@@ -1,0 +1,4 @@
+﻿Filter
+
+・フィルタ/クエリシステムを管理。
+・Krile Query system v3

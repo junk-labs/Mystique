@@ -1,0 +1,5 @@
+﻿Dulcet Library
+
+Krile2 Mystiqueに対して、Twitterへの接続やデータの提供を行います。
+
+from dulcet ROMANCE -ReBirth-  ave;new feat.佐倉紗織, 大咲美和, 白沢理恵

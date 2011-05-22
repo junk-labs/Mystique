@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FE3EC1D6-4A61-4E6D-915B-5EED8AE046D2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Inscribe</RootNamespace>
+    <AssemblyName>Inscribe</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Livet">
+      <HintPath>..\Mystique\InfrastructureAssemblies\Livet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Mystique\InfrastructureAssemblies\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Mystique\InfrastructureAssemblies\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\EnumerableEx.cs" />
+    <Compile Include="Common\XMLSerializer.cs" />
+    <Compile Include="Communication\APIHelper.cs" />
+    <Compile Include="Communication\Lists\ListReceiver.cs" />
+    <Compile Include="Communication\Lists\ListReceiverManager.cs" />
+    <Compile Include="Communication\MainTimeline\Connection\RestConnection.cs" />
+    <Compile Include="Communication\MainTimeline\Connection\UserStreamsConnection.cs" />
+    <Compile Include="Communication\MainTimeline\Receiver.cs" />
+    <Compile Include="Communication\MainTimeline\ReceiverManager.cs" />
+    <Compile Include="Communication\Posting\PostOffice.cs" />
+    <Compile Include="Communication\Posting\TweetAnnotationException.cs" />
+    <Compile Include="Communication\Posting\TweetFailedException.cs" />
+    <Compile Include="Communication\Robustness\NetworkTest.cs" />
+    <Compile Include="Communication\Robustness\TestBase.cs" />
+    <Compile Include="Communication\Robustness\TwitterTest.cs" />
+    <Compile Include="Configuration\Elements\AccountProperty.cs" />
+    <Compile Include="Configuration\KeyAssignment\AssignData.cs" />
+    <Compile Include="Configuration\KeyAssignment\AssignUtil.cs" />
+    <Compile Include="Configuration\KeyAssignment\KeyAssign.cs" />
+    <Compile Include="Configuration\Setting.cs" />
+    <Compile Include="Configuration\Settings\AccountProperty.cs" />
+    <Compile Include="Configuration\Settings\ColoringProperty.cs" />
+    <Compile Include="Configuration\Settings\ConnectionProperty.cs" />
+    <Compile Include="Configuration\Settings\ExperienceProperty.cs" />
+    <Compile Include="Configuration\Settings\ExternalServiceProperty.cs" />
+    <Compile Include="Configuration\Settings\InputExperienceProperty.cs" />
+    <Compile Include="Configuration\Settings\KernelProperty.cs" />
+    <Compile Include="Configuration\Settings\NotificationProperty.cs" />
+    <Compile Include="Configuration\Settings\StateProperty.cs" />
+    <Compile Include="Configuration\Settings\TimelineExperienceProperty.cs" />
+    <Compile Include="Configuration\Settings\TimelineFilterlingProperty.cs" />
+    <Compile Include="Configuration\Settings\TweetExperienceProperty.cs" />
+    <Compile Include="Configuration\Settings\TwitterProperty.cs" />
+    <Compile Include="Configuration\Tabs\TabProperty.cs" />
+    <Compile Include="Data\ILockOperatable.cs" />
+    <Compile Include="Data\SafeObservable.cs" />
+    <Compile Include="Data\ReaderWriterLockBase.cs" />
+    <Compile Include="Data\ReaderWriterLockWrap.cs" />
+    <Compile Include="Data\SafeDictionary.cs" />
+    <Compile Include="Data\SafeLinkedList.cs" />
+    <Compile Include="Data\SafeList.cs" />
+    <Compile Include="Define.cs" />
+    <Compile Include="Filter\FilterBase.cs" />
+    <Compile Include="Filter\FilterCluster.cs" />
+    <Compile Include="Filter\FilterOperations.cs" />
+    <Compile Include="Filter\GuiSystem\GuiSystem.cs" />
+    <Compile Include="Filter\GuiSystem\GuiVisibleAttribute.cs" />
+    <Compile Include="Filter\GuiSystem\IGuiElement.cs" />
+    <Compile Include="Filter\IFilter.cs" />
+    <Compile Include="Filter\Manager\FilterRegistrant.cs" />
+    <Compile Include="Filter\QuerySystem\Escaping.cs" />
+    <Compile Include="Filter\QuerySystem\IQueryConvertable.cs" />
+    <Compile Include="Filter\QuerySystem\IQueryElement.cs" />
+    <Compile Include="Filter\QuerySystem\MethodVisibleAttribute.cs" />
+    <Compile Include="Filter\QuerySystem\QueryConverter.cs" />
+    <Compile Include="Model\AccountInfo.cs" />
+    <Compile Include="Model\CredentialCore.cs" />
+    <Compile Include="Storage\AccountStorage.cs" />
+    <Compile Include="Storage\EventStorage.cs" />
+    <Compile Include="Storage\FilterStorage.cs" />
+    <Compile Include="Storage\HashtagStorage.cs" />
+    <Compile Include="Storage\ListStorage.cs" />
+    <Compile Include="Storage\NotifyStorage.cs" />
+    <Compile Include="Storage\UserStorage.cs" />
+    <Compile Include="Threading\DispatcherEx.cs" />
+    <Compile Include="Threading\RestrictedTask.cs" />
+    <Compile Include="Threading\ThreadHelper.cs" />
+    <Compile Include="TwitterStatic.cs" />
+    <Compile Include="ViewModels\TweetViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Storage\TweetStorage.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Filter\Filter.txt" />
+    <Content Include="Inscribe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Acuerdo\Acuerdo.csproj">
+      <Project>{B0E2A5B6-420C-4437-B995-9E31149078E6}</Project>
+      <Name>Acuerdo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dulcet\Dulcet.csproj">
+      <Project>{8D33449B-0BD8-4873-B872-0E91FA7EBC4B}</Project>
+      <Name>Dulcet</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

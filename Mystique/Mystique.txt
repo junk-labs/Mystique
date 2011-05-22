@@ -1,0 +1,6 @@
+﻿Mystique UI
+
+Krile2 MystiqueのUI部分を司ります。
+ViewとViewModelの実装の大半を含みます。
+
+from mystique? ave;new feat.佐倉紗織

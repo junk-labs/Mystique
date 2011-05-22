@@ -1,0 +1,7 @@
+﻿Inscribe Library
+
+Krile2 Mystiqueのデータを管理する部分です。
+Windows Presentation Foundationと密結合し、
+データキャッシュサービスやTwitter ViewModelデータの統合的な管理を行います。
+
+from ave;new 2nd concept album "Inscribe"

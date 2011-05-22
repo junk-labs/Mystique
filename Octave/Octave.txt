@@ -1,0 +1,6 @@
+﻿Octave Library
+
+Mystiqueが内部で利用するライブラリ資源などを管理します。
+一般的に、外部ライブラリに公開することを想定していないリソースを含みます。
+
+from Octave Rain ave;new feat.佐倉紗織
