@@ -56,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\EnumerableEx.cs" />
+    <Compile Include="Common\Browser.cs" />
+    <Compile Include="Common\TwitterHelper.cs" />
     <Compile Include="Common\XMLSerializer.cs" />
     <Compile Include="Communication\APIHelper.cs" />
     <Compile Include="Communication\Lists\ListReceiver.cs" />
@@ -89,12 +91,14 @@
     <Compile Include="Configuration\Settings\TweetExperienceProperty.cs" />
     <Compile Include="Configuration\Settings\TwitterProperty.cs" />
     <Compile Include="Configuration\Tabs\TabProperty.cs" />
+    <Compile Include="Core\InitializationService.cs" />
+    <Compile Include="Core\StateProxy.cs" />
+    <Compile Include="Data\ConcurrentDictionaryExtension.cs" />
     <Compile Include="Data\ILockOperatable.cs" />
-    <Compile Include="Data\SafeObservable.cs" />
+    <Compile Include="Data\SafeLinkedList.cs" />
+    <Compile Include="Data\ConcurrentObservable.cs" />
     <Compile Include="Data\ReaderWriterLockBase.cs" />
     <Compile Include="Data\ReaderWriterLockWrap.cs" />
-    <Compile Include="Data\SafeDictionary.cs" />
-    <Compile Include="Data\SafeLinkedList.cs" />
     <Compile Include="Data\SafeList.cs" />
     <Compile Include="Define.cs" />
     <Compile Include="Filter\FilterBase.cs" />
@@ -112,17 +116,23 @@
     <Compile Include="Filter\QuerySystem\QueryConverter.cs" />
     <Compile Include="Model\AccountInfo.cs" />
     <Compile Include="Model\CredentialCore.cs" />
+    <Compile Include="Plugin\PluginManager.cs" />
+    <Compile Include="Plugin\ShortenManager.cs" />
+    <Compile Include="Plugin\UploaderManager.cs" />
     <Compile Include="Storage\AccountStorage.cs" />
     <Compile Include="Storage\EventStorage.cs" />
+    <Compile Include="Storage\ExceptionStorage.cs" />
     <Compile Include="Storage\FilterStorage.cs" />
     <Compile Include="Storage\HashtagStorage.cs" />
     <Compile Include="Storage\ListStorage.cs" />
     <Compile Include="Storage\NotifyStorage.cs" />
     <Compile Include="Storage\UserStorage.cs" />
+    <Compile Include="Text\RegularExpressions.cs" />
     <Compile Include="Threading\DispatcherEx.cs" />
     <Compile Include="Threading\RestrictedTask.cs" />
     <Compile Include="Threading\ThreadHelper.cs" />
-    <Compile Include="TwitterStatic.cs" />
+    <Compile Include="TwitterDefine.cs" />
+    <Compile Include="ViewModels\TabViewModel.cs" />
     <Compile Include="ViewModels\TweetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\TweetStorage.cs" />

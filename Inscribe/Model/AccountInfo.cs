@@ -6,6 +6,7 @@ using Dulcet.Twitter;
 using Inscribe.Configuration.Elements;
 using Inscribe.Data;
 using Inscribe.ViewModels;
+using System.Collections.Concurrent;
 
 namespace Inscribe.Model
 {

@@ -103,14 +103,14 @@ namespace Inscribe.Communication.MainTimeline
                         this.usConnection = UserStreamsConnection.Connect(lui, Queries);
                         lui.UserStreamsConnectionState = ConnectionState.Connected;
                         // REST ポーリングインターバルのオーバーライト
-                        this.restConnection.HomeReceiveInterval = lui.AccoutProperty.UserStreamsOverrideRestHomeInterval ?? TwitterStatic.UserStreamsRestHomeInterval;
-                        this.restConnection.MentionReceiveInterval = lui.AccoutProperty.UserStreamsOverrideRestMentionsInterval ?? TwitterStatic.UserStreamsRestMentionsInterval;
-                        this.restConnection.DirectMessageReceiveInterval = lui.AccoutProperty.UserStreamsOverrideRestDirectMessagesInterval ?? TwitterStatic.UserStreamsRestDirectMessagesInterval;
-                        this.restConnection.FavoredReceiveInterval = lui.AccoutProperty.UserStreamsOverrideRestFavoredInterval ?? TwitterStatic.UserStreamsRestFavoredInterval;
+                        this.restConnection.HomeReceiveInterval = lui.AccoutProperty.UserStreamsOverrideRestHomeInterval ?? TwitterDefine.UserStreamsRestHomeInterval;
+                        this.restConnection.MentionReceiveInterval = lui.AccoutProperty.UserStreamsOverrideRestMentionsInterval ?? TwitterDefine.UserStreamsRestMentionsInterval;
+                        this.restConnection.DirectMessageReceiveInterval = lui.AccoutProperty.UserStreamsOverrideRestDirectMessagesInterval ?? TwitterDefine.UserStreamsRestDirectMessagesInterval;
+                        this.restConnection.FavoredReceiveInterval = lui.AccoutProperty.UserStreamsOverrideRestFavoredInterval ?? TwitterDefine.UserStreamsRestFavoredInterval;
                     }
                     catch (Exception e)
                     {
-                        NotifyStorage.Notify(e.Message);
+                        ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "User Streams接続に失敗しました。");
                     }
                 }
             }

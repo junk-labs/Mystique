@@ -44,6 +44,7 @@
       <HintPath>InfrastructureAssemblies\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity">
       <SpecificVersion>False</SpecificVersion>
@@ -66,6 +67,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\CachedConcurrentObservableCollection.cs" />
+    <Compile Include="Plugin\PluginLoader.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\TabViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml.cs">
+      <DependentUpon>TimelineItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Chrome\ButtonChromeEx.cs" />
+    <Compile Include="Views\Common\LazyImage.cs" />
+    <Compile Include="Views\Common\PopupButton.cs" />
+    <Compile Include="Views\Converters\BooleanToVisibleConverter.cs" />
+    <Compile Include="Views\Converters\ConverterBase.cs" />
+    <Compile Include="Views\Converters\DoubleToGridLengthConverter.cs" />
+    <Compile Include="Views\Converters\EnumToRadioConverter.cs" />
+    <Compile Include="Views\Converters\Particular\StringRemoveLineFeedConverter.cs" />
+    <Compile Include="Views\Converters\Particular\TextToFlowDocumentConvereter.cs" />
+    <Compile Include="Views\Converters\Particular\TVMToUserNameConverter.cs" />
+    <Compile Include="Views\Converters\StringEqVisibleConverter.cs" />
+    <Compile Include="Views\Text\Tokenizer.cs" />
+    <Page Include="Simple Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewModels\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -74,7 +101,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\Model.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -109,6 +135,99 @@
     <Content Include="InfrastructureAssemblies\Design\Livet.Design.dll" />
     <Content Include="InfrastructureAssemblies\Design\Livet.Expression.Design.dll" />
     <Content Include="InfrastructureAssemblies\Livet.dll" />
+    <Resource Include="Resources\accept.png" />
+    <Resource Include="Resources\accounts.png" />
+    <Resource Include="Resources\add.png" />
+    <Resource Include="Resources\application_xp_terminal.png" />
+    <Resource Include="Resources\arrowdown.png" />
+    <Resource Include="Resources\arrowup.png" />
+    <Resource Include="Resources\arrow_join.png" />
+    <Resource Include="Resources\bell.png" />
+    <Resource Include="Resources\bin_empty.png" />
+    <Resource Include="Resources\box_left.png" />
+    <Resource Include="Resources\box_right.png" />
+    <Resource Include="Resources\bug.png" />
+    <Resource Include="Resources\cancel.png" />
+    <Resource Include="Resources\car.png" />
+    <Resource Include="Resources\chart_curve.png" />
+    <Resource Include="Resources\chevron.png" />
+    <Resource Include="Resources\close12.png" />
+    <Resource Include="Resources\close12inactive.png" />
+    <Resource Include="Resources\color_wheel.png" />
+    <Resource Include="Resources\comment.png" />
+    <Resource Include="Resources\comment_add.png" />
+    <Resource Include="Resources\comment_checked.png" />
+    <Resource Include="Resources\comment_edit.png" />
+    <Resource Include="Resources\conversation.png" />
+    <Resource Include="Resources\cross.png" />
+    <Resource Include="Resources\delete.png" />
+    <Resource Include="Resources\disconnect.png" />
+    <Resource Include="Resources\exclamation.png" />
+    <Resource Include="Resources\failed.png" />
+    <Resource Include="Resources\feed.png" />
+    <Resource Include="Resources\find.png" />
+    <Resource Include="Resources\find_folder.png" />
+    <Resource Include="Resources\grayed_star.png" />
+    <Resource Include="Resources\group.png" />
+    <Resource Include="Resources\heart.png" />
+    <Resource Include="Resources\help.png" />
+    <Resource Include="Resources\image.png" />
+    <Resource Include="Resources\image_link.png" />
+    <Resource Include="Resources\kettamachine.png" />
+    <Resource Include="Resources\krile.ico" />
+    <Resource Include="Resources\krile.png" />
+    <Resource Include="Resources\krile2.png" />
+    <Resource Include="Resources\krile2_large.png" />
+    <SplashScreen Include="Resources\krile2_splash.png" />
+    <Resource Include="Resources\krile32.png" />
+    <Resource Include="Resources\kriletan.png" />
+    <Resource Include="Resources\lightning.png" />
+    <Resource Include="Resources\lock.png" />
+    <Resource Include="Resources\mlx01.png" />
+    <Resource Include="Resources\new.png" />
+    <Resource Include="Resources\nozomi.png" />
+    <Resource Include="Resources\oauth_logo.png" />
+    <Resource Include="Resources\orbiter.png" />
+    <Resource Include="Resources\pencil.png" />
+    <Resource Include="Resources\plane.png" />
+    <Resource Include="Resources\qt.png" />
+    <Resource Include="Resources\query.png" />
+    <Resource Include="Resources\rainbow.png" />
+    <Resource Include="Resources\refresh.png" />
+    <Resource Include="Resources\refresh_large.png" />
+    <Resource Include="Resources\remove.png" />
+    <Resource Include="Resources\report_spam.png" />
+    <Resource Include="Resources\rt.png" />
+    <Resource Include="Resources\rtp.png" />
+    <Resource Include="Resources\shield.png" />
+    <Resource Include="Resources\star.png" />
+    <Resource Include="Resources\star_blue.png" />
+    <Resource Include="Resources\star_green.png" />
+    <Resource Include="Resources\star_large.png" />
+    <Resource Include="Resources\star_red.png" />
+    <Resource Include="Resources\tab_add.png" />
+    <Resource Include="Resources\tab_edit.png" />
+    <Resource Include="Resources\tag.png" />
+    <Resource Include="Resources\tag_add.png" />
+    <Resource Include="Resources\tag_edit.png" />
+    <Resource Include="Resources\tag_red.png" />
+    <Resource Include="Resources\tick.png" />
+    <Resource Include="Resources\time.png" />
+    <Resource Include="Resources\timeline_marker.png" />
+    <Resource Include="Resources\tweets.png" />
+    <Resource Include="Resources\user.png" />
+    <Resource Include="Resources\user_add.png" />
+    <Resource Include="Resources\user_comment.png" />
+    <Resource Include="Resources\user_delete.png" />
+    <Resource Include="Resources\user_edit.png" />
+    <Resource Include="Resources\vcard.png" />
+    <Resource Include="Resources\vcard_add.png" />
+    <Resource Include="Resources\vcard_delete.png" />
+    <Resource Include="Resources\vcard_edit.png" />
+    <Resource Include="Resources\walk.png" />
+    <Resource Include="Resources\wand.png" />
+    <Resource Include="Resources\world.png" />
+    <Resource Include="Resources\wrench.png" />
     <Resource Include="Mystique.txt" />
     <Resource Include="InfrastructureAssemblies\Livet.XML" />
     <Content Include="InfrastructureAssemblies\Microsoft.Expression.Interactions.dll" />
@@ -131,10 +250,24 @@
       <Project>{2E6A1FEF-EDC5-4588-99A0-A70EC237FB28}</Project>
       <Name>Nightmare</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Octave\Octave.csproj">
+      <Project>{E3B834E1-51A4-4042-B4DC-F906AD597282}</Project>
+      <Name>Octave</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Vanille\Vanille.csproj">
       <Project>{CF81A75C-2CCF-428D-9D2B-B59216761A9E}</Project>
       <Name>Vanille</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\Common\" />
+    <Folder Include="ViewModels\Dialogs\" />
+    <Folder Include="ViewModels\PartBlocks\InputBlock\" />
+    <Folder Include="ViewModels\PartBlocks\NotifyBlock\" />
+    <Folder Include="Views\Dialogs\" />
+    <Folder Include="Views\PartBlocks\InputBlock\" />
+    <Folder Include="Views\PartBlocks\MainBlock\TimelineChild\" />
+    <Folder Include="Views\PartBlocks\NotifyBlock\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

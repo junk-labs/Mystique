@@ -1,10 +1,10 @@
-﻿using Inscribe.Data;
+﻿using System.Collections.Concurrent;
 
 namespace Octave.Caching
 {
     public static class UrlResolveCacheStorage
     {
-        private static SafeDictionary<string, string> urlResolved = new SafeDictionary<string, string>();
+        private static ConcurrentDictionary<string, string> urlResolved = new ConcurrentDictionary<string, string>();
 
         /// <summary>
         /// URLがキャッシュされている場合、キャッシュ結果を返します。<para />
@@ -28,7 +28,7 @@ namespace Octave.Caching
             urlResolved.AddOrUpdate(resolved, resolved);
         }
 
-        private static SafeDictionary<string, string> imageResolved = new SafeDictionary<string, string>();
+        private static ConcurrentDictionary<string, string> imageResolved = new ConcurrentDictionary<string, string>();
 
         /// <summary>
         /// URLがキャッシュされている場合、キャッシュ結果を返します。<para />

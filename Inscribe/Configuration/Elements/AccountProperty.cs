@@ -14,10 +14,10 @@ namespace Inscribe.Configuration.Elements
         {
             this.UserStreamsRepliesAll = false;
             this.ConnectionKind = Elements.ConnectionKind.UserStreams;
-            this.RestHomeInterval = TwitterStatic.RestHomeInterval;
-            this.RestMentionsInterval = TwitterStatic.RestMentionsInterval;
-            this.RestDirectMessagesInterval = TwitterStatic.RestDirectMessagesInterval;
-            this.RestFavoredInterval = TwitterStatic.RestFavoredInterval;
+            this.RestHomeInterval = TwitterDefine.RestHomeInterval;
+            this.RestMentionsInterval = TwitterDefine.RestMentionsInterval;
+            this.RestDirectMessagesInterval = TwitterDefine.RestDirectMessagesInterval;
+            this.RestFavoredInterval = TwitterDefine.RestFavoredInterval;
         }
 
         public bool UserStreamsRepliesAll { get; set; }

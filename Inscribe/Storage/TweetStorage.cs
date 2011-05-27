@@ -8,6 +8,7 @@ using Dulcet.Twitter;
 using System.Threading.Tasks;
 using Inscribe.Configuration;
 using Livet;
+using System.Collections.Concurrent;
 
 namespace Inscribe.Storage
 {
@@ -30,17 +31,17 @@ namespace Inscribe.Storage
         /// <summary>
         /// 登録済みステータスディクショナリ
         /// </summary>
-        static SafeDictionary<long, TweetViewModel> dictionary = new SafeDictionary<long, TweetViewModel>();
+        static ConcurrentDictionary<long, TweetViewModel> dictionary = new ConcurrentDictionary<long, TweetViewModel>();
 
         /// <summary>
         /// 仮登録ステータスディクショナリ
         /// </summary>
-        static SafeDictionary<long, TweetViewModel> empties = new SafeDictionary<long, TweetViewModel>();
+        static ConcurrentDictionary<long, TweetViewModel> empties = new ConcurrentDictionary<long, TweetViewModel>();
 
         /// <summary>
         /// 削除予約されたツイートIDリスト
         /// </summary>
-        static SafeLinkedList<long> deleteReserveds = new SafeLinkedList<long>();
+        static ConcurrentBag<long> deleteReserveds = new ConcurrentBag<long>();
 
         /// <summary>
         /// ツイートストレージの作業用スレッドディスパッチャ
@@ -77,7 +78,7 @@ namespace Inscribe.Storage
             if (createEmpty)
             {
                 var nvm = new TweetViewModel();
-                empties.Add(id, nvm);
+                empties.AddOrUpdate(id, nvm);
                 return nvm;
             }
             else
@@ -94,9 +95,9 @@ namespace Inscribe.Storage
         public static IEnumerable<TweetViewModel> GetAll(Func<TweetViewModel, bool> predicate = null)
         {
             if (predicate == null)
-                return dictionary.ValueToArray();
+                return dictionary.Values.ToArray();
             else
-                return dictionary.ValueToArrayParallel(predicate);
+                return dictionary.Values.AsParallel().Where(predicate).ToArray();
         }
 
         /// <summary>
@@ -181,14 +182,14 @@ namespace Inscribe.Storage
                     var vm = empties[statusBase.Id];
                     vm.SetStatus(statusBase);
                     empties.Remove(statusBase.Id);
-                    dictionary.Add(statusBase.Id, vm);
+                    dictionary.AddOrUpdate(statusBase.Id, vm);
                     Task.Factory.StartNew(() => RaiseStatusAdded(vm));
                 }
                 else
                 {
                     // 全く初めて触れるステータス
                     var newViewModel = new TweetViewModel(statusBase);
-                    dictionary.Add(statusBase.Id, newViewModel);
+                    dictionary.AddOrUpdate(statusBase.Id, newViewModel);
                     Task.Factory.StartNew(() => RaiseStatusAdded(newViewModel));
                 }
             });
@@ -201,7 +202,7 @@ namespace Inscribe.Storage
         public static void Remove(long id)
         {
             // とりあえず削除候補に登録しておく
-            deleteReserveds.AddLast(id);
+            deleteReserveds.Add(id);
             operationDispatcher.Enqueue(() =>
             {
                 // 削除する

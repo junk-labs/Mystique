@@ -6,12 +6,13 @@ using Inscribe.ViewModels;
 using Inscribe.Data;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
+using System.Collections.Concurrent;
 
 namespace Inscribe.Storage
 {
     public static class UserStorage
     {
-        public static SafeDictionary<string, UserViewModel> dictionary = new SafeDictionary<string, UserViewModel>();
+        public static ConcurrentDictionary<string, UserViewModel> dictionary = new ConcurrentDictionary<string, UserViewModel>();
 
         /// <summary>
         /// キャッシュにユーザー情報が存在していたら、すぐに返します。<para />

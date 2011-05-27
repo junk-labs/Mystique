@@ -15,6 +15,7 @@ using Inscribe.Storage;
 using Inscribe.Configuration;
 using System.Net;
 using System.Xml.Linq;
+using System.Collections.Concurrent;
 
 namespace Inscribe.Communication.Posting
 {
@@ -26,7 +27,7 @@ namespace Inscribe.Communication.Posting
     {
         static Timer updateUnderControllingTimer = new Timer(UpdateUnderControls, null, 1000, 1000);
 
-        static SafeDictionary<AccountInfo, DateTime> underControls = new SafeDictionary<AccountInfo, DateTime>();
+        static ConcurrentDictionary<AccountInfo, DateTime> underControls = new ConcurrentDictionary<AccountInfo, DateTime>();
         
         #region OnUnderControlChangedイベント
 

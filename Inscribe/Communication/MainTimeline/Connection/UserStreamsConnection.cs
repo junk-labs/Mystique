@@ -57,7 +57,7 @@ namespace Inscribe.Communication.MainTimeline.Connection
             catch (ThreadAbortException) { }
             catch (Exception e)
             {
-                NotifyStorage.Notify(e.Message);
+                ExceptionStorage.Register(e, ExceptionCategory.InternalError, "メッセージポンピングシステムにエラーが発生しました。");
             }
         }
 
@@ -257,7 +257,7 @@ namespace Inscribe.Communication.MainTimeline.Connection
             }
             catch (Exception e)
             {
-                throw new WebException("User Streamsへの接続に失敗しました。");
+                throw new WebException("User Streamsへの接続に失敗しました。", e);
             }
         }
         

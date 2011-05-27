@@ -8,14 +8,15 @@ using Inscribe.Configuration;
 using Inscribe.Data;
 using Inscribe.Storage;
 using Octave.Windows;
+using System.Collections.Concurrent;
 
 namespace Octave.Caching
 {
     public static class ImageCacheStorage
     {
-        private static SafeDictionary<Uri, KeyValuePair<BitmapImage, DateTime>> imageDataDictionary;
+        private static ConcurrentDictionary<Uri, KeyValuePair<BitmapImage, DateTime>> imageDataDictionary;
         private static object semaphoreAccessLocker = new object();
-        private static SafeDictionary<Uri, ManualResetEvent> semaphores;
+        private static ConcurrentDictionary<Uri, ManualResetEvent> semaphores;
 
         public static event Action DownloadingChanged = () => { };
         private static bool _downloading = false;
@@ -33,23 +34,17 @@ namespace Octave.Caching
 
         static ImageCacheStorage()
         {
-            imageDataDictionary = new SafeDictionary<Uri, KeyValuePair<BitmapImage, DateTime>>();
-            semaphores = new SafeDictionary<Uri, ManualResetEvent>();
+            imageDataDictionary = new ConcurrentDictionary<Uri, KeyValuePair<BitmapImage, DateTime>>();
+            semaphores = new ConcurrentDictionary<Uri, ManualResetEvent>();
             gcTimer = new Timer(GC, null, Setting.Instance.KernelProperty.ImageGCInitialDelay, Setting.Instance.KernelProperty.ImageGCInterval);
         }
 
         private static void GC(object o)
         {
-            imageDataDictionary.LockOperate(() =>
-            {
-                var delcand = from d in imageDataDictionary
-                              where DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds > Setting.Instance.KernelProperty.ImageLifetime
-                              select d.Key;
-                foreach (var d in delcand.ToArray())
-                {
-                    imageDataDictionary.RemoveUnsafe(d);
-                }
-            });
+            imageDataDictionary
+                .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds > Setting.Instance.KernelProperty.ImageLifetime)
+                .Select(d => d.Key)
+                .ToArray().AsParallel().ForAll(d => imageDataDictionary.Remove(d));
         }
 
         /// <summary>
@@ -92,7 +87,7 @@ namespace Octave.Caching
                 if (!semaphores.TryGetValue(uri, out mre))
                 {
                     if (semaphores.Count == 0) Downloading = true;
-                    semaphores.Add(uri, new ManualResetEvent(false));
+                    semaphores.AddOrUpdate(uri, new ManualResetEvent(false));
                 }
             }
             if (mre != null)

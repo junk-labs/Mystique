@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.Filter;
 using System.Xml.Serialization;
+using Inscribe.Filter;
 using Inscribe.Filter.QuerySystem;
 using Inscribe.Storage;
 

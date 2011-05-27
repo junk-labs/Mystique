@@ -8,7 +8,7 @@ namespace Inscribe
     /// <summary>
     /// Twitterの(半)静的値
     /// </summary>
-    public static class TwitterStatic
+    public static class TwitterDefine
     {
         #region Twitter API 依存
 

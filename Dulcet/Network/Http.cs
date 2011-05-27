@@ -11,7 +11,7 @@ namespace Dulcet.Network
 {
     public static class Http
     {
-        private static string _userAgent = "Krile/Mystique (.NET Framework 4.0)";
+        private static string _userAgent = "Krile2/Mystique (.NET Framework 4.0)";
         public static string UserAgent
         {
             get { return _userAgent; }

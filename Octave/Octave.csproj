@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\UrlResolveCacheStorage.cs" />
     <Compile Include="Windows\Packaging.cs" />
     <Content Include="Octave.txt" />
     <Compile Include="Caching\ImageCacheStorage.cs" />

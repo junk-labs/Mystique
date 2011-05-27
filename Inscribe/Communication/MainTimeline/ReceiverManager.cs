@@ -20,7 +20,7 @@ namespace Inscribe.Communication.MainTimeline
         public static void RunUserInfoTimer()
         {
             userInfoUpdateTimer = new Timer(_ => receivers.Keys.ForEach(ReceiveInidividualInfo)
-            , null, TwitterStatic.UserInformationRefreshPeriod, TwitterStatic.UserInformationRefreshPeriod);
+            , null, TwitterDefine.UserInformationRefreshPeriod, TwitterDefine.UserInformationRefreshPeriod);
             ThreadHelper.Halt += () => userInfoUpdateTimer.Dispose();
         }
 

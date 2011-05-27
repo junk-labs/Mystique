@@ -6,7 +6,7 @@
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         xmlns:v="clr-namespace:Mystique.Views"
         xmlns:vm="clr-namespace:Mystique.ViewModels"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="300" Width="500">
     
     <Window.DataContext>
         <vm:MainWindowViewModel/>

@@ -12,7 +12,7 @@ using Livet;
 namespace Inscribe.Data
 {
     [Serializable]
-    public class SafeObservable<T> : ReaderWriterLockBase, IList<T>, ICollection<T>, IEnumerable<T>, IList, ICollection, IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ConcurrentObservable<T> : ReaderWriterLockBase, IList<T>, ICollection<T>, IEnumerable<T>, IList, ICollection, IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged
     {
         public event NotifyCollectionChangedEventHandler CollectionChanging;
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -27,12 +27,12 @@ namespace Inscribe.Data
             private set;
         }
 
-        public SafeObservable()
+        public ConcurrentObservable()
         {
             this.NotifyChanges = true;
         }
 
-        public SafeObservable(IEnumerable<T> collection)
+        public ConcurrentObservable(IEnumerable<T> collection)
             : this()
         {
             AddRange(collection);

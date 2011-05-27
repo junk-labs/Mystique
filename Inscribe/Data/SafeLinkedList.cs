@@ -12,7 +12,7 @@ namespace Inscribe.Data
 
         public SafeLinkedList()
         {
-            internalList = new LinkedList<T>();
+            this.internalList = new LinkedList<T>();
         }
 
         void ICollection<T>.Add(T item)
@@ -80,6 +80,19 @@ namespace Inscribe.Data
         {
             using (WriterLock())
                 return internalList.Remove(item);
+        }
+
+        public void ReplaceItem(Func<T, bool> predicate, T newItem)
+        {
+            using (ReaderLock())
+            {
+                var current = this.internalList.First;
+                while (current != null)
+                {
+                    current.Value = predicate(current.Value) ? newItem : current.Value;
+                    current = current.Next;
+                }
+            }
         }
 
         public IEnumerator<T> GetEnumerator()

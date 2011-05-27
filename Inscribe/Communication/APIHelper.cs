@@ -60,7 +60,7 @@ namespace Inscribe.Communication
                     }
                     else
                     {
-                        NotifyStorage.Notify(we.Message);
+                        ExceptionStorage.Register(we, ExceptionCategory.TwitterError, null, () => operate());
                         return default(T);
                     }
                 }
