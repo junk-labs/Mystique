@@ -93,6 +93,7 @@
     <Compile Include="Configuration\Tabs\TabProperty.cs" />
     <Compile Include="Core\InitializationService.cs" />
     <Compile Include="Core\StateProxy.cs" />
+    <Compile Include="Data\CachedConcurrentObservableCollection.cs" />
     <Compile Include="Data\ConcurrentDictionaryExtension.cs" />
     <Compile Include="Data\ILockOperatable.cs" />
     <Compile Include="Data\SafeLinkedList.cs" />

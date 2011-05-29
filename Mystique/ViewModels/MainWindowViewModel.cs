@@ -10,8 +10,6 @@ using Livet.Messaging;
 using Livet.Messaging.File;
 using Livet.Messaging.Window;
 
-using Mystique.Models;
-
 namespace Mystique.ViewModels
 {
     public class MainWindowViewModel : ViewModel

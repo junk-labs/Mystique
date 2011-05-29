@@ -67,12 +67,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\CachedConcurrentObservableCollection.cs" />
     <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\TabViewModel.cs" />
-    <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml.cs">
-      <DependentUpon>TimelineItem.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Views\Behaviors\FrameworkActualWidthAction.cs" />
     <Compile Include="Views\Chrome\ButtonChromeEx.cs" />
     <Compile Include="Views\Common\LazyImage.cs" />
     <Compile Include="Views\Common\PopupButton.cs" />
@@ -80,18 +77,20 @@
     <Compile Include="Views\Converters\ConverterBase.cs" />
     <Compile Include="Views\Converters\DoubleToGridLengthConverter.cs" />
     <Compile Include="Views\Converters\EnumToRadioConverter.cs" />
+    <Compile Include="Views\Converters\Particular\CollectionExistToVisibleConverter.cs" />
+    <Compile Include="Views\Converters\Particular\CollectionToCountConverter.cs" />
     <Compile Include="Views\Converters\Particular\StringRemoveLineFeedConverter.cs" />
     <Compile Include="Views\Converters\Particular\TextToFlowDocumentConvereter.cs" />
     <Compile Include="Views\Converters\Particular\TVMToUserNameConverter.cs" />
     <Compile Include="Views\Converters\StringEqVisibleConverter.cs" />
+    <Compile Include="Views\CustomPanels\FillPanel.cs" />
+    <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml.cs">
+      <DependentUpon>TimelineItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Text\Tokenizer.cs" />
     <Page Include="Simple Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ViewModels\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -106,6 +105,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -263,10 +266,10 @@
     <Folder Include="ViewModels\Common\" />
     <Folder Include="ViewModels\Dialogs\" />
     <Folder Include="ViewModels\PartBlocks\InputBlock\" />
+    <Folder Include="ViewModels\PartBlocks\MainBlock\TimelineChild\" />
     <Folder Include="ViewModels\PartBlocks\NotifyBlock\" />
     <Folder Include="Views\Dialogs\" />
     <Folder Include="Views\PartBlocks\InputBlock\" />
-    <Folder Include="Views\PartBlocks\MainBlock\TimelineChild\" />
     <Folder Include="Views\PartBlocks\NotifyBlock\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

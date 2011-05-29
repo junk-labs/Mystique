@@ -50,6 +50,20 @@ namespace Inscribe.ViewModels
             get { return this.Status != null; }
         }
 
+        #region Twitter Status Property
+
+        public Uri ProfileImage
+        {
+            get { return Status.User.ProfileImage; }
+        }
+
+        public string Text
+        {
+            get { return this.Status.Text; }
+        }
+
+        #endregion
+
         #region Retweeteds Control
 
         private ConcurrentObservable<UserViewModel> _retweeteds = new ConcurrentObservable<UserViewModel>();

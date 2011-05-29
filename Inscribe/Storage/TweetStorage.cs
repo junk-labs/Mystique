@@ -207,8 +207,12 @@ namespace Inscribe.Storage
             {
                 // 削除する
                 empties.Remove(id);
-                dictionary.Remove(id);
-                Task.Factory.StartNew(() => RaiseStatusRemoved(id));
+                if (dictionary.ContainsKey(id))
+                {
+                    var remobj = dictionary[id];
+                    dictionary.Remove(id);
+                    Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
+                }
             });
         }
 
@@ -222,9 +226,9 @@ namespace Inscribe.Storage
             Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Added, added));
         }
 
-        static void RaiseStatusRemoved(long removedId)
+        static void RaiseStatusRemoved(TweetViewModel removed)
         {
-            Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Removed, id: removedId));
+            Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Removed, removed));
         }
 
         static void RaiseRefreshTweets()
@@ -237,16 +241,13 @@ namespace Inscribe.Storage
 
     public class TweetStorageChangedEventArgs : EventArgs
     {
-        public TweetStorageChangedEventArgs(TweetActionKind act, TweetViewModel added = null, long id = 0)
+        public TweetStorageChangedEventArgs(TweetActionKind act, TweetViewModel added = null)
         {
             this.ActionKind = act;
-            this.Added = added;
-            this.Id = id;
+            this.Tweet = added;
         }
 
-        public TweetViewModel Added { get; set; }
-
-        public long Id { get; set; }
+        public TweetViewModel Tweet { get; set; }
 
         public TweetActionKind ActionKind { get; set; }
     }
