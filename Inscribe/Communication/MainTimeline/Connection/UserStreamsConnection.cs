@@ -77,15 +77,16 @@ namespace Inscribe.Communication.MainTimeline.Connection
                 case ElementKind.Favorite:
                     TweetStorage.Register(elem.Status);
                     var avm = TweetStorage.Get(elem.Status.Id);
-                    avm.RegisterFavored(UserStorage.Get(elem.SourceUser));
-                    // TODO: Notify Event
+                    var uavm = UserStorage.Get(elem.SourceUser);
+                    avm.RegisterFavored(uavm);
+                    EventStorage.OnFavored(avm, uavm);
                     break;
                 case ElementKind.Unfavorite:
                     TweetStorage.Register(elem.Status);
                     var rvm = TweetStorage.Get(elem.Status.Id);
-                    rvm.RemoveFavored(UserStorage.Get(elem.SourceUser));
-
-                    // TODO: Notify Event
+                    var urvm = UserStorage.Get(elem.SourceUser);
+                    rvm.RemoveFavored(urvm);
+                    EventStorage.OnUnfavored(rvm, urvm);
                     break;
                 case ElementKind.Delete:
                     TweetStorage.Remove(elem.DeletedStatusId);
@@ -101,11 +102,13 @@ namespace Inscribe.Communication.MainTimeline.Connection
                 case ElementKind.Unfollow:
                     var affect = AccountStorage.Get(elem.SourceUser.ScreenName);
                     var effect = AccountStorage.Get(elem.TargetUser.ScreenName);
+                    var sourceuvm = UserStorage.Get(elem.SourceUser);
+                    var targetuvm = UserStorage.Get(elem.TargetUser);
                     if (affect != null)
                     {
                         // Add/Remove followings
                         if (elem.Kind == ElementKind.Follow)
-                            affect.RegisterFollowing(UserStorage.Get(elem.TargetUser));
+                            affect.RegisterFollowing(targetuvm);
                         else
                             affect.RemoveFollowing(UserStorage.Get(elem.TargetUser));
                     }
@@ -117,7 +120,10 @@ namespace Inscribe.Communication.MainTimeline.Connection
                         else
                             effect.RemoveFollower(UserStorage.Get(elem.SourceUser));
                     }
-                    // TODO: Notify events
+                    if (elem.Kind == ElementKind.Follow)
+                        EventStorage.OnFollowed(sourceuvm, targetuvm);
+                    else
+                        EventStorage.OnRemoved(sourceuvm, targetuvm);
                     break;
                 case ElementKind.Blocked:
                     if (info == null) break;

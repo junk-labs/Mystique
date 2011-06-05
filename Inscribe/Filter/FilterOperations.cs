@@ -11,7 +11,7 @@ namespace Inscribe.Filter
         /// <summary>
         /// フィルタクラスタにフィルタを結合します。
         /// </summary>
-        public static FilterCluster Join(this FilterCluster cluster, FilterBase filter, bool concatOr = true)
+        public static FilterCluster Join(this FilterCluster cluster, FilterBase filter, bool concatAnd = false)
         {
             var newCluster = new FilterCluster();
 
@@ -20,7 +20,7 @@ namespace Inscribe.Filter
             else
                 newCluster.Filters = new IFilter[] { filter };
 
-            newCluster.ConcatenateOR = concatOr;
+            newCluster.ConcatenateAnd = concatAnd;
 
             return newCluster.Optimize();
         }
@@ -31,7 +31,7 @@ namespace Inscribe.Filter
         public static FilterCluster Concat(this FilterCluster original, params FilterCluster[] append)
         {
             var cluster = new FilterCluster();
-            cluster.ConcatenateOR = true;
+            cluster.ConcatenateAnd = false;
             cluster.Filters = new[] { original }.Concat(append).ToArray();
             return cluster.Optimize();
         }
@@ -42,7 +42,7 @@ namespace Inscribe.Filter
         public static FilterCluster Restrict(this FilterCluster original, params FilterCluster[] append)
         {
             var cluster = new FilterCluster();
-            cluster.ConcatenateOR = false;
+            cluster.ConcatenateAnd = true;
             cluster.Filters = new[] { original }.Concat(append).ToArray();
             return cluster.Optimize();
         }
@@ -52,11 +52,11 @@ namespace Inscribe.Filter
         /// </summary>
         public static FilterCluster Optimize(this FilterCluster cluster)
         {
-            return QueryConverter.Optimize(cluster);
+            return QueryCompiler.Optimize(cluster);
         }
         public static FilterCluster Copy(this FilterCluster cluster)
         {
-            return QueryConverter.ToFilter(cluster.ToQuery());
+            return QueryCompiler.ToFilter(cluster.ToQuery());
         }
 
         public static FilterCluster GetParent(this IFilter filterObject, FilterCluster root)

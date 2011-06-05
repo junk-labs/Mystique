@@ -59,6 +59,5 @@ namespace Dulcet.Twitter.Rest
         {
             return provider.GetStatus("statuses/destroy/{0}.xml", CredentialProvider.RequestMethod.POST, id);
         }
-
     }
 }

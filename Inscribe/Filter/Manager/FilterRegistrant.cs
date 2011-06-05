@@ -22,7 +22,7 @@ namespace Inscribe.Filter.Manager
         /// </summary>
         private static List<Type> filterTypes = new List<Type>();
 
-        private static List<Tuple<Type, string, string>> filterLookup = new List<Tuple<Type, string, string>>();
+        private static List<Tuple<Type, string>> filterLookup = new List<Tuple<Type, string>>();
 
         /// <summary>
         /// 登録されているフィルタ型一覧を取得します。
@@ -38,11 +38,11 @@ namespace Inscribe.Filter.Manager
         /// <param name="ns">名前空間</param>
         /// <param name="cls">クラス名</param>
         /// <returns>名前空間とクラス名が一致する型</returns>
-        public static IEnumerable<Type> GetFilterFromNsAndClass(string ns, string cls)
+        public static IEnumerable<Type> GetFilter(string identifier)
         {
             foreach (var fl in filterLookup)
             {
-                if (fl.Item2 == ns && fl.Item3 == cls)
+                if (fl.Item2 == identifier)
                     yield return fl.Item1;
             }
         }
@@ -76,12 +76,23 @@ namespace Inscribe.Filter.Manager
             }
             if (!filterTypes.Contains(type))
             {
-                var inst = Activator.CreateInstance(type) as FilterBase;
+                FilterBase inst = null;
+                try
+                {
+                    inst = Activator.CreateInstance(type) as FilterBase;
+                }
+                catch (MissingMethodException)
+                {
+                    // Constructor not found?
+                    var ci = type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0];
+                    if (ci != null)
+                        inst = ci.Invoke(new object[0]) as FilterBase;
+                }
                 if (inst == null)
                     throw new ArgumentException("フィルタを作成できません。");
                 System.Diagnostics.Debug.WriteLine("Join:" + type.ToString());
                 filterTypes.Add(type);
-                filterLookup.Add(new Tuple<Type, string, string>(type, inst.Namespace, inst.Class));
+                filterLookup.Add(new Tuple<Type, string>(type, inst.Identifier));
                 return true;
             }
             else

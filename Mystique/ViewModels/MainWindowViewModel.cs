@@ -9,32 +9,25 @@ using Livet.Command;
 using Livet.Messaging;
 using Livet.Messaging.File;
 using Livet.Messaging.Window;
+using Mystique.ViewModels.PartBlocks.NotifyBlock;
 
 namespace Mystique.ViewModels
 {
+    /// <summary>
+    /// メイン ウィンドウ用ViewModel
+    /// </summary>
+    /// <remarks>
+    /// スタティッククラスのイベントリスニングを行いますが、このViewModelのライフサイクルは
+    /// アプリケーションライフサイクルと一致するため、メモリリークの問題を回避できます。
+    /// </remarks>
     public class MainWindowViewModel : ViewModel
     {
-        /*コマンド、プロパティの定義にはそれぞれ 
-         * 
-         *  ldcom   : DelegateCommand(パラメータ無)
-         *  ldcomp  : DelegateCommand(型パラメータ有)
-         *  lprop   : 変更通知プロパティ
-         *  
-         * を使用してください。
-         */
 
-        /*ViewModelからViewを操作したい場合は、
-         * Messengerプロパティからメッセージ(各種InteractionMessage)を発信してください。
-         */
 
-        /*
-         * UIDispatcherを操作する場合は、DispatcherHelperのメソッドを操作してください。
-         * UIDispatcher自体はApp.xaml.csでインスタンスを確保してあります。
-         */
-
-        /*
-         * Modelからの変更通知などの各種イベントをそのままViewModelで購読する事はメモリリークの
-         * 原因となりやすく推奨できません。ViewModelHelperの各静的メソッドの利用を検討してください。
-         */
+        private NotifyBlockViewModel _notifyBlockViewModel = new NotifyBlockViewModel();
+        public NotifyBlockViewModel NotifyBlockViewModel
+        {
+            get { return this._notifyBlockViewModel; }
+        }
     }
 }

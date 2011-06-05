@@ -140,7 +140,13 @@ namespace Inscribe.Common
         public static bool IsPublishedByRetweet(TweetViewModel status)
         {
             if (status == null || !status.IsStatusInfoContains) return false;
-            var ss = status.Status as TwitterStatus;
+            return IsPublishedByRetweet(status.Status);
+        }
+
+        public static bool IsPublishedByRetweet(TwitterStatusBase status)
+        {
+            if (status == null) return false;
+            var ss = status as TwitterStatus;
             return ss != null && ss.RetweetedOriginal != null;
         }
 
@@ -150,6 +156,14 @@ namespace Inscribe.Common
                 return ((TwitterStatus)status.Status).RetweetedOriginal.User;
             else
                 return status.Status.User;
+        }
+
+        public static TwitterUser GetSuggestedUser(TwitterStatusBase status)
+        {
+            if (IsPublishedByRetweet(status))
+                return ((TwitterStatus)status).RetweetedOriginal.User;
+            else
+                return status.User;
         }
     }
 }

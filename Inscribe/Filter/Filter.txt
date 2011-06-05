@@ -1,4 +1,4 @@
 ﻿Filter
 
 ・フィルタ/クエリシステムを管理。
-・Krile Query system v3
+・Krile Query system v4

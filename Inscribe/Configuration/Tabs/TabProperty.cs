@@ -62,7 +62,7 @@ namespace Inscribe.Configuration.Tabs
                 FilterCluster cluster = null;
                 try
                 {
-                    cluster = QueryConverter.ToFilter(s);
+                    cluster = QueryCompiler.ToFilter(s);
                 }
                 catch(Exception e)
                 {

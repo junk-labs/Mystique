@@ -14,6 +14,7 @@ using Inscribe.Common;
 using System.Threading.Tasks;
 using Inscribe.Storage;
 using Livet.Command;
+using Inscribe.Threading;
 
 namespace Inscribe.ViewModels
 {
@@ -531,6 +532,12 @@ namespace Inscribe.ViewModels
         #endregion
 
         #region Color changing
+
+        static TweetViewModel()
+        {
+            taskDispatcher = new StackTaskDispatcher(10);
+            ThreadHelper.Halt += () => taskDispatcher.Dispose();
+        }
 
         private static StackTaskDispatcher taskDispatcher;
 

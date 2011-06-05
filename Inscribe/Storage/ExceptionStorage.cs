@@ -4,12 +4,37 @@ using System.Linq;
 using System.Text;
 using Inscribe.Data;
 using System.Collections.Concurrent;
+using Livet;
+using System.Threading;
 
 namespace Inscribe.Storage
 {
     public static class ExceptionStorage
     {
-        public static event Action OnExceptionsUpdated = () => { };
+
+        #region ExceptionUpdatedイベント
+
+        public static event EventHandler<EventArgs> ExceptionUpdated;
+        private static Notificator<EventArgs> _ExceptionUpdatedEvent;
+        public static Notificator<EventArgs> ExceptionUpdatedEvent
+        {
+            get
+            {
+                if (_ExceptionUpdatedEvent == null) _ExceptionUpdatedEvent = new Notificator<EventArgs>();
+                return _ExceptionUpdatedEvent;
+            }
+            set { _ExceptionUpdatedEvent = value; }
+        }
+
+        private static void OnExceptionUpdated(EventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref ExceptionUpdated, null, null);
+            if (threadSafeHandler != null) threadSafeHandler(null, e);
+            ExceptionUpdatedEvent.Raise(e);
+        }
+
+        #endregion
+      
 
         private static SafeLinkedList<ExceptionDescription> exceptions = new SafeLinkedList<ExceptionDescription>();
 
@@ -21,12 +46,13 @@ namespace Inscribe.Storage
             if (excp == null)
                 throw new ArgumentNullException("excp");
             exceptions.AddLast(new ExceptionDescription(excp, category, message ?? excp.Message, retry));
-            OnExceptionsUpdated();
+            OnExceptionUpdated(EventArgs.Empty);
         }
 
         public static void Remove(ExceptionDescription description)
         {
             exceptions.Remove(description);
+            OnExceptionUpdated(EventArgs.Empty);
         }
 
         public static IEnumerable<ExceptionDescription> Exceptions

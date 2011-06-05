@@ -13,7 +13,7 @@ namespace Inscribe.Configuration.Settings
     {
         public TimelineFilterlingProperty()
         {
-            this.MuteFilterCluster = new FilterCluster() { Negate = true, ConcatenateOR = false };
+            this.MuteFilterCluster = new FilterCluster() { Negate = true, ConcatenateAnd = false };
 
             this.RedStarUsers = new string[0];
             this.BlueStarUsers = new string[0];
@@ -33,7 +33,7 @@ namespace Inscribe.Configuration.Settings
             {
                 try
                 {
-                    this.MuteFilterCluster = QueryConverter.ToFilter(value);
+                    this.MuteFilterCluster = QueryCompiler.ToFilter(value);
                 }
                 catch (Exception e)
                 {

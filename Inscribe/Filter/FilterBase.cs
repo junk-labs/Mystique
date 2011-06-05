@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Inscribe.Filter.QuerySystem;
 using Dulcet.Twitter;
+using Inscribe.Filter.GuiSystem;
 
 namespace Inscribe.Filter
 {
     /// <summary>
     /// フィルタベース
     /// </summary>
-    public abstract class FilterBase : IFilter, QuerySystem.IQueryElement, GuiSystem.IGuiElement
+    public abstract class FilterBase : IFilter, IGuiElement
     {
         /// <summary>
         /// フィルタを適用します。
@@ -42,58 +43,28 @@ namespace Inscribe.Filter
         /// </summary>
         public bool Negate { get; set; }
 
-        public abstract string Namespace { get; }
-
-        public abstract string Class { get; }
-
         /// <summary>
-        /// このフィルタにただ一つ含まれるクエリシステムに対して公開されているメソッドを示します。<para />
-        /// オーバーライドされると、そのフィルタが公開するいくつかのメソッドのうち、現在フィルタが使用しているメソッド名を示します。
+        /// このフィルタを識別する文字列です。
         /// </summary>
-        /// <returns>フィルタメソッド名</returns>
-        public virtual string GetCurrentMethod()
-        {
-            List<string> methCandidate = new List<string>();
-            foreach(var meth in this.GetType().GetMethods())
-            {
-                if (meth.IsSpecialName || !meth.IsPublic || meth.IsAbstract) continue;
-                foreach (var attr in Attribute.GetCustomAttributes(meth, typeof(MethodVisibleAttribute)))
-                {
-                    var openmeth = attr as MethodVisibleAttribute;
-                    if (openmeth != null)
-                    {
-                        methCandidate.Add(meth.Name);
-                        break;
-                    }
-                }
-            }
-            if (methCandidate.Count == 0)
-                throw new InvalidOperationException("型 " + this.GetType().Name + " において、クエリシステムから参照可能なメソッドがありません。");
-            else if (methCandidate.Count > 1)
-                throw new InvalidOperationException("型 " + this.GetType().Name + " において、クエリシステムから参照可能なメソッドが2つ以上あります。GetCurrentMethodをオーバーライドする必要があります。");
-            else
-                return methCandidate[0];
-        }
-
-        public abstract IEnumerable<object> GetArgumentsForQueryify();
+        public abstract string Identifier { get; }
 
         public string ToQuery()
         {
-            var arg = String.Join(", ", from a in GetArgumentsForQueryify() select GetQueryString(a));
-            var meth = Namespace + "." + Class + "." + GetCurrentMethod();
+            var arg = String.Join(", ", from a in this.GetArgumentsForQueryify() select this.GetQueryString(a));
             if (!String.IsNullOrEmpty(arg))
-                meth += "(" + arg + ")";
-            if(Negate)
-                meth = "!" + meth;
-            return meth;
+                return Identifier + (this.Negate ? "!" : "") + ":" + arg;
+            else
+                return Identifier + (this.Negate ? "!" : "");
         }
+
+        public abstract IEnumerable<object> GetArgumentsForQueryify();
 
         private string GetQueryString(object o)
         {
             if (o is string)
             {
                 // escape double quote
-                return "\"" + ((string)o).EscapeForQuery() + "\"";
+                return ((string)o).EscapeForQuery().Quote();
             }
             else if (o is bool)
             {

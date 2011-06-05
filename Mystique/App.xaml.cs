@@ -6,6 +6,9 @@ using System.Linq;
 using System.Windows;
 
 using Livet;
+using Inscribe.Threading;
+using Inscribe.Core;
+using Mystique.Core;
 
 namespace Mystique
 {
@@ -16,8 +19,17 @@ namespace Mystique
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            Application.Current.Exit += new ExitEventHandler(Exitting);
             DispatcherHelper.UIDispatcher = Dispatcher;
+#if RELEASE
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+#endif
+            Initializer.Init();
+        }
+
+        void Exitting(object sender, ExitEventArgs e)
+        {
+            ThreadHelper.HaltThreads();
         }
 
         //集約エラーハンドラ
@@ -25,13 +37,7 @@ namespace Mystique
         {
             //TODO:ロギング処理など
 
-            MessageBox.Show(
-                "不明なエラーが発生しました。アプリケーションを終了します。",
-                "エラー",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
-
-            Environment.Exit(1);
+            // Environment.Exit(1);
         }
     }
 }

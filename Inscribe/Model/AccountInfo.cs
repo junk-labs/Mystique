@@ -7,6 +7,8 @@ using Inscribe.Configuration.Elements;
 using Inscribe.Data;
 using Inscribe.ViewModels;
 using System.Collections.Concurrent;
+using Livet;
+using System.Threading;
 
 namespace Inscribe.Model
 {
@@ -71,7 +73,28 @@ namespace Inscribe.Model
             get { return Storage.UserStorage.Get(this.ScreenName); }
         }
 
-        public event Action<ConnectionState> RestConnectionStateChanged = _ => { };
+        #region RestConnectionStateChangedイベント
+
+        public event EventHandler<EventArgs> RestConnectionStateChanged;
+        private Notificator<EventArgs> _RestConnectionStateChangedEvent;
+        public Notificator<EventArgs> RestConnectionStateChangedEvent
+        {
+            get
+            {
+                if (_RestConnectionStateChangedEvent == null) _RestConnectionStateChangedEvent = new Notificator<EventArgs>();
+                return _RestConnectionStateChangedEvent;
+            }
+            set { _RestConnectionStateChangedEvent = value; }
+        }
+
+        protected void OnRestConnectionStateChanged(EventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref RestConnectionStateChanged, null, null);
+            if (threadSafeHandler != null) threadSafeHandler(this, e);
+            RestConnectionStateChangedEvent.Raise(e);
+        }
+
+        #endregion
 
         private ConnectionState _restConnectionState = ConnectionState.Disconnected;
         public ConnectionState RestConnectionState
@@ -81,11 +104,36 @@ namespace Inscribe.Model
             {
                 if (this._restConnectionState == value) return;
                 this._restConnectionState = value;
-                RestConnectionStateChanged(value);
+                OnRestConnectionStateChanged(EventArgs.Empty);
             }
         }
 
-        public event Action<ConnectionState> UserStreamsConnectionStateChanged = _ => { };
+
+
+        #region UserStreamsConnectionChangedイベント
+
+        public event EventHandler<EventArgs> UserStreamsConnectionChanged;
+        private Notificator<EventArgs> _UserStreamsConnectionChangedEvent;
+        public Notificator<EventArgs> UserStreamsConnectionChangedEvent
+        {
+            get
+            {
+                if (_UserStreamsConnectionChangedEvent == null) _UserStreamsConnectionChangedEvent = new Notificator<EventArgs>();
+                return _UserStreamsConnectionChangedEvent;
+            }
+            set { _UserStreamsConnectionChangedEvent = value; }
+        }
+
+        protected void OnUserStreamsConnectionChanged(EventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref UserStreamsConnectionChanged, null, null);
+            if (threadSafeHandler != null) threadSafeHandler(this, e);
+            UserStreamsConnectionChangedEvent.Raise(e);
+        }
+
+        #endregion
+      
+
         private ConnectionState _userStreamsConnectionState = ConnectionState.Disconnected;
         public ConnectionState UserStreamsConnectionState
         {
@@ -94,7 +142,7 @@ namespace Inscribe.Model
             {
                 if (this._userStreamsConnectionState == value) return;
                 this._userStreamsConnectionState = value;
-                UserStreamsConnectionStateChanged(value);
+                OnUserStreamsConnectionChanged(EventArgs.Empty);
             }
         }
 

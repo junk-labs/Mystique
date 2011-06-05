@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Reflection;
 
 namespace Inscribe.Filter.QuerySystem
 {
-    public static class QueryConverter
+    /// <summary>
+    /// Krile Query Version 4
+    /// </summary>
+    public static class QueryCompiler
     {
         #region Querification
 
@@ -46,6 +48,10 @@ namespace Inscribe.Filter.QuerySystem
                 /// </summary>
                 Comma,
                 /// <summary>
+                /// コロン記号
+                /// </summary>
+                Collon,
+                /// <summary>
                 /// エクスクラメーション マーク
                 /// </summary>
                 Exclamation,
@@ -54,11 +60,11 @@ namespace Inscribe.Filter.QuerySystem
                 /// </summary>
                 Literal,
                 /// <summary>
-                /// &amp;&amp;記号
+                /// &amp;記号
                 /// </summary>
                 ConcatenatorAnd,
                 /// <summary>
-                /// ||記号
+                /// |記号
                 /// </summary>
                 ConcatenatorOr,
                 /// <summary>
@@ -94,14 +100,16 @@ namespace Inscribe.Filter.QuerySystem
             /// </summary>
             public int DebugIndex { get; set; }
 
-            public Token(TokenType type, int debugIndex) : this()
+            public Token(TokenType type, int debugIndex)
+                : this()
             {
                 this.Type = type;
                 this.Value = null;
                 this.DebugIndex = debugIndex;
             }
 
-            public Token(TokenType type, string value, int debugIndex) : this()
+            public Token(TokenType type, string value, int debugIndex)
+                : this()
             {
                 this.Type = type;
                 this.Value = value;
@@ -117,9 +125,9 @@ namespace Inscribe.Filter.QuerySystem
                     case TokenType.CloseBracket:
                         return ") [閉じ括弧]";
                     case TokenType.ConcatenatorAnd:
-                        return "&& [AND結合子]";
+                        return "& [AND結合子]";
                     case TokenType.ConcatenatorOr:
-                        return "|| [OR結合子]";
+                        return "| [OR結合子]";
                     case TokenType.Literal:
                         return "リテラル (" + (Value == null ? "[null]" : Value) + ")";
                     case TokenType.Period:
@@ -147,24 +155,19 @@ namespace Inscribe.Filter.QuerySystem
                 switch (query[strptr])
                 {
                     case '&':
-                        // CONCATENATE &&
-                        if (CheckIsNotNext(query, strptr, '&'))
-                            throw new ArgumentException("AND結合演算子は&&です。(" + strptr.ToString() + ")");
                         yield return new Token(Token.TokenType.ConcatenatorAnd, strptr);
-                        strptr++;
                         break;
                     case '|':
-                        // CONCATENATE ||
-                        if (CheckIsNotNext(query, strptr, '|'))
-                            throw new ArgumentException("OR結合演算子は||です。(" + strptr.ToString() + ")");
                         yield return new Token(Token.TokenType.ConcatenatorOr, strptr);
-                        strptr++;
                         break;
                     case '.':
                         yield return new Token(Token.TokenType.Period, strptr);
                         break;
                     case ',':
                         yield return new Token(Token.TokenType.Comma, strptr);
+                        break;
+                    case ':':
+                        yield return new Token(Token.TokenType.Collon, strptr);
                         break;
                     case '!':
                         yield return new Token(Token.TokenType.Exclamation, strptr);
@@ -187,7 +190,7 @@ namespace Inscribe.Filter.QuerySystem
                     default:
                         int begin = strptr;
                         // 何らかのトークンに出会うまで空回し
-                        var tokens = "&|.()\" \t\r\n";
+                        var tokens = "&|.,:!()\" \t\r\n";
                         do
                         {
                             if (tokens.Contains(query[strptr]))
@@ -212,7 +215,7 @@ namespace Inscribe.Filter.QuerySystem
         /// </summary>
         private static bool CheckIsNotNext(string q, int i, char n)
         {
-            if(i + 1 >= q.Length ||q[i] != n)
+            if (i + 1 >= q.Length || q[i] != n)
                 return true;
             else
                 return false;
@@ -246,7 +249,7 @@ namespace Inscribe.Filter.QuerySystem
             /// <returns></returns>
             public Token Get()
             {
-                //System.Diagnostics.Debug.WriteLine("read:" + tokenQueueList[queueCursor]);
+                System.Diagnostics.Debug.WriteLine("read:" + tokenQueueList[queueCursor]);
                 return tokenQueueList[queueCursor++];
             }
 
@@ -305,10 +308,10 @@ namespace Inscribe.Filter.QuerySystem
         static SyntaxTuple MakeTuples(IEnumerable<Token> tokens)
         {
             var reader = new TokenReader(tokens);
-            KQRootTuple roots = null;
+            RootTuple roots = null;
             try
             {
-                roots = MakeKQRoot(ref reader);
+                roots = MakeRoot(ref reader);
             }
             catch (ArgumentException e)
             {
@@ -337,11 +340,13 @@ namespace Inscribe.Filter.QuerySystem
         private static Token AssertNext(ref TokenReader reader, Token.TokenType type)
         {
             if (!reader.IsRemainToken)
-                throw new ArgumentException("クエリ トークン種別 " + type.ToString() + " を読もうとしましたが、ぶった切れています。");
+                reader.PushError("クエリが解析の途中で終了しました。" +
+                    "ここには " + type.ToString() + " が存在しなければなりません。");
             var ntoken = reader.Get();
             if (ntoken.Type != type)
             {
-                reader.PushError("クエリ トークン " + type.ToString() + " が必要です。または、トークンの種類が違います。(読み込まれたトークン: " + ntoken + ") (@" + ntoken.DebugIndex + ")");
+                reader.PushError("不明な文字です: " + reader.LookAhead() + " (インデックス:" + reader.LookAhead().DebugIndex + ")" +
+                    "ここには " + type.ToString() + " が存在しなければなりません。");
                 return new Token() { Type = type, Value = null, DebugIndex = -1 };
             }
             return ntoken;
@@ -370,27 +375,63 @@ namespace Inscribe.Filter.QuerySystem
             }
         }
 
+        /// <summary>
+        /// 次の一つのトークンがどれかに合致するか確認します。
+        /// </summary>
+        /// <param name="reader">リーダートークン</param>
+        /// <param name="isEnd">文末を受け入れるか</param>
+        /// <param name="tokens">可能なトークン集合</param>
+        private static void AssertNextAny(ref TokenReader reader, bool isEnd, params Token.TokenType[] tokens)
+        {
+            var descstr = "";
+            if (tokens.Count() == 1)
+            {
+                descstr = "ここには " + tokens.First().ToString() + " が存在しなければなりません。";
+            }
+            else
+            {
+                descstr = "ここには " + String.Join(", ", tokens.Select(s => s.ToString())) + " のうちいずれかが存在しなければなりません。";
+            }
+            if (!reader.IsRemainToken)
+            {
+                if (isEnd) return;
+                reader.PushError("クエリが解析の途中で終了しました。" + descstr);
+            }
+            if (tokens == null) return;
+            var lat = reader.LookAhead().Type;
+            if (!tokens.Any(f => f == lat))
+            {
+                reader.PushError("不明な文字です: " + reader.LookAhead() +
+                    " (インデックス:" + reader.LookAhead().DebugIndex + ")" + descstr);
+            }
+        }
+
         #endregion
 
-        class KQRootTuple : SyntaxTuple
+
+        class RootTuple : SyntaxTuple
         {
             public ClusterTuple Cluster { get; set; }
         }
 
-        private static KQRootTuple MakeKQRoot(ref TokenReader reader)
+        private static RootTuple MakeRoot(ref TokenReader reader)
         {
-            if (!reader.IsRemainToken)
-                return new KQRootTuple() { Cluster = null };
-            else
-                return new KQRootTuple() { Cluster = MakeCluster(ref reader) };
-
+            var ret = new RootTuple();
+            if (reader.IsRemainToken)
+            {
+                ret.Cluster = MakeCluster(ref reader);
+            }
+            if (reader.IsRemainToken)
+                throw new ArgumentException("クエリが途中で終了しています。閉じ括弧が多すぎる可能性があります。(次のクエリ:" + reader.LookAhead().ToString() +
+                    ", インデックス:" + reader.LookAhead().DebugIndex.ToString());
+            return ret;
         }
 
         class ClusterTuple : SyntaxTuple
         {
             public bool Negate { get; set; }
 
-            public ExpressionTuple Expression { get; set; }
+            public InnerClusterTuple InnerCluster { get; set; }
         }
 
         private static ClusterTuple MakeCluster(ref TokenReader reader)
@@ -400,148 +441,192 @@ namespace Inscribe.Filter.QuerySystem
             AssertNext(ref reader, Token.TokenType.OpenBracket);
             if (!TryLookAhead(ref reader, Token.TokenType.CloseBracket, true))
             {
-                ctuple.Expression = MakeExpression(ref reader);
-                AssertNext(ref reader, Token.TokenType.CloseBracket);
+                ctuple.InnerCluster = MakeInnerCluster(ref reader);
             }
+            AssertNext(ref reader, Token.TokenType.CloseBracket);
+            AssertNextAny(ref reader, true, Token.TokenType.CloseBracket, 
+                Token.TokenType.ConcatenatorAnd, Token.TokenType.ConcatenatorOr);
             return ctuple;
+        }
+
+        class InnerClusterTuple : SyntaxTuple
+        {
+            public ExpressionTuple Expression { get; set; }
+
+            public ConcatenatorTuple Concatenator { get; set; }
+        }
+
+        private static InnerClusterTuple MakeInnerCluster(ref TokenReader reader)
+        {
+            // Follow -> )
+            if (TryLookAhead(ref reader, Token.TokenType.CloseBracket, false))
+                return new InnerClusterTuple();
+            else
+            {
+                var rct =  new InnerClusterTuple()
+                {
+                    Expression = MakeExpression(ref reader),
+                    Concatenator = MakeConcatenator(ref reader)
+                };
+                AssertNextAny(ref reader, false, Token.TokenType.CloseBracket);
+                return rct;
+            }
+        }
+
+        class ConcatenatorTuple : SyntaxTuple
+        {
+            public ExpressionTuple Expression { get; set; }
+            public bool IsConcatenateAnd { get; set; }
+            public ConcatenatorTuple Concatenator { get; set; }
+        }
+
+        private static ConcatenatorTuple MakeConcatenator(ref TokenReader reader)
+        {
+            ConcatenatorTuple ret = new ConcatenatorTuple();
+            if (TryLookAhead(ref reader, Token.TokenType.ConcatenatorAnd))
+            {
+                ret.IsConcatenateAnd = true;
+                ret.Expression = MakeExpression(ref reader);
+                ret.Concatenator = MakeConcatenator(ref reader);
+            }
+            else if (TryLookAhead(ref reader, Token.TokenType.ConcatenatorOr))
+            {
+                ret.IsConcatenateAnd = false;
+                ret.Expression = MakeExpression(ref reader);
+                ret.Concatenator = MakeConcatenator(ref reader);
+            }
+            else
+            {
+                ret = new ConcatenatorTuple();
+            }
+            AssertNextAny(ref reader, false, Token.TokenType.CloseBracket);
+            return ret;
         }
 
         class ExpressionTuple : SyntaxTuple
         {
-            public ExpressionBodyTuple ExpressionBody { get; set; }
-
-            public bool? ConcatOr { get; set; }
-
-            public ExpressionTuple Expression { get; set; }
+            public ClusterTuple Cluster { get; set; }
+            public FilterTuple Filter { get; set; }
         }
 
         private static ExpressionTuple MakeExpression(ref TokenReader reader)
         {
-            var extuple = new ExpressionTuple()
+            ExpressionTuple ret = new ExpressionTuple();
+            if (TryLookAhead(ref reader, Token.TokenType.Exclamation, false) ||
+                TryLookAhead(ref reader, Token.TokenType.OpenBracket, false))
             {
-                ExpressionBody = MakeExpressionBody(ref reader)
-            };
-            if (reader.IsRemainToken)
-            {
-                var ntoken = reader.LookAhead();
-                switch (ntoken.Type)
-                {
-                    case Token.TokenType.ConcatenatorAnd:
-                        reader.Get();
-                        extuple.ConcatOr = false;
-                        extuple.Expression = MakeExpression(ref reader);
-                        break;
-                    case Token.TokenType.ConcatenatorOr:
-                        reader.Get();
-                        extuple.ConcatOr = true;
-                        extuple.Expression = MakeExpression(ref reader);
-                        break;
-                    case Token.TokenType.CloseBracket:
-                        break;
-                    default:
-                        throw new ArgumentException("トークン " + ntoken.ToString() + " はここに置くことはできません。(@" + ntoken.DebugIndex + ")");
-                }
-            }
-            return extuple;
-        }
-
-        class ExpressionBodyTuple : SyntaxTuple
-        {
-            public ClusterTuple Cluster { get; set; }
-
-            public MethodDeclarationTuple MethodDeclaration { get; set; }
-        }
-
-        private static ExpressionBodyTuple MakeExpressionBody(ref TokenReader reader)
-        {
-            bool rewind = TryLookAhead(ref reader, Token.TokenType.Exclamation);
-            if (TryLookAhead(ref reader, Token.TokenType.OpenBracket, false))
-            {
-                // 開き括弧/!マーク -> クラスタ
-                if (rewind)
-                    reader.RewindOne();
-                return new ExpressionBodyTuple() { Cluster = MakeCluster(ref reader) };
+                // 新クラスタの開始
+                ret.Cluster = MakeCluster(ref reader);
             }
             else
             {
-                if (rewind)
-                    reader.RewindOne();
-                return new ExpressionBodyTuple() { MethodDeclaration = MakeMethodDeclaration(ref reader) };
+                // フィルタの開始
+                ret.Filter = MakeFilter(ref reader);
             }
+            AssertNextAny(ref reader, false, Token.TokenType.CloseBracket,
+                Token.TokenType.ConcatenatorAnd, Token.TokenType.ConcatenatorOr);
+            return ret;
         }
 
-        class MethodDeclarationTuple : SyntaxTuple
+        class FilterTuple : SyntaxTuple
         {
-            public Token Namespace { get; set; }
+            public Token Name { get; set; }
 
-            public Token Class { get; set; }
-
-            public MethodAndArgsTuple MethodAndArgs { get; set; }
-
-            public bool Negate { get; set; }
+            public FilterAttrTuple FilterAttr { get; set; }
         }
 
-        private static MethodDeclarationTuple MakeMethodDeclaration(ref TokenReader reader)
+        private static FilterTuple MakeFilter(ref TokenReader reader)
         {
-            bool negate = TryLookAhead(ref reader, Token.TokenType.Exclamation);
-            var ns = AssertNext(ref reader, Token.TokenType.Literal);
-            AssertNext(ref reader, Token.TokenType.Period);
-            var cls = AssertNext(ref reader, Token.TokenType.Literal);
-            AssertNext(ref reader, Token.TokenType.Period);
-            return new MethodDeclarationTuple()
+            var ret = new FilterTuple()
             {
-                Namespace = ns,
-                Class = cls,
-                MethodAndArgs = MakeMethodAndArgs(ref reader),
-                Negate = negate
+                Name = AssertNext(ref reader, Token.TokenType.Literal),
+                FilterAttr = MakeFilterAttr(ref reader)
             };
+            AssertNextAny(ref reader, false, Token.TokenType.CloseBracket,
+                Token.TokenType.ConcatenatorAnd, Token.TokenType.ConcatenatorOr);
+            return ret;
         }
 
-        class MethodAndArgsTuple : SyntaxTuple
+        class FilterAttrTuple : SyntaxTuple
         {
-            public Token MethodName { get; set; }
-
-            public ArgumentsTuple Arguments { get; set; }
+            public bool IsNegate { get; set; }
+            public ArgDescriptTuple ArgDescript { get; set; }
         }
 
-        private static MethodAndArgsTuple MakeMethodAndArgs(ref TokenReader reader)
+        private static FilterAttrTuple MakeFilterAttr(ref TokenReader reader)
         {
-            var mname = AssertNext(ref reader, Token.TokenType.Literal);
-            if (TryLookAhead(ref reader, Token.TokenType.OpenBracket))
+            var ret = new FilterAttrTuple();
+            if(TryLookAhead(ref reader, Token.TokenType.Exclamation))
             {
-                // 引数付きメソッド呼び出し
-                var ret = new MethodAndArgsTuple()
-                {
-                    MethodName = mname,
-                    Arguments = MakeArguments(ref reader)
-                };
-                AssertNext(ref reader, Token.TokenType.CloseBracket);
-                return ret;
+                // Negate
+                ret.IsNegate = true;
             }
-            else
-            {
-                // 引数を省略したメソッド呼び出し
-                return new MethodAndArgsTuple() { MethodName = mname };
-            }
+            // 引数を読む
+            ret.ArgDescript = MakeArgDescript(ref reader);
+            // 終わり
+            AssertNextAny(ref reader, false,  Token.TokenType.CloseBracket,
+                Token.TokenType.ConcatenatorAnd, Token.TokenType.ConcatenatorOr);
+            return ret;
         }
 
-        class ArgumentsTuple : SyntaxTuple
+        class ArgDescriptTuple : SyntaxTuple
+        {
+            public ArgsTuple Args { get; set; }
+        }
+
+        private static ArgDescriptTuple MakeArgDescript(ref TokenReader reader)
+        {
+            ArgDescriptTuple ret = new ArgDescriptTuple();
+            if (TryLookAhead(ref reader, Token.TokenType.Collon))
+            {
+                // NOT EPSILON
+                ret.Args = MakeArgs(ref reader);
+            }
+            AssertNextAny(ref reader, false,  Token.TokenType.CloseBracket,
+                Token.TokenType.ConcatenatorAnd, Token.TokenType.ConcatenatorOr);
+            return ret;
+        }
+
+        class ArgsTuple : SyntaxTuple
         {
             public ArgBodyTuple ArgBody { get; set; }
+            public ArgConcatrTuple ArgConcatr { get; set; }
         }
 
-        private static ArgumentsTuple MakeArguments(ref TokenReader reader)
+        private static ArgsTuple MakeArgs(ref TokenReader reader)
         {
-            if (TryLookAhead(ref reader, Token.TokenType.CloseBracket, false)) // 引数なし
-                return null;
-            else
-                return new ArgumentsTuple() { ArgBody = MakeArgBody(ref reader) };
+            var ret = new ArgsTuple()
+            {
+                ArgBody = MakeArgBody(ref reader),
+                ArgConcatr = MakeArgConcatr(ref reader)
+            };
+            AssertNextAny(ref reader, false, Token.TokenType.CloseBracket,
+                Token.TokenType.ConcatenatorAnd, Token.TokenType.ConcatenatorOr);
+            return ret;
+        }
+
+        class ArgConcatrTuple : SyntaxTuple
+        {
+            public ArgBodyTuple ArgBody { get; set; }
+            public ArgConcatrTuple ArgConcatr{get;set;}
+        }
+
+        private static ArgConcatrTuple MakeArgConcatr(ref TokenReader reader)
+        {
+            ArgConcatrTuple ret = new ArgConcatrTuple();
+            if (TryLookAhead(ref reader, Token.TokenType.Comma))
+            {
+                ret.ArgBody = MakeArgBody(ref reader);
+                ret.ArgConcatr = MakeArgConcatr(ref reader);
+            }
+            AssertNextAny(ref reader, false, Token.TokenType.CloseBracket,
+                Token.TokenType.ConcatenatorAnd, Token.TokenType.ConcatenatorOr);
+            return ret;
         }
 
         class ArgBodyTuple : SyntaxTuple
         {
-            public Token Argument { get; set; }
-            public ArgBodyTuple ArgBody { get; set; }
+            public Token Arg { get; set; }
         }
 
         private static ArgBodyTuple MakeArgBody(ref TokenReader reader)
@@ -549,14 +634,13 @@ namespace Inscribe.Filter.QuerySystem
             var token = reader.Get();
             if (token.Type != Token.TokenType.String && token.Type != Token.TokenType.Literal)
             {
-                throw new ArgumentException("引数が不正です。(@" + token.DebugIndex + ") " + token.ToString());
+                reader.PushError("不明な文字です: " + reader.LookAhead() + " (インデックス:" + reader.LookAhead().DebugIndex + ")" +
+                "フィルタ引数は、単純な文字列かダブルクオートで括られた文字列のみが指定できます。");
             }
-            var abt = new ArgBodyTuple() { Argument = token };
-            if (TryLookAhead(ref reader, Token.TokenType.Comma))
-            {
-                abt.ArgBody = MakeArgBody(ref reader);
-            }
-            return abt;
+            var ret = new ArgBodyTuple() { Arg = token };
+            AssertNextAny(ref reader, false, Token.TokenType.Comma, Token.TokenType.CloseBracket,
+                Token.TokenType.ConcatenatorAnd, Token.TokenType.ConcatenatorOr);
+            return ret;
         }
 
         #endregion
@@ -570,7 +654,7 @@ namespace Inscribe.Filter.QuerySystem
         /// <returns>フィルタ</returns>
         private static FilterCluster GenerateFilter(SyntaxTuple tuple)
         {
-            var root = tuple as KQRootTuple;
+            var root = tuple as RootTuple;
             if (root == null)
             {
                 throw new InvalidOperationException("内部エラー: ルートタプル種別が一致しません。(渡された型: " + tuple.GetType().ToString() + " / " + tuple.ToString() + ")");
@@ -578,173 +662,97 @@ namespace Inscribe.Filter.QuerySystem
             return AnalysisCluster(root.Cluster);
         }
 
-        private static FilterCluster AnalysisCluster(ClusterTuple tuple)
+        private static FilterCluster AnalysisCluster(ClusterTuple cTuple)
         {
-            if (tuple == null)
+            if (cTuple.InnerCluster != null)
             {
-                return new FilterCluster();
+                var ic = AnalysisInnerCluster(cTuple.InnerCluster);
+                ic.Negate = cTuple.Negate;
+                return ic;
             }
             else
             {
-                if (tuple.Expression == null)
-                {
-                    return new FilterCluster() { Negate = tuple.Negate };
-                }
-                else
-                {
-                    var clstr = AnalysisExpression(tuple.Expression);
-                    clstr.Negate = tuple.Negate;
-                    return clstr;
-                }
+                return new FilterCluster() { Negate = cTuple.Negate };
             }
         }
 
-        private static FilterCluster AnalysisExpression(ExpressionTuple expressionTuple)
+        private static FilterCluster AnalysisInnerCluster(InnerClusterTuple icTuple)
         {
-            var retcluster = new FilterCluster()
+            return AnalysisConcatenator(
+                AnalysisExpression(icTuple.Expression),
+                icTuple.Concatenator);
+        }
+
+        private static FilterCluster AnalysisConcatenator(IFilter leftExpr, ConcatenatorTuple coTuple)
+        {
+            if (coTuple.Expression == null)
             {
-                ConcatenateOR = expressionTuple.ConcatOr.GetValueOrDefault(false)
-            };
-            if (expressionTuple.Expression == null)
-            {
-                retcluster.Filters = new[] { AnalysisExpressionBody(expressionTuple.ExpressionBody) };
+                return new FilterCluster() { Filters = new[] { leftExpr } };
             }
             else
             {
-                if (!expressionTuple.ConcatOr.HasValue)
-                    throw new InvalidOperationException("内部エラー: ExpressionTupleはチェーンを構成しますが、接続情報がありません。");
-                retcluster.Filters = new[] { AnalysisExpressionBody(expressionTuple.ExpressionBody), AnalysisExpression(expressionTuple.Expression) };
+                return new FilterCluster()
+                {
+                    ConcatenateAnd = coTuple.IsConcatenateAnd,
+                    Filters = new[]{
+                        leftExpr,
+                        AnalysisConcatenator(AnalysisExpression(coTuple.Expression), coTuple.Concatenator)}
+                };
             }
-            return retcluster;
         }
 
-        private static IFilter AnalysisExpressionBody(ExpressionBodyTuple expressionBodyTuple)
+        private static IFilter AnalysisExpression(ExpressionTuple exprTuple)
         {
-            if (expressionBodyTuple.Cluster != null)
-                return AnalysisCluster(expressionBodyTuple.Cluster);
-            else
-                return AnalysisMethodDeclaration(expressionBodyTuple.MethodDeclaration);
-        }
-
-        private static IFilter AnalysisMethodDeclaration(MethodDeclarationTuple methodDeclarationTuple)
-        {
-            if (methodDeclarationTuple.Namespace.Type != Token.TokenType.Literal)
-                throw new InvalidOperationException("内部エラー: 型が一致しません(名前空間)");
-            if (methodDeclarationTuple.Class.Type != Token.TokenType.Literal)
-                throw new InvalidOperationException("内部エラー: 型が一致しません(クラス)");
-            var ns = methodDeclarationTuple.Namespace.Value;
-            var cls = methodDeclarationTuple.Class.Value;
-            var fil = Manager.FilterRegistrant.GetFilterFromNsAndClass(ns, cls).ToArray();
-            IFilter composed = null;
-            if (fil.Length == 0)
+            if (exprTuple.Cluster != null)
             {
-                throw new ArgumentException("フィルタが存在しません: " + ns + "." + cls);
-            }
-            else if (fil.Length == 1)
-            {
-                composed = AnalysisMethodAndArgs(methodDeclarationTuple.MethodAndArgs, fil[0], ns + "." + cls, true);
+                // Cluster Tuple
+                if (exprTuple.Filter != null)
+                    throw new InvalidOperationException("[内部エラー]AVAILABLE EXPRESSION.CLUSTER AND EXPRESSION.FILTER.");
+                return AnalysisCluster(exprTuple.Cluster);
             }
             else
             {
-                foreach (var f in fil)
-                {
-                    composed = AnalysisMethodAndArgs(methodDeclarationTuple.MethodAndArgs, f, ns + "." + cls, false);
-                    if (composed != null) break;
-                }
-                if (composed == null)
-                {
-                    throw new ArgumentException("すべてのオーバーロードがマッチしませんでした: " + ns + "." + cls + "." + methodDeclarationTuple.MethodAndArgs.MethodName.Value);
-                }
+                // Filter Tuple
+                if (exprTuple.Filter == null)
+                    throw new InvalidOperationException("[内部エラー]UNAVAILABLE EXPRESSION.CLUSTER NOR EXPRESSION.FILTER.");
+                return AnalysisFilterAndAttr(exprTuple.Filter);
             }
-            composed.Negate = methodDeclarationTuple.Negate;
-            return composed;
         }
 
-        private static IFilter AnalysisMethodAndArgs(MethodAndArgsTuple methodAndArgsTuple, Type filter, string filterInfo, bool terminal)
+        private static FilterBase AnalysisFilterAndAttr(FilterTuple filterTuple)
         {
-            if (methodAndArgsTuple.MethodName.Type != Token.TokenType.Literal)
-                throw new InvalidOperationException("内部エラー: 型が一致しません(メソッド");
-            var methods = QueryCandidateMethods(filter);
-            var arguments = GetCTSTypedArguments(methodAndArgsTuple.Arguments).ToArray();
-            List<MethodInfo> foundMethods = new List<MethodInfo>();
-            foreach (var m in methods)
+            var negate = filterTuple.FilterAttr.IsNegate;
+            var argument = AnalysisArgDescript(filterTuple.FilterAttr.ArgDescript).ToArray();
+            if(filterTuple.Name.Type != Token.TokenType.Literal)
+                throw new InvalidOperationException("[内部エラー]MISMATCHED TYPE: FILTER TYPE REQUIRED Literal, BUT " + filterTuple.Name.Type.ToString() + ".");
+            var filters = Manager.FilterRegistrant.GetFilter(filterTuple.Name.Value);
+            if(filters == null)
+                throw new InvalidOperationException("ID \"" + filterTuple.Name.Value + "\" のフィルタは見つかりませんでした。");
+            foreach(var f in filters)
             {
-                if (m.Name == methodAndArgsTuple.MethodName.Value)
+                var wellformed = (from c in f.GetConstructors()
+                                  let cp = c.GetParameters()
+                                  where cp.Count() == argument.Count()
+                                  select cp)
+                                  .Any(pia => pia.Zip(argument, (pi, o) => new { pi, o })
+                                     .All(a => a.pi.ParameterType.Equals(a.o.GetType())));
+                if (wellformed)
                 {
-                    var param = m.GetParameters();
-                    if(param.Length == arguments.Length)
-                    {
-                        bool succ = true;
-                        for(int i = 0; i < param.Length; i++)
-                        {
-                            if(!param[i].ParameterType.Equals(arguments[i].GetType()))
-                            {
-                                succ = false;
-                                break;
-                            }
-                        }
-                        if(succ)
-                        {
-                            // 見つかりました
-                            return CreateFilterInstance(filter, m, arguments);
-                        }
-                    }
-                    foundMethods.Add(m);
+                    var instance = CreateFilterInstance(f, argument);
+                    instance.Negate = negate;
+                    return instance;
                 }
             }
-            if (terminal)
-            {
-                if (foundMethods.Count > 0)
-                {
-                    throw new ArgumentException(
-                        "指定のオーバーロードを持つメソッド " + methodAndArgsTuple.MethodName.Value + " は、フィルタ " + filterInfo + " には見つかりませんでした。" + Environment.NewLine +
-                        "フィルタ " + filterInfo + " が実装するメソッド:" + Environment.NewLine +
-                        " - " + String.Join(Environment.NewLine + " - ", from m in methods
-                                                                         select m.Name + "(" +
-                                                                             String.Join(", ", (from p in m.GetParameters()
-                                                                                               select p.ParameterType.ToString())) + ")"));
-                }
-                else
-                {
-                    throw new ArgumentException(
-                        "メソッド \"" + methodAndArgsTuple.MethodName.Value + "\"は、フィルタ " + filterInfo + " には見つかりませんでした。" + Environment.NewLine +
-                        "フィルタ " + filterInfo + " が実装するメソッド:" + Environment.NewLine +
-                        " - " + String.Join(Environment.NewLine + " - ", methods.Select(m => m.Name).Distinct()));
-                }
-            }
-            else
-            {
-                return null;
-            }
+            // オーバーロードが何も一致しない
+            throw new ArgumentException("ID \"" + filterTuple.Name.Value + "\" のフィルタは存在しますが、引数が一致しません。(引数:" + String.Join(", ", argument.Select(a => a.ToString())) + ")");
         }
 
-        private static IFilter CreateFilterInstance(Type filterType, MethodInfo method, object[] parameter)
+        private static IEnumerable<object> AnalysisArgDescript(ArgDescriptTuple adTuple)
         {
-            IFilter instance = null;
-            try
-            {
-                instance = (IFilter)Activator.CreateInstance(filterType);
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException("内部エラー: フィルタのインスタンスを作成できません(" + filterType.ToString() + ")", e);
-            }
-            try
-            {
-                method.Invoke(instance, parameter);
-            }
-            catch (ArgumentException ae)
-            {
-                throw new ArgumentException("フィルタの生成時にエラーが発生しました。", ae);
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException("内部エラー: フィルタの生成時にエラーが発生しました。", e);
-            }
-            return instance;
+            return GetCTSTypedArguments(adTuple.Args);
         }
 
-        private static IEnumerable<object> GetCTSTypedArguments(ArgumentsTuple argTuple)
+        private static IEnumerable<object> GetCTSTypedArguments(ArgsTuple argTuple)
         {
             foreach (var tok in GetArguments(argTuple))
             {
@@ -752,15 +760,34 @@ namespace Inscribe.Filter.QuerySystem
             }
         }
 
-        private static IEnumerable<Token> GetArguments(ArgumentsTuple argTuple)
+        private static IEnumerable<Token> GetArguments(ArgsTuple argTuple)
         {
             if (argTuple == null || argTuple.ArgBody == null) yield break;
-            var body = argTuple.ArgBody;
-            while (body != null)
+            yield return argTuple.ArgBody.Arg;
+            var conc = argTuple.ArgConcatr;
+            while (conc.ArgBody != null)
             {
-                yield return body.Argument;
-                body = body.ArgBody;
+                yield return conc.ArgBody.Arg;
+                conc = conc.ArgConcatr;
             }
+        }
+
+        private static FilterBase CreateFilterInstance(Type filterType, object[] parameter)
+        {
+            FilterBase instance = null;
+            try
+            {
+                instance = (FilterBase)Activator.CreateInstance(filterType, parameter);
+            }
+            catch (ArgumentException e)
+            {
+                throw new InvalidOperationException("内部エラー: フィルタの作成時にエラーが発生しました(" + filterType.ToString() + "):" + e.Message, e);
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("内部エラー: フィルタインスタンスを作成できません(" + filterType.ToString() + "):" + e.Message, e);
+            }
+            return instance;
         }
 
         #region Reflection
@@ -775,7 +802,7 @@ namespace Inscribe.Filter.QuerySystem
                 case Token.TokenType.Literal:
                     // string or integer or boolean
                     bool bv;
-                    if(bool.TryParse(tok.Value, out bv))
+                    if (bool.TryParse(tok.Value, out bv))
                     {
                         // boolean
                         return bv;
@@ -790,23 +817,6 @@ namespace Inscribe.Filter.QuerySystem
                     break;
             }
             throw new ArgumentException("不明な型の引数です:" + tok.ToString());
-        }
-
-        private static IEnumerable<MethodInfo> QueryCandidateMethods(Type type)
-        {
-            foreach (var meth in type.GetMethods())
-            {
-                if (meth.IsSpecialName || !meth.IsPublic || meth.IsAbstract) continue;
-                foreach (var attr in Attribute.GetCustomAttributes(meth, typeof(MethodVisibleAttribute)))
-                {
-                    var openmeth = attr as MethodVisibleAttribute;
-                    if (openmeth != null)
-                    {
-                        yield return meth;
-                        break;
-                    }
-                }
-            }
         }
 
         #endregion
@@ -835,7 +845,7 @@ namespace Inscribe.Filter.QuerySystem
                     {
                         throw new ArgumentException("バックスラッシュでクエリが終了しています。");
                     }
-                    else if(query[cursor + 1] == '"' || query[cursor + 1] == '\\')
+                    else if (query[cursor + 1] == '"' || query[cursor + 1] == '\\')
                     {
                         cursor++;
                     }
@@ -853,108 +863,6 @@ namespace Inscribe.Filter.QuerySystem
         #endregion
 
         #endregion
-
-        /*
-
-        #region Simplification
-
-        /// <summary>
-        /// フィルタの無駄な括弧を外し、簡単にします。
-        /// </summary>
-        /// <param name="cluster">簡単化するフィルタクラスタ</param>
-        /// <returns>簡単化済みのフィルタクラスタ</returns>
-        public static FilterCluster Simplify(FilterCluster cluster)
-        {
-            var nc = new FilterCluster()
-            {
-                ConcatenateOR = cluster.ConcatenateOR,
-                Negate = false
-            };
-            nc.Filters = SimplifyCo(cluster, cluster.ConcatenateOR).ToArray();
-            return nc;
-        }
-
-        /// <summary>
-        /// フィルタの要素を処理します。
-        /// </summary>
-        /// <param name="filter">フィルタ要素</param>
-        /// <param name="inConcatOr">この要素が含まれるフィルタがOR結合であるか</param>
-        /// <returns>フィルタ要素か、クラスタ</returns>
-        private static IEnumerable<IFilter> ExplodeItem(IFilter filter, bool inConcatOr)
-        {
-            var cluster = filter as FilterCluster;
-            if (cluster == null)
-            {
-                // フィルタ
-                return new[] { filter };
-            }
-            else
-            {
-                return SimplifyCo(cluster, inConcatOr);
-            }
-        }
-
-        /// <summary>
-        /// フィルタの簡単化を実行します
-        /// </summary>
-        /// <param name="cluster">処理対象クラスタ</param>
-        /// <param name="inConcatOr">上層クラスタの合成手段</param>
-        /// <returns></returns>
-        private static IEnumerable<IFilter> SimplifyCo(FilterCluster cluster, bool inConcatOr)
-        {
-            if (cluster == null || cluster.Filters == null)
-            {
-                // ＼スカ／
-                yield break;
-            }
-            else if (cluster.Filters.Count() == 1)
-            {
-                // 要素が1つなら要素だけ返してしまえホトトギス
-                yield return cluster.Filters.ElementAt(0);
-            }
-            else
-            {
-                if (cluster.ConcatenateOR == inConcatOr && !cluster.Negate)
-                {
-                    // 直上のクラスタと同じ連結を用いている
-                    // rankを落とす
-                    foreach (var i in cluster.Filters)
-                    {
-                        foreach (var f in ExplodeItem(i, inConcatOr))
-                        {
-                            yield return f;
-                        }
-                    }
-                }
-                else
-                {
-                    // 同じ連結ではない
-
-                    // 新しいフィルタクラスタを作る
-                    var nc = new FilterCluster()
-                    {
-                        ConcatenateOR = cluster.ConcatenateOR,
-                        Negate = cluster.Negate
-                    };
-
-                    // 新しいフィルタクラスタにセットするフィルタ
-                    List<IFilter> nfs = new List<IFilter>();
-                    foreach (var c in cluster.Filters)
-                    {
-                        foreach (var i in ExplodeItem(c, cluster.ConcatenateOR))
-                        {
-                            nfs.Add(i);
-                        }
-                    }
-                    nc.Filters = nfs.ToArray();
-                    yield return nc;
-                }
-            }
-        }
-
-        #endregion
-
-        */
 
         #region Optimization
 
@@ -996,8 +904,8 @@ namespace Inscribe.Filter.QuerySystem
             {
                 // 要素無しのフィルタ
                 return new[]{new FilterCluster(){
-                    ConcatenateOR = false, // 常に AND 結合
-                    Negate = cluster.ConcatenateOR != cluster.Negate}
+                    ConcatenateAnd = false, // 常に AND 結合
+                    Negate = cluster.ConcatenateAnd != cluster.Negate}
                 };
                 // AND  => U false  false
                 // NAND => Φ false  true
@@ -1014,7 +922,7 @@ namespace Inscribe.Filter.QuerySystem
                 // 所属を変更する
                 return OptimizeCo(items[0], parent);
             }
-            else if (cluster.Negate == false && cluster.ConcatenateOR == parent.ConcatenateOR)
+            else if (cluster.Negate == false && cluster.ConcatenateAnd == parent.ConcatenateAnd)
             {
                 // このクラスタがNegateでなく、直上のクラスタと同じ結合である場合
                 // 直上のクラスタに合成する
@@ -1037,7 +945,7 @@ namespace Inscribe.Filter.QuerySystem
             var emptyClusters = cluster.Filters.OfType<FilterCluster>().Where(f => f.Filters.Count() == 0).ToArray();
 
             // [全ての空フィルタクラスタはANDかNANDである]
-            if (emptyClusters.FirstOrDefault(f => f.ConcatenateOR) != null)
+            if (emptyClusters.FirstOrDefault(f => !f.ConcatenateAnd) != null)
                 throw new ArgumentException("All empty filters must be AND or NAND.");
 
             // フィルタと非空フィルタクラスタを待避
@@ -1047,20 +955,7 @@ namespace Inscribe.Filter.QuerySystem
             // 0    : F [一つだけ含まれるフィルタ]
             // -1   : Φ [抽出されるツイート無し]
             int resultValue = 0;
-            if (cluster.ConcatenateOR)
-            {
-                // OR 結合モード
-
-                // AND 空フィルタが含まれていたら resultvalue = 1
-                if (emptyClusters.FirstOrDefault(f => !f.Negate) != null)
-                    resultValue = 1;
-                // そうでない場合は、唯一含まれるフィルタが存在すればresultValue = 0, でなければ -1
-                else if (filters.Length > 0)
-                    resultValue = 0;
-                else
-                    resultValue = -1;
-            }
-            else
+            if (cluster.ConcatenateAnd)
             {
                 // AND 結合モード
 
@@ -1073,24 +968,37 @@ namespace Inscribe.Filter.QuerySystem
                 else
                     resultValue = 1;
             }
+            else
+            {
+                // OR 結合モード
+
+                // AND 空フィルタが含まれていたら resultvalue = 1
+                if (emptyClusters.FirstOrDefault(f => !f.Negate) != null)
+                    resultValue = 1;
+                // そうでない場合は、唯一含まれるフィルタが存在すればresultValue = 0, でなければ -1
+                else if (filters.Length > 0)
+                    resultValue = 0;
+                else
+                    resultValue = -1;
+            }
 
             if (resultValue == 1) // U
                 return new FilterCluster()
                 {
-                    ConcatenateOR = false,
+                    ConcatenateAnd = true,
                     Negate = cluster.Negate
                 };
             else if (resultValue == 0) // F
                 return new FilterCluster()
                 {
-                    ConcatenateOR = cluster.ConcatenateOR,
+                    ConcatenateAnd = cluster.ConcatenateAnd,
                     Filters = filters,
                     Negate = cluster.Negate
                 };
             else if (resultValue == -1) // Φ
                 return new FilterCluster()
                 {
-                    ConcatenateOR = false,
+                    ConcatenateAnd = false,
                     Negate = !cluster.Negate
                 };
             else

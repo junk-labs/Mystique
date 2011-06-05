@@ -12,6 +12,7 @@
     <AssemblyName>Inscribe</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ExpressionBlendVersion>4.0.20621.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,7 +35,7 @@
     <Reference Include="Livet">
       <HintPath>..\Mystique\InfrastructureAssemblies\Livet.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Expression.Interactions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Expression.Interactions">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Mystique\InfrastructureAssemblies\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
@@ -42,7 +43,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Interactivity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Windows.Interactivity">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Mystique\InfrastructureAssemblies\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -93,6 +94,7 @@
     <Compile Include="Configuration\Tabs\TabProperty.cs" />
     <Compile Include="Core\InitializationService.cs" />
     <Compile Include="Core\StateProxy.cs" />
+    <Compile Include="Core\Statistics.cs" />
     <Compile Include="Data\CachedConcurrentObservableCollection.cs" />
     <Compile Include="Data\ConcurrentDictionaryExtension.cs" />
     <Compile Include="Data\ILockOperatable.cs" />
@@ -105,16 +107,15 @@
     <Compile Include="Filter\FilterBase.cs" />
     <Compile Include="Filter\FilterCluster.cs" />
     <Compile Include="Filter\FilterOperations.cs" />
-    <Compile Include="Filter\GuiSystem\GuiSystem.cs" />
+    <Compile Include="Filter\Filters\FilterProtected.cs" />
+    <Compile Include="Filter\Filters\FilterVerified.cs" />
     <Compile Include="Filter\GuiSystem\GuiVisibleAttribute.cs" />
     <Compile Include="Filter\GuiSystem\IGuiElement.cs" />
     <Compile Include="Filter\IFilter.cs" />
     <Compile Include="Filter\Manager\FilterRegistrant.cs" />
     <Compile Include="Filter\QuerySystem\Escaping.cs" />
     <Compile Include="Filter\QuerySystem\IQueryConvertable.cs" />
-    <Compile Include="Filter\QuerySystem\IQueryElement.cs" />
-    <Compile Include="Filter\QuerySystem\MethodVisibleAttribute.cs" />
-    <Compile Include="Filter\QuerySystem\QueryConverter.cs" />
+    <Compile Include="Filter\QuerySystem\QueryCompiler.cs" />
     <Compile Include="Model\AccountInfo.cs" />
     <Compile Include="Model\CredentialCore.cs" />
     <Compile Include="Plugin\PluginManager.cs" />

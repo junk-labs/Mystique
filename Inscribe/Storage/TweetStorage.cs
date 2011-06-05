@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Inscribe.Configuration;
 using Livet;
 using System.Collections.Concurrent;
+using Inscribe.Threading;
 
 namespace Inscribe.Storage
 {
@@ -47,6 +48,11 @@ namespace Inscribe.Storage
         /// ツイートストレージの作業用スレッドディスパッチャ
         /// </summary>
         static QueueTaskDispatcher operationDispatcher = new QueueTaskDispatcher(1);
+
+        static TweetStorage()
+        {
+            ThreadHelper.Halt += () => operationDispatcher.Dispose();
+        }
 
         /// <summary>
         /// ツイートを受信したか、また明示的削除などが行われたかを確認します。

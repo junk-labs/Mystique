@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Inscribe.Data;
 using Inscribe.Model;
+using Livet;
+using System.Threading;
 
 namespace Inscribe.Storage
 {
@@ -25,7 +27,7 @@ namespace Inscribe.Storage
         public static void RegisterAccount(AccountInfo accountInfo)
         {
             accounts.Add(accountInfo);
-            OnAccountsChanged();
+            OnAccountsChanged(EventArgs.Empty);
         }
 
         /// <summary>
@@ -44,7 +46,7 @@ namespace Inscribe.Storage
                 if (idx < 0) throw new ArgumentException("旧アカウント情報が見つかりません。");
                 accounts[idx] = newinfo;
             });
-            OnAccountsChanged();
+            OnAccountsChanged(EventArgs.Empty);
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace Inscribe.Storage
             if (del != null)
             {
                 accounts.Remove(del);
-                RaiseAccountsChanged();
+                OnAccountsChanged(EventArgs.Empty);
                 return true;
             }
             else
@@ -141,15 +143,29 @@ namespace Inscribe.Storage
                 }
             });
         }
-        
-        /// <summary>
-        /// アカウント一覧に変更があったことを通知します。
-        /// </summary>
-        public static event Action OnAccountsChanged = () => { };
 
-        private static void RaiseAccountsChanged()
+
+        #region AccountsChangedイベント
+
+        public static event EventHandler<EventArgs> AccountsChanged;
+        private static Notificator<EventArgs> _AccountsChangedEvent;
+        public static Notificator<EventArgs> AccountsChangedEvent
         {
-            OnAccountsChanged();
+            get
+            {
+                if (_AccountsChangedEvent == null) _AccountsChangedEvent = new Notificator<EventArgs>();
+                return _AccountsChangedEvent;
+            }
+            set { _AccountsChangedEvent = value; }
         }
+
+        private static void OnAccountsChanged(EventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref AccountsChanged, null, null);
+            if (threadSafeHandler != null) threadSafeHandler(null, e);
+            AccountsChangedEvent.Raise(e);
+        }
+
+        #endregion
     }
 }

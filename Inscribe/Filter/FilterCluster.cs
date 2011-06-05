@@ -44,9 +44,9 @@ namespace Inscribe.Filter
                 foreach (var f in _filters)
                 {
                     if (attach)
-                        f.RequireReaccept += new Action(filter_RequireReaccept);
+                        f.RequireReaccept += filter_RequireReaccept;
                     else
-                        f.RequireReaccept -= new Action(filter_RequireReaccept);
+                        f.RequireReaccept -= filter_RequireReaccept;
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace Inscribe.Filter
         /// <summary>
         /// このクラスタの真偽値がクラスタに登録されているフィルタ全体のOR結合で判定されるかを設定します。
         /// </summary>
-        public bool ConcatenateOR { get; set; }
+        public bool ConcatenateAnd { get; set; }
 
         /// <summary>
         /// このフィルタクラスタに所属するフィルタについて、フィルタ条件に合致するかの判定を行います。<para />
@@ -80,13 +80,13 @@ namespace Inscribe.Filter
                 {
                     // ANDのとき => FALSEに出会ったらFALSEを返す
                     // ORのとき => TRUEに出会ったらTRUEを返す　
-                    if (f.Filter(status) == ConcatenateOR)
-                        return ConcatenateOR == !Negate;
+                    if (f.Filter(status) != ConcatenateAnd)
+                        return ConcatenateAnd == Negate;
                 }
             }
             // ANDのとき => FALSEに出会っていないのでTRUEを返す
             // ORのとき => TRUEに出会っていないのでFALSEを返す
-            return !ConcatenateOR == !Negate;
+            return ConcatenateAnd == !Negate;
         }
 
         public event Action RequireReaccept = () => { };
@@ -103,7 +103,7 @@ namespace Inscribe.Filter
         {
             if (_filters == null || _filters.Count() == 0)
             {
-                if (this.ConcatenateOR)
+                if (this.ConcatenateAnd)
                     return this.Negate ? "()" : "!()";
                 else
                     return this.Negate ? "!()" : "()";
@@ -113,7 +113,7 @@ namespace Inscribe.Filter
                 var strs = from f in _filters
                            select f.ToQuery();
                 return (this.Negate ? "!(" : "(") + String.Join(
-                    ConcatenateOR ? " || " : " && ",
+                    ConcatenateAnd ? " & " : " | ",
                     strs) + ")";
             }
         }
