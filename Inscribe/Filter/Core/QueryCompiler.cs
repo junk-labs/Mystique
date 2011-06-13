@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Inscribe.Filter.QuerySystem
+namespace Inscribe.Filter.Core
 {
     /// <summary>
     /// Krile Query Version 4
@@ -725,8 +725,8 @@ namespace Inscribe.Filter.QuerySystem
             var argument = AnalysisArgDescript(filterTuple.FilterAttr.ArgDescript).ToArray();
             if(filterTuple.Name.Type != Token.TokenType.Literal)
                 throw new InvalidOperationException("[内部エラー]MISMATCHED TYPE: FILTER TYPE REQUIRED Literal, BUT " + filterTuple.Name.Type.ToString() + ".");
-            var filters = Manager.FilterRegistrant.GetFilter(filterTuple.Name.Value);
-            if(filters == null)
+            var filters = Core.FilterRegistrant.GetFilter(filterTuple.Name.Value);
+            if(filters == null || filters.Count() == 0)
                 throw new InvalidOperationException("ID \"" + filterTuple.Name.Value + "\" のフィルタは見つかりませんでした。");
             foreach(var f in filters)
             {
@@ -812,6 +812,12 @@ namespace Inscribe.Filter.QuerySystem
                     {
                         // long
                         return lv;
+                    }
+                    LongRange lrv;
+                    if (LongRange.TryParse(tok.Value, out lrv))
+                    {
+                        // range
+                        return lrv;
                     }
                     // unknown
                     break;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using Inscribe.Filter;
-using Inscribe.Filter.QuerySystem;
+using Inscribe.Filter.Core;
 using Inscribe.Storage;
 
 namespace Inscribe.Configuration.Settings

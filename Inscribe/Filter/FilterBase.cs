@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Inscribe.Filter.QuerySystem;
 using Dulcet.Twitter;
-using Inscribe.Filter.GuiSystem;
+using Inscribe.Filter.Core;
 
 namespace Inscribe.Filter
 {
     /// <summary>
     /// フィルタベース
     /// </summary>
-    public abstract class FilterBase : IFilter, IGuiElement
+    public abstract class FilterBase : IFilter
     {
         /// <summary>
         /// フィルタを適用します。

@@ -10,10 +10,10 @@ namespace Mystique.Core
         internal static void Init()
         {
             System.Diagnostics.Debug.WriteLine(
-                String.Join(", ", Inscribe.Filter.Manager.FilterRegistrant.RegisteredFilters.Select(t => t.ToString())));
+                String.Join(", ", Inscribe.Filter.Core.FilterRegistrant.RegisteredFilters.Select(t => t.ToString())));
             try
             {
-                var structure = Inscribe.Filter.QuerySystem.QueryCompiler.ToFilter("(verified | (((protected & verified!))))");
+                var structure = Inscribe.Filter.Core.QueryCompiler.ToFilter("(test:32-64)");
                 System.Diagnostics.Debug.WriteLine(structure);
             }
             catch (Exception e)

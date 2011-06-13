@@ -2,23 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Inscribe.Common;
-using Inscribe.Storage;
+using Dulcet.Twitter;
 
-namespace Inscribe.Filter.Filters
+namespace Inscribe.Filter.Filters.Arg0
 {
-    public class FilterVerified : FilterBase
+    public class FilterDirectMessage : FilterBase
     {
-        public FilterVerified() { }
-
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
-            return TwitterHelper.GetSuggestedUser(status).IsVerified;
+            return status is TwitterDirectMessage;
         }
 
         public override string Identifier
         {
-            get { return "verified"; }
+            get { return "dmsg"; }
         }
 
         public override IEnumerable<object> GetArgumentsForQueryify()
@@ -28,12 +25,12 @@ namespace Inscribe.Filter.Filters
 
         public override string Description
         {
-            get { return "公式認証ユーザーのツイート"; }
+            get { return "ダイレクトメッセージ"; }
         }
 
         public override string FilterStateString
         {
-            get { return "公式認証ユーザー"; }
+            get { return "ダイレクトメッセージ"; }
         }
     }
 }

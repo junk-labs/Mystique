@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Inscribe.Filter.QuerySystem;
+using Inscribe.Filter.Core;
 
 namespace Inscribe.Filter
 {

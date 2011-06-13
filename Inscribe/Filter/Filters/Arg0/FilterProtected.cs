@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Inscribe.Filter.Filters
+namespace Inscribe.Filter.Filters.Arg0
 {
     public class FilterProtected : FilterBase
     {

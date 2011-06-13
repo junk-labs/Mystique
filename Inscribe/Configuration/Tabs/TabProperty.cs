@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using Inscribe.Filter;
-using Inscribe.Filter.QuerySystem;
+using Inscribe.Filter.Core;
 using Inscribe.Model;
 using Inscribe.Storage;
 

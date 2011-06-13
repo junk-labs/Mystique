@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Inscribe.Filter.QuerySystem
+namespace Inscribe.Filter.Core
 {
     public static class Escaping
     {

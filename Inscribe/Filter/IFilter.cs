@@ -1,6 +1,6 @@
 ﻿using System;
 using Dulcet.Twitter;
-using Inscribe.Filter.QuerySystem;
+using Inscribe.Filter.Core;
 
 namespace Inscribe.Filter
 {
