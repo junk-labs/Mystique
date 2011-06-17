@@ -13,8 +13,8 @@ namespace Mystique.Core
                 String.Join(", ", Inscribe.Filter.Core.FilterRegistrant.RegisteredFilters.Select(t => t.ToString())));
             try
             {
-                var structure = Inscribe.Filter.Core.QueryCompiler.ToFilter("(test:32-64)");
-                System.Diagnostics.Debug.WriteLine(structure);
+                var structure = Inscribe.Filter.Core.QueryCompiler.ToFilter("(mtree:1003131)");
+                System.Diagnostics.Debug.WriteLine(structure.ToQuery());
             }
             catch (Exception e)
             {

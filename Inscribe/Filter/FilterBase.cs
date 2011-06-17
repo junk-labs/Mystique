@@ -87,5 +87,20 @@ namespace Inscribe.Filter
         /// このフィルタの設定状態(GUI編集用)
         /// </summary>
         public abstract string FilterStateString { get; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        ~FilterBase()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            GC.SuppressFinalize(this);
+        }
     }
 }

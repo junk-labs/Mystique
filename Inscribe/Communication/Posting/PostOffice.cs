@@ -72,7 +72,7 @@ namespace Inscribe.Communication.Posting
 
             try
             {
-                var recvs = APIHelper.ExecApi(() => info.GetUserTimeline(count: 200, include_rts: true));
+                var recvs = ApiHelper.ExecApi(() => info.GetUserTimeline(count: 200, include_rts: true));
                 if (recvs != null)
                     recvs.ForEach(TweetStorage.Register);
 
@@ -270,7 +270,7 @@ namespace Inscribe.Communication.Posting
             Parallel.ForEach(infos,
                 (d) =>
                 {
-                    if (APIHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) != null)
+                    if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) != null)
                     {
                         var ud = UserStorage.Get(d.ScreenName);
                         if (ud != null)
@@ -297,7 +297,7 @@ namespace Inscribe.Communication.Posting
             Parallel.ForEach(infos,
                 (d) =>
                 {
-                    if (APIHelper.ExecApi(() => d.Retweet(status.Status.Id)) != null)
+                    if (ApiHelper.ExecApi(() => d.Retweet(status.Status.Id)) != null)
                     {
                         var ud = UserStorage.Get(d.ScreenName);
                         if (ud != null)
@@ -320,7 +320,7 @@ namespace Inscribe.Communication.Posting
 
         private static void RemoveTweetSink(AccountInfo info, long tweetId)
         {
-            var tweet = APIHelper.ExecApi(() => info.DestroyStatus(tweetId));
+            var tweet = ApiHelper.ExecApi(() => info.DestroyStatus(tweetId));
             if (tweet != null)
             {
                 if (tweet.Id != tweetId)

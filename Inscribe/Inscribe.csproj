@@ -108,19 +108,31 @@
     <Compile Include="Filter\FilterBase.cs" />
     <Compile Include="Filter\FilterCluster.cs" />
     <Compile Include="Filter\FilterOperations.cs" />
-    <Compile Include="Filter\Filters\Arg0\FilterDirectMessage.cs" />
-    <Compile Include="Filter\Filters\Arg0\FilterProtected.cs" />
-    <Compile Include="Filter\Filters\Arg0\FilterVerified.cs" />
-    <Compile Include="Filter\Filters\Arg1\FilterRetweetFrom.cs" />
-    <Compile Include="Filter\Filters\Arg1\FilterText.cs" />
-    <Compile Include="Filter\Filters\Arg1\FilterUserName.cs" />
-    <Compile Include="Filter\Filters\Arg1\FilterUser.cs" />
-    <Compile Include="Filter\Filters\Arg1\FilterUserBio.cs" />
-    <Compile Include="Filter\Filters\Arg1\FilterUserLocation.cs" />
-    <Compile Include="Filter\Filters\Arg1\FilterUserWeb.cs" />
-    <Compile Include="Filter\Filters\Arg1\FilterVia.cs" />
-    <Compile Include="Filter\Filters\Common\ScreenNameFilterBase.cs" />
-    <Compile Include="Filter\Filters\Common\TextFilterBase.cs" />
+    <Compile Include="Filter\Filters\Attributes\FilterDirectMessage.cs" />
+    <Compile Include="Filter\Filters\Attributes\FilterProtected.cs" />
+    <Compile Include="Filter\Filters\Attributes\FilterRetweeted.cs" />
+    <Compile Include="Filter\Filters\Attributes\FilterVerified.cs" />
+    <Compile Include="Filter\Filters\Numeric\FilterFavoriteCount.cs" />
+    <Compile Include="Filter\Filters\Numeric\FilterRetweetCount.cs" />
+    <Compile Include="Filter\Filters\Numeric\FilterStatusId.cs" />
+    <Compile Include="Filter\Filters\Numeric\FilterUserId.cs" />
+    <Compile Include="Filter\Filters\Paticular\FilterConversation.cs" />
+    <Compile Include="Filter\Filters\Paticular\FilterMentionTree.cs" />
+    <Compile Include="Filter\Filters\ScreenName\FilterBlockFrom.cs" />
+    <Compile Include="Filter\Filters\ScreenName\FilterFavoriteFrom.cs" />
+    <Compile Include="Filter\Filters\ScreenName\FilterFollowFrom.cs" />
+    <Compile Include="Filter\Filters\ScreenName\FilterFollowTo.cs" />
+    <Compile Include="Filter\Filters\ScreenName\FilterMention.cs" />
+    <Compile Include="Filter\Filters\ScreenName\FilterRetweetFrom.cs" />
+    <Compile Include="Filter\Filters\Text\FilterText.cs" />
+    <Compile Include="Filter\Filters\Text\FilterUserName.cs" />
+    <Compile Include="Filter\Filters\Text\FilterUser.cs" />
+    <Compile Include="Filter\Filters\Text\FilterUserBio.cs" />
+    <Compile Include="Filter\Filters\Text\FilterUserLocation.cs" />
+    <Compile Include="Filter\Filters\Text\FilterUserWeb.cs" />
+    <Compile Include="Filter\Filters\Text\FilterVia.cs" />
+    <Compile Include="Filter\Filters\ScreenName\ScreenNameFilterBase.cs" />
+    <Compile Include="Filter\Filters\Text\TextFilterBase.cs" />
     <Compile Include="Filter\IFilter.cs" />
     <Compile Include="Filter\Core\FilterRegistrant.cs" />
     <Compile Include="Filter\Core\Escaping.cs" />
@@ -164,10 +176,7 @@
       <Name>Dulcet</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Filter\Manager\" />
-    <Folder Include="Filter\QuerySystem\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

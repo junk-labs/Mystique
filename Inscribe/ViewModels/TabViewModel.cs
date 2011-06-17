@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Livet;
+using System.Threading.Tasks;
 using Inscribe.Configuration.Tabs;
 using Inscribe.Data;
-using Inscribe.Storage;
 using Inscribe.Filter;
-using System.Threading.Tasks;
+using Inscribe.Storage;
+using Livet;
 
 namespace Inscribe.ViewModels
 {
@@ -40,6 +38,16 @@ namespace Inscribe.ViewModels
                     break;
                 case TweetActionKind.Refresh:
                     Task.Factory.StartNew(InvalidateAll);
+                    break;
+                case TweetActionKind.Changed:
+                    var contains = this.tweetsSource.Contains(e.Tweet);
+                    if (CheckFilters(e.Tweet) != contains)
+                    {
+                        if (contains)
+                            this.tweetsSource.Remove(e.Tweet);
+                        else
+                            this.tweetsSource.Add(e.Tweet);
+                    }
                     break;
                 case TweetActionKind.Removed:
                     this.tweetsSource.Remove(e.Tweet);

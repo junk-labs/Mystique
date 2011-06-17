@@ -28,22 +28,12 @@ namespace Inscribe.Filter.Core
         }
 
         /// <summary>
-        /// 文字をクオートしなければならない場合、クオートを行います。
+        /// 文字をクオートします。
         /// </summary>
         /// <param name="argstr">エスケープ済みの文字列</param>
         public static string Quote(this string escaped)
         {
-            int i; bool b;
-            if (escaped.Where(c => requireQuotes.Contains(c)).Count() > 0 || int.TryParse(escaped, out i) || bool.TryParse(escaped, out b))
-            {
-                return "\"" + escaped + "\"";
-            }
-            else
-            {
-                return escaped;
-            }
+            return "\"" + escaped + "\"";
         }
-
-        private static char[] requireQuotes = new[] { ' ', '\t', ',', '(', ')', '|', '&', '"', '\\' };
     }
 }

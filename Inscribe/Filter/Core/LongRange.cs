@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Inscribe.Filter.Core
 {
+    /// <summary>
+    /// RangeOfInteger
+    /// </summary>
     public class LongRange
     {
         public RangeType RangeType
@@ -26,35 +29,35 @@ namespace Inscribe.Filter.Core
             }
         }
 
-        private ulong from;
-        public ulong From
+        private long? from;
+        public long? From
         {
             get { return this.from; }
             set { this.from = value; }
         }
 
-        private ulong to;
-        public ulong To
+        private long? to;
+        public long? To
         {
             get { return this.to; }
             set { this.to = value; }
         }
 
-        public LongRange(ulong? from = null, ulong? to = null)
+        public LongRange(long? from = null, long? to = null)
         {
             if (from == null && to == null)
                 throw new ArgumentException("Range unexisted.");
             if (from != null && to != null && from > to)
                 throw new ArgumentException("Invalid range.");
-            this.from = from ?? ulong.MinValue;
-            this.to = to ?? ulong.MaxValue;
+            this.from = from;
+            this.to = to;
         }
 
         /// <summary>
         /// Range 内にvalueがあるか確認します。
         /// </summary>
         /// <param name="value">確認する値</param>
-        public bool Check(ulong value)
+        public bool Check(long value)
         {
             switch (RangeType)
             {
@@ -71,22 +74,22 @@ namespace Inscribe.Filter.Core
             }
         }
 
-        public static LongRange FromPivotValue(ulong value)
+        public static LongRange FromPivotValue(long value)
         {
             return new LongRange(value, value);
         }
 
-        public static LongRange FromFromValue(ulong value)
+        public static LongRange FromFromValue(long value)
         {
             return new LongRange(from: value);
         }
 
-        public static LongRange FromToValue(ulong value)
+        public static LongRange FromToValue(long value)
         {
             return new LongRange(to: value);
         }
 
-        public static LongRange FromBetweenValues(ulong v1, ulong v2)
+        public static LongRange FromBetweenValues(long v1, long v2)
         {
             if (v1 < v2)
                 return new LongRange(v1, v2);
@@ -114,7 +117,7 @@ namespace Inscribe.Filter.Core
             if (sary.Length == 1)
             {
                 // double じゃない？
-                return LongRange.FromPivotValue(ulong.Parse(sary[0]));
+                return LongRange.FromPivotValue(long.Parse(sary[0]));
             }
             else if (sary.Length == 2)
             {
@@ -122,22 +125,39 @@ namespace Inscribe.Filter.Core
                 if (String.IsNullOrEmpty(sary[0]))
                 {
                     // To
-                    return LongRange.FromToValue(ulong.Parse(sary[1]));
+                    return LongRange.FromToValue(long.Parse(sary[1]));
                 }
                 else if (String.IsNullOrEmpty(sary[1]))
                 {
                     // From
-                    return LongRange.FromFromValue(ulong.Parse(sary[0]));
+                    return LongRange.FromFromValue(long.Parse(sary[0]));
                 }
                 else
                 {
                     // Between
-                    return LongRange.FromBetweenValues(ulong.Parse(sary[0]), ulong.Parse(sary[1]));
+                    return LongRange.FromBetweenValues(long.Parse(sary[0]), long.Parse(sary[1]));
                 }
             }
             else
                 throw new ArgumentException("引数が不正です。-が多すぎるか、または無効な文字列です。");
 
+        }
+
+        public override string ToString()
+        {
+            switch (this.RangeType)
+            {
+                case Core.RangeType.Between:
+                    return this.from.ToString() + "-" + this.to.ToString();
+                case Core.RangeType.From:
+                    return this.from.ToString() + "-";
+                case Core.RangeType.Pivot:
+                    return this.from.ToString();
+                case Core.RangeType.To:
+                    return "-" + this.to.ToString();
+                default:
+                    return "0";
+            }
         }
     }
 

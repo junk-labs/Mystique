@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Inscribe.Filter.Filters.Common;
 using Inscribe.Storage;
 
-namespace Inscribe.Filter.Filters.Arg1
+namespace Inscribe.Filter.Filters.ScreenName
 {
     public class FilterRetweetFrom : ScreenNameFilterBase
     {
         private FilterRetweetFrom() { }
 
-        public FilterRetweetFrom(string screen)
+        public FilterRetweetFrom(string needle)
         {
             this.needle = needle;
         }
@@ -25,22 +22,22 @@ namespace Inscribe.Filter.Filters.Arg1
 
         public override string Identifier
         {
-            get { throw new NotImplementedException(); }
+            get { return "rt_from"; }
         }
 
         public override IEnumerable<object> GetArgumentsForQueryify()
         {
-            throw new NotImplementedException();
+            yield return needle;
         }
 
         public override string Description
         {
-            get { throw new NotImplementedException(); }
+            get { return "指定ユーザーのRetweet"; }
         }
 
         public override string FilterStateString
         {
-            get { throw new NotImplementedException(); }
+            get { return "ユーザー @" + this.needle + " のRetweet"; }
         }
     }
 }

@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using Inscribe.Filter.Filters.Common;
-
-namespace Inscribe.Filter.Filters.Arg1
+﻿
+namespace Inscribe.Filter.Filters.Text
 {
     class FilterUser : TextFilterBase
     {

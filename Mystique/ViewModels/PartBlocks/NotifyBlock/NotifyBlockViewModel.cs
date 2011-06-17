@@ -120,8 +120,8 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
             }
         }
 
-        private NotifyBlockAdditionalInfoViewModel _notifyBlockAdditionalInfoViewModel = new NotifyBlockAdditionalInfoViewModel();
-        public NotifyBlockAdditionalInfoViewModel NotifyBlockAdditionalInfoViewModel
+        private SystemInfoViewModel _notifyBlockAdditionalInfoViewModel = new SystemInfoViewModel();
+        public SystemInfoViewModel NotifyBlockAdditionalInfoViewModel
         {
             get { return this._notifyBlockAdditionalInfoViewModel; }
         }

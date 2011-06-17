@@ -35,6 +35,24 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Livet, Version=0.9.2011.429, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -74,12 +92,12 @@
     <Compile Include="Core\Initializer.cs" />
     <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="ViewModels\Common\ImageStackingViewViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SettingViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
     <Compile Include="Views\PartBlocks\BlockCommon\Notifier.xaml.cs">
       <DependentUpon>Notifier.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\PartBlocks\MainBlock\TabViewModel.cs" />
-    <Compile Include="ViewModels\PartBlocks\NotifyBlock\NotifyBlockAdditionalInfoViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\NotifyBlock\SystemInfoViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\NotifyBlockViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\TwitterEventInfoViewModel.cs" />
     <Compile Include="Views\Behaviors\FrameworkActualWidthAction.cs" />
@@ -209,6 +227,7 @@
     <Content Include="InfrastructureAssemblies\Design\Livet.Design.dll" />
     <Content Include="InfrastructureAssemblies\Design\Livet.Expression.Design.dll" />
     <Content Include="InfrastructureAssemblies\Livet.dll" />
+    <Resource Include="Resources\retry.png" />
     <Resource Include="Resources\information.png" />
     <Resource Include="Resources\dropdown.png" />
     <Resource Include="Resources\accept.png" />
@@ -332,7 +351,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\Dialogs\" />
     <Folder Include="ViewModels\PartBlocks\InputBlock\" />
     <Folder Include="ViewModels\PartBlocks\MainBlock\TimelineChild\" />
     <Folder Include="Views\PartBlocks\InputBlock\" />

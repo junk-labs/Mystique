@@ -1,6 +1,5 @@
-﻿using Inscribe.Filter.Filters.Common;
-
-namespace Inscribe.Filter.Filters.Arg1
+﻿
+namespace Inscribe.Filter.Filters.Text
 {
     public class FilterText : TextFilterBase
     {

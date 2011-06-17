@@ -1,8 +1,9 @@
 ﻿using System;
 using Inscribe.Filter.Core;
 using Inscribe.Storage;
+using Inscribe.Filter.Filters.Text;
 
-namespace Inscribe.Filter.Filters.Common
+namespace Inscribe.Filter.Filters.ScreenName
 {
     public abstract class ScreenNameFilterBase : TextFilterBase
     {

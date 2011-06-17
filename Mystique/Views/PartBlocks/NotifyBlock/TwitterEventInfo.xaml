@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="400" Width="400">
+             d:DesignHeight="300" d:DesignWidth="400" Width="450">
     <UserControl.Resources>
         <cp:CollectionToCountConverter x:Key="CollectionToCountConverter" />
     </UserControl.Resources>

@@ -1,15 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Inscribe.ViewModels;
-using Inscribe.Data;
-using Dulcet.Twitter;
 using System.Threading.Tasks;
-using Inscribe.Configuration;
-using Livet;
-using System.Collections.Concurrent;
+using Dulcet.Twitter;
 using Inscribe.Threading;
+using Inscribe.ViewModels;
+using Livet;
 
 namespace Inscribe.Storage
 {
@@ -222,6 +219,15 @@ namespace Inscribe.Storage
             });
         }
 
+        /// <summary>
+        /// ツイートの内部状態が変化したことを通知します。<para />
+        /// (例えば、ふぁぼられたりRTされたり返信貰ったりなど。)
+        /// </summary>
+        public static void NotifyTweetStateChanged(TweetViewModel tweet)
+        {
+            Task.Factory.StartNew(() => RaiseStatusStateChanged(tweet));
+        }
+
         #region Notifications
 
         private static readonly Notificator<TweetStorageChangedEventArgs> _notificator = new Notificator<TweetStorageChangedEventArgs>();
@@ -237,10 +243,16 @@ namespace Inscribe.Storage
             Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Removed, removed));
         }
 
+        static void RaiseStatusStateChanged(TweetViewModel changed)
+        {
+            Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Changed, changed));
+        }
+
         static void RaiseRefreshTweets()
         {
             Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Refresh));
         }
+
 
         #endregion
     }
@@ -260,8 +272,21 @@ namespace Inscribe.Storage
 
     public enum TweetActionKind
     {
+        /// <summary>
+        /// ツイートが追加された
+        /// </summary>
         Added,
+        /// <summary>
+        /// ツイートが削除された
+        /// </summary>
         Removed,
+        /// <summary>
+        /// ツイートの固有情報が変更された
+        /// </summary>
+        Changed,
+        /// <summary>
+        /// ストレージ全体に変更が入った
+        /// </summary>
         Refresh,
     }
 }

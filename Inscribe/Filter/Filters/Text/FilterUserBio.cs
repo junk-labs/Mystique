@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.Filter.Filters.Common;
-
-namespace Inscribe.Filter.Filters.Arg1
+﻿
+namespace Inscribe.Filter.Filters.Text
 {
     public class FilterUserBio : TextFilterBase
     {

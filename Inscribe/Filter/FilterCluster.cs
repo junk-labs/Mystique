@@ -117,5 +117,10 @@ namespace Inscribe.Filter
                     strs) + ")";
             }
         }
+
+        public void Dispose()
+        {
+            this.Filters.ForEach(f => f.Dispose());
+        }
     }
 }

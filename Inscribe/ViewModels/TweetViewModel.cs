@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using Dulcet.Twitter;
-using Livet;
-using Inscribe.Data;
-using Inscribe.Configuration.Tabs;
 using System.Collections.Concurrent;
-using System.Windows;
-using Inscribe.Configuration;
-using System.Windows.Media;
+using System.Collections.Generic;
 using System.Linq;
-using Inscribe.Configuration.Settings;
-using Inscribe.Common;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using Dulcet.Twitter;
+using Inscribe.Common;
+using Inscribe.Configuration;
+using Inscribe.Configuration.Settings;
+using Inscribe.Data;
 using Inscribe.Storage;
-using Livet.Command;
 using Inscribe.Threading;
+using Livet;
+using Livet.Command;
 
 namespace Inscribe.ViewModels
 {
@@ -74,6 +72,7 @@ namespace Inscribe.ViewModels
             if (user == null)
                 return;
             this._retweeteds.Add(user);
+            TweetStorage.NotifyTweetStateChanged(this);
         }
 
         public void RemoveRetweeted(UserViewModel user)
@@ -81,6 +80,7 @@ namespace Inscribe.ViewModels
             if (user == null)
                 return;
             this._retweeteds.Remove(user);
+            TweetStorage.NotifyTweetStateChanged(this);
         }
 
         public IEnumerable<UserViewModel> RetweetedUsers
@@ -99,6 +99,7 @@ namespace Inscribe.ViewModels
             if (user == null)
                 return;
             this._favoreds.Add(user);
+            TweetStorage.NotifyTweetStateChanged(this);
         }
 
         public void RemoveFavored(UserViewModel user)
@@ -106,6 +107,7 @@ namespace Inscribe.ViewModels
             if (user == null)
                 return;
             this._favoreds.Remove(user);
+            TweetStorage.NotifyTweetStateChanged(this);
         }
 
         public IEnumerable<UserViewModel> FavoredUsers
@@ -129,6 +131,7 @@ namespace Inscribe.ViewModels
         public void RegisterInReplyToThis(long tweetId)
         {
             this.inReplyFroms.Add(tweetId);
+            TweetStorage.NotifyTweetStateChanged(this);
         }
 
         /// <summary>

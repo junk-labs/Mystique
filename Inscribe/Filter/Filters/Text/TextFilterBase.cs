@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Inscribe.Filter.Core;
 
-namespace Inscribe.Filter.Filters.Common
+namespace Inscribe.Filter.Filters.Text
 {
     public abstract class TextFilterBase : FilterBase
     {

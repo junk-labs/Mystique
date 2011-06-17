@@ -62,7 +62,7 @@ namespace Inscribe.Storage
             {
                 var acInfo = AccountStorage.GetRandom(a => a.IsFollowingList(screenName, listName), true);
                 if (acInfo == null) return null;
-                var list = APIHelper.ExecApi(() => acInfo.GetList(screenName, listName));
+                var list = ApiHelper.ExecApi(() => acInfo.GetList(screenName, listName));
                 if (list == null)
                     throw new Exception("リストの読み込みを行えませんでした。");
                 return list;
@@ -111,7 +111,7 @@ namespace Inscribe.Storage
             {
                 var acInfo = AccountStorage.GetRandom(a => a.IsFollowingList(screenName, listName), true);
                 if (acInfo == null) return null;
-                var members = APIHelper.ExecApi(() => acInfo.GetListMembersAll(screenName, listName));
+                var members = ApiHelper.ExecApi(() => acInfo.GetListMembersAll(screenName, listName));
                 if (members == null)
                 {
                     NotifyStorage.Notify("リストメンバーを読み込めませんでした: @" + screenName + "/" + listName);

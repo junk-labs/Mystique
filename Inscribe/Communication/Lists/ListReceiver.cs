@@ -53,7 +53,7 @@ namespace Inscribe.Communication.Lists
         {
             var acc = AccountStorage.GetRandom(a => a.IsFollowingList(listUser, listName), true);
             if (acc == null) return;
-            var statuses = APIHelper.ExecApi(() => acc.GetListStatuses(listUser, listName));
+            var statuses = ApiHelper.ExecApi(() => acc.GetListStatuses(listUser, listName));
             if (statuses == null) return;
             statuses.ForEach(s => TweetStorage.Register(s));
         }

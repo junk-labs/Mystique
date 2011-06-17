@@ -97,9 +97,12 @@ namespace Inscribe.Storage
             string currentMessage = null;
             using (notifyLock.GetReaderLock())
             {
-                if (!notificationStack.Peek().IsDisposed)
+                if (notificationStack.Count > 0)
                 {
-                    currentMessage = notificationStack.Peek().Message;
+                    if (!notificationStack.Peek().IsDisposed)
+                    {
+                        currentMessage = notificationStack.Peek().Message;
+                    }
                 }
             }
             if (currentMessage != null)
@@ -128,13 +131,13 @@ namespace Inscribe.Storage
                     {
                         Message = notificationStack.Peek().Message;
                         OnNotifyTextChanged(new NotifyUpdatedEventArgs(Message));
+                        UpdateFocus();
                     }
                     else
                     {
                         Message = Define.DefaultStatusMessage;
                         OnNotifyTextChanged(new NotifyUpdatedEventArgs(Define.DefaultStatusMessage));
                     }
-                    UpdateFocus();
                 }
             }
         }

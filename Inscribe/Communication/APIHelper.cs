@@ -9,7 +9,7 @@ using Inscribe.Storage;
 
 namespace Inscribe.Communication
 {
-    public static class APIHelper
+    public static class ApiHelper
     {
         /// <summary>
         /// Twitter APIを実行します。<para />
@@ -68,10 +68,9 @@ namespace Inscribe.Communication
                 {
                     throw;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    NotifyStorage.Notify(ex.Message);
-                    return default(T);
+                    throw;
                 }
             }
             return default(T);

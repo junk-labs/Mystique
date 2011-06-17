@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Dulcet.Twitter;
 
-namespace Inscribe.Filter.Filters.Arg0
+namespace Inscribe.Filter.Filters.Attributes
 {
-    public class FilterProtected : FilterBase
+    public class FilterRetweeted : FilterBase
     {
-        public FilterProtected() { }
+        public FilterRetweeted() { }
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
-            return status.User.IsProtected;
+            var s = status as TwitterStatus;
+            return s != null && s.RetweetedOriginal != null;
         }
 
         public override string Identifier
         {
-            get { return "protected"; }
+            get { return "retweeted"; }
         }
 
         public override IEnumerable<object> GetArgumentsForQueryify()
@@ -26,12 +28,12 @@ namespace Inscribe.Filter.Filters.Arg0
 
         public override string Description
         {
-            get { return "プロテクトユーザーのツイート"; }
+            get { return "リツイートされたステータス"; }
         }
 
         public override string FilterStateString
         {
-            get { return "プロテクトユーザー"; }
+            get { return "RTされたステータス"; }
         }
     }
 }

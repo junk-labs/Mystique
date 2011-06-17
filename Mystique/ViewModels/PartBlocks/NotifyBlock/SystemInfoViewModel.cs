@@ -11,12 +11,13 @@ using Inscribe.Communication.Posting;
 using Inscribe.Storage;
 using System.Windows.Media;
 using Livet.Command;
+using System.Threading.Tasks;
 
 namespace Mystique.ViewModels.PartBlocks.NotifyBlock
 {
-    public class NotifyBlockAdditionalInfoViewModel : ViewModel
+    public class SystemInfoViewModel : ViewModel
     {
-        public NotifyBlockAdditionalInfoViewModel()
+        public SystemInfoViewModel()
         {
             ViewModelHelper.BindNotification(AccountStorage.AccountsChangedEvent, this, (o, e) => RaisePropertyChanged(() => Accounts));
             ViewModelHelper.BindNotification(ExceptionStorage.ExceptionUpdatedEvent, this, (o, e) => RaisePropertyChanged(() => Exceptions));
@@ -268,7 +269,7 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
         private void Retry()
         {
             ExceptionStorage.Remove(desc);
-            desc.RetryAction();
+            Task.Factory.StartNew(() => desc.RetryAction());
         }
 
         #endregion

@@ -50,34 +50,34 @@ namespace Inscribe.Communication.MainTimeline.Connection
         /// </summary>
         public bool Test()
         {
-            return APIHelper.ExecApi(() => credential.Test());
+            return ApiHelper.ExecApi(() => credential.Test());
         }
 
         #region Endless Summer
 
         public IEnumerable<TwitterStatus> ReceiveHomeTimeline()
         {
-            return APIHelper.ExecApi(() => credential.GetHomeTimeline(count: Setting.Instance.ConnectionProperty.ApiTweetReceiveCount));
+            return ApiHelper.ExecApi(() => credential.GetHomeTimeline(count: Setting.Instance.ConnectionProperty.ApiTweetReceiveCount));
         }
 
         public IEnumerable<TwitterStatus> ReceiveMentions()
         {
-            return APIHelper.ExecApi(() => credential.GetMentions(count: Setting.Instance.ConnectionProperty.ApiTweetReceiveCount));
+            return ApiHelper.ExecApi(() => credential.GetMentions(count: Setting.Instance.ConnectionProperty.ApiTweetReceiveCount));
         }
 
         public IEnumerable<TwitterStatus> ReceiveMyTweets()
         {
-            return APIHelper.ExecApi(() => credential.GetUserTimeline(count: Setting.Instance.ConnectionProperty.ApiTweetReceiveCount));
+            return ApiHelper.ExecApi(() => credential.GetUserTimeline(count: Setting.Instance.ConnectionProperty.ApiTweetReceiveCount));
         }
 
         public IEnumerable<TwitterDirectMessage> ReceiveDirectMessages()
         {
-            return APIHelper.ExecApi(() => credential.GetDirectMessages(count: Setting.Instance.ConnectionProperty.ApiTweetReceiveCount));
+            return ApiHelper.ExecApi(() => credential.GetDirectMessages(count: Setting.Instance.ConnectionProperty.ApiTweetReceiveCount));
         }
 
         public IEnumerable<TwitterStatus> ReceiveFavors()
         {
-            return APIHelper.ExecApi(() => credential.GetFavorites());
+            return ApiHelper.ExecApi(() => credential.GetFavorites());
         }
 
         #endregion
