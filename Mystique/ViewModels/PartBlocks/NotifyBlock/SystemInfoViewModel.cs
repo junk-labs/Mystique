@@ -84,7 +84,6 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
         {
             
             this.Info = info;
-            ViewModelHelper.BindNotification(info.RestConnectionStateChangedEvent, this, (o, e) => RaisePropertyChanged(() => ConnectState));
             ViewModelHelper.BindNotification(info.UserStreamsConnectionChangedEvent, this, (o, e) => RaisePropertyChanged(() => ConnectState));
             ViewModelHelper.BindNotification(TimeTickCall, this, (o, e) =>
             {
@@ -105,47 +104,33 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
         {
             get
             {
-                switch (this.Info.RestConnectionState)
+                switch (this.Info.UserStreamsConnectionState)
                 {
                     case ConnectionState.Disconnected:
-                        return "接続されていません";
+                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                            return "REST APIで接続しています";
+                        else
+                            return "接続しています";
                     case ConnectionState.WaitNetwork:
-                        return "ネットワーク接続を待っています...";
+                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                            return "User Streams: ネットワーク接続を待っています...";
+                        else
+                            return "リアルタイム接続を試行しています...";
                     case ConnectionState.WaitTwitter:
-                        return "Twitterの応答を待っています...";
+                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                            return "User Streams: Twitterの応答を待っています...";
+                        else
+                            return "リアルタイム接続を試行しています...";
                     case ConnectionState.TryConnection:
-                        return "接続を開始しています...";
+                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                            return "User Streams 接続を開始しています...";
+                        else
+                            return "リアルタイム接続を開始しています...";
                     case ConnectionState.Connected:
-                        switch (this.Info.UserStreamsConnectionState)
-                        {
-                            case ConnectionState.Disconnected:
-                                if (Setting.Instance.ExperienceProperty.PowerUserMode)
-                                    return "REST APIで接続しています";
-                                else
-                                    return "接続しています";
-                            case ConnectionState.WaitNetwork:
-                                if (Setting.Instance.ExperienceProperty.PowerUserMode)
-                                    return "User Streams: ネットワーク接続を待っています...";
-                                else
-                                    return "リアルタイム接続を試行しています...";
-                            case ConnectionState.WaitTwitter:
-                                if (Setting.Instance.ExperienceProperty.PowerUserMode)
-                                    return "User Streams: Twitterの応答を待っています...";
-                                else
-                                    return "リアルタイム接続を試行しています...";
-                            case ConnectionState.TryConnection:
-                                if (Setting.Instance.ExperienceProperty.PowerUserMode)
-                                    return "User Streams 接続を開始しています...";
-                                else
-                                    return "リアルタイム接続を開始しています...";
-                            case ConnectionState.Connected:
-                                if (Setting.Instance.ExperienceProperty.PowerUserMode)
-                                    return "User Streams 接続しています";
-                                else
-                                    return "リアルタイム接続しています";
-                            default:
-                                return "接続状況が不明です。(US)";
-                        }
+                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                            return "User Streams 接続しています";
+                        else
+                            return "リアルタイム接続しています";
                     default:
                         return "接続状況が不明です。";
                 }

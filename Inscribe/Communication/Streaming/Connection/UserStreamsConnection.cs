@@ -7,7 +7,7 @@ using Inscribe.Model;
 using Inscribe.Storage;
 using Inscribe.Threading;
 
-namespace Inscribe.Communication.MainTimeline.Connection
+namespace Inscribe.Communication.Streaming.Connection
 {
     public class UserStreamsConnection : IDisposable
     {

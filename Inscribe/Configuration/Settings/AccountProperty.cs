@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
+using Inscribe.Model;
+using Inscribe.Storage;
 
 namespace Inscribe.Configuration.Settings
 {
     public class AccountProperty
     {
-
-    }
-
-    /// <summary>
-    /// アカウントに依存する設定値を保持します。
-    /// </summary>
-    public class AccountConfig
-    {
-        public AccountConfig()
+        public AccountInfo[] Accounts
         {
-
+            get { return AccountStorage.Accounts.ToArray(); }
+            set
+            {
+                if (value != null)
+                {
+                    value.ForEach(a => AccountStorage.RegisterAccount(a));
+                }
+            }
         }
     }
 }

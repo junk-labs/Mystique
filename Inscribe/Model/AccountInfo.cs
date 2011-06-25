@@ -73,43 +73,6 @@ namespace Inscribe.Model
             get { return Storage.UserStorage.Get(this.ScreenName); }
         }
 
-        #region RestConnectionStateChangedイベント
-
-        public event EventHandler<EventArgs> RestConnectionStateChanged;
-        private Notificator<EventArgs> _RestConnectionStateChangedEvent;
-        public Notificator<EventArgs> RestConnectionStateChangedEvent
-        {
-            get
-            {
-                if (_RestConnectionStateChangedEvent == null) _RestConnectionStateChangedEvent = new Notificator<EventArgs>();
-                return _RestConnectionStateChangedEvent;
-            }
-            set { _RestConnectionStateChangedEvent = value; }
-        }
-
-        protected void OnRestConnectionStateChanged(EventArgs e)
-        {
-            var threadSafeHandler = Interlocked.CompareExchange(ref RestConnectionStateChanged, null, null);
-            if (threadSafeHandler != null) threadSafeHandler(this, e);
-            RestConnectionStateChangedEvent.Raise(e);
-        }
-
-        #endregion
-
-        private ConnectionState _restConnectionState = ConnectionState.Disconnected;
-        public ConnectionState RestConnectionState
-        {
-            get { return this._restConnectionState; }
-            internal set
-            {
-                if (this._restConnectionState == value) return;
-                this._restConnectionState = value;
-                OnRestConnectionStateChanged(EventArgs.Empty);
-            }
-        }
-
-
-
         #region UserStreamsConnectionChangedイベント
 
         public event EventHandler<EventArgs> UserStreamsConnectionChanged;
@@ -132,7 +95,7 @@ namespace Inscribe.Model
         }
 
         #endregion
-      
+
 
         private ConnectionState _userStreamsConnectionState = ConnectionState.Disconnected;
         public ConnectionState UserStreamsConnectionState

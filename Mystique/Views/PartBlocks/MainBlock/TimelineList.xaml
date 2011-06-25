@@ -1,0 +1,48 @@
+﻿<UserControl xmlns:cp="clr-namespace:Mystique.Views.CustomPanels"
+             xmlns:tchild="clr-namespace:Mystique.Views.PartBlocks.MainBlock.TimelineChild"
+             x:Class="Mystique.Views.PartBlocks.MainBlock.TimelineList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf" 
+             xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
+             xmlns:v="clr-namespace:Mystique.Views" 
+             xmlns:pb="clr-namespace:Mystique.Views.Behaviors.Particular"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="300">
+    <UserControl.Resources>
+        <DataTemplate x:Key="NormalStatusTemplate">
+            <tchild:TimelineItem HorizontalAlignment="Stretch" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="SelectedStatusTemplate">
+            <tchild:TimelineSelectedItem HorizontalAlignment="Stretch" />
+        </DataTemplate>
+
+        <Style TargetType="{x:Type ListBoxItem}" x:Key="ContainerStyle">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="ContentTemplate" Value="{StaticResource NormalStatusTemplate}" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="ContentTemplate" Value="{StaticResource SelectedStatusTemplate}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <cp:FillPanel>
+        <ListBox x:Name="List" Padding="0" ItemsSource="{Binding TweetViewModels}" AlternationCount="2"
+                HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Visible" VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                ItemContainerStyle="{StaticResource ContainerStyle}" InputMethod.IsInputMethodEnabled="False">
+            <i:Interaction.Behaviors>
+                <pb:SquaredScrollBehavior />
+                <pb:MouseOverBindBehavior IsMouseOver="{Binding IsMouseOver, Mode=OneWayToSource}" />
+            </i:Interaction.Behaviors>
+        </ListBox>
+    </cp:FillPanel>
+</UserControl>

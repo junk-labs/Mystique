@@ -7,7 +7,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:l="clr-namespace:Livet;assembly=Livet"
-             xmlns:mb="clr-namespace:Mystique.Views.Behaviors"
+             xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:cbs="clr-namespace:Livet.Behaviors.ControlBindingSupport;assembly=Livet"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 

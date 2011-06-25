@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Interactivity;
 
-namespace Mystique.Views.Behaviors
+namespace Mystique.Views.Behaviors.Actions
 {
     public class FrameworkActualWidthAction : TriggerAction<FrameworkElement>
     {

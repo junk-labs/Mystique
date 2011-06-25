@@ -43,9 +43,7 @@
             </ItemsPanelTemplate>
         </StatusBar.ItemsPanel>
         <StatusBarItem Grid.Column="1" Padding="0">
-            <ToggleButton Command="{Binding ShowAdditionalInfoCommand}" x:Name="AdditionalInfoOriginPoint"
-                    IsChecked="{Binding IsAdditionalInfoOpen, Mode=OneWay}"
-                    Style="{StaticResource FlatToggleButtonStyle}" Focusable="False">
+            <com:PopupButton Focusable="False" Style="{StaticResource FlatToggleButtonStyle}">
                 <Canvas Width="20" Height="16" Margin="2">
                     <Image Source="{StaticResource StateOk}" Width="16" Height="16"
                             Visibility="{Binding State, Converter={StaticResource StringEqualVisibleConverter}, ConverterParameter=Ok}">
@@ -67,15 +65,28 @@
                     </Image>
                     <Image Source="{StaticResource Chevron}" Width="6" Height="6" Canvas.Left="13" Canvas.Top="10" />
                 </Canvas>
-            </ToggleButton>
+                <com:PopupButton.DropDownPopup>
+                    <Popup Placement="Top">
+                        <Border Background="White" BorderBrush="Gray" BorderThickness="1">
+                            <this:SystemInfo DataContext="{Binding NotifyBlockAdditionalInfoViewModel}" />
+                        </Border>
+                    </Popup>
+                </com:PopupButton.DropDownPopup>
+            </com:PopupButton>
         </StatusBarItem>
         <StatusBarItem Grid.Column="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center"
                 ToolTip="現在の処理状態を示します。クリックすると、Twitterイベント履歴を表示します。" Padding="0">
-            <ToggleButton x:Name="EventInfoOriginPoint" Command="{Binding ShowTwitterEventInfoCommand}"
-                    HorizontalContentAlignment="Stretch" IsChecked="{Binding IsTwitterEventInfoOpen}"
-                    Style="{StaticResource FlatToggleButtonStyle}" Focusable="False">
+            <com:PopupButton HorizontalContentAlignment="Stretch" Style="{StaticResource FlatToggleButtonStyle}"
+                    Focusable="False">
                 <TextBlock Text="done" Margin="2" />
-            </ToggleButton>
+                <com:PopupButton.DropDownPopup>
+                    <Popup Placement="Top" StaysOpen="False">
+                        <Border Background="White" BorderBrush="Gray" BorderThickness="1">
+                            <this:TwitterEventInfo DataContext="{Binding TwitterEventInfoViewModel}" />
+                        </Border>
+                    </Popup>
+                </com:PopupButton.DropDownPopup>
+            </com:PopupButton>
         </StatusBarItem>
         <StatusBarItem Grid.Column="3" ToolTip="画像をダウンロードしています..."
                 Visibility="{Binding ImageDownloading, Converter={StaticResource BoolVisibleConverter}}">
@@ -130,17 +141,5 @@
             <Canvas Width="10" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=WindowState, 
                     Converter={StaticResource MaximizeToInvisibleConverter}}" />
         </StatusBarItem>
-        <Popup Placement="Top" PlacementTarget="{Binding ElementName=AdditionalInfoOriginPoint}"
-                IsOpen="{Binding IsAdditionalInfoOpen, Mode=TwoWay}" StaysOpen="False">
-            <Border Background="White" BorderBrush="Gray" BorderThickness="1">
-                <this:SystemInfo DataContext="{Binding NotifyBlockAdditionalInfoViewModel}" />
-            </Border>
-        </Popup>
-        <Popup Placement="Top" PlacementTarget="{Binding ElementName=EventInfoOriginPoint}"
-                IsOpen="{Binding IsTwitterEventInfoOpen, Mode=TwoWay}" StaysOpen="False">
-            <Border Background="White" BorderBrush="Gray" BorderThickness="1">
-                <this:TwitterEventInfo DataContext="{Binding TwitterEventInfoViewModel}" />
-            </Border>
-        </Popup>
     </StatusBar>
 </UserControl>

@@ -10,6 +10,7 @@ using Livet.Messaging;
 using Livet.Messaging.File;
 using Livet.Messaging.Window;
 using Mystique.ViewModels.PartBlocks.NotifyBlock;
+using Mystique.ViewModels.PartBlocks.InputBlock;
 
 namespace Mystique.ViewModels
 {
@@ -22,7 +23,11 @@ namespace Mystique.ViewModels
     /// </remarks>
     public class MainWindowViewModel : ViewModel
     {
-
+        private InputBlockViewModel _inputBlockViewModel = new InputBlockViewModel();
+        public InputBlockViewModel InputBlockViewModel
+        {
+            get { return this._inputBlockViewModel; }
+        }
 
         private NotifyBlockViewModel _notifyBlockViewModel = new NotifyBlockViewModel();
         public NotifyBlockViewModel NotifyBlockViewModel

@@ -7,6 +7,7 @@ using Inscribe.Core;
 using Inscribe.Storage;
 using Octave.Caching;
 using Livet.Command;
+using Inscribe.Communication.Posting;
 
 namespace Mystique.ViewModels.PartBlocks.NotifyBlock
 {
@@ -24,6 +25,7 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
             // InformServer.EventRegistered += new InformServer.NotifyEventHandler(InformServer_EventRegistered);
             // InformServer.ReportRegistered += new InformServer.ReportRegisterHandler(InformServer_ReportRegistered);
             ViewModelHelper.BindNotification(NotifyStorage.NotifyTextChangedEvent, this, (o, e) => RaisePropertyChanged(() => StatusText));
+            ViewModelHelper.BindNotification(ExceptionStorage.ExceptionUpdatedEvent, this, (o, e) => RaisePropertyChanged(() => State));
             ViewModelHelper.BindNotification(Statistics.WakeupTimeUpdatedEvent, this, (o, e) => RaisePropertyChanged(() => WakeupTime));
             ViewModelHelper.BindNotification(Statistics.TweetSpeedUpdatedEvent, this, (o, e) =>
             {
@@ -45,7 +47,10 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
         {
             get
             {
-                return StateImages.Ok;
+                if (ExceptionStorage.Exceptions.Count() > 0)
+                    return StateImages.Error;
+                else
+                    return StateImages.Ok;
             }
         }
 

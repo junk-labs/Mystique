@@ -92,15 +92,25 @@
     <Compile Include="Core\Initializer.cs" />
     <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="ViewModels\Common\ImageStackingViewViewModel.cs" />
+    <Compile Include="ViewModels\Common\UserSelectorViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\InputBlock\InputBlockViewModel.cs" />
+    <Compile Include="Views\Behaviors\Actions\FrameworkSetFocusAction.cs" />
+    <Compile Include="Views\Behaviors\Particular\KeyBindingHandlerBehavior.cs" />
+    <Compile Include="Views\Behaviors\Particular\MouseOverBindBehavior.cs" />
+    <Compile Include="Views\Behaviors\Particular\SquaredScrollBehavior.cs" />
+    <Compile Include="Views\Common\DropDownButton.cs" />
+    <Compile Include="Views\Common\UserSelector.xaml.cs">
+      <DependentUpon>UserSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PartBlocks\BlockCommon\Notifier.xaml.cs">
       <DependentUpon>Notifier.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\SystemInfoViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\NotifyBlockViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\TwitterEventInfoViewModel.cs" />
-    <Compile Include="Views\Behaviors\FrameworkActualWidthAction.cs" />
+    <Compile Include="Views\Behaviors\Actions\FrameworkActualWidthAction.cs" />
     <Compile Include="Views\Chrome\ButtonChromeEx.cs" />
     <Compile Include="Views\Common\ImageStackingView.xaml.cs">
       <DependentUpon>ImageStackingView.xaml</DependentUpon>
@@ -127,8 +137,20 @@
     <Compile Include="Views\Dialogs\SettingSub\AccountConfig.xaml.cs">
       <DependentUpon>AccountConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PartBlocks\InputBlock\InputBlock.xaml.cs">
+      <DependentUpon>InputBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PartBlocks\MainBlock\ColumnOwner.xaml.cs">
+      <DependentUpon>ColumnOwner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml.cs">
       <DependentUpon>TimelineItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineSelectedItem.xaml.cs">
+      <DependentUpon>TimelineSelectedItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PartBlocks\MainBlock\TimelineList.xaml.cs">
+      <DependentUpon>TimelineList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PartBlocks\NotifyBlock\NotifyBlock.xaml.cs">
       <DependentUpon>NotifyBlock.xaml</DependentUpon>
@@ -148,6 +170,10 @@
     <Page Include="Simple Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Common\UserSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PartBlocks\BlockCommon\Notifier.xaml">
       <SubType>Designer</SubType>
@@ -182,7 +208,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PartBlocks\InputBlock\InputBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PartBlocks\MainBlock\ColumnOwner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineSelectedItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PartBlocks\MainBlock\TimelineList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -227,6 +269,10 @@
     <Content Include="InfrastructureAssemblies\Design\Livet.Design.dll" />
     <Content Include="InfrastructureAssemblies\Design\Livet.Expression.Design.dll" />
     <Content Include="InfrastructureAssemblies\Livet.dll" />
+    <Resource Include="Resources\cross_gray.png" />
+    <Resource Include="Resources\image_add.png" />
+    <Resource Include="Resources\bullet_green.png" />
+    <Resource Include="Resources\bullet_red.png" />
     <Resource Include="Resources\retry.png" />
     <Resource Include="Resources\information.png" />
     <Resource Include="Resources\dropdown.png" />
@@ -267,7 +313,6 @@
     <Resource Include="Resources\heart.png" />
     <Resource Include="Resources\help.png" />
     <Resource Include="Resources\image.png" />
-    <Resource Include="Resources\image_link.png" />
     <Resource Include="Resources\kettamachine.png" />
     <Resource Include="Resources\krile.ico" />
     <Resource Include="Resources\krile.png" />
@@ -351,9 +396,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\PartBlocks\InputBlock\" />
     <Folder Include="ViewModels\PartBlocks\MainBlock\TimelineChild\" />
-    <Folder Include="Views\PartBlocks\InputBlock\" />
+    <Folder Include="Views\Behaviors\Messages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

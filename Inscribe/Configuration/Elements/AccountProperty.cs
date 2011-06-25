@@ -13,32 +13,14 @@ namespace Inscribe.Configuration.Elements
         public AccountProperty()
         {
             this.UserStreamsRepliesAll = false;
-            this.ConnectionKind = Elements.ConnectionKind.UserStreams;
-            this.RestHomeInterval = TwitterDefine.RestHomeInterval;
-            this.RestMentionsInterval = TwitterDefine.RestMentionsInterval;
-            this.RestDirectMessagesInterval = TwitterDefine.RestDirectMessagesInterval;
-            this.RestFavoredInterval = TwitterDefine.RestFavoredInterval;
+            this.UseUserStreams = true;
+            this.AutoCruiseDefaultMu = 0.8;
         }
 
         public bool UserStreamsRepliesAll { get; set; }
 
-        public ConnectionKind ConnectionKind { get; set; }
+        public bool UseUserStreams { get; set; }
 
-        public int RestHomeInterval { get; set; }
-        public int RestMentionsInterval { get; set; }
-        public int RestDirectMessagesInterval { get; set; }
-        public int RestFavoredInterval { get; set; }
-
-        public int? UserStreamsOverrideRestHomeInterval { get; set; }
-        public int? UserStreamsOverrideRestMentionsInterval { get; set; }
-        public int? UserStreamsOverrideRestDirectMessagesInterval { get; set; }
-        public int? UserStreamsOverrideRestFavoredInterval { get; set; }
-    }
-
-    public enum ConnectionKind
-    {
-        None,
-        Rest,
-        UserStreams,
+        public double AutoCruiseDefaultMu { get; set; }
     }
 }

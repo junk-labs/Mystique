@@ -26,7 +26,7 @@ namespace Inscribe.Core
         static Statistics()
         {
             tweetSpeedUpdate = new Timer(TweetSpeedUpdateSink, null, 0, 1000 * 20);
-            wakeUpTimeUpdate = new Timer(WakeupTimeUpdateSink, null, 0, 500);
+            wakeUpTimeUpdate = new Timer(WakeupTimeUpdateSink, null, 0, 1000);
         }
 
         private static void TweetSpeedUpdateSink(object o)
@@ -46,7 +46,7 @@ namespace Inscribe.Core
         }
 
         #region TweetSpeedUpdatedイベント
-        
+
         public static event EventHandler<EventArgs> TweetSpeedUpdated;
         private static Notificator<EventArgs> _TweetSpeedUpdatedEvent;
         public static Notificator<EventArgs> TweetSpeedUpdatedEvent
@@ -91,7 +91,7 @@ namespace Inscribe.Core
         }
 
         #endregion
-      
+
 
         public static int TweetSpeedPerMin { get; private set; }
 

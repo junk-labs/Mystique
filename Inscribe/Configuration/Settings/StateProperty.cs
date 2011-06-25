@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Inscribe.Configuration.Tabs;
+using System.Xml.Serialization;
 
 namespace Inscribe.Configuration.Settings
 {
@@ -20,7 +22,21 @@ namespace Inscribe.Configuration.Settings
 
         public bool IsSideViewInLeft { get; set; }
 
-        // public Data.TabData[] TabDatas { get; set; }
+        [XmlIgnore()]
+        public IEnumerable<IEnumerable<TabProperty>> TabColumns { get; set; }
+
+        [XmlArray("TabColumns")]
+        public TabProperty[][] _TabColumnsArray
+        {
+            get
+            {
+                return this.TabColumns.Select(i => i.ToArray()).ToArray();
+            }
+            set
+            {
+                this.TabColumns = value;
+            }
+        }
 
         /// <summary>
         /// サイレントモードにあるか

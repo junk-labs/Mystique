@@ -26,19 +26,15 @@ namespace Mystique.Views.Common
 
         // Using a DependencyProperty as the backing store for DropDownPopup.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DropDownPopupProperty =
-            DependencyProperty.Register("DropDownPopup", typeof(Popup), typeof(PopupButton), new FrameworkPropertyMetadata(null));
+            DependencyProperty.Register("DropDownPopup", typeof(Popup), typeof(PopupButton), new FrameworkPropertyMetadata(null, DropDownPopupChanged));
 
-        /// <summary>
-        /// コントロールがクリックされた時のイベントです。
-        /// </summary>
-        protected override void OnClick()
+        private static void DropDownPopupChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
-            if (this.DropDownPopup == null)
-                return;
-            this.DropDownPopup.PlacementTarget = this;
-            this.DropDownPopup.StaysOpen = false;
-            this.DropDownPopup.Placement = PlacementMode.Bottom;
-            this.DropDownPopup.IsOpen = !this.DropDownPopup.IsOpen;
+            var pb = o as PopupButton;
+            var pop = e.NewValue as Popup;
+            if (pb == null || pop == null) return;
+            pop.PlacementTarget = pb;
+            pop.StaysOpen = false;
         }
     }
 }

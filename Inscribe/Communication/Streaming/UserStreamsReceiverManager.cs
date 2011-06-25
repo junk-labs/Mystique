@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Inscribe.Model;
-using Inscribe.Configuration;
-using Inscribe.Storage;
-using Dulcet.Twitter.Rest;
 using System.Threading;
+using Dulcet.Twitter.Rest;
+using Inscribe.Model;
+using Inscribe.Storage;
 using Inscribe.Threading;
 
-namespace Inscribe.Communication.MainTimeline
+namespace Inscribe.Communication.Streaming
 {
-    public static class ReceiverManager
+    public static class UserStreamsReceiverManager
     {
-        static Dictionary<AccountInfo, Receiver> receivers = new Dictionary<AccountInfo, Receiver>();
+        static Dictionary<AccountInfo, UserStreamsReceiver> receivers = new Dictionary<AccountInfo, UserStreamsReceiver>();
 
         static Timer userInfoUpdateTimer = null;
 
@@ -37,7 +35,7 @@ namespace Inscribe.Communication.MainTimeline
             foreach (var i in addeds)
             {
                 // 新規接続
-                var recv = new Receiver(i);
+                var recv = new UserStreamsReceiver(i);
                 ReceiveInidividualInfo(i);
                 recv.UpdateConnection();
             }

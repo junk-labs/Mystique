@@ -61,12 +61,19 @@
     <Compile Include="Common\TwitterHelper.cs" />
     <Compile Include="Common\XMLSerializer.cs" />
     <Compile Include="Communication\APIHelper.cs" />
-    <Compile Include="Communication\Lists\ListReceiver.cs" />
-    <Compile Include="Communication\Lists\ListReceiverManager.cs" />
-    <Compile Include="Communication\MainTimeline\Connection\RestConnection.cs" />
-    <Compile Include="Communication\MainTimeline\Connection\UserStreamsConnection.cs" />
-    <Compile Include="Communication\MainTimeline\Receiver.cs" />
-    <Compile Include="Communication\MainTimeline\ReceiverManager.cs" />
+    <Compile Include="Communication\CruiseControl\AccountScheduler.cs" />
+    <Compile Include="Communication\CruiseControl\AutoCruiseSchedulerManager.cs" />
+    <Compile Include="Communication\CruiseControl\DefaultTasks\DirectMessageReceiveTask.cs" />
+    <Compile Include="Communication\CruiseControl\DefaultTasks\FavoritesReceiveTask.cs" />
+    <Compile Include="Communication\CruiseControl\DefaultTasks\HomeReceiveTask.cs" />
+    <Compile Include="Communication\CruiseControl\DefaultTasks\MentionReceiveTask.cs" />
+    <Compile Include="Communication\CruiseControl\DefaultTasks\ReceiveTaskBase.cs" />
+    <Compile Include="Communication\CruiseControl\DefaultTasks\SentDirectMessageReceiveTask.cs" />
+    <Compile Include="Communication\CruiseControl\Lists\ListReceiverManager.cs" />
+    <Compile Include="Communication\CruiseControl\Lists\ListReceiveTask.cs" />
+    <Compile Include="Communication\Streaming\Connection\UserStreamsConnection.cs" />
+    <Compile Include="Communication\Streaming\UserStreamsReceiver.cs" />
+    <Compile Include="Communication\Streaming\UserStreamsReceiverManager.cs" />
     <Compile Include="Communication\Posting\PostOffice.cs" />
     <Compile Include="Communication\Posting\TweetAnnotationException.cs" />
     <Compile Include="Communication\Posting\TweetFailedException.cs" />
@@ -138,6 +145,7 @@
     <Compile Include="Filter\Core\Escaping.cs" />
     <Compile Include="Filter\Core\IQueryConvertable.cs" />
     <Compile Include="Filter\Core\QueryCompiler.cs" />
+    <Compile Include="KeyAssign\AssignManager.cs" />
     <Compile Include="Model\AccountInfo.cs" />
     <Compile Include="Model\CredentialCore.cs" />
     <Compile Include="Plugin\PluginManager.cs" />
@@ -174,6 +182,10 @@
     <ProjectReference Include="..\Dulcet\Dulcet.csproj">
       <Project>{8D33449B-0BD8-4873-B872-0E91FA7EBC4B}</Project>
       <Name>Dulcet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Supervisor\Supervisor.csproj">
+      <Project>{A476C562-E73E-41EC-BB2C-F47E07A8D0D5}</Project>
+      <Name>Supervisor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

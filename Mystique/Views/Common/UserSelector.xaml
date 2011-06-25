@@ -1,0 +1,44 @@
+﻿<UserControl xmlns:my="clr-namespace:Mystique.Views.Common" x:Class="Mystique.Views.Common.UserSelector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300"
+        d:DesignWidth="300">
+    <UserControl.Resources>
+        <BitmapImage UriSource="/Resources/bullet_green.png" x:Key="CheckAll" />
+        <BitmapImage UriSource="/Resources/bullet_red.png" x:Key="UncheckAll" />
+    </UserControl.Resources>
+        <StackPanel Orientation="Vertical">
+        <ItemsControl MaxWidth="480" ItemsSource="{Binding LinkDatas}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ToggleButton IsChecked="{Binding IsLink, Mode=TwoWay}">
+                        <ToggleButton.InputBindings>
+                            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding SelectThisCommand}" />
+                        </ToggleButton.InputBindings>
+                        <my:LazyImage Margin="2" Width="32" Height="32" UriSource="{Binding UserProfileImageUri}" />
+                        <ToggleButton.ToolTip>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontWeight="Bold" Text="{Binding ScreenName, StringFormat=@{0}, Mode=OneWay}" />
+                                <TextBlock Text="ダブルクリックでこのユーザーのみ選択します。" />
+                            </StackPanel>
+                        </ToggleButton.ToolTip>
+                    </ToggleButton>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <StackPanel Orientation="Horizontal">
+            <Button ToolTip="全てチェックする" Command="{Binding CheckAll}">
+                <Image Source="{StaticResource CheckAll}" Width="8" Height="8" Margin="2" />
+            </Button>
+            <Button ToolTip="全てチェックを外す" Command="{Binding UncheckAll}">
+                <Image Source="{StaticResource UncheckAll}" Width="8" Height="8" Margin="2" />
+            </Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
