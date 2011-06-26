@@ -10,15 +10,15 @@ namespace Inscribe
 
         public static readonly int UserStreamsQueryMaxCount = 200;
 
-        public static readonly int HomeReceiveMaxCount = 200;
+        public static readonly int HomeReceiveMaxCount = 150;
 
-        public static readonly int MentionReceiveMaxCount = 200;
+        public static readonly int MentionReceiveMaxCount = 100;
 
-        public static readonly int DmReceiveMaxCount = 200;
+        public static readonly int DmReceiveMaxCount = 50;
 
         public static readonly int DefaultReceiveCount = 20;
 
-        public static readonly int ListReceiveCount = 200;
+        public static readonly int ListReceiveCount = 100;
 
         #endregion
 
@@ -31,7 +31,11 @@ namespace Inscribe
 
         #region Cluise Control
 
-        public static double MinNewbiesRate = 0.01; // 1%
+        public static readonly double MinNewbiesRate = 0.01; // 1%
+        public static readonly double TimesPerTweetMaximumValue = 1000 * 60 * 60; // 1hに1ツイートはあることにする
+        public static readonly int MinWindowTime = 5 * 1000;
+        public static readonly int IntervalLookPrevious = 10;
+        public static readonly double MinDensity = 0.1;
 
         #endregion
     }

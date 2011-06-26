@@ -38,7 +38,8 @@ namespace Inscribe.Communication.CruiseControl
 
         protected override void OnFallingASleep()
         {
-            this.TaskRateLimit = this._accountInfo.RateLimitRemaining;
+            this.TaskRateLimit = this._accountInfo.RateLimitRemaining
+                - (int)(this._accountInfo.RateLimitMax * (1 - this._accountInfo.AccoutProperty.AutoCruiseApiConsumeRate));
             int wndTime = (int)this._accountInfo.RateLimitReset.Subtract(DateTime.Now).TotalMilliseconds;
             if (wndTime < 0)
                 this.WindowTime = 0;
@@ -49,6 +50,22 @@ namespace Inscribe.Communication.CruiseControl
         protected override void OnWakeup()
         {
             this.TargetMu = this._accountInfo.AccoutProperty.AutoCruiseDefaultMu;
+        }
+
+        protected override int MinWindowTime
+        {
+            get
+            {
+                return TwitterDefine.MinWindowTime;
+            }
+        }
+
+        protected override double MinDensity
+        {
+            get
+            {
+                return TwitterDefine.MinDensity;
+            }
         }
     }
 }

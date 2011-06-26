@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using Inscribe.Common;
 using Inscribe.Configuration.Settings;
-using System.ComponentModel;
 using Inscribe.Storage;
+using Livet;
 
 namespace Inscribe.Configuration
 {
@@ -65,11 +64,33 @@ namespace Inscribe.Configuration
             }
         }
 
-        public static event Action SettingValueChanged = () => { };
+        
+        #region SettingValueChangedイベント
+
+        public static event EventHandler<EventArgs> SettingValueChanged;
+        private static Notificator<EventArgs> _SettingValueChangedEvent;
+        public static Notificator<EventArgs> SettingValueChangedEvent
+        {
+            get
+            {
+                if (_SettingValueChangedEvent == null) _SettingValueChangedEvent = new Notificator<EventArgs>();
+                return _SettingValueChangedEvent;
+            }
+            set { _SettingValueChangedEvent = value; }
+        }
+
+        private static void OnSettingValueChanged(EventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref SettingValueChanged, null, null);
+            if (threadSafeHandler != null) threadSafeHandler(null, e);
+            SettingValueChangedEvent.Raise(e);
+        }
+
+        #endregion
 
         public static void RaiseSettingValueChanged()
         {
-            SettingValueChanged();
+            OnSettingValueChanged(EventArgs.Empty);
             // TweetModel.RaiseInvalidateAllCache();
         }
 

@@ -80,7 +80,7 @@ namespace Inscribe.Data
 
         public IEnumerator<T> GetEnumerator()
         {
-            return this.BehindArray.GetEnumerator() as IEnumerator<T>;
+            return this.BehindArray.Cast<T>().GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -94,7 +94,7 @@ namespace Inscribe.Data
         {
             var handler = this.CollectionChanged;
             if (handler != null)
-                handler(this, e);
+                DispatcherHelper.BeginInvoke(() => handler(this, e));
         }
 
         bool ICollection<T>.IsReadOnly

@@ -7,7 +7,7 @@ using Dulcet.Twitter;
 using Inscribe.Storage;
 using Supervisor;
 
-namespace Inscribe.Communication.CruiseControl.DefaultTasks
+namespace Inscribe.Communication.CruiseControl
 {
     public abstract class ReceiveTaskBase : ScheduledTask
     {
@@ -23,8 +23,6 @@ namespace Inscribe.Communication.CruiseControl.DefaultTasks
             {
                 var t = DateTime.Now.Subtract(previousReceived).TotalMilliseconds;
                 var tp = t * newbiesRate;
-                if(newbiesRate < TwitterDefine.MinNewbiesRate)
-                    tp = t * TwitterDefine.MinNewbiesRate;
                 return tp / (tp + this.ReceiveCount * timesPerTweet);
             }
         }
@@ -35,16 +33,21 @@ namespace Inscribe.Communication.CruiseControl.DefaultTasks
         {
             try
             {
-                var received = GetTweets().ToArray();
+                var received = (GetTweets() ?? new TwitterStatusBase[0]).ToArray();
                 previousReceived = DateTime.Now;
                 var newbiesCount = received.Count(s => TweetStorage.Contains(s.Id) == TweetExistState.Unreceived);
                 received.ForEach(s => TweetStorage.Register(s));
-                var oldest = received.LastOrDefault();
+                var pivotarray = received.Take(TwitterDefine.IntervalLookPrevious).ToArray();
+                var pivot = pivotarray.LastOrDefault();
                 var newest = received.FirstOrDefault();
-                if (oldest != null && newest != null)
+                if (pivot != null && newest != null)
                 {
                     newbiesRate = (double)newbiesCount / received.Length;
-                    timesPerTweet = (double)(newest.CreatedAt.Subtract(oldest.CreatedAt)).TotalMilliseconds / received.Length;
+                    if (newbiesRate < TwitterDefine.MinNewbiesRate)
+                        newbiesRate = TwitterDefine.MinNewbiesRate;
+                    timesPerTweet = (double)(newest.CreatedAt.Subtract(pivot.CreatedAt)).TotalMilliseconds / pivotarray.Length;
+                    if (timesPerTweet > TwitterDefine.TimesPerTweetMaximumValue)
+                        timesPerTweet = TwitterDefine.TimesPerTweetMaximumValue;
                 }
             }
             catch (WebException ex)

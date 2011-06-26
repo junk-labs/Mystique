@@ -32,7 +32,8 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <my:LazyImage Width="48" Height="48" Margin="2" VerticalAlignment="Center" />
+                            <my:LazyImage Width="48" Height="48" Margin="2" VerticalAlignment="Center"
+                                    UriSource="{Binding ProfileImage}" />
                             <Grid Grid.Column="1" VerticalAlignment="Center">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -58,7 +59,7 @@
                             </TextBlock.Text>
                                 </TextBlock>
 
-                                <TextBlock Visibility="{Binding IsAccountUnderControlled}" Foreground="Red"
+                                <TextBlock Visibility="{Binding IsAccountUnderControlled, Converter={StaticResource BoolVisibleConverter}}" Foreground="Red"
                                         FontWeight="Bold" Grid.Row="2" Margin="2"
                                         Text="{Binding AccountControlReleaseTime, StringFormat=POST規制:{0}に解除と推測, FallbackValue=POST規制されていますが、解除時間を特定できません}" />
                             </Grid>

@@ -39,6 +39,7 @@ namespace System.Windows.Data
     {
         protected TTarget ConvertSink<TSource, TTarget>(object value, object parameter, Func<TSource, object, TTarget> converter)
         {
+            var cname = this.GetType().ToString();
             if (IsInDesignTime)
             {
                 try

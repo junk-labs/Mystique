@@ -98,6 +98,11 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
             });
         }
 
+        public Uri ProfileImage
+        {
+            get { return this.Info.UserViewModel.TwitterUser.ProfileImage; }
+        }
+
         public string ScreenName { get { return this.Info.ScreenName; } }
 
         public string ConnectState

@@ -11,48 +11,48 @@ using Inscribe.Common;
 
 namespace Mystique.Views.Converters.Particular
 {
+    public enum UserNameViewKind
+    {
+        ScreenName,
+        Name,
+        ViewName,
+        RetweetedScreenName,
+        DirectMessageTarget
+    }
+
     public class TVMToUserNameConverter : OneWayConverter<TweetViewModel, string>
     {
-        public enum ViewKind
-        {
-            ScreenName,
-            Name,
-            ViewName,
-            RetweetedScreenName,
-            DirectMessageTarget
-        }
 
         public override string ToTarget(TweetViewModel input, object parameter)
         {
             if (input == null) return String.Empty;
-            var status = input;
-            ViewKind kind;
-            if (!Enum.TryParse<ViewKind>(parameter as string, out kind))
-                kind = ViewKind.ScreenName;
+            UserNameViewKind kind;
+            if (!Enum.TryParse(parameter as string, out kind))
+                kind = UserNameViewKind.ScreenName;
             switch (kind)
             {
-                case ViewKind.Name:
-                    return UserName(status);
-                case ViewKind.ScreenName:
-                    return ScreenName(status);
-                case ViewKind.RetweetedScreenName:
-                    if (status == null) return String.Empty;
-                    return status.Status.User.ScreenName;
-                case ViewKind.ViewName:
+                case UserNameViewKind.Name:
+                    return UserName(input);
+                case UserNameViewKind.ScreenName:
+                    return ScreenName(input);
+                case UserNameViewKind.RetweetedScreenName:
+                    if (input == null) return String.Empty;
+                    return input.Status.User.ScreenName;
+                case UserNameViewKind.ViewName:
                     switch (Setting.Instance.TweetExperienceProperty.UserNameMode)
                     {
                         case TweetExperienceProperty.NameViewMode.ID:
-                            return ScreenName(status);
+                            return ScreenName(input);
                         case TweetExperienceProperty.NameViewMode.Name:
-                            return UserName(status);
+                            return UserName(input);
                         case TweetExperienceProperty.NameViewMode.Both:
-                            return ScreenName(status) + " (" + UserName(status) + ")";
+                            return ScreenName(input) + " (" + UserName(input) + ")";
                         default:
                             return String.Empty;
                     }
-                case ViewKind.DirectMessageTarget:
-                    if (status == null || !(status.Status is TwitterDirectMessage)) return String.Empty;
-                    return ((TwitterDirectMessage)status.Status).Recipient.ScreenName ?? String.Empty;
+                case UserNameViewKind.DirectMessageTarget:
+                    if (input == null || !(input.Status is TwitterDirectMessage)) return String.Empty;
+                    return ((TwitterDirectMessage)input.Status).Recipient.ScreenName ?? String.Empty;
 
                 default:
                     return String.Empty;

@@ -12,7 +12,7 @@ namespace Inscribe.Communication.CruiseControl.DefaultTasks
         private AccountInfo _accountInfo;
         public AccountInfo AccountInfo
         {
-            get { return this.AccountInfo; }
+            get { return this._accountInfo; }
         }
 
         public FavoritesReceiveTask(AccountInfo info)

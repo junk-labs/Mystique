@@ -67,7 +67,7 @@
     <Compile Include="Communication\CruiseControl\DefaultTasks\FavoritesReceiveTask.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\HomeReceiveTask.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\MentionReceiveTask.cs" />
-    <Compile Include="Communication\CruiseControl\DefaultTasks\ReceiveTaskBase.cs" />
+    <Compile Include="Communication\CruiseControl\ReceiveTaskBase.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\SentDirectMessageReceiveTask.cs" />
     <Compile Include="Communication\CruiseControl\Lists\ListReceiverManager.cs" />
     <Compile Include="Communication\CruiseControl\Lists\ListReceiveTask.cs" />
@@ -164,6 +164,9 @@
     <Compile Include="Threading\RestrictedTask.cs" />
     <Compile Include="Threading\ThreadHelper.cs" />
     <Compile Include="TwitterDefine.cs" />
+    <Compile Include="ViewModels\ColumnOwnerViewModel.cs" />
+    <Compile Include="ViewModels\ColumnViewModel.cs" />
+    <Compile Include="ViewModels\TabDependentTweetViewModel.cs" />
     <Compile Include="ViewModels\TabViewModel.cs" />
     <Compile Include="ViewModels\TweetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -7,6 +7,7 @@ namespace Inscribe.Configuration.Settings
 {
     public class TimelineExperienceProperty
     {
+        public bool AscendingSort;
         public TimelineExperienceProperty()
         {
             FastScrolling = true;

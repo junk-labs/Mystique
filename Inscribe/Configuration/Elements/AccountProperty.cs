@@ -14,7 +14,8 @@ namespace Inscribe.Configuration.Elements
         {
             this.UserStreamsRepliesAll = false;
             this.UseUserStreams = true;
-            this.AutoCruiseDefaultMu = 0.8;
+            this.AutoCruiseDefaultMu = 0.5;
+            this.AutoCruiseApiConsumeRate = 0.8;
         }
 
         public bool UserStreamsRepliesAll { get; set; }
@@ -22,5 +23,7 @@ namespace Inscribe.Configuration.Elements
         public bool UseUserStreams { get; set; }
 
         public double AutoCruiseDefaultMu { get; set; }
+
+        public double AutoCruiseApiConsumeRate { get; set; }
     }
 }

@@ -1,24 +1,21 @@
-﻿<UserControl xmlns:cp="clr-namespace:Mystique.Views.CustomPanels" 
-             xmlns:my="clr-namespace:Mystique.Views.Common" 
-             xmlns:pc="clr-namespace:Mystique.Views.Converters.Particular"
-             x:Class="Mystique.Views.PartBlocks.MainBlock.TimelineChild.TimelineItem"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:l="clr-namespace:Livet;assembly=Livet"
-             xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
-             xmlns:cbs="clr-namespace:Livet.Behaviors.ControlBindingSupport;assembly=Livet"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="500">
+﻿<UserControl xmlns:cp="clr-namespace:Mystique.Views.CustomPanels" xmlns:my="clr-namespace:Mystique.Views.Common"
+        xmlns:pc="clr-namespace:Mystique.Views.Converters.Particular"
+        x:Class="Mystique.Views.PartBlocks.MainBlock.TimelineChild.TimelineItem"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:l="clr-namespace:Livet;assembly=Livet"
+        xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
+        xmlns:cbs="clr-namespace:Livet.Behaviors.ControlBindingSupport;assembly=Livet"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" mc:Ignorable="d"
+        d:DesignHeight="50" d:DesignWidth="500">
     <UserControl.Resources>
         <BitmapImage UriSource="/Resources/comment_edit.png" x:Key="Comment" />
         <BitmapImage UriSource="/Resources/star.png" x:Key="Favorited" />
         <BitmapImage UriSource="/Resources/rt.png" x:Key="Retweeted" />
-        
-        <pc:TextToFlowDocumentConvereter x:Key="ToFlowDocumentConverter" />
-        <pc:TVMToUserNameConverter x:Key="ToUserNameConverter" />
+
+        <pc:TVMToUserNameConverter x:Key="TweetUserNameConverter" />
+        <pc:TVMToUserImageConverter x:Key="TweetUserImageConverter" />
         <pc:StringRemoveLineFeedConverter x:Key="SingleLineConverter" />
         <pc:CollectionToCountConverter x:Key="CollectionCountConverter" />
         <pc:CollectionExistToVisibleConverter x:Key="ExistVisibleConverter" />
@@ -51,34 +48,78 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid Background="{Binding BackBrush, Mode=OneWay}" x:Name="LayoutRoot">
+    <Grid Background="{Binding Path=BackBrush, Mode=OneWay}" x:Name="LayoutRoot">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="SizeChanged">
-                <mb:FrameworkActualWidthAction Source="{Binding TooltipWidth, Mode=OneWayToSource}" />
+                <mb:FrameworkActualWidthAction Source="{Binding Path=Tweet.TooltipWidth, Mode=OneWayToSource}" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="{Binding NameAreaWidth, FallbackValue=Auto}" />
+            <ColumnDefinition Width="{Binding Path=Tweet.NameAreaWidth, FallbackValue=Auto}" />
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.ToolTip>
-            <ToolTip DataContext="{Binding PlacementTarget.DataContext, RelativeSource={x:Static RelativeSource.Self}}"
-                    Width="{Binding TooltipWidth, Mode=OneWay}" Placement="Bottom" HorizontalContentAlignment="Stretch">
-                <!-- <tl:TimelineTooltip /> -->
+            <ToolTip DataContext="{Binding Path=PlacementTarget.DataContext, 
+                RelativeSource={x:Static RelativeSource.Self}}" Width="{Binding Path=Tweet.TooltipWidth, Mode=OneWay}"
+                    Placement="Bottom" HorizontalContentAlignment="Stretch">
+                <DockPanel>
+                    <my:LazyImage
+                            UriSource="{Binding Path=Tweet, Converter={StaticResource TweetUserImageConverter}, ConverterParameter=Suggseted}"
+                            Width="48" Height="48" VerticalAlignment="Center" DockPanel.Dock="Left" />
+                    <DockPanel DockPanel.Dock="Top">
+                        <DockPanel.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="{Binding BackColor}" />
+                                <GradientStop Offset="1" Color="Transparent" />
+                            </LinearGradientBrush>
+                        </DockPanel.Background>
+
+                        <TextBlock Margin="4,2" Foreground="DimGray" HorizontalAlignment="Right" DockPanel.Dock="Right"
+                                Text="{Binding Path=Tweet.CreatedAt, Mode=OneWay, StringFormat=yy/MM/dd HH:mm:ss}" />
+                        <TextBlock Margin="4,2" Foreground="Black" HorizontalAlignment="Left" DockPanel.Dock="Left">
+                                <Bold>
+                                    <Run Text="{Binding Path=Tweet, Converter={StaticResource TweetUserNameConverter},
+                                        Mode=OneWay}" />
+                                </Bold>
+                                    <Run Foreground="Gray" Text="{Binding Path=Tweet, Converter={StaticResource TweetUserNameConverter},
+                                        ConverterParameter=Name, Mode=OneWay}" />
+                        </TextBlock>
+                        <TextBlock Margin="4,2" Foreground="Gray" HorizontalAlignment="Left" DockPanel.Dock="Left"
+                                Visibility="{Binding Path=Tweet.IsMention, Converter={StaticResource BoolVisibleConverter}}">
+                                <Run Text="in reply to: " />
+                                <Run Text="{Binding Path=Tweet.ReplyText, Mode=OneWay}" Foreground="Gray" />
+                        </TextBlock>
+                        <TextBlock Margin="4,2" Foreground="Gray" HorizontalAlignment="Left" DockPanel.Dock="Left"
+                                Visibility="{Binding Path=Tweet.IsPublishedByRetweet, Converter={StaticResource BoolVisibleConverter}}">
+                                <Run Text="retweeted: " />
+                                <Run Text="{Binding Path=Tweet, Converter={StaticResource TweetUserNameConverter},
+                                    ConverterParameter=RetweetedScreenName, Mode=OneWay,  StringFormat=@{0}}" />
+                        </TextBlock>
+                        <TextBlock Margin="4,2" Foreground="Gray" HorizontalAlignment="Left" DockPanel.Dock="Left"
+                                Visibility="{Binding Path=Tweet.IsDirectMessage, Converter={StaticResource BoolVisibleConverter}}">
+                                <Run Text="direct message to: " />
+                                <Run Text="{Binding Path=Tweet, Converter={StaticResource TweetUserNameConverter}, 
+                                    ConverterParameter=DirectMessageTarget, Mode=OneWay, StringFormat=@{0}}" />
+                        </TextBlock>
+                    </DockPanel>
+                    <TextBlock Text="{Binding Path=Tweet.Text}" TextWrapping="Wrap" Background="Transparent"
+                            HorizontalAlignment="Stretch" Margin="2" Padding="0" Foreground="Black" />
+                </DockPanel>
             </ToolTip>
         </Grid.ToolTip>
         <cp:FillPanel x:Name="UserImageOwner">
-            <my:LazyImage UriSource="{Binding ProfileImage}" VerticalAlignment="Center" Stretch="UniformToFill"
-                    x:Name="Owner">
+            <my:LazyImage
+                    UriSource="{Binding Path=Tweet, Converter={StaticResource TweetUserImageConverter}, ConverterParameter=Suggested}"
+                    VerticalAlignment="Center" Stretch="UniformToFill" x:Name="Owner">
                 <my:LazyImage.Style>
                     <Style TargetType="my:LazyImage">
                         <Setter Property="my:LazyImage.Width" Value="24" />
                         <Setter Property="my:LazyImage.Height" Value="24" />
                         <Setter Property="my:LazyImage.Margin" Value="0" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsP3StyleIcon}" Value="True">
+                            <DataTrigger Binding="{Binding Path=Tweet.IsP3StyleIcon}" Value="True">
                                 <Setter Property="my:LazyImage.Width" Value="48" />
                                 <Setter Property="my:LazyImage.Height" Value="48" />
                                 <Setter Property="my:LazyImage.Margin" Value="0, -12, 0, -12" />
@@ -92,62 +133,70 @@
                     </Style>
                 </my:LazyImage.Style>
             </my:LazyImage>
-            <Grid Visibility="{Binding IsMouseOver, Converter={StaticResource BoolVisibleConverter}, 
+            <Grid Visibility="{Binding Path=IsMouseOver, Converter={StaticResource BoolVisibleConverter}, 
                 ElementName=UserImageOwner, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <Button Command="{Binding MentionCommand, Mode=OneTime}" Style="{StaticResource SimpleButtonStyle}">
+                <Button Command="{Binding Path=MentionCommand, Mode=OneTime}" Style="{StaticResource SimpleButtonStyle}">
                     <Image Source="{StaticResource Comment}" Width="16" Height="16" SnapsToDevicePixels="True"
                             RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
+                            VerticalAlignment="Center" Margin="2" />
                     <Button.ToolTip>返信</Button.ToolTip>
                 </Button>
-                <Button Command="{Binding FavoriteCommand, Mode=OneTime}" Grid.Column="1"
-                        Visibility="{Binding IsP3StyleIcon, Converter={StaticResource BoolVisibleConverter}}"
+                <Button Command="{Binding Path=FavoriteCommand, Mode=OneTime}" Grid.Column="1"
                         Style="{StaticResource SimpleButtonStyle}">
                     <Image Source="{StaticResource Favorited}" Width="16" Height="16" SnapsToDevicePixels="True"
                             RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-                    <Button.ToolTip>ふぁぼる</Button.ToolTip>
+                            VerticalAlignment="Center" Margin="2" />
+                    <Button.ToolTip>Favoriteに追加</Button.ToolTip>
+                </Button>
+                <Button Command="{Binding Path=RetweetCommand, Mode=OneTime}" Grid.Column="2"
+                        Style="{StaticResource SimpleButtonStyle}">
+                    <Image Source="{StaticResource Retweeted}" Width="16" Height="16" SnapsToDevicePixels="True"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor" HorizontalAlignment="Center"
+                            VerticalAlignment="Center" Margin="2" />
+                    <Button.ToolTip>Retweetする</Button.ToolTip>
                 </Button>
             </Grid>
         </cp:FillPanel>
-        <TextBlock Grid.Column="1" Foreground="{Binding ForeBrush}" Margin="2"
-                Text="{Binding Status, Mode=OneTime, ConverterParameter=ViewName, Converter={StaticResource ToUserNameConverter}}"
+        <TextBlock Grid.Column="1" Foreground="{Binding Path=ForeBrush}" Margin="2"
+                Text="{Binding Path=Tweet, Mode=OneTime, ConverterParameter=ViewName, Converter={StaticResource TweetUserNameConverter}}"
                 TextTrimming="CharacterEllipsis" />
-        <TextBlock Text="{Binding Text, Mode=OneTime}" Grid.Column="2" Background="{x:Null}" Margin="2"
-                TextTrimming="CharacterEllipsis" Foreground="{Binding ForeBrush}" />
+        <TextBlock Text="{Binding Path=Tweet.Text, Mode=OneTime}" Grid.Column="2" Background="{x:Null}" Margin="2"
+                TextTrimming="CharacterEllipsis" Foreground="{Binding Path=ForeBrush}" />
         <StackPanel Orientation="Horizontal" Grid.Column="3">
             <Border CornerRadius="3" Background="LightGoldenrodYellow" VerticalAlignment="Center" Margin="1,0"
-                    Padding="1" Visibility="{Binding FavoredUsers, Converter={StaticResource ExistVisibleConverter}}">
+                    Padding="1"
+                    Visibility="{Binding Path=Tweet.FavoredUsers, Converter={StaticResource ExistVisibleConverter}}">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="{StaticResource Favorited}" Width="16" Height="16" SnapsToDevicePixels="True"
                             RenderOptions.BitmapScalingMode="NearestNeighbor" VerticalAlignment="Center" />
                     <TextBlock
-                            Text="{Binding FavoredUsers, Converter={StaticResource CollectionCountConverter}, FallbackValue=0}"
+                            Text="{Binding Path=Tweet.FavoredUsers, Converter={StaticResource CollectionCountConverter}, FallbackValue=0}"
                             Margin="2,2,4,2" VerticalAlignment="Center" Foreground="Goldenrod" />
                 </StackPanel>
             </Border>
             <Border CornerRadius="3" Background="Honeydew" VerticalAlignment="Center" Margin="1,0" Padding="1"
-                    Visibility="{Binding RetweetedUsers, Converter={StaticResource ExistVisibleConverter}}">
+                    Visibility="{Binding Path=Tweet.RetweetedUsers, Converter={StaticResource ExistVisibleConverter}}">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="{StaticResource Retweeted}" Width="16" Height="16" SnapsToDevicePixels="True"
                             RenderOptions.BitmapScalingMode="NearestNeighbor" VerticalAlignment="Center" />
                     <TextBlock
-                            Text="{Binding RetweetedUsers, Converter={StaticResource CollectionCountConverter}, FallbackValue=0}"
+                            Text="{Binding Path=Tweet.RetweetedUsers, Converter={StaticResource CollectionCountConverter}, FallbackValue=0}"
                             Margin="2,2,2,2" VerticalAlignment="Center" Foreground="SeaGreen" />
                 </StackPanel>
             </Border>
             <Image Source="{StaticResource Favorited}" Width="16" Height="16" SnapsToDevicePixels="True"
                     RenderOptions.BitmapScalingMode="NearestNeighbor" VerticalAlignment="Center"
-                    Visibility="{Binding IsFavored, Converter={StaticResource BoolVisibleConverter}}" />
+                    Visibility="{Binding Path=Tweet.IsFavored, Converter={StaticResource BoolVisibleConverter}}" />
             <Image Source="{StaticResource Retweeted}" Width="16" Height="16" SnapsToDevicePixels="True"
                     RenderOptions.BitmapScalingMode="NearestNeighbor"
-                    Visibility="{Binding IsPublishedByRetweet, Converter={StaticResource BoolVisibleConverter}}" />
-            <TextBlock Text="{Binding Path=CreatedAt, Mode=OneTime, StringFormat=HH:mm:ss}" VerticalAlignment="Center"
-                    Margin="4,2" Foreground="Gray" FontSize="10" />
+                    Visibility="{Binding Path=Tweet.IsPublishedByRetweet, Converter={StaticResource BoolVisibleConverter}}" />
+            <TextBlock Text="{Binding Path=Tweet.CreatedAt, Mode=OneTime, StringFormat=HH:mm:ss}"
+                    VerticalAlignment="Center" Margin="4,2" Foreground="Gray" FontSize="10" />
         </StackPanel>
         <Rectangle Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Height="6">
             <Rectangle.Fill>

@@ -17,7 +17,7 @@ namespace Mystique.Views.Converters.Particular
     {
         public override IEnumerable<Inline> ToTarget(string input, object parameter)
         {
-            throw new NotImplementedException();
+            return TextToFlowConversionStatic.Generate(input);
         }
     }
 

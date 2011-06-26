@@ -5,6 +5,7 @@ using Inscribe.Data;
 using Inscribe.Model;
 using Livet;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Inscribe.Storage
 {
@@ -28,6 +29,8 @@ namespace Inscribe.Storage
         {
             accounts.Add(accountInfo);
             OnAccountsChanged(EventArgs.Empty);
+            // アカウント情報のキャッシュ
+            Task.Factory.StartNew(() => accountInfo.UserViewModel);
         }
 
         /// <summary>

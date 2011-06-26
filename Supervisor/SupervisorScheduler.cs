@@ -52,7 +52,12 @@ namespace Supervisor
         /// </summary>
         public int TaskRateLimit { get; set; }
 
-        private double _targetMu = 0.5;
+        /// <summary>
+        /// 最小ウィンドウタイム
+        /// </summary>
+        protected virtual int MinWindowTime { get { return 0; } }
+
+        private double _targetMu = 0.3;
         /// <summary>
         /// 目標レート平均(0-1)
         /// </summary>
@@ -84,8 +89,8 @@ namespace Supervisor
             get { return this._density; }
             set
             {
-                if (value < 0 || value > 1)
-                    throw new ArgumentOutOfRangeException("Density", "実行密度は0-1で指定される必要があります。");
+                if (value < this.MinDensity || value > 1)
+                    throw new ArgumentOutOfRangeException("Density", "実行密度は最小密度と1の間で指定される必要があります。");
                 this._density = value;
             }
         }
@@ -108,6 +113,7 @@ namespace Supervisor
                 throw new InvalidOperationException("Thread is already running.");
             }
             this.schedulerThread = new Thread(SchedulerCore);
+            this.schedulerThread.Start();
         }
 
         /// <summary>
@@ -130,8 +136,20 @@ namespace Supervisor
             {
                 this.OnFallingASleep();
                 // 待機時間導出、待機
-                var wait = (int)(this.WindowTime / (this.TaskRateLimit * this.Density));
-                Thread.Sleep(wait);
+                if (TaskRateLimit > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("Window Time:" + this.WindowTime + ", Rate Limit:" + this.TaskRateLimit + ", Density:" + this.Density);
+                    var wait = (int)(this.WindowTime / (this.TaskRateLimit * this.Density));
+                    System.Diagnostics.Debug.WriteLine("Sleep:" + wait);
+                    if (wait > this.MinWindowTime)
+                        Thread.Sleep(wait);
+                    else
+                        Thread.Sleep(this.MinWindowTime);
+                }
+                else
+                {
+                    Thread.Sleep(this.MinWindowTime);
+                }
                 this.OnWakeup();
                 // キュー済みの追加待ちスケジュールを追加
                 while (this.addCandidates.Count > 0)
@@ -154,7 +172,9 @@ namespace Supervisor
                 }
 
                 // R, T, ∑Ri, μを導出
-                var rand = this.random.NextDouble();
+                var rand = (double)this.random.NextUInt32() / UInt32.MaxValue;
+                if (rand < 0)
+                    throw new Exception();
                 var tasks = this.scheduledTasks.OrderBy(t => t.Rate);
                 var sigma = this.scheduledTasks.Sum(t => t.Rate);
                 var mu = this.scheduledTasks.Average(t => t.Rate);
@@ -163,8 +183,9 @@ namespace Supervisor
                 double sum = 0;
                 foreach (var task in tasks)
                 {
+                    System.Diagnostics.Debug.WriteLine(task.GetType().ToString() + ": " + task.Rate);
                     sum += (task.Rate / sigma);
-                    if (sum < rand)
+                    if (sum > rand)
                     {
                         this.OnTaskRun();
                         Task.Factory.StartNew(task.DoWork);
@@ -174,12 +195,12 @@ namespace Supervisor
 
                 // μの値により実行密度を変化
                 var nd = this.Density;
-                if (mu < this.TargetMu)
+                if (mu > this.TargetMu) // μが低かったらdensityを上げる
                     nd += Math.Pow(mu - this.TargetMu, 2);
-                else
+                else // μが高かったらdensityを下げる
                     nd -= Math.Pow(mu - this.TargetMu, 2);
-                if (nd < 0)
-                    nd = 0;
+                if (nd < this.MinDensity)
+                    nd = this.MinDensity;
                 else if (nd > 1)
                     nd = 1;
                 this.Density = nd;
@@ -197,5 +218,10 @@ namespace Supervisor
         protected virtual void OnTaskRun()
         {
         }
+
+        protected virtual double MinDensity {
+            get { return 0.001; }
+        }
+    
     }
 }

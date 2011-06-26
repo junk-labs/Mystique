@@ -11,6 +11,8 @@ using Livet.Messaging.File;
 using Livet.Messaging.Window;
 using Mystique.ViewModels.PartBlocks.NotifyBlock;
 using Mystique.ViewModels.PartBlocks.InputBlock;
+using Inscribe.Storage;
+using Inscribe.ViewModels;
 
 namespace Mystique.ViewModels
 {
@@ -23,10 +25,20 @@ namespace Mystique.ViewModels
     /// </remarks>
     public class MainWindowViewModel : ViewModel
     {
+        public MainWindowViewModel()
+        {
+            Inscribe.Communication.CruiseControl.AutoCruiseSchedulerManager.Begin();
+        }
         private InputBlockViewModel _inputBlockViewModel = new InputBlockViewModel();
         public InputBlockViewModel InputBlockViewModel
         {
             get { return this._inputBlockViewModel; }
+        }
+
+        private ColumnOwnerViewModel _columnOwnerViewModel = new ColumnOwnerViewModel();
+        public ColumnOwnerViewModel ColumnOwnerViewModel
+        {
+            get { return this._columnOwnerViewModel; }
         }
 
         private NotifyBlockViewModel _notifyBlockViewModel = new NotifyBlockViewModel();
@@ -34,5 +46,34 @@ namespace Mystique.ViewModels
         {
             get { return this._notifyBlockViewModel; }
         }
+
+
+        #region AuthCommand
+        DelegateCommand _AuthCommand;
+
+        public DelegateCommand AuthCommand
+        {
+            get
+            {
+                if (_AuthCommand == null)
+                    _AuthCommand = new DelegateCommand(Auth);
+                return _AuthCommand;
+            }
+        }
+
+        private void Auth()
+        {
+            DispatcherHelper.BeginInvoke(() =>
+                {
+                    var vm = new Mystique.ViewModels.Dialogs.Account.AuthenticateViewModel();
+                    this.Messenger.Raise(new TransitionMessage(vm, TransitionMode.Modal, "AccountInfo"));
+                    if (vm.Success)
+                    {
+                        AccountStorage.RegisterAccount(vm.GetAccountInfo());
+                    }
+                });
+        }
+        #endregion
+      
     }
 }

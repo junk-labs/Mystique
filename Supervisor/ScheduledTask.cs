@@ -9,7 +9,7 @@ namespace Supervisor
         /// </summary>
         public abstract double Rate { get; }
 
-        private bool _isAlive;
+        private bool _isAlive = true;
         /// <summary>
         /// このスケジュールが生存しているか
         /// </summary>
