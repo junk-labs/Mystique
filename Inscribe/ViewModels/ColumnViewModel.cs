@@ -5,6 +5,7 @@ using Livet;
 using Livet.Command;
 using System.Linq;
 using Inscribe.Configuration.Tabs;
+using System;
 
 namespace Inscribe.ViewModels
 {
@@ -17,30 +18,33 @@ namespace Inscribe.ViewModels
             this.Parent = parent;
         }
 
-        private bool _isFocusContains = false;
-        public bool IsFocusContains
+        /// <summary>
+        /// このカラムがフォーカスを得た
+        /// </summary>
+        public event EventHandler GotFocus;
+        protected void OnGetFocus()
         {
-            get { return this._isFocusContains; }
-            set
-            {
-                this._isFocusContains = value;
-                RaisePropertyChanged(() => IsFocusContains);
-            }
+            var fchandler = GotFocus;
+            if (fchandler != null)
+                fchandler(this, EventArgs.Empty);
         }
-
-        private bool _isDragOver = false;
-        public bool IsDragOver
+        
+        private bool _isInDragDrop = false;
+        /// <summary>
+        /// ドラッグアンドドロップ処理中であることを示します。
+        /// </summary>
+        public bool IsInDragDrop
         {
-            get { return this._isDragOver; }
+            get { return this._isInDragDrop; }
             set
             {
-                this._isDragOver = value;
-                RaisePropertyChanged(() => IsDragOver);
+                this._isInDragDrop = value;
+                RaisePropertyChanged(() => IsInDragDrop);
             }
         }
 
         private ObservableCollection<TabViewModel> _tabItems = new ObservableCollection<TabViewModel>();
-        public IEnumerable<TabViewModel> TabItems { get { return this._tabItems; } }
+        public ObservableCollection<TabViewModel> TabItems { get { return this._tabItems; } }
 
         private TabViewModel _selectedTabViewModel = null;
         public TabViewModel SelectedTabViewModel
@@ -57,6 +61,9 @@ namespace Inscribe.ViewModels
             }
         }
 
+        /// <summary>
+        /// タブをこのカラムの末尾に追加します。
+        /// </summary>
         public TabViewModel AddTab(TabProperty tabProperty = null)
         {
             var nvm = new TabViewModel(this, tabProperty);
@@ -64,21 +71,40 @@ namespace Inscribe.ViewModels
             return nvm;
         }
 
+        /// <summary>
+        /// タブをこのカラムの末尾に追加します。
+        /// </summary>
         public void AddTab(TabViewModel tabViewModel)
         {
-            tabViewModel.SetTabOwner(this);
-            this._tabItems.Add(tabViewModel);
-            if (this._tabItems.Count == 1)
-                SelectedTabViewModel = tabViewModel;
+            InsertBefore(tabViewModel, null);
         }
 
+        /// <summary>
+        /// タブを指定したタブの前に追加します。
+        /// </summary>
+        /// <param name="insert">追加するタブ</param>
+        /// <param name="beforeThis">このタブの前に追加、nullなら末尾に追加</param>
         public void InsertBefore(TabViewModel insert, TabViewModel beforeThis)
         {
-            var idx = this._tabItems.IndexOf(beforeThis);
+            // インデックス取得
+            int idx = -1;
+            if(beforeThis != null)
+                idx = this._tabItems.IndexOf(beforeThis);
+
             if (idx == -1)
                 this._tabItems.Add(insert);
             else
                 this._tabItems.Insert(idx, insert);
+
+            // タブの保持カラムを更新し、イベントハンドラを連結する
+            insert.SetTabOwner(this);
+            insert.GotFocus += OnTabGotFocus;
+
+            // 一つ目のタブであればそのタブを選択する
+            if (this._tabItems.Count == 1)
+                SelectedTabViewModel = insert;
+
+            // タブ変更のコミット
             insert.Commit(true);
         }
 
@@ -91,6 +117,8 @@ namespace Inscribe.ViewModels
         {
             if (this._tabItems.Remove(tabViewModel))
             {
+                // イベントハンドラを解除
+                tabViewModel.GotFocus -= OnTabGotFocus;
                 if (this._tabItems.Count > 0)
                     SelectedTabViewModel = this._tabItems[0];
                 else
@@ -98,13 +126,14 @@ namespace Inscribe.ViewModels
             }
         }
 
+        private void OnTabGotFocus(object o, EventArgs e)
+        {
+            OnGetFocus();
+        }
+
         public bool Contains(TabViewModel tabViewModel)
         {
             return this._tabItems.Contains(tabViewModel);
-        }
-
-        internal void SetFocus()
-        {
         }
 
         #region DragDropStartCommand
@@ -122,7 +151,7 @@ namespace Inscribe.ViewModels
 
         private void DragDropStart()
         {
-            this.Parent.Columns.ForEach(c => c.IsDragOver = true);
+            this.Parent.Columns.ForEach(c => c.IsInDragDrop = true);
         }
         #endregion
 
@@ -193,7 +222,7 @@ namespace Inscribe.ViewModels
         {
             var data = parameter.Data.GetData(typeof(TabViewModel)) as TabViewModel;
             if (data == null) return;
-            this.Parent.Columns.ForEach(c => c.IsDragOver = false);
+            this.Parent.Columns.ForEach(c => c.IsInDragDrop = false);
             var idx = this.Parent.ColumnIndexOf(this);
             var target = this.Parent.CreateColumn(idx + 1);
             this.Parent.Columns.ForEach(cvm => cvm.RemoveTab(data));
@@ -216,10 +245,15 @@ namespace Inscribe.ViewModels
 
         private void DragDropFinish()
         {
-            this.Parent.Columns.ForEach(c => c.IsDragOver = false);
+            this.Parent.Columns.ForEach(c => c.IsInDragDrop = false);
             this.Parent.GCColumn();
         }
         #endregion
 
+        internal void SetFocus()
+        {
+            if(this.SelectedTabViewModel != null)
+                this.SelectedTabViewModel.SetFocus();
+        }
     }
 }

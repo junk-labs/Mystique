@@ -25,7 +25,7 @@ namespace Inscribe.ViewModels
         }
 
         private ObservableCollection<ColumnViewModel> _columns = new ObservableCollection<ColumnViewModel>();
-        public IEnumerable<ColumnViewModel> Columns { get { return this._columns; } }
+        public ObservableCollection<ColumnViewModel> Columns { get { return this._columns; } }
 
         public int ColumnIndexOf(ColumnViewModel vm)
         {
@@ -39,16 +39,37 @@ namespace Inscribe.ViewModels
                 this._columns.Add(nvm);
             else
                 this._columns.Insert(index, nvm);
+            nvm.GotFocus += (o, e) => CurrentFocusColumn = nvm;
             return nvm;
         }
 
+        /// <summary>
+        /// タブが一つも含まれないカラムを削除します。
+        /// </summary>
         public void GCColumn()
         {
             this._columns.Where(c => c.TabItems.Count() == 0).ToArray()
                 .ForEach(v => this._columns.Remove(v));
+            // 少なくとも1つのカラムは必要
+            if (this._columns.Count == 0)
+                this._columns.Add(new ColumnViewModel(this));
         }
 
-        private void MoveFocusTo(ColumnViewModel column, ColumnsLocation moveTarget)
+        private ColumnViewModel _currentFocusColumn = null;
+        public ColumnViewModel CurrentFocusColumn
+        {
+            get
+            {
+                return this._currentFocusColumn;
+            }
+            protected set
+            {
+                this._currentFocusColumn = value;
+                RaisePropertyChanged(() => CurrentFocusColumn);
+            }
+        }
+
+        public void MoveFocusTo(ColumnViewModel column, ColumnsLocation moveTarget)
         {
             if (_columns.Count == 0)
                 throw new InvalidOperationException("No columns existed.");
@@ -70,6 +91,11 @@ namespace Inscribe.ViewModels
                         _columns[i - 1].SetFocus();
                     break;
             }
+        }
+
+        public void SetFocus()
+        {
+            this.CurrentFocusColumn.SetFocus();
         }
     }
 

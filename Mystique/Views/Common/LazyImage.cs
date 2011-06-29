@@ -17,7 +17,7 @@ namespace Mystique.Views.Common
 
         static LazyImage()
         {
-            taskrun = new QueueTaskDispatcher(2);
+            taskrun = new QueueTaskDispatcher(4);
             ThreadHelper.Halt += taskrun.Dispose;
         }
 

@@ -7,8 +7,10 @@ namespace Inscribe.Filter.Filters.Text
 {
     public abstract class TextFilterBase : FilterBase
     {
+        public string Needle { get { return this.needle; } }
         protected string needle = String.Empty;
 
+        public bool IsCaseSensitive { get { return this.isCaseSensitive; } }
         protected bool isCaseSensitive = false;
 
         protected virtual bool Match(string haystack, string needle, bool isCaseSensitive)

@@ -9,6 +9,8 @@ namespace Mystique.Core
     {
         internal static void Init()
         {
+            Dulcet.Network.Http.Expect100Continue = false;
+            Dulcet.Network.Http.MaxConnectionLimit = Int32.MaxValue;
         }
     }
 }

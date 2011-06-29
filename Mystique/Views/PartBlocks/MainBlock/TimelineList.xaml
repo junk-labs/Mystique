@@ -1,25 +1,30 @@
-﻿<UserControl xmlns:cp="clr-namespace:Mystique.Views.CustomPanels"
-        xmlns:tchild="clr-namespace:Mystique.Views.PartBlocks.MainBlock.TimelineChild"
-        x:Class="Mystique.Views.PartBlocks.MainBlock.TimelineList"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf" xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
-        xmlns:v="clr-namespace:Mystique.Views" xmlns:pb="clr-namespace:Mystique.Views.Behaviors.Particular"
-        mc:Ignorable="d" d:DesignHeight="200" d:DesignWidth="300">
+﻿<UserControl x:Class="Mystique.Views.PartBlocks.MainBlock.TimelineList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cp="clr-namespace:Mystique.Views.CustomPanels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pb="clr-namespace:Mystique.Views.Behaviors.Particular"
+             xmlns:ba="clr-namespace:Mystique.Views.Behaviors.Actions"
+             xmlns:pc="clr-namespace:Mystique.Views.Converters.Particular"
+             xmlns:tchild="clr-namespace:Mystique.Views.PartBlocks.MainBlock.TimelineChild"
+             d:DesignHeight="200"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
     <UserControl.Resources>
+        <BitmapImage x:Key="Search" UriSource="/Resources/find.png" />
+        <BitmapImage x:Key="Close" UriSource="/Resources/cross.png" />
+        <BitmapImage x:Key="QueryInvalid" UriSource="/Resources/exclamation.png" />
         <DataTemplate x:Key="NormalStatusTemplate">
             <tchild:TimelineItem HorizontalAlignment="Stretch" />
         </DataTemplate>
-
         <DataTemplate x:Key="SelectedStatusTemplate">
             <tchild:TimelineSelectedItem HorizontalAlignment="Stretch" />
         </DataTemplate>
-
-        <Style TargetType="{x:Type ListBoxItem}" x:Key="ContainerStyle">
+        <Style x:Key="ContainerStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Padding" Value="0" />
             <Setter Property="ContentTemplate" Value="{StaticResource NormalStatusTemplate}" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -30,16 +35,117 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <cp:FillPanel>
-        <ListBox x:Name="List" Padding="0" ItemsSource="{Binding Path=TweetCollectionView.View}" AlternationCount="2"
-                HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                ScrollViewer.VerticalScrollBarVisibility="Visible" VirtualizingStackPanel.IsVirtualizing="True"
-                VirtualizingStackPanel.VirtualizationMode="Recycling" SelectedItem="{Binding SelectedTweetViewModel}"
-                ItemContainerStyle="{StaticResource ContainerStyle}" InputMethod.IsInputMethodEnabled="False">
+    <DockPanel>
+        <Border BorderBrush="Black"
+                BorderThickness="1,1,1,0"
+                Background="White"
+                DockPanel.Dock="Top">
+            <Grid>
+                <!--  This stacking view contains only one timeline.  -->
+                <DockPanel Visibility="{Binding IsContainsSingle, Converter={StaticResource BoolVisibleConverter}}">
+                    <Image Width="16"
+                           Height="16"
+                           Margin="2"
+                           DockPanel.Dock="Left"
+                           Source="{StaticResource Search}" />
+                    <Border Margin="2"
+                            VerticalAlignment="Center"
+                            Background="White"
+                            BorderBrush="Silver"
+                            BorderThickness="1"
+                            CornerRadius="1">
+                        <TextBlock Cursor="IBeam"
+                                   Foreground="Gray"
+                                   Padding="2"
+                                   Text="Input here to search timeline...">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding CreateTopTimelineCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Border>
+                </DockPanel>
+                <Grid Visibility="{Binding IsContainsSingle, Converter={StaticResource BoolInvisibleConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Image Width="16"
+                           Height="16"
+                           Margin="2"
+                           DockPanel.Dock="Left"
+                           Source="{StaticResource Search}"
+                           Visibility="{Binding IsQueryValid,
+                                                Converter={StaticResource BoolVisibleConverter}}" />
+                    <Image Width="16"
+                           Height="16"
+                           Margin="2"
+                           DockPanel.Dock="Left"
+                           Source="{StaticResource QueryInvalid}"
+                           ToolTip="クエリに誤りがあります。"
+                           Visibility="{Binding IsQueryValid,
+                                                Converter={StaticResource BoolInvisibleConverter}}" />
+                    <Border Grid.Column="1"
+                            Margin="2"
+                            VerticalAlignment="Center"
+                            Background="White"
+                            BorderBrush="Silver"
+                            BorderThickness="1"
+                            CornerRadius="1">
+                        <TextBox BorderThickness="0"
+                                 Text="{Binding QueryText, UpdateSourceTrigger=PropertyChanged}">
+                            <i:Interaction.Triggers>
+                                <l:InteractionMessageTrigger MessageKey="FocusToSearch"
+                                                             Messenger="{Binding Messenger}">
+                                    <ba:FrameworkSetFocusAction />
+                                </l:InteractionMessageTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </Border>
+                    <Button Grid.Column="2"
+                            Command="{Binding RemoveTopTimelineCommand}"
+                            Style="{StaticResource FlatButtonStyle}">
+                        <Image Width="12"
+                               Height="12"
+                               Margin="2"
+                               Source="{StaticResource Close}" />
+                    </Button>
+                    <!--  This stacking view contains two or more timelines.  -->
+                </Grid>
+            </Grid>
+        </Border>
+        <ItemsControl ItemsSource="{Binding Timelines}">
             <i:Interaction.Behaviors>
-                <pb:SquaredScrollBehavior />
                 <pb:MouseOverBindBehavior IsMouseOver="{Binding IsMouseOver, Mode=OneWayToSource}" />
             </i:Interaction.Behaviors>
-        </ListBox>
-    </cp:FillPanel>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <cp:FillPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ListBox x:Name="List"
+                             BorderBrush="Black"
+                             BorderThickness="1,0,1,1"
+                             HorizontalContentAlignment="Stretch"
+                             InputMethod.IsInputMethodEnabled="False"
+                             ItemContainerStyle="{StaticResource ContainerStyle}"
+                             ItemsSource="{Binding Path=TweetCollectionView.View}"
+                             Padding="0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Visible"
+                             SelectedItem="{Binding SelectedTweetViewModel}"
+                             VirtualizingStackPanel.IsVirtualizing="True"
+                             VirtualizingStackPanel.VirtualizationMode="Recycling"
+                             Visibility="{Binding IsActive,
+                                                  Converter={StaticResource BoolVisibleConverter}}">
+                        <i:Interaction.Behaviors>
+                            <pb:SquaredScrollBehavior />
+                        </i:Interaction.Behaviors>
+                    </ListBox>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
 </UserControl>

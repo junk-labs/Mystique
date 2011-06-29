@@ -247,7 +247,6 @@ namespace Mystique.ViewModels.Dialogs.Account
         }
         #endregion
 
-
         #region CancelCommand
         DelegateCommand _CancelCommand;
 

@@ -21,7 +21,7 @@ namespace Inscribe.ViewModels
         public TabViewModel Parent { get; private set; }
 
         public TweetViewModel Tweet { get; private set; }
-
+        
         public TabDependentTweetViewModel(TweetViewModel tvm, TabViewModel parent)
         {
             if (tvm == null)
@@ -30,7 +30,38 @@ namespace Inscribe.ViewModels
                 throw new ArgumentNullException("parent");
             this.Parent = parent;
             this.Tweet = tvm;
+
+            switch (Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy)
+            {
+                case TimelineExperienceProperty.ItemInitStrategy.None:
+                    break;
+                case TimelineExperienceProperty.ItemInitStrategy.DefaultColors:
+                    _lightningColorCache = Setting.Instance.ColoringProperty.BaseHighlightColor.GetColor();
+                    _foreColorCache = Setting.Instance.ColoringProperty.BaseColor.GetDarkColor();
+                    _backColorCache = Setting.Instance.ColoringProperty.BaseColor.GetLightColor();
+                    _foreBrushCache = new SolidColorBrush(_foreColorCache);
+                    _foreBrushCache.Freeze();
+                    _backBrushCache = new SolidColorBrush(_backColorCache);
+                    _backBrushCache.Freeze();
+                    break;
+                case TimelineExperienceProperty.ItemInitStrategy.Full:
+                    CommitColorChanged(true);
+                    break;
+            }
         }
+
+        #region Binding helper
+        private double _tooltipWidth = 0;
+        public double TooltipWidth
+        {
+            get { return _tooltipWidth; }
+            set
+            {
+                _tooltipWidth = value;
+                RaisePropertyChanged(() => TooltipWidth);
+            }
+        }
+        #endregion
 
         public void SettingValueChanged()
         {
@@ -182,8 +213,7 @@ namespace Inscribe.ViewModels
 
         private Color GetCurrentCommonColor(bool dark)
         {
-
-            var pts = Parent.SelectedTweetViewModel;
+            var pts = Parent.CurrentForegroundTimeline.SelectedTweetViewModel;
             if ((Setting.Instance.ColoringProperty.Selected.IsDarkActivated ||
                 Setting.Instance.ColoringProperty.Selected.IsLightActivated) &&
                 pts != null && pts.Tweet.Status.User.NumericId == this.Tweet.Status.User.NumericId &&
@@ -387,7 +417,6 @@ namespace Inscribe.ViewModels
         }
         #endregion
 
-
         #region FavoriteMultiUserCommand
         DelegateCommand _FavoriteMultiUserCommand;
 
@@ -406,7 +435,6 @@ namespace Inscribe.ViewModels
             // TODO:Implementation
         }
         #endregion
-      
 
         #region RetweetCommand
         DelegateCommand _RetweetCommand;
@@ -427,7 +455,6 @@ namespace Inscribe.ViewModels
         }
         #endregion
 
-
         #region RetweetMultiUserCommand
         DelegateCommand _RetweetMultiUserCommand;
 
@@ -446,7 +473,6 @@ namespace Inscribe.ViewModels
             // TODO:Implementation
         }
         #endregion
-      
 
         #region UnofficialRetweetCommand
         DelegateCommand _UnofficialRetweetCommand;
@@ -505,7 +531,6 @@ namespace Inscribe.ViewModels
         }
         #endregion
 
-
         #region ReportAsSpamCommand
         DelegateCommand _ReportAsSpamCommand;
 
@@ -525,7 +550,6 @@ namespace Inscribe.ViewModels
         }
         #endregion
       
-
         #region DeselectCommand
         DelegateCommand _DeselectCommand;
 
@@ -541,10 +565,9 @@ namespace Inscribe.ViewModels
 
         private void Deselect()
         {
-            this.Parent.SelectedTweetViewModel = null;
+            this.Parent.CurrentForegroundTimeline.SelectedTweetViewModel = null;
         }
         #endregion
-
 
         #region ConditionalDeselectCommand
         DelegateCommand<TextSelection> _ConditionalDeselectCommand;
@@ -563,11 +586,10 @@ namespace Inscribe.ViewModels
         {
             if (parameter == null || String.IsNullOrEmpty(parameter.Text))
             {
-                this.Parent.SelectedTweetViewModel = null;
+                this.Parent.CurrentForegroundTimeline.SelectedTweetViewModel = null;
             }
         }
         #endregion
-      
 
         #region CreateUserTabCommand
         DelegateCommand _CreateUserTabCommand;

@@ -42,7 +42,13 @@ namespace Inscribe.Configuration.Tabs
         public IEnumerable<IFilter> TweetSources
         {
             get { return this._tweetSources ?? new IFilter[0]; }
-            set { this._tweetSources = value; }
+            set
+            {
+                if (this._tweetSources == value) return;
+                if (this._tweetSources != null)
+                    this._tweetSources.ForEach(f => f.Dispose());
+                this._tweetSources = value;
+            }
         }
 
         public IEnumerable<string> TweetSourceQueries

@@ -13,11 +13,31 @@ using Octave.Caching;
 
 namespace Mystique.Views.Converters.Particular
 {
+    public enum FlowDocumentConversion
+    {
+        Full,
+        Digest,
+        Source,
+    }
+
     public class TextToFlowDocumentConvereter : OneWayConverter<string, IEnumerable<Inline>>
     {
         public override IEnumerable<Inline> ToTarget(string input, object parameter)
         {
+            FlowDocumentConversion kind;
+            if (!Enum.TryParse(parameter as string, true, out kind))
+                kind = FlowDocumentConversion.Full;
+            switch (kind)
+            {
+                case FlowDocumentConversion.Full:
+                    return TextToFlowConversionStatic.Generate(input);
+
+                case FlowDocumentConversion.Digest:
+                    return TextToFlowConversionStatic.GenerateDigest(input);
+
+                default:
             return TextToFlowConversionStatic.Generate(input);
+            }
         }
     }
 

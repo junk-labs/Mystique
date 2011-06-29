@@ -1,32 +1,39 @@
-﻿<Window xmlns:ib="clr-namespace:Mystique.Views.PartBlocks.InputBlock"
-        xmlns:nb="clr-namespace:Mystique.Views.PartBlocks.NotifyBlock"
-        x:Class="Mystique.Views.MainWindow"
+﻿<Window x:Class="Mystique.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:a="clr-namespace:Mystique.Views.Dialogs.Account"
         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ib="clr-namespace:Mystique.Views.PartBlocks.InputBlock"
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
+        xmlns:my="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
+        xmlns:nb="clr-namespace:Mystique.Views.PartBlocks.NotifyBlock"
         xmlns:v="clr-namespace:Mystique.Views"
         xmlns:vm="clr-namespace:Mystique.ViewModels"
-xmlns:a="clr-namespace:Mystique.Views.Dialogs.Account"
-        Title="Mystique" Height="300" Width="500"
-        ResizeMode="CanResizeWithGrip" Icon="/Mystique;component/Resources/krile.ico"
-        xmlns:my="clr-namespace:Mystique.Views.PartBlocks.MainBlock">
-    <Window.Resources>
-    </Window.Resources>
+        Title="Mystique"
+        Width="500"
+        Height="300"
+        Icon="/Mystique;component/Resources/krile.ico"
+        ResizeMode="CanResizeWithGrip">
+    <Window.Resources />
     <i:Interaction.Triggers>
-        <l:InteractionMessageTrigger MessageKey="AccountInfo" Messenger="{Binding Messenger}">
-            <l:InteractionTransitionAction WindowType="{x:Type a:Authenticate}"  />
+        <l:InteractionMessageTrigger MessageKey="AccountInfo"
+                                     Messenger="{Binding Messenger}">
+            <l:InteractionTransitionAction WindowType="{x:Type a:Authenticate}"
+                                           Mode="Modal" />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
-        <Window.DataContext>
-        <vm:MainWindowViewModel/>
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
     </Window.DataContext>
     <Window.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Offset="0" Color="AliceBlue" />
-            <GradientStop Offset="0.5" Color="White" />
+        <LinearGradientBrush StartPoint="0,0"
+                             EndPoint="0,1">
+            <GradientStop Offset="0"
+                          Color="AliceBlue" />
+            <GradientStop Offset="0.5"
+                          Color="White" />
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
@@ -36,9 +43,13 @@ xmlns:a="clr-namespace:Mystique.Views.Dialogs.Account"
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ib:InputBlock DataContext="{Binding InputBlockViewModel}" />
-        <my:ColumnOwner Grid.Row="1" DataContext="{Binding ColumnOwnerViewModel}" />
-        <!-- STATUS BAR AREA -->
-        <nb:NotifyBlock Grid.Row="2" DataContext="{Binding NotifyBlockViewModel}" />
-        <Button Grid.Row="2" Command="{Binding AuthCommand}" Width="120" />
+        <my:ColumnOwner Grid.Row="1"
+                        DataContext="{Binding ColumnOwnerViewModel}" />
+        <!--  STATUS BAR AREA  -->
+        <nb:NotifyBlock Grid.Row="2"
+                        DataContext="{Binding NotifyBlockViewModel}" />
+        <Button Grid.Row="2"
+                Width="120"
+                Command="{Binding AuthCommand}" />
     </Grid>
 </Window>

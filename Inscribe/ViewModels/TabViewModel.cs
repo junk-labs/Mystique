@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using Inscribe.Configuration;
 using Inscribe.Configuration.Tabs;
-using Inscribe.Data;
 using Inscribe.Filter;
-using Inscribe.Storage;
 using Livet;
 using Livet.Command;
-using System.ComponentModel;
+using Livet.Messaging;
+using Inscribe.Filter.Core;
+using Inscribe.Filter.Filters.Text;
+using System.Threading.Tasks;
 
 namespace Inscribe.ViewModels
 {
@@ -27,6 +26,17 @@ namespace Inscribe.ViewModels
                 this._tabProperty = value;
                 RaisePropertyChanged(() => TabProperty);
             }
+        }
+
+        /// <summary>
+        /// このタブがフォーカスを得た
+        /// </summary>
+        public event EventHandler GotFocus;
+        protected void OnGetFocus()
+        {
+            var fchandler = GotFocus;
+            if (fchandler != null)
+                fchandler(this, EventArgs.Empty);
         }
 
         private bool _isSelected = false;
@@ -70,14 +80,10 @@ namespace Inscribe.ViewModels
         public TabViewModel(ColumnViewModel parent, TabProperty property = null)
         {
             this.Parent = parent;
-            this._tweetsSource = new CachedConcurrentObservableCollection<TabDependentTweetViewModel>();
-            this._tweetCollectionView = new CollectionViewSource();
-            this._tweetCollectionView.Source = this._tweetsSource;
+
             this._tabProperty = property ?? new TabProperty();
-            ViewModelHelper.BindNotification(TweetStorage.Notificator, this, TweetStorageChanged);
-            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, SettingValueChanged);
-            Task.Factory.StartNew(() => InvalidateAll())
-                .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => UpdateSortDescription()));
+
+            this.AddTopTimeline(null);
         }
 
         public void SetTabOwner(ColumnViewModel newParent)
@@ -85,91 +91,176 @@ namespace Inscribe.ViewModels
             this.Parent = newParent;
         }
 
-        private void TweetStorageChanged(object o, TweetStorageChangedEventArgs e)
-        {
-            switch (e.ActionKind)
-            {
-                case TweetActionKind.Added:
-                    if (CheckFilters(e.Tweet))
-                    {
-                        this._tweetsSource.Add(new TabDependentTweetViewModel(e.Tweet, this));
-                        this.NewTweetsCount++;
-                    }
-                    break;
-                case TweetActionKind.Refresh:
-                    Task.Factory.StartNew(InvalidateAll);
-                    break;
-                case TweetActionKind.Changed:
-                    var tdtvm = new TabDependentTweetViewModel(e.Tweet, this);
-                    var contains = this._tweetsSource.Contains(tdtvm);
-                    if (CheckFilters(e.Tweet) != contains)
-                    {
-                        if (contains)
-                            this._tweetsSource.Remove(tdtvm);
-                        else
-                            this._tweetsSource.Add(tdtvm);
-                    }
-                    break;
-                case TweetActionKind.Removed:
-                    this._tweetsSource.Remove(new TabDependentTweetViewModel(e.Tweet, this));
-                    break;
-            }
-        }
-
-        private void SettingValueChanged(object o, EventArgs e)
-        {
-            UpdateSortDescription();
-        }
-
-        private void UpdateSortDescription()
-        {
-            using (var disp = this._tweetCollectionView.DeferRefresh())
-            {
-                this._tweetsSource.Commit();
-                this._tweetCollectionView.SortDescriptions.Clear();
-                if (Setting.Instance.TimelineExperienceProperty.AscendingSort)
-                    this._tweetCollectionView.SortDescriptions.Add(
-                        new SortDescription("Tweet.CreatedAt", ListSortDirection.Ascending));
-                else
-                    this._tweetCollectionView.SortDescriptions.Add(
-                        new SortDescription("Tweet.CreatedAt", ListSortDirection.Descending));
-            }
-        }
-
-        public bool CheckFilters(TweetViewModel viewModel)
-        {
-            if (!viewModel.IsStatusInfoContains) return false;
-            return (this._tabProperty.TweetSources ?? new IFilter[0]).Any(f => f.Filter(viewModel.Status));
-        }
-
-        public void InvalidateAll()
-        {
-            TweetStorage.GetAll(vm => CheckFilters(vm))
-                .Select(tvm => new TabDependentTweetViewModel(tvm, this))
-                .Where(tvm => !this._tweetsSource.Contains(tvm))
-                .ForEach(this._tweetsSource.Add);
-        }
-
         public void Commit(bool reinvalidate)
         {
-            this._tweetsSource.Commit(reinvalidate);
+            this._timelines.ForEach(f => f.Commit(reinvalidate));
         }
 
-        private CachedConcurrentObservableCollection<TabDependentTweetViewModel> _tweetsSource;
-        public ICollection<TabDependentTweetViewModel> TweetsSource { get { return this._tweetsSource; } }
-
-        private CollectionViewSource _tweetCollectionView;
-        public CollectionViewSource TweetCollectionView { get { return this._tweetCollectionView; } }
-
-        private TabDependentTweetViewModel _selectedTweetViewModel = null;
-        public TabDependentTweetViewModel SelectedTweetViewModel
+        private ObservableCollection<TimelineListViewModel> _timelines = new ObservableCollection<TimelineListViewModel>();
+        public IEnumerable<TimelineListViewModel> Timelines
         {
-            get { return _selectedTweetViewModel; }
+            get { return this._timelines; }
+        }
+
+        public TimelineListViewModel CurrentForegroundTimeline
+        {
+            get { return this._timelines.Last(); }
+        }
+
+        private bool _isQueryValid = true;
+        public bool IsQueryValid
+        {
+            get { return this._isQueryValid; }
             set
             {
-                this._selectedTweetViewModel = value;
-                RaisePropertyChanged(() => SelectedTweetViewModel);
+                this._isQueryValid = value;
+                RaisePropertyChanged(() => IsQueryValid);
             }
+        }
+
+        private string _queryTextBuffer = String.Empty;
+        public string QueryText
+        {
+            get { return this._queryTextBuffer; }
+            set
+            {
+                this._queryTextBuffer = value;
+                RaisePropertyChanged(() => QueryText);
+                this.AnalyzeCurrentQuery();
+            }
+        }
+
+        private void AnalyzeCurrentQuery()
+        {
+            if (this.TimelinesCount == 1)
+                this._queryTextBuffer = String.Empty;
+            IEnumerable<IFilter> filter = null;
+            var prefix = (this._queryTextBuffer.Length > 2 && this._queryTextBuffer[1] == ':') ?
+                this._queryTextBuffer[0] : '\0';
+            switch (prefix)
+            {
+                case 'u':
+                case 'U':
+                    // search with user
+                    // tokenizing
+                    var uqsplitted = this._queryTextBuffer.Substring(2)
+                        .Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries));
+                    filter = uqsplitted.Select(s => new FilterCluster(){
+                        ConcatenateAnd = true,
+                        Filters = s.Select(un => new Filter.Filters.Text.FilterUser(un)).ToArray()}).ToArray();
+                    break;
+                case 't':
+                case 'T':
+                    // search text
+                    var tsplitted = this._queryTextBuffer.Substring(2)
+                        .Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries));
+                    filter = tsplitted.Select(s => new FilterCluster(){
+                        ConcatenateAnd = true,
+                        Filters = s.Select(un => new Filter.Filters.Text.FilterText(un)).ToArray()}).ToArray();
+                    break;
+                case 'q':
+                case 'Q':
+                    // search with query
+                    try
+                    {
+                        filter = new[] { QueryCompiler.ToFilter(this._queryTextBuffer.Substring(2)) };
+                    }
+                    catch
+                    {
+                        this.IsQueryValid = false;
+                        return;
+                    }
+                    break;
+                default:
+                    var tosplitted = this._queryTextBuffer
+                        .Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries));
+                    filter = tosplitted.Select(s => new FilterCluster(){
+                        ConcatenateAnd = true,
+                        Filters = s.Select(un => new Filter.Filters.Text.FilterText(un)).ToArray()}).ToArray();
+                    break;
+            }
+            this.IsQueryValid = true;
+            this.CurrentForegroundTimeline.Sources = filter;
+            Task.Factory.StartNew(() => this.CurrentForegroundTimeline.InvalidateAll())
+                .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => this.CurrentForegroundTimeline.Commit(true)));
+        }
+
+        private void WritebackQuery()
+        {
+            if (this.TimelinesCount == 1)
+                this._queryTextBuffer = String.Empty;
+            if (this.CurrentForegroundTimeline.Sources == null)
+                this._queryTextBuffer = String.Empty;
+            else if(this.CurrentForegroundTimeline.Sources.All(
+                c => (c is FilterCluster) && ((FilterCluster)c).Filters
+                    .All(f => f is Filter.Filters.Text.FilterText)))
+            {
+                // t:
+                this._queryTextBuffer =
+                    this.CurrentForegroundTimeline.Sources.Select(
+                    c => ((FilterCluster)c).Filters.Select(f =>
+                        ((FilterText)f).Needle).JoinString(" ")).JoinString("|");
+            }
+            else if (this.CurrentForegroundTimeline.Sources.All(
+                c => (c is FilterCluster) && ((FilterCluster)c).Filters
+                    .All(f => f is Filter.Filters.Text.FilterUser)))
+            {
+                // u:
+                this._queryTextBuffer = "u:" +
+                    this.CurrentForegroundTimeline.Sources.Select(
+                    c => ((FilterCluster)c).Filters.Select(f =>
+                        ((FilterUser)f).Needle).JoinString(" ")).JoinString("|");
+            }
+            else
+            {
+                this._queryTextBuffer = "q:(" +
+                    this.CurrentForegroundTimeline.Sources.Select(
+                    s => s.ToQuery()).JoinString("|") + ")";
+            }
+            RaisePropertyChanged(() => QueryText);
+        }
+
+        public int TimelinesCount
+        {
+            get { return this._timelines.Count; }
+        }
+
+        public bool IsContainsSingle
+        {
+            get { return this._timelines.Count == 1; }
+        }
+
+        /// <summary>
+        /// 現在のスタックトップタイムラインを削除します。
+        /// </summary>
+        /// <param name="removeAllStackings">スタックされているすべてのタイムラインを削除します。</param>
+        public void RemoveTopTimeline(bool removeAllStackings)
+        {
+            do
+            {
+                this._timelines.RemoveAt(this._timelines.Count - 1);
+            } while (removeAllStackings && this._timelines.Count > 2);
+            this._timelines.ForEach(t => t.InvalidateIsActive());
+            RaisePropertyChanged(() => TimelinesCount);
+            RaisePropertyChanged(() => IsContainsSingle);
+            WritebackQuery();
+        }
+
+        /// <summary>
+        /// スタックトップタイムラインを追加します。
+        /// </summary>
+        /// <param name="newFilter"></param>
+        /// <param name="description"></param>
+        public void AddTopTimeline(IEnumerable<IFilter> newFilter)
+        {
+            this._timelines.Add(new TimelineListViewModel(this, newFilter));
+            this._timelines.ForEach(t => t.InvalidateIsActive());
+            RaisePropertyChanged(() => TimelinesCount);
+            RaisePropertyChanged(() => IsContainsSingle);
+            WritebackQuery();
         }
 
         #region ClearNewTweetsCountCommand
@@ -190,5 +281,50 @@ namespace Inscribe.ViewModels
             this.NewTweetsCount = 0;
         }
         #endregion
+
+        #region CreateTopTimelineCommand
+        DelegateCommand _CreateTopTimelineCommand;
+
+        public DelegateCommand CreateTopTimelineCommand
+        {
+            get
+            {
+                if (_CreateTopTimelineCommand == null)
+                    _CreateTopTimelineCommand = new DelegateCommand(CreateTopView);
+                return _CreateTopTimelineCommand;
+            }
+        }
+
+        private void CreateTopView()
+        {
+            this.AddTopTimeline(null);
+            this.Messenger.Raise(new InteractionMessage("FocusToSearch"));
+        }
+        #endregion
+
+        #region RemoveTopTimelineCommand
+        DelegateCommand _RemoveTopTimelineCommand;
+
+        public DelegateCommand RemoveTopTimelineCommand
+        {
+            get
+            {
+                if (_RemoveTopTimelineCommand == null)
+                    _RemoveTopTimelineCommand = new DelegateCommand(RemoveTopTimeline);
+                return _RemoveTopTimelineCommand;
+            }
+        }
+
+        private void RemoveTopTimeline()
+        {
+            this.RemoveTopTimeline(false);
+        }
+        #endregion
+      
+
+        internal void SetFocus()
+        {
+            this.Messenger.Raise(new InteractionMessage("SetFocus"));
+        }
     }
 }

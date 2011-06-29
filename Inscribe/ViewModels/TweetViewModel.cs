@@ -174,17 +174,6 @@ namespace Inscribe.ViewModels
 
         #region Binding Helper Property
 
-        private double _tooltipWidth = 0;
-        public double TooltipWidth
-        {
-            get { return _tooltipWidth; }
-            set
-            {
-                _tooltipWidth = value;
-                RaisePropertyChanged(() => TooltipWidth);
-            }
-        }
-
         public bool IsProtected
         {
             get { return TwitterHelper.GetSuggestedUser(this).IsProtected; }

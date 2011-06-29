@@ -29,6 +29,7 @@ namespace Mystique.ViewModels
         {
             Inscribe.Communication.CruiseControl.AutoCruiseSchedulerManager.Begin();
         }
+
         private InputBlockViewModel _inputBlockViewModel = new InputBlockViewModel();
         public InputBlockViewModel InputBlockViewModel
         {

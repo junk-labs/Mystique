@@ -7,7 +7,7 @@ namespace Mystique.Views.Converters.Particular
     {
         public override string ToTarget(string input, object parameter)
         {
-            return input.Replace("\r", "").Replace("\n", "");
+            return input.Replace("\r\n", "\n").Replace("\r", " ").Replace("\n", " ");
         }
     }
 }

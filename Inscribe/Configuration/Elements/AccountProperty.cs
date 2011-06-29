@@ -16,6 +16,8 @@ namespace Inscribe.Configuration.Elements
             this.UseUserStreams = true;
             this.AutoCruiseDefaultMu = 0.5;
             this.AutoCruiseApiConsumeRate = 0.8;
+            this.FooterString = null;
+            this.AccountDependentQuery = null;
         }
 
         public bool UserStreamsRepliesAll { get; set; }
@@ -25,5 +27,9 @@ namespace Inscribe.Configuration.Elements
         public double AutoCruiseDefaultMu { get; set; }
 
         public double AutoCruiseApiConsumeRate { get; set; }
+
+        public string FooterString { get; set; }
+
+        public string[] AccountDependentQuery { get; set; }
     }
 }

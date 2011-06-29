@@ -63,5 +63,10 @@ namespace System.Linq
             foreach (var i in source)
                 execute(i);
         }
+
+        public static string JoinString(this IEnumerable<string> source, string separator)
+        {
+            return String.Join(separator, source);
+        }
     }
 }

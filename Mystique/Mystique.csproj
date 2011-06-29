@@ -108,6 +108,7 @@
       <DependentUpon>UserSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Converters\Particular\NotZeroToVisibleConverter.cs" />
+    <Compile Include="Views\Converters\Particular\SourceToInlinesConverter.cs" />
     <Compile Include="Views\Converters\Particular\TVMToUserImageConverter.cs" />
     <Compile Include="Views\Converters\Particular\TwoOrMoreVisibleConverter.cs" />
     <Compile Include="Views\Dialogs\Account\Authenticate.xaml.cs">
@@ -156,6 +157,7 @@
       <DependentUpon>Column.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\DynamicRichTextBox.cs" />
+    <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\DynamicTextBlock.cs" />
     <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml.cs">
       <DependentUpon>TimelineItem.xaml</DependentUpon>
     </Compile>
