@@ -54,6 +54,7 @@
     <Compile Include="Twitter\Rest\Status.cs" />
     <Compile Include="Twitter\Rest\Timeline.cs" />
     <Compile Include="Twitter\Rest\User.cs" />
+    <Compile Include="Twitter\Rest\User.Deprecated.cs" />
     <Compile Include="Twitter\Rest\Utility.cs" />
     <Compile Include="Twitter\Streaming\StreamingConnection.cs" />
     <Compile Include="Twitter\Streaming\StreamingCore.cs" />

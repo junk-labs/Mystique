@@ -102,39 +102,37 @@ namespace Inscribe.Communication.Streaming.Connection
                 case ElementKind.Unfollow:
                     var affect = AccountStorage.Get(elem.SourceUser.ScreenName);
                     var effect = AccountStorage.Get(elem.TargetUser.ScreenName);
-                    var sourceuvm = UserStorage.Get(elem.SourceUser);
-                    var targetuvm = UserStorage.Get(elem.TargetUser);
                     if (affect != null)
                     {
                         // Add/Remove followings
                         if (elem.Kind == ElementKind.Follow)
-                            affect.RegisterFollowing(targetuvm);
+                            affect.RegisterFollowing(elem.TargetUser.NumericId);
                         else
-                            affect.RemoveFollowing(UserStorage.Get(elem.TargetUser));
+                            affect.RemoveFollowing(elem.TargetUser.NumericId);
                     }
                     if (effect != null)
                     {
                         // Add/Remove followers
                         if (elem.Kind == ElementKind.Follow)
-                            effect.RegisterFollower(UserStorage.Get(elem.SourceUser));
+                            effect.RegisterFollower(elem.SourceUser.NumericId);
                         else
-                            effect.RemoveFollower(UserStorage.Get(elem.SourceUser));
+                            effect.RemoveFollower(elem.SourceUser.NumericId);
                     }
                     if (elem.Kind == ElementKind.Follow)
-                        EventStorage.OnFollowed(sourceuvm, targetuvm);
+                        EventStorage.OnFollowed(UserStorage.Get(elem.SourceUser), UserStorage.Get(elem.TargetUser));
                     else
-                        EventStorage.OnRemoved(sourceuvm, targetuvm);
+                        EventStorage.OnRemoved(UserStorage.Get(elem.SourceUser), UserStorage.Get(elem.TargetUser));
                     break;
                 case ElementKind.Blocked:
                     if (info == null) break;
-                    info.RemoveFollowing(UserStorage.Get(elem.TargetUser));
-                    info.RemoveFollower(UserStorage.Get(elem.TargetUser));
-                    info.RegisterBlocking(UserStorage.Get(elem.TargetUser));
+                    info.RemoveFollowing(elem.TargetUser.NumericId);
+                    info.RemoveFollower(elem.TargetUser.NumericId);
+                    info.RegisterBlocking(elem.TargetUser.NumericId);
                     // TODO: notify events
                     break;
                 case ElementKind.Unblocked:
                     if (info == null) break;
-                    info.RemoveBlocking(UserStorage.Get(elem.TargetUser));
+                    info.RemoveBlocking(elem.TargetUser.NumericId);
                     // TODO: Notify events
                     break;
             }

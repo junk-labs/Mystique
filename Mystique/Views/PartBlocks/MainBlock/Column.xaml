@@ -111,6 +111,9 @@
                       Margin="0,-2,0,0"
                       ItemsSource="{Binding TabItems}">
             <i:Interaction.Triggers>
+                <i:EventTrigger EventName="GotFocus">
+                    <i:InvokeCommandAction Command="{Binding GetFocusCommand}" />
+                </i:EventTrigger>
                 <l:InteractionMessageTrigger MessageKey="SetFocus" Messenger="{Binding Messenger}">
                     <ba:FrameworkSetFocusAction />
                 </l:InteractionMessageTrigger>
@@ -137,6 +140,7 @@
                      Grid.Column="0"
                      Grid.ColumnSpan="3"
                      Margin="0"
+                     AllowDrop="True"
                      Background="Transparent"
                      BorderThickness="0"
                      ContextMenu="{StaticResource TabParentContextMenu}"
@@ -147,15 +151,11 @@
                      ItemsSource="{Binding TabItems}"
                      ItemTemplate="{DynamicResource ItemTemplate}"
                      Padding="0"
-                     AllowDrop="True"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
                      SelectedItem="{Binding SelectedTabViewModel}"
                      VerticalContentAlignment="Stretch">
                 <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="GotFocus">
-                        <i:InvokeCommandAction Command="{Binding GetFocusCommand}" />
-                    </i:EventTrigger>
                     <i:EventTrigger EventName="Drop">
                         <act:InvokePassThruCommandAction Command="{Binding OnDropCommand}" />
                     </i:EventTrigger>

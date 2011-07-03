@@ -2,6 +2,7 @@
 using System.Linq;
 using Dulcet.Twitter.Credential;
 using Dulcet.Util;
+using System;
 
 namespace Dulcet.Twitter.Rest
 {
@@ -50,7 +51,31 @@ namespace Dulcet.Twitter.Rest
         /// <summary>
         /// Get users
         /// </summary>
-        private static IEnumerable<TwitterUser> GetUsers(this CredentialProvider provider, string partialUri, IEnumerable<KeyValuePair<string, string>> para, out long prevCursor, out long nextCursor)
+        private static IEnumerable<TwitterUser> GetUsers(this CredentialProvider provider, string partialUri, IEnumerable<KeyValuePair<string, string>> para)
+        {
+            var doc = provider.RequestAPIv1(partialUri, CredentialProvider.RequestMethod.GET, para);
+            if (doc == null)
+                return null; // request returns error ?
+            return doc.Descendants("user").Select(u => TwitterUser.FromNode(u)).Where(u => u != null);
+        }
+
+        /// <summary>
+        /// ユーザー情報を取得します。
+        /// </summary>
+        public static IEnumerable<TwitterUser> LookupUsers(this CredentialProvider provider, string[] screenNames = null, long[] ids = null)
+        {
+            if (screenNames == null && ids == null)
+                throw new ArgumentNullException("screenNameとid,両方をnullに設定することはできません。");
+            if (screenNames != null)
+                return provider.GetUsers("users/lookup.xml", new[] { new KeyValuePair<string, string>("screen_name", String.Join(",", screenNames)) });
+            else
+                return provider.GetUsers("users/lookup.xml", new[] { new KeyValuePair<string, string>("user_id", String.Join(",", ids.Select(l => l.ToString()))) });
+        }
+
+        /// <summary>
+        /// Get users
+        /// </summary>
+        private static IEnumerable<long> GetUserIds(this CredentialProvider provider, string partialUri, IEnumerable<KeyValuePair<string, string>> para, out long prevCursor, out long nextCursor)
         {
             prevCursor = 0;
             nextCursor = 0;
@@ -58,7 +83,7 @@ namespace Dulcet.Twitter.Rest
             if (doc == null)
                 return null; // request returns error ?
             List<TwitterUser> users = new List<TwitterUser>();
-            var ul = doc.Element("users_list");
+            var ul = doc.Element("id_list");
             if (ul != null)
             {
                 var nc = ul.Element("next_cursor");
@@ -68,16 +93,13 @@ namespace Dulcet.Twitter.Rest
                 if (pc != null)
                     prevCursor = (long)pc.ParseLong();
             }
-            return from n in doc.Descendants("user")
-                   let usr = TwitterUser.FromNode(n)
-                   where usr != null
-                   select usr;
+            return doc.Descendants("id").Select(n => n.ParseLong()).Where(n => n != 0);
         }
 
         /// <summary>
         /// Get users with full params
         /// </summary>
-        private static IEnumerable<TwitterUser> GetUsers(this CredentialProvider provider, string partialUri, long? userId, string screenName, long? cursor, out long prevCursor, out long nextCursor)
+        private static IEnumerable<long> GetUserIds(this CredentialProvider provider, string partialUri, long? userId, string screenName, long? cursor, out long prevCursor, out long nextCursor)
         {
             List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
             if (userId != null)
@@ -92,20 +114,20 @@ namespace Dulcet.Twitter.Rest
             {
                 para.Add(new KeyValuePair<string, string>("cursor", cursor.ToString()));
             }
-            return provider.GetUsers(partialUri, para, out prevCursor, out nextCursor);
+            return provider.GetUserIds(partialUri, para, out prevCursor, out nextCursor);
         }
 
         /// <summary>
         /// Get users with use cursor params
         /// </summary>
-        private static IEnumerable<TwitterUser> GetUsersAll(this CredentialProvider provider, string partialUri, long? userId, string screenName)
+        private static IEnumerable<long> GetUserIdsAll(this CredentialProvider provider, string partialUri, long? userId, string screenName)
         {
             long n_cursor = -1;
             long c_cursor = -1;
             long p;
             while (n_cursor != 0)
             {
-                var users = provider.GetUsers(partialUri, userId, screenName, c_cursor, out p, out n_cursor);
+                var users = provider.GetUserIds(partialUri, userId, screenName, c_cursor, out p, out n_cursor);
                 if (users != null)
                     foreach (var u in users)
                         yield return u;
@@ -113,62 +135,19 @@ namespace Dulcet.Twitter.Rest
             }
         }
 
-        /// <summary>
-        /// Get friends all
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="userId">target user id</param>
-        public static IEnumerable<TwitterUser> GetFriendsAll(this CredentialProvider provider, long? userId = null)
+        public static IEnumerable<long> GetFriendIds(this CredentialProvider provider, long? userId = null, string screenName = null)
         {
-            return provider.GetUsersAll("statuses/friends.xml", userId, null);
+            return provider.GetUserIdsAll("friends/ids.xml", userId, screenName);
         }
 
-        /// <summary>
-        /// Get friends all
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="screenName">target user's screen name</param>
-        public static IEnumerable<TwitterUser> GetFriendsAllByScreenName(this CredentialProvider provider, string screenName)
+        public static IEnumerable<long> GetFollowerIds(this CredentialProvider provider, long? userId = null, string screenName = null)
         {
-            return provider.GetUsersAll("statuses/friends.xml", null, screenName);
+            return provider.GetUserIdsAll("followers/ids.xml", userId, screenName);
         }
 
-        /// <summary>
-        /// Get friends with full params
-        /// </summary>
-        public static IEnumerable<TwitterUser> GetFriends(this CredentialProvider provider, long? userId, string screenName, long? cursor, out long prevCursor, out long nextCursor)
+        public static IEnumerable<long> GetBlockingIds(this CredentialProvider provider)
         {
-            if (cursor == null)
-                cursor = -1;
-            return provider.GetUsers("statuses/friends.xml", userId, screenName, cursor, out prevCursor, out nextCursor);
-        }
-
-        /// <summary>
-        /// Get followers all
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="userId">target user id</param>
-        public static IEnumerable<TwitterUser> GetFollowersAll(this CredentialProvider provider, long? userId = null)
-        {
-            return provider.GetUsersAll("statuses/followers.xml", userId, null);
-        }
-
-        /// <summary>
-        /// Get followers all
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="screenName">target user's screen name</param>
-        public static IEnumerable<TwitterUser> GetFollowersAllByScreenName(this CredentialProvider provider, string screenName)
-        {
-            return provider.GetUsersAll("statuses/followers.xml", null, screenName);
-        }
-
-        /// <summary>
-        /// Get followers with full params
-        /// </summary>
-        public static IEnumerable<TwitterUser> GetFollowers(this CredentialProvider provider, long? userId, string screenName, long? cursor, out long prevCursor, out long nextCursor)
-        {
-            return provider.GetUsers("statuses/followers.xml", userId, screenName, cursor, out prevCursor, out nextCursor);
+            return provider.GetUserIdsAll("followers/ids.xml", null, null);
         }
     }
 }

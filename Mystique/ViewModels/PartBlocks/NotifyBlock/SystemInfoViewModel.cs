@@ -100,7 +100,7 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
 
         public Uri ProfileImage
         {
-            get { return this.Info.UserViewModel.TwitterUser.ProfileImage; }
+            get { return this.Info.ProfileImage; }
         }
 
         public string ScreenName { get { return this.Info.ScreenName; } }

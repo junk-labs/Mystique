@@ -111,11 +111,11 @@ namespace Inscribe.Model
 
         #region Additional information
 
-        private SafeLinkedList<UserViewModel> following = new SafeLinkedList<UserViewModel>();
+        private SafeLinkedList<long> following = new SafeLinkedList<long>();
 
-        private SafeLinkedList<UserViewModel> followers = new SafeLinkedList<UserViewModel>();
+        private SafeLinkedList<long> followers = new SafeLinkedList<long>();
 
-        private SafeLinkedList<UserViewModel> blockings = new SafeLinkedList<UserViewModel>();
+        private SafeLinkedList<long> blockings = new SafeLinkedList<long>();
 
         private SafeLinkedList<TwitterList> followingLists = new SafeLinkedList<TwitterList>();
 
@@ -123,19 +123,19 @@ namespace Inscribe.Model
 
         #region Following
 
-        public void RegisterFollowing(UserViewModel user)
+        public void RegisterFollowing(long user)
         {
             if (!this.following.Contains(user))
                 this.following.AddLast(user);
         }
 
-        public void RemoveFollowing(UserViewModel user)
+        public void RemoveFollowing(long user)
         {
             this.following.Remove(user);
         }
 
         [XmlIgnore()]
-        public IEnumerable<UserViewModel> Followings
+        public IEnumerable<long> Followings
         {
             get { return this.following; }
         }
@@ -143,29 +143,28 @@ namespace Inscribe.Model
         /// <summary>
         /// 指定したユーザーをフォローしているか　
         /// </summary>
-        public bool IsFollowing(string screenName)
+        public bool IsFollowing(long id)
         {
-            return this.following
-                .FirstOrDefault(v => v.TwitterUser.ScreenName == screenName) != null;
+            return this.following.Contains(id);
         }
 
         #endregion
 
         #region Followers
 
-        public void RegisterFollower(UserViewModel user)
+        public void RegisterFollower(long user)
         {
             if (!this.followers.Contains(user))
                 this.followers.AddLast(user);
         }
 
-        public void RemoveFollower(UserViewModel user)
+        public void RemoveFollower(long user)
         {
             this.followers.Remove(user);
         }
 
         [XmlIgnore()]
-        public IEnumerable<UserViewModel> Followers
+        public IEnumerable<long> Followers
         {
             get { return this.followers; }
         }
@@ -173,37 +172,35 @@ namespace Inscribe.Model
         /// <summary>
         /// 指定したユーザーからフォローされているか
         /// </summary>
-        public bool IsFollowedBy(string screenName)
+        public bool IsFollowedBy(long id)
         {
-            return this.followers
-                .FirstOrDefault(v => v.TwitterUser.ScreenName == screenName) != null;
+            return this.followers.Contains(id);
         }
 
         #endregion
 
         #region Blockings
 
-        public void RegisterBlocking(UserViewModel user)
+        public void RegisterBlocking(long user)
         {
             if (!this.blockings.Contains(user))
                 this.blockings.AddLast(user);
         }
 
-        public void RemoveBlocking(UserViewModel user)
+        public void RemoveBlocking(long user)
         {
             this.blockings.Remove(user);
         }
 
         [XmlIgnore()]
-        public IEnumerable<UserViewModel> Blockings
+        public IEnumerable<long> Blockings
         {
             get { return this.blockings; }
         }
 
-        public bool IsBlocking(string screenName)
+        public bool IsBlocking(long id)
         {
-            return this.blockings
-                .FirstOrDefault(v => v.TwitterUser.ScreenName == screenName) != null;
+            return this.blockings.Contains(id);
         }
 
         #endregion
@@ -238,6 +235,23 @@ namespace Inscribe.Model
         #endregion
 
         public AccountProperty AccoutProperty { get; set; }
+
+        #region Reference helper
+
+        public Uri ProfileImage
+        {
+            get
+            {
+                try
+                {
+                    return this.UserViewModel.TwitterUser.ProfileImage;
+                }
+                catch { return null; }
+            }
+
+        }
+
+        #endregion
 
     }
 }

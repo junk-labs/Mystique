@@ -108,7 +108,7 @@ namespace Inscribe.Plugin
                     return ss;
                 }
             }
-            return null;
+            return uploaders.FirstOrDefault();
         }
     }
 }

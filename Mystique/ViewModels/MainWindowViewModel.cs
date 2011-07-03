@@ -28,21 +28,25 @@ namespace Mystique.ViewModels
         public MainWindowViewModel()
         {
             Inscribe.Communication.CruiseControl.AutoCruiseSchedulerManager.Begin();
+            this._columnOwnerViewModel = new ColumnOwnerViewModel();
+            this._notifyBlockViewModel = new NotifyBlockViewModel(this);
+            // Input block dependents ColumnOwnerViewModel
+            this._inputBlockViewModel = new InputBlockViewModel(this);
         }
 
-        private InputBlockViewModel _inputBlockViewModel = new InputBlockViewModel();
+        private InputBlockViewModel _inputBlockViewModel;
         public InputBlockViewModel InputBlockViewModel
         {
             get { return this._inputBlockViewModel; }
         }
 
-        private ColumnOwnerViewModel _columnOwnerViewModel = new ColumnOwnerViewModel();
+        private ColumnOwnerViewModel _columnOwnerViewModel;
         public ColumnOwnerViewModel ColumnOwnerViewModel
         {
             get { return this._columnOwnerViewModel; }
         }
 
-        private NotifyBlockViewModel _notifyBlockViewModel = new NotifyBlockViewModel();
+        private NotifyBlockViewModel _notifyBlockViewModel;
         public NotifyBlockViewModel NotifyBlockViewModel
         {
             get { return this._notifyBlockViewModel; }

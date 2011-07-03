@@ -6,6 +6,8 @@ using Inscribe.Filter;
 using Inscribe.Filter.Core;
 using Inscribe.Model;
 using Inscribe.Storage;
+using Livet;
+using System.Threading;
 
 namespace Inscribe.Configuration.Tabs
 {
@@ -14,6 +16,29 @@ namespace Inscribe.Configuration.Tabs
     /// </summary>
     public class TabProperty
     {
+        #region LinkAccountInfoChangedイベント
+
+        public event EventHandler<EventArgs> LinkAccountInfoChanged;
+        private Notificator<EventArgs> _LinkAccountInfoChangedEvent;
+        public Notificator<EventArgs> LinkAccountInfoChangedEvent
+        {
+            get
+            {
+                if (_LinkAccountInfoChangedEvent == null) _LinkAccountInfoChangedEvent = new Notificator<EventArgs>();
+                return _LinkAccountInfoChangedEvent;
+            }
+            set { _LinkAccountInfoChangedEvent = value; }
+        }
+
+        protected void OnLinkAccountInfoChanged(EventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref LinkAccountInfoChanged, null, null);
+            if (threadSafeHandler != null) threadSafeHandler(this, e);
+            LinkAccountInfoChangedEvent.Raise(e);
+        }
+
+        #endregion
+      
         /// <summary>
         /// タブ名称
         /// </summary>
@@ -99,6 +124,7 @@ namespace Inscribe.Configuration.Tabs
                     this.LinkAccountScreenNames = new string[0];
                 else
                     this.LinkAccountScreenNames = value.Select(i => i.ScreenName).Distinct();
+                OnLinkAccountInfoChanged(EventArgs.Empty);
             }
         }
     }

@@ -39,7 +39,10 @@ namespace Inscribe.ViewModels
                 this._columns.Add(nvm);
             else
                 this._columns.Insert(index, nvm);
+            // ColumnViewModelのイベントを購読。
+            // このイベントはリリースの必要がない
             nvm.GotFocus += (o, e) => CurrentFocusColumn = nvm;
+            nvm.SelectedTabChanged += _ => RaisePropertyChanged(() => CurrentTab);
             return nvm;
         }
 
@@ -58,16 +61,29 @@ namespace Inscribe.ViewModels
         private ColumnViewModel _currentFocusColumn = null;
         public ColumnViewModel CurrentFocusColumn
         {
-            get
-            {
-                return this._currentFocusColumn;
-            }
+            get { return this._currentFocusColumn; }
             protected set
             {
                 this._currentFocusColumn = value;
                 RaisePropertyChanged(() => CurrentFocusColumn);
+                RaisePropertyChanged(() => CurrentTab);
+                var cfc = this.CurrentColumnChanged;
+                if (cfc != null)
+                    cfc(value);
+                var ctab = this.CurrentTabChanged;
+                if (ctab != null)
+                    ctab(value.SelectedTabViewModel);
             }
         }
+
+        public event Action<ColumnViewModel> CurrentColumnChanged;
+
+        public TabViewModel CurrentTab
+        {
+            get { return this.CurrentFocusColumn.SelectedTabViewModel; }
+        }
+
+        public event Action<TabViewModel> CurrentTabChanged;
 
         public void MoveFocusTo(ColumnViewModel column, ColumnsLocation moveTarget)
         {

@@ -20,8 +20,10 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
     /// </remarks>
     public class NotifyBlockViewModel : ViewModel
     {
-        public NotifyBlockViewModel()
+        public MainWindowViewModel Parent{get; private set;}
+        public NotifyBlockViewModel(MainWindowViewModel parent)
         {
+            this.Parent = parent;
             // InformServer.EventRegistered += new InformServer.NotifyEventHandler(InformServer_EventRegistered);
             // InformServer.ReportRegistered += new InformServer.ReportRegisterHandler(InformServer_ReportRegistered);
             ViewModelHelper.BindNotification(NotifyStorage.NotifyTextChangedEvent, this, (o, e) => RaisePropertyChanged(() => StatusText));
@@ -35,7 +37,7 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
             ViewModelHelper.BindNotification(TweetStorage.Notificator, this, (o, e) => RaisePropertyChanged(() => Tweets));
             ImageCacheStorage.DownloadingChanged += () => RaisePropertyChanged(() => ImageDownloading);
         }
-        
+
         public enum StateImages
         {
             Ok,
@@ -172,6 +174,7 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
         #region ShowTwitterEventInfoCommand
         
         DelegateCommand _ShowTwitterEventInfoCommand;
+        private MainWindowViewModel mainWindowViewModel;
 
         public DelegateCommand ShowTwitterEventInfoCommand
         {

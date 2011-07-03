@@ -14,7 +14,7 @@ namespace Inscribe.Filter.Filters.ScreenName
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
             return AccountStorage.Accounts.Where(i => Match(i.ScreenName, needle))
-                .Any(i => i.IsFollowing(status.User.ScreenName));
+                .Any(i => i.IsFollowing(status.User.NumericId));
         }
 
         public override string Identifier

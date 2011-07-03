@@ -33,10 +33,10 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <StackPanel Orientation="Horizontal">
-            <Button ToolTip="全てチェックする" Command="{Binding CheckAll}">
+            <Button ToolTip="全てチェックする" Command="{Binding CheckAllCommand}">
                 <Image Source="{StaticResource CheckAll}" Width="8" Height="8" Margin="2" />
             </Button>
-            <Button ToolTip="全てチェックを外す" Command="{Binding UncheckAll}">
+            <Button ToolTip="全てチェックを外す" Command="{Binding UncheckAllCommand}">
                 <Image Source="{StaticResource UncheckAll}" Width="8" Height="8" Margin="2" />
             </Button>
         </StackPanel>

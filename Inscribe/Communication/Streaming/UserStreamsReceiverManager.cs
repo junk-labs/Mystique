@@ -49,9 +49,9 @@ namespace Inscribe.Communication.Streaming
             // アカウント情報の受信
             UserStorage.Register(info.GetUserByScreenName(info.ScreenName));
             // フォロー/フォロワー/ブロックの受信
-            info.GetFriendsAll().Select(u => UserStorage.Get(u)).ForEach(u => info.RegisterFollowing(u));
-            info.GetFollowersAll().Select(u => UserStorage.Get(u)).ForEach(u => info.RegisterFollower(u));
-            info.GetBlockingUsersAll().Select(u => UserStorage.Get(u)).ForEach(u => info.RegisterBlocking(u));
+            info.GetFriendIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollowing(i));
+            info.GetFollowerIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollower(i));
+            info.GetBlockingIds().ForEach(i => info.RegisterBlocking(i));
         }
 
         /// <summary>

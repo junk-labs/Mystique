@@ -111,30 +111,30 @@ namespace Inscribe.Common
         public static bool IsFollowingCurrent(UserViewModel user, TabProperty property)
         {
             if (user == null) return false;
-            return property.LinkAccountInfos.All(i => i.IsFollowing(user.TwitterUser.ScreenName));
+            return property.LinkAccountInfos.All(i => i.IsFollowing(user.TwitterUser.NumericId));
         }
 
         public static bool IsFollowingAny(UserViewModel user)
         {
             if (user == null) return false;
-            return AccountStorage.Accounts.Any(d => d.Followings.Contains(user));
+            return AccountStorage.Accounts.Any(d => d.Followings.Contains(user.TwitterUser.NumericId));
         }
 
         public static bool IsFollowingAll(UserViewModel user)
         {
             if (user == null) return false;
-            return AccountStorage.Accounts.All(d => d.Followings.Contains(user));
+            return AccountStorage.Accounts.All(d => d.Followings.Contains(user.TwitterUser.NumericId));
         }
 
         public static bool IsFollowerCurrent(UserViewModel user, TabProperty property)
         {
             if (user == null || property == null) return false;
-            return property.LinkAccountInfos.All(i => i.IsFollowedBy(user.TwitterUser.ScreenName));
+            return property.LinkAccountInfos.All(i => i.IsFollowedBy(user.TwitterUser.NumericId));
         }
 
         public static bool IsFollowerAny(UserViewModel user)
         {
-            return AccountStorage.Accounts.Any(d => d.Followers.Contains(user));
+            return AccountStorage.Accounts.Any(d => d.Followers.Contains(user.TwitterUser.NumericId));
         }
 
         public static bool IsPublishedByRetweet(TweetViewModel status)

@@ -45,31 +45,15 @@ namespace Mystique.ViewModels.Common
             get { return this._linkDatas; }
         }
 
+        public event Action LinkChanged;
 
-        #region LinkChangedイベント
-
-        public event EventHandler<EventArgs> LinkChanged;
-        private Notificator<EventArgs> _LinkChangedEvent;
-        public Notificator<EventArgs> LinkChangedEvent
+        private void OnLinkChanged()
         {
-            get
-            {
-                if (_LinkChangedEvent == null) _LinkChangedEvent = new Notificator<EventArgs>();
-                return _LinkChangedEvent;
-            }
-            set { _LinkChangedEvent = value; }
+            var lc = this.LinkChanged;
+            if(lc != null)
+                lc();
         }
-
-        protected void OnLinkChanged(EventArgs e)
-        {
-            var threadSafeHandler = Interlocked.CompareExchange(ref LinkChanged, null, null);
-            if (threadSafeHandler != null) threadSafeHandler(this, e);
-            LinkChangedEvent.Raise(e);
-        }
-
-        #endregion
       
-
         #region CheckAllCommand
         DelegateCommand _CheckAllCommand;
 
@@ -114,6 +98,7 @@ namespace Mystique.ViewModels.Common
         {
             LinkElements = new[] { ld.AccountInfo };
             MakeTargets();
+            this.OnLinkChanged();
         }
 
         public void ChangeLinkState(UserLinkData linkdata, bool check)
@@ -126,11 +111,13 @@ namespace Mystique.ViewModels.Common
             {
                 this.LinkElements = this.LinkElements.Except(new[] { linkdata.AccountInfo }).ToArray();
             }
+            this.OnLinkChanged();
         }    
     }
 
     public class UserLinkData : ViewModel
     {
+
         UserSelectorViewModel parent;
 
         AccountInfo info;
@@ -163,9 +150,9 @@ namespace Mystique.ViewModels.Common
                     return;
                 _IsLink = value;
                 RaisePropertyChanged("IsLink");
+                parent.ChangeLinkState(this, this._IsLink);
             }
         }
-
 
         #region SelectThisCommand
         DelegateCommand _SelectThisCommand;
@@ -185,7 +172,11 @@ namespace Mystique.ViewModels.Common
             parent.SelectThis(this);
         }
         #endregion
-      
+
+        public Uri UserProfileImageUri
+        {
+            get { return this.AccountInfo.ProfileImage; }
+        }
 
     }
 }

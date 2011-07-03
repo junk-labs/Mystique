@@ -6,6 +6,12 @@ namespace Inscribe
     /// </summary>
     public static class TwitterDefine
     {
+        #region ほぼ固定されている値
+
+        public static int TweetMaxLength = 140;
+
+        #endregion
+
         #region Twitter API 依存
 
         public static readonly int UserStreamsQueryMaxCount = 200;

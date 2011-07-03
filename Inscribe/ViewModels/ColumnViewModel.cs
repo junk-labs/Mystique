@@ -28,6 +28,14 @@ namespace Inscribe.ViewModels
             if (fchandler != null)
                 fchandler(this, EventArgs.Empty);
         }
+
+        public event Action<TabViewModel> SelectedTabChanged;
+        protected void OnSelectedTabChanged(TabViewModel selected)
+        {
+            var stc = this.SelectedTabChanged;
+            if (stc != null)
+                stc(selected);
+        }
         
         private bool _isInDragDrop = false;
         /// <summary>
@@ -57,6 +65,9 @@ namespace Inscribe.ViewModels
                 this._selectedTabViewModel = value;
                 if (this._selectedTabViewModel != null)
                     this._selectedTabViewModel.IsSelected = true;
+                // 選択タブが変わったんだから、カレントカラムは自分でないとおかしい
+                this.OnGetFocus();
+                OnSelectedTabChanged(value);
                 RaisePropertyChanged(() => SelectedTabViewModel);
             }
         }

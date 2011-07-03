@@ -82,6 +82,8 @@ namespace Inscribe.ViewModels
             this.Parent = parent;
 
             this._tabProperty = property ?? new TabProperty();
+            ViewModelHelper.BindNotification(this._tabProperty.LinkAccountInfoChangedEvent, this, (o, e) =>
+                this._timelines.SelectMany(vm => vm.TweetsSource).ForEach(t => t.PendingColorChanged(true)));
 
             this.AddTopTimeline(null);
         }
@@ -321,7 +323,6 @@ namespace Inscribe.ViewModels
         }
         #endregion
       
-
         internal void SetFocus()
         {
             this.Messenger.Raise(new InteractionMessage("SetFocus"));
