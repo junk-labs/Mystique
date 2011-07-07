@@ -91,7 +91,7 @@
                         BorderBrush="Silver"
                         BorderThickness="1"
                         CornerRadius="1">
-                    <TextBox BorderThickness="0" Text="{Binding QueryText, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox Padding="2" BorderThickness="0" Text="{Binding QueryText, UpdateSourceTrigger=PropertyChanged}">
                         <i:Interaction.Triggers>
                             <l:InteractionMessageTrigger MessageKey="FocusToSearch" Messenger="{Binding Messenger}">
                                 <ba:FrameworkSetFocusAction />

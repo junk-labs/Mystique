@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.ComponentModel;
-
+using System.Threading;
+using Dulcet.Twitter;
+using Inscribe;
+using Inscribe.Model;
+using Inscribe.Storage;
+using Inscribe.ViewModels;
 using Livet;
 using Livet.Command;
 using Livet.Messaging;
-using Livet.Messaging.File;
-using Livet.Messaging.Window;
 using Mystique.ViewModels.Common;
-using Inscribe.ViewModels;
-using Inscribe.Model;
-using Inscribe.Storage;
 using Mystique.Views.Behaviors.Messages;
-using Dulcet.Twitter;
-using System.Collections.ObjectModel;
-using System.Threading;
-using Inscribe;
 
 namespace Mystique.ViewModels.PartBlocks.InputBlock
 {

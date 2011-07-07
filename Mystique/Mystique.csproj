@@ -116,6 +116,9 @@
     <Compile Include="Views\Converters\Particular\TweetStringToCountConverter.cs" />
     <Compile Include="Views\Converters\Particular\TVMToUserImageConverter.cs" />
     <Compile Include="Views\Converters\Particular\TwoOrMoreVisibleConverter.cs" />
+    <Compile Include="Views\Dialogs\Account\AccountPropertyConfig.xaml.cs">
+      <DependentUpon>AccountPropertyConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\Account\Authenticate.xaml.cs">
       <DependentUpon>Authenticate.xaml</DependentUpon>
     </Compile>
@@ -192,6 +195,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Common\UserSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\Account\AccountPropertyConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
