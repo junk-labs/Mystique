@@ -64,5 +64,4 @@ namespace System.Windows.Data
                 return DesignerProperties.GetIsInDesignMode(new DependencyObject());
             }
         }
-    }
-}
+    }}

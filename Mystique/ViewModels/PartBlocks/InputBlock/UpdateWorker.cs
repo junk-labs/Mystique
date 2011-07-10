@@ -28,7 +28,8 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
     {
         Updating,
         Updated,
-        Failed
+        Failed,
+        Annotated
     }
 
     public class TweetWorker : ViewModel
@@ -91,7 +92,9 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
                     throw new Exception("ツイートが140文字を超えました。");
 
                 // add footer
-                if (!String.IsNullOrEmpty(accountInfo.AccoutProperty.FooterString) && body.Length + accountInfo.AccoutProperty.FooterString.Length + 1 <= TwitterDefine.TweetMaxLength)
+                if (!String.IsNullOrEmpty(accountInfo.AccoutProperty.FooterString) &&
+                    !(body.Contains("RT @") || body.Contains("QT @")) &&
+                    body.Length + accountInfo.AccoutProperty.FooterString.Length + 1 <= TwitterDefine.TweetMaxLength)
                     body += " " + accountInfo.AccoutProperty.FooterString;
 
                 if (tags != null)
@@ -105,10 +108,10 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
 
                 // ready
 
-                if(this.inReplyToId != 0)
-                    PostOffice.UpdateTweet(this.accountInfo, body, this.inReplyToId);
+                if (this.inReplyToId != 0)
+                    this.RecentPostCount = PostOffice.UpdateTweet(this.accountInfo, body, this.inReplyToId);
                 else
-                    PostOffice.UpdateTweet(this.accountInfo, body);
+                    this.RecentPostCount = PostOffice.UpdateTweet(this.accountInfo, body);
 
                 this.WorkingState = InputBlock.WorkingState.Updated;
 
@@ -116,7 +119,7 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
             }
             catch (Exception e)
             {
-                this.WorkingState = InputBlock.WorkingState.Failed;
+                this.WorkingState = e is TweetAnnotationException ? InputBlock.WorkingState.Annotated : InputBlock.WorkingState.Failed;
                 this.ExceptionString = e.ToString();
                 ParseFailException(e);
                 return false;
@@ -178,7 +181,7 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
                         break;
                     default:
                         this.ErrorTitle = "アノテーションがあります。";
-                        this.ErrorSummary = "(内部エラー: アノテーションの特定に失敗しました。)" + Environment.NewLine + 
+                        this.ErrorSummary = "(内部エラー: アノテーションの特定に失敗しました。)" + Environment.NewLine +
                             tex.Message;
                         break;
                 }
@@ -219,7 +222,9 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
                 RaisePropertyChanged(() => WorkingState);
                 RaisePropertyChanged(() => IsInUpdating);
                 RaisePropertyChanged(() => IsInUpdated);
+                RaisePropertyChanged(() => IsInformationAvailable);
                 RaisePropertyChanged(() => IsInFailed);
+                RaisePropertyChanged(() => IsInAnnotated);
                 RaisePropertyChanged(() => IsClosable);
             }
         }
@@ -234,9 +239,19 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
             get { return this._workstate == WorkingState.Updated; }
         }
 
+        public bool IsInformationAvailable
+        {
+            get { return this._workstate == InputBlock.WorkingState.Annotated || this._workstate == InputBlock.WorkingState.Failed; }
+        }
+
         public bool IsInFailed
         {
             get { return this._workstate == WorkingState.Failed; }
+        }
+
+        public bool IsInAnnotated
+        {
+            get { return this._workstate == InputBlock.WorkingState.Annotated; }
         }
 
         public bool IsClosable
@@ -244,11 +259,28 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
             get { return this._workstate != InputBlock.WorkingState.Updating; }
         }
 
+        private int _recentPostCount = -1;
+        public int RecentPostCount
+        {
+            get { return this._recentPostCount; }
+            private set
+            {
+                this._recentPostCount = value;
+                RaisePropertyChanged(() => RecentPostCount);
+                RaisePropertyChanged(() => UnderControlCount);
+            }
+        }
+
+        public int UnderControlCount
+        {
+            get { return TwitterDefine.UnderControlCount - this._recentPostCount; }
+        }
+
         private string _errorTitle = String.Empty;
         public string ErrorTitle
         {
             get { return this._errorTitle; }
-            set
+            private set
             {
                 this._errorTitle = value;
                 RaisePropertyChanged(() => ErrorTitle);
@@ -259,7 +291,7 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
         public string ErrorSummary
         {
             get { return this._errorSummary; }
-            set
+            private set
             {
                 this._errorSummary = value;
                 RaisePropertyChanged(() => ErrorSummary);
@@ -270,7 +302,7 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
         public string ExceptionString
         {
             get { return this._exceptionString; }
-            set
+            private set
             {
                 this._exceptionString = value;
                 RaisePropertyChanged(() => ExceptionString);
@@ -326,7 +358,6 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
             Remove();
         }
         #endregion
-
 
         #region RemoveCommand
         DelegateCommand _RemoveCommand;

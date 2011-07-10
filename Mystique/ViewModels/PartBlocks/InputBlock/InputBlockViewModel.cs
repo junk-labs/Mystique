@@ -13,6 +13,7 @@ using Livet.Command;
 using Livet.Messaging;
 using Mystique.ViewModels.Common;
 using Mystique.Views.Behaviors.Messages;
+using Mystique.ViewModels.Dialogs;
 
 namespace Mystique.ViewModels.PartBlocks.InputBlock
 {
@@ -59,7 +60,32 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
             get { return _ImageStackingViewViewModel; }
         }
 
-        #region Input control 
+        #region Menuitems
+
+        #region ShowConfigCommand
+        DelegateCommand _ShowConfigCommand;
+
+        public DelegateCommand ShowConfigCommand
+        {
+            get
+            {
+                if (_ShowConfigCommand == null)
+                    _ShowConfigCommand = new DelegateCommand(ShowConfig);
+                return _ShowConfigCommand;
+            }
+        }
+
+        private void ShowConfig()
+        {
+            var vm = new SettingViewModel();
+            Messenger.Raise(new TransitionMessage(vm, "ShowConfig"));
+        }
+        #endregion
+      
+
+        #endregion
+
+        #region Input control
 
         private InputDescription _currentInputDescription = null;
         public InputDescription CurrentInputDescription
@@ -322,6 +348,22 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
         {
             this.CurrentInputDescription.InReplyToId = 0;
         }
+        #endregion
+
+        #region URL Shortening
+
+        private bool _isUrlShortening = false;
+        public bool IsUrlShortening
+        {
+            get { return this._isUrlShortening; }
+            set
+
+            {
+                this._isUrlShortening = value;
+                RaisePropertyChanged(() => IsUrlShortening);
+            }
+        }
+
         #endregion
 
         #region AttachImageCommand

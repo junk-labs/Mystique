@@ -10,6 +10,8 @@ using Livet.Messaging;
 using Inscribe.Filter.Core;
 using Inscribe.Filter.Filters.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels
 {
@@ -120,7 +122,7 @@ namespace Inscribe.ViewModels
             }
         }
 
-        private string _queryTextBuffer = String.Empty;
+        private volatile string _queryTextBuffer = String.Empty;
         public string QueryText
         {
             get { return this._queryTextBuffer; }
@@ -128,7 +130,14 @@ namespace Inscribe.ViewModels
             {
                 this._queryTextBuffer = value;
                 RaisePropertyChanged(() => QueryText);
-                this.AnalyzeCurrentQuery();
+                Task.Factory.StartNew(() =>
+                    {
+                        Thread.Sleep(Setting.Instance.TimelineExperienceProperty.QueryApplyWait);
+                        if (this._queryTextBuffer == value)
+                        {
+                            this.AnalyzeCurrentQuery();
+                        }
+                    });
             }
         }
 

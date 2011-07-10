@@ -124,7 +124,7 @@ namespace Inscribe.ViewModels
             {
                 this._tweetsSource.Commit();
                 this._tweetCollectionView.SortDescriptions.Clear();
-                if (Setting.Instance.TimelineExperienceProperty.AscendingSort)
+                if (Setting.Instance.TimelineExperienceProperty.UseAscendingSort)
                     this._tweetCollectionView.SortDescriptions.Add(
                         new SortDescription("Tweet.CreatedAt", ListSortDirection.Ascending));
                 else

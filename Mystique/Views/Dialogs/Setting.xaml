@@ -1,11 +1,17 @@
-﻿<Window xmlns:my="clr-namespace:Mystique.Views.Dialogs.SettingSub"  x:Class="Mystique.Views.Dialogs.Setting"
+﻿<Window x:Class="Mystique.Views.Dialogs.Setting"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:Mystique.ViewModels.Dialogs"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf" 
-        Title="Setting" Height="400" Width="625">
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:my="clr-namespace:Mystique.Views.Dialogs.SettingSub"
+        xmlns:vm="clr-namespace:Mystique.ViewModels.Dialogs"
+        Title="Setting"
+        Width="625"
+WindowStyle="ToolWindow"
+WindowStartupLocation="CenterOwner"
+        Height="400"
+        ResizeMode="NoResize">
     <Window.Resources>
         <vm:SettingViewModel x:Key="ViewModel" />
     </Window.Resources>
@@ -18,7 +24,11 @@
             <ColumnDefinition Width="180" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <ListBox Name="ItemList" VerticalAlignment="Stretch" Margin="12,12,12,0" Height="300" SelectedIndex="0">
+        <ListBox Name="ItemList"
+                 Height="300"
+                 Margin="12,12,12,0"
+                 VerticalAlignment="Stretch"
+                 SelectedIndex="0">
             <ListBoxItem Content="アカウント" />
             <ListBoxItem Content="一般" />
             <ListBoxItem Content="タイムライン" />
@@ -30,13 +40,27 @@
             <ListBoxItem Content="外部サービス連携" />
             <ListBoxItem Content="拡張機能" />
         </ListBox>
-        <Grid Margin="0,12,12,0" VerticalAlignment="Stretch" Width="400" Height="300" Grid.Column="1">
-            <my:AccountConfig DataContext="{Binding AccountConfigViewModel}"
-                    Visibility="{Binding Converter={StaticResource StringToVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=0}" />
+        <Grid Grid.Column="1"
+              Width="400"
+              Height="300"
+              Margin="0,12,12,0"
+              VerticalAlignment="Stretch">
+            <my:AccountConfig DataContext="{Binding AccountConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=0}" />
         </Grid>
-        <Button Content="OK" HorizontalAlignment="Right" Margin="0,6,122,6" Width="110" Grid.Column="1" Grid.Row="1"
-                IsDefault="True" Command="{Binding ApplyCommand}" />
-        <Button Content="キャンセル" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,6,12,6" Width="110"
+        <Button Grid.Row="1"
+                Grid.Column="1"
+                Width="110"
+                Margin="0,6,122,6"
+                HorizontalAlignment="Right"
+                Command="{Binding ApplyCommand}"
+                Content="OK"
+                IsDefault="True" />
+        <Button Grid.Row="1"
+                Grid.Column="1"
+                Width="110"
+                Margin="0,6,12,6"
+                HorizontalAlignment="Right"
+                Content="キャンセル"
                 IsCancel="True" />
     </Grid>
 </Window>

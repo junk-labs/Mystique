@@ -93,7 +93,9 @@
     <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="ViewModels\Common\ImageStackingViewViewModel.cs" />
     <Compile Include="ViewModels\Common\UserSelectorViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\Account\AccountPropertyConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\Account\AuthenticateViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SettingSub\AccountConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputBlockViewModel.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="Views\Behaviors\Actions\FrameworkSetFocusAction.cs" />
     <Compile Include="Views\Behaviors\Actions\InvokePassThruCommandAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TextBoxSetCaretAction.cs" />
+    <Compile Include="Views\Behaviors\Actions\TransitionInteractionMessageAction.cs" />
     <Compile Include="Views\Behaviors\Messages\TextBoxSetCaretMessage.cs" />
     <Compile Include="Views\Behaviors\Particular\KeyBindingHandlerBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\MouseOverBindBehavior.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="Views\Common\UserSelector.xaml.cs">
       <DependentUpon>UserSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Converters\DoublePercentStringConverter.cs" />
     <Compile Include="Views\Converters\Particular\NotZeroToVisibleConverter.cs" />
     <Compile Include="Views\Converters\Particular\SourceToInlinesConverter.cs" />
     <Compile Include="Views\Converters\Particular\TweetStringToCountConverter.cs" />
@@ -315,9 +319,6 @@
     <Resource Include="Resources\accounts.png" />
     <Resource Include="Resources\add.png" />
     <Resource Include="Resources\application_xp_terminal.png" />
-    <Resource Include="Resources\arrowdown.png" />
-    <Resource Include="Resources\arrowup.png" />
-    <Resource Include="Resources\arrow_join.png" />
     <Resource Include="Resources\bell.png" />
     <Resource Include="Resources\bin_empty.png" />
     <Resource Include="Resources\box_left.png" />

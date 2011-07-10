@@ -21,7 +21,6 @@ namespace Mystique.ViewModels.Dialogs.Account
 
         public AccountInfo GetAccountInfo(AccountInfo previous = null)
         {
-            this.Success = false;
             if (previous != null)
             {
                 previous.RewriteCredential(this._credentialCore);
@@ -35,6 +34,7 @@ namespace Mystique.ViewModels.Dialogs.Account
 
         public AuthenticateViewModel(CredentialCore prevCore = null)
         {
+            this.Success = false;
             this._credentialCore = new CredentialCore();
             if (prevCore != null)
             {

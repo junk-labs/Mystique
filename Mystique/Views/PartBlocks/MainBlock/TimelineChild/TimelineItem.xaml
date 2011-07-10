@@ -17,6 +17,7 @@
         <BitmapImage x:Key="Comment" UriSource="/Resources/comment_edit.png" />
         <BitmapImage x:Key="Favorited" UriSource="/Resources/star.png" />
         <BitmapImage x:Key="Retweeted" UriSource="/Resources/rt.png" />
+        <BitmapImage x:Key="Loading" UriSource="/Resources/refresh_large.png" />
         <pc:TVMToUserNameConverter x:Key="TweetUserNameConverter" />
         <pc:TVMToUserImageConverter x:Key="TweetUserImageConverter" />
         <pc:StringRemoveLineFeedConverter x:Key="SingleLineConverter" />
@@ -74,6 +75,7 @@
                     <my:LazyImage Width="48"
                                   Height="48"
                                   VerticalAlignment="Center"
+                                  DefaultImage="{StaticResource Loading}"
                                   DockPanel.Dock="Left"
                                   UriSource="{Binding Path=Tweet,
                                                       Converter={StaticResource TweetUserImageConverter},
@@ -142,7 +144,7 @@
         <cp:FillPanel x:Name="UserImageOwner">
             <my:LazyImage x:Name="Owner"
                           VerticalAlignment="Center"
-                          Stretch="UniformToFill"
+                          Stretch="UniformToFill" DefaultImage="{StaticResource Loading}"
                           UriSource="{Binding Path=Tweet,
                                               Converter={StaticResource TweetUserImageConverter},
                                               ConverterParameter=Suggested}">

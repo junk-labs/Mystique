@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Octave.Caching;
 using System.Windows.Threading;
+using System.Windows.Media;
 
 namespace Mystique.Views.Common
 {
@@ -30,6 +31,16 @@ namespace Mystique.Views.Common
         // Using a DependencyProperty as the backing store for UriSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty UriSourceProperty =
             DependencyProperty.Register("UriSource", typeof(Uri), typeof(LazyImage), new UIPropertyMetadata(null, UriSourcePropertyChanged));
+
+        public ImageSource DefaultImage
+        {
+            get { return (ImageSource)GetValue(DefaultImageProperty); }
+            set { SetValue(DefaultImageProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DefaultImage.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DefaultImageProperty =
+            DependencyProperty.Register("DefaultImage", typeof(ImageSource), typeof(LazyImage), new UIPropertyMetadata(null));
 
         private static void UriSourcePropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
@@ -59,7 +70,7 @@ namespace Mystique.Views.Common
                 {
                     img.Dispatcher.BeginInvoke(() =>
                     {
-                        img.Source = null;
+                        img.Source = img.DefaultImage;
                     }, DispatcherPriority.ContextIdle);
                 }
             });

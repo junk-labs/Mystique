@@ -71,6 +71,7 @@
     <Compile Include="Communication\CruiseControl\DefaultTasks\SentDirectMessageReceiveTask.cs" />
     <Compile Include="Communication\CruiseControl\Lists\ListReceiverManager.cs" />
     <Compile Include="Communication\CruiseControl\Lists\ListReceiveTask.cs" />
+    <Compile Include="Communication\UserInformationManager.cs" />
     <Compile Include="Communication\Streaming\Connection\UserStreamsConnection.cs" />
     <Compile Include="Communication\Streaming\UserStreamsReceiver.cs" />
     <Compile Include="Communication\Streaming\UserStreamsReceiverManager.cs" />
@@ -97,7 +98,6 @@
     <Compile Include="Configuration\Settings\TimelineExperienceProperty.cs" />
     <Compile Include="Configuration\Settings\TimelineFilterlingProperty.cs" />
     <Compile Include="Configuration\Settings\TweetExperienceProperty.cs" />
-    <Compile Include="Configuration\Settings\TwitterProperty.cs" />
     <Compile Include="Configuration\Tabs\TabProperty.cs" />
     <Compile Include="Core\InitializationService.cs" />
     <Compile Include="Core\StateProxy.cs" />

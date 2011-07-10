@@ -248,7 +248,6 @@ namespace Inscribe.Model
                 }
                 catch { return null; }
             }
-
         }
 
         #endregion

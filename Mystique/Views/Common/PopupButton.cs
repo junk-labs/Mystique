@@ -18,23 +18,33 @@ namespace Mystique.Views.Common
             this.SetBinding(PopupButton.IsCheckedProperty, binding);
         }
 
-        public Popup DropDownPopup
+        public UIElement DropDownPopup
         {
-            get { return GetValue(DropDownPopupProperty) as Popup; }
+            get { return GetValue(DropDownPopupProperty) as UIElement; }
             set { this.SetValue(DropDownPopupProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for DropDownPopup.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DropDownPopupProperty =
-            DependencyProperty.Register("DropDownPopup", typeof(Popup), typeof(PopupButton), new FrameworkPropertyMetadata(null, DropDownPopupChanged));
+            DependencyProperty.Register("DropDownPopup", typeof(UIElement), typeof(PopupButton), new FrameworkPropertyMetadata(null, DropDownPopupChanged));
 
         private static void DropDownPopupChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             var pb = o as PopupButton;
-            var pop = e.NewValue as Popup;
-            if (pb == null || pop == null) return;
-            pop.PlacementTarget = pb;
-            pop.StaysOpen = false;
+            var popobj = e.NewValue as UIElement;
+            if (pb == null || popobj == null) return;
+            Popup popup;
+            if (popobj is Popup)
+            {
+                popup = popobj as Popup;
+            }
+            else
+            {
+                popup = new Popup();
+                popup.Child = popobj;
+            }
+            popup.PlacementTarget = pb;
+            popup.StaysOpen = false;
         }
     }
 }

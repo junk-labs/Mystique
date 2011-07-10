@@ -74,7 +74,11 @@ namespace Mystique.ViewModels
                     this.Messenger.Raise(new TransitionMessage(vm, TransitionMode.Modal, "AccountInfo"));
                     if (vm.Success)
                     {
-                        AccountStorage.RegisterAccount(vm.GetAccountInfo());
+                        var apcvm = new Mystique.ViewModels.Dialogs.Account.AccountPropertyConfigViewModel(vm.GetAccountInfo());
+                        var apc = new Mystique.Views.Dialogs.Account.AccountPropertyConfig();
+                        apc.DataContext = apcvm;
+                        apc.ShowDialog();
+                        AccountStorage.RegisterAccount(apcvm.AccountInfo);
                     }
                 });
         }

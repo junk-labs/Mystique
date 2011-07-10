@@ -145,6 +145,7 @@ namespace Inscribe.Storage
                         throw new ArgumentException("移動方向指定がちゃんちゃらおかしい :" + direction.ToString());
                 }
             });
+            OnAccountsChanged(EventArgs.Empty);
         }
 
 

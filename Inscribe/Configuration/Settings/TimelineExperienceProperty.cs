@@ -7,13 +7,12 @@ namespace Inscribe.Configuration.Settings
 {
     public class TimelineExperienceProperty
     {
-        public bool AscendingSort;
         public TimelineExperienceProperty()
         {
+            this.UseAscendingSort = false;
             FastScrolling = true;
             ScrollLockMode = ScrollLock.OnSelected;
-            IntelligentReordering = true;
-            IntelligentReorderThreshold = 10;
+            QueryApplyWait = 200;
             TimelineColorLazyUpdate = true;
             TimelineItemInitStrategy = ItemInitStrategy.DefaultColors;
             TimelineItemResetBreakCount = 50;
@@ -21,6 +20,8 @@ namespace Inscribe.Configuration.Settings
         }
 
         public bool FastScrolling { get; set; }
+
+        public bool UseAscendingSort { get; set; }
 
         public enum ScrollLock
         {
@@ -32,17 +33,7 @@ namespace Inscribe.Configuration.Settings
 
         public ScrollLock ScrollLockMode { get; set; }
 
-        /// <summary>
-        /// TLに注目している間は、時間にかかわらず受信順にツイートを並べます。<para />
-        /// (一定の期間より前に受信したツイートは時間通りに並べます。)
-        /// </summary>
-        public bool IntelligentReordering { get; set; }
-
-        /// <summary>
-        /// 現在の時刻からこれ以上前の分に投稿されたツイートについては、<para />
-        /// Intelligent Reorderingを適用しません。
-        /// </summary>
-        public int IntelligentReorderThreshold { get; set; }
+        public int QueryApplyWait;
 
         /// <summary>
         /// タイムラインの色設定を遅延反映する(パフォーマンス向上、ただし大量に処理対象がある場合処理が遅延する場合あり)

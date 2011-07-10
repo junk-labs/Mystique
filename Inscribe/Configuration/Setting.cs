@@ -108,7 +108,6 @@ namespace Inscribe.Configuration
             this.ColoringProperty = new ColoringProperty();
             this.NotificationProperty = new Settings.NotificationProperty();
             this.StateProperty = new StateProperty();
-            this.TwitterProperty = new TwitterProperty();
         }
 
         public KernelProperty KernelProperty { get; set; }
@@ -139,8 +138,6 @@ namespace Inscribe.Configuration
         public NotificationProperty NotificationProperty { get; set; }
 
         public StateProperty StateProperty { get; set; }
-
-        public TwitterProperty TwitterProperty { get; set; }
 
         public void Save()
         {

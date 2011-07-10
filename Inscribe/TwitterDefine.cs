@@ -1,4 +1,5 @@
 ﻿
+using System;
 namespace Inscribe
 {
     /// <summary>
@@ -28,6 +29,15 @@ namespace Inscribe
 
         #endregion
 
+        #region 規制管理
+
+        public static readonly TimeSpan UnderControlTimespan = new TimeSpan(3, 0, 0);
+
+        public static readonly int UnderControlCount = 127;
+
+        public static readonly int UnderControlWarningThreshold = 117;
+
+        #endregion
 
         #region ミリ秒単位
 
