@@ -95,6 +95,7 @@
     <Compile Include="ViewModels\Common\UserSelectorViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\Account\AccountPropertyConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\Account\AuthenticateViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\Common\LoadingViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\AccountConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
@@ -125,6 +126,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\Account\Authenticate.xaml.cs">
       <DependentUpon>Authenticate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Common\Loading.xaml.cs">
+      <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PartBlocks\BlockCommon\Notifier.xaml.cs">
       <DependentUpon>Notifier.xaml</DependentUpon>
@@ -207,6 +211,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\Account\Authenticate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\Common\Loading.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -20,7 +20,7 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
     /// </remarks>
     public class NotifyBlockViewModel : ViewModel
     {
-        public MainWindowViewModel Parent{get; private set;}
+        public MainWindowViewModel Parent { get; private set; }
         public NotifyBlockViewModel(MainWindowViewModel parent)
         {
             this.Parent = parent;
@@ -172,9 +172,8 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
         }
 
         #region ShowTwitterEventInfoCommand
-        
+
         DelegateCommand _ShowTwitterEventInfoCommand;
-        private MainWindowViewModel mainWindowViewModel;
 
         public DelegateCommand ShowTwitterEventInfoCommand
         {
@@ -192,6 +191,6 @@ namespace Mystique.ViewModels.PartBlocks.NotifyBlock
         }
 
         #endregion
-      
+
     }
 }

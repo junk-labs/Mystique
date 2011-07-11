@@ -74,7 +74,7 @@ namespace Inscribe.Configuration.Settings
                     {
                         if (!_warnedRegexError)
                         {
-                            NotifyStorage.Notify("ハッシュタグ自動バインド:正規表現エラー " + e.Message);
+                            ExceptionStorage.Register(e, ExceptionCategory.UserError, "ハッシュタグ自動バインドで使われている正規表現 \"" + ConditionText + "\" に問題があります。");
                             _warnedRegexError = true;
                         }
                         return false;

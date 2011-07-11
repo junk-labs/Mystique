@@ -23,18 +23,21 @@ namespace Inscribe.Configuration.Settings
         public bool IsSideViewInLeft { get; set; }
 
         [XmlIgnore()]
-        public IEnumerable<IEnumerable<TabProperty>> TabColumns { get; set; }
+        public IEnumerable<IEnumerable<TabProperty>> TabInformations { get; private set; }
 
-        [XmlArray("TabColumns")]
+        [XmlIgnore()]
+        public Func<IEnumerable<IEnumerable<TabProperty>>> TabPropertyProvider { get; set; }
+
+        [XmlArray("Columns"), XmlArrayItem("Column")]
         public TabProperty[][] _TabColumnsArray
         {
             get
             {
-                return this.TabColumns.Select(i => i.ToArray()).ToArray();
+                return this.TabPropertyProvider().Select(i => i.ToArray()).ToArray();
             }
             set
             {
-                this.TabColumns = value;
+                this.TabInformations = value;
             }
         }
 

@@ -6,16 +6,18 @@
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         xmlns:my="clr-namespace:Mystique.Views.Dialogs.SettingSub"
         xmlns:vm="clr-namespace:Mystique.ViewModels.Dialogs"
-        Title="Setting"
+        Title="設定"
         Width="625"
-WindowStyle="ToolWindow"
-WindowStartupLocation="CenterOwner"
         Height="400"
-        ResizeMode="NoResize">
-    <Window.Resources>
-        <vm:SettingViewModel x:Key="ViewModel" />
-    </Window.Resources>
-    <Grid DataContext="{StaticResource ViewModel}">
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow">
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="Close" Messenger="{Binding Messenger}">
+            <l:InteractionWindowAction />
+        </l:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="40" />
@@ -60,6 +62,7 @@ WindowStartupLocation="CenterOwner"
                 Width="110"
                 Margin="0,6,12,6"
                 HorizontalAlignment="Right"
+                Command="{Binding CloseCommand}"
                 Content="キャンセル"
                 IsCancel="True" />
     </Grid>

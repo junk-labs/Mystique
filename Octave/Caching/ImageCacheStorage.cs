@@ -122,7 +122,7 @@ namespace Octave.Caching
             }
             catch (Exception e)
             {
-                NotifyStorage.Notify("画像のロードエラー[システムエラー](" + uri.OriginalString + "):" + e.ToString());
+                NotifyStorage.Notify("画像のロードエラー(" + uri.OriginalString + "):" + e.ToString());
                 return new BitmapImage("Resources/failed.png".ToPackUri());
             }
             finally

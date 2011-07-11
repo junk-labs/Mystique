@@ -6,6 +6,8 @@ using Inscribe.Common;
 using Inscribe.Configuration.Settings;
 using Inscribe.Storage;
 using Livet;
+using System.Windows;
+using System.Diagnostics;
 
 namespace Inscribe.Configuration
 {
@@ -27,15 +29,33 @@ namespace Inscribe.Configuration
             {
                 if (_instance == null)
                 {
-#if DEBUG
-                    _instance = new Setting();
-#else
-                    throw new InvalidOperationException("設定システムはまだ初期化されていません。");
-#endif
+                    if (IsInDesignMode)
+                    {
+                        _instance = new Setting();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("設定システムはまだ初期化されていません。");
+                    }
                 }
                 return _instance;
             }
         }
+
+        private static bool IsInDesignMode
+        {
+            get
+            {
+                var prop = DesignerProperties.IsInDesignModeProperty;
+                var ret = (bool)DependencyPropertyDescriptor.FromProperty(prop, typeof(FrameworkElement)).Metadata.DefaultValue;
+                if (!ret)
+                {
+                    ret = Process.GetCurrentProcess().ProcessName.StartsWith("devenv", StringComparison.Ordinal);
+                }
+                return ret;
+            }
+        }
+   
 
         public static bool IsInitialized
         {
@@ -64,7 +84,6 @@ namespace Inscribe.Configuration
             }
         }
 
-        
         #region SettingValueChangedイベント
 
         public static event EventHandler<EventArgs> SettingValueChanged;
@@ -98,7 +117,6 @@ namespace Inscribe.Configuration
         {
             this.KernelProperty = new KernelProperty();
             this.ConnectionProperty = new ConnectionProperty();
-            this.AccountProperty = new AccountProperty();
             this.ExperienceProperty = new ExperienceProperty();
             this.TimelineExperienceProperty = new Settings.TimelineExperienceProperty();
             this.TweetExperienceProperty = new Settings.TweetExperienceProperty();
@@ -113,13 +131,6 @@ namespace Inscribe.Configuration
         public KernelProperty KernelProperty { get; set; }
 
         public ConnectionProperty ConnectionProperty { get; set; }
-
-        /// <summary>
-        /// エディタ内から参照しないでください。<para />
-        /// KernelModel.AccountServerModelから取得してください。
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public AccountProperty AccountProperty { get; set; }
 
         public ExperienceProperty ExperienceProperty { get; set; }
 

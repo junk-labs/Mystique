@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
+using Inscribe.Configuration.Tabs;
 using Livet;
 using Livet.Command;
-using System.Linq;
-using Inscribe.Configuration.Tabs;
-using System;
 
 namespace Inscribe.ViewModels
 {
@@ -36,7 +35,7 @@ namespace Inscribe.ViewModels
             if (stc != null)
                 stc(selected);
         }
-        
+
         private bool _isInDragDrop = false;
         /// <summary>
         /// ドラッグアンドドロップ処理中であることを示します。
@@ -99,7 +98,7 @@ namespace Inscribe.ViewModels
         {
             // インデックス取得
             int idx = -1;
-            if(beforeThis != null)
+            if (beforeThis != null)
                 idx = this._tabItems.IndexOf(beforeThis);
 
             if (idx == -1)
@@ -261,9 +260,28 @@ namespace Inscribe.ViewModels
         }
         #endregion
 
+        #region GetFocusCommand
+        DelegateCommand _GetFocusCommand;
+
+        public DelegateCommand GetFocusCommand
+        {
+            get
+            {
+                if (_GetFocusCommand == null)
+                    _GetFocusCommand = new DelegateCommand(GetFocus);
+                return _GetFocusCommand;
+            }
+        }
+
+        private void GetFocus()
+        {
+            OnGetFocus();
+        }
+        #endregion
+
         internal void SetFocus()
         {
-            if(this.SelectedTabViewModel != null)
+            if (this.SelectedTabViewModel != null)
                 this.SelectedTabViewModel.SetFocus();
         }
     }

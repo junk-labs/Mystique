@@ -59,8 +59,8 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
         {
             get { return _ImageStackingViewViewModel; }
         }
-
-        #region Menuitems
+      
+        #region MenuItems
 
         #region ShowConfigCommand
         DelegateCommand _ShowConfigCommand;
@@ -75,13 +75,12 @@ namespace Mystique.ViewModels.PartBlocks.InputBlock
             }
         }
 
-        private void ShowConfig()
+        public void ShowConfig()
         {
             var vm = new SettingViewModel();
             Messenger.Raise(new TransitionMessage(vm, "ShowConfig"));
         }
         #endregion
-      
 
         #endregion
 

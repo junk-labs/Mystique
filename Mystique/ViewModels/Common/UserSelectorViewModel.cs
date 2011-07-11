@@ -126,7 +126,7 @@ namespace Mystique.ViewModels.Common
         {
             this.parent = parent;
             this.info = info;
-            this.IsLink = isLink;
+            this._IsLink = isLink;
         }
 
         public AccountInfo AccountInfo

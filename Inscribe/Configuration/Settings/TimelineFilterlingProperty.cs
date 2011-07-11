@@ -37,7 +37,7 @@ namespace Inscribe.Configuration.Settings
                 }
                 catch (Exception e)
                 {
-                    NotifyStorage.Notify(e.Message);
+                    ExceptionStorage.Register(e, ExceptionCategory.UserError, "クエリのコンパイルに失敗しました。(クエリ:" + value +")");
                 }
             }
         }

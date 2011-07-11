@@ -24,8 +24,9 @@ namespace Inscribe.Filter.Core
             if (String.IsNullOrWhiteSpace(queryString)) // カ ラ
                 return new FilterCluster();
             // トークン化
-            if (!(queryString.StartsWith("(") && queryString.EndsWith(")"))) // 最外殻を追加
+            if (!queryString.StartsWith("(")) // 最外殻を追加
                 queryString = "(" + queryString + ")";
+            System.Diagnostics.Debug.WriteLine(queryString);
             var tokens = Tokenize(queryString);
             var syntaxes = MakeTuples(tokens);
             var filter = GenerateFilter(syntaxes);
@@ -385,13 +386,10 @@ namespace Inscribe.Filter.Core
         {
             var descstr = "";
             if (tokens.Count() == 1)
-            {
                 descstr = "ここには " + tokens.First().ToString() + " が存在しなければなりません。";
-            }
             else
-            {
                 descstr = "ここには " + String.Join(", ", tokens.Select(s => s.ToString())) + " のうちいずれかが存在しなければなりません。";
-            }
+
             if (!reader.IsRemainToken)
             {
                 if (isEnd) return;
@@ -416,6 +414,7 @@ namespace Inscribe.Filter.Core
 
         private static RootTuple MakeRoot(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeRoot");
             var ret = new RootTuple();
             if (reader.IsRemainToken)
             {
@@ -436,10 +435,11 @@ namespace Inscribe.Filter.Core
 
         private static ClusterTuple MakeCluster(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeCluster");
             var ctuple = new ClusterTuple();
             ctuple.Negate = TryLookAhead(ref reader, Token.TokenType.Exclamation);
             AssertNext(ref reader, Token.TokenType.OpenBracket);
-            if (!TryLookAhead(ref reader, Token.TokenType.CloseBracket, true))
+            if (reader.IsRemainToken && !TryLookAhead(ref reader, Token.TokenType.CloseBracket, false))
             {
                 ctuple.InnerCluster = MakeInnerCluster(ref reader);
             }
@@ -458,6 +458,7 @@ namespace Inscribe.Filter.Core
 
         private static InnerClusterTuple MakeInnerCluster(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeInnerCluster");
             // Follow -> )
             if (TryLookAhead(ref reader, Token.TokenType.CloseBracket, false))
                 return new InnerClusterTuple();
@@ -482,6 +483,7 @@ namespace Inscribe.Filter.Core
 
         private static ConcatenatorTuple MakeConcatenator(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeConcatenator");
             ConcatenatorTuple ret = new ConcatenatorTuple();
             if (TryLookAhead(ref reader, Token.TokenType.ConcatenatorAnd))
             {
@@ -511,6 +513,7 @@ namespace Inscribe.Filter.Core
 
         private static ExpressionTuple MakeExpression(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeExpression");
             ExpressionTuple ret = new ExpressionTuple();
             if (TryLookAhead(ref reader, Token.TokenType.Exclamation, false) ||
                 TryLookAhead(ref reader, Token.TokenType.OpenBracket, false))
@@ -523,7 +526,7 @@ namespace Inscribe.Filter.Core
                 // フィルタの開始
                 ret.Filter = MakeFilter(ref reader);
             }
-            AssertNextAny(ref reader, false, Token.TokenType.CloseBracket,
+            AssertNextAny(ref reader, true, Token.TokenType.CloseBracket,
                 Token.TokenType.ConcatenatorAnd, Token.TokenType.ConcatenatorOr);
             return ret;
         }
@@ -537,6 +540,7 @@ namespace Inscribe.Filter.Core
 
         private static FilterTuple MakeFilter(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeFilter");
             var ret = new FilterTuple()
             {
                 Name = AssertNext(ref reader, Token.TokenType.Literal),
@@ -555,6 +559,7 @@ namespace Inscribe.Filter.Core
 
         private static FilterAttrTuple MakeFilterAttr(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeFilterAttr");
             var ret = new FilterAttrTuple();
             if(TryLookAhead(ref reader, Token.TokenType.Exclamation))
             {
@@ -576,6 +581,7 @@ namespace Inscribe.Filter.Core
 
         private static ArgDescriptTuple MakeArgDescript(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeArgDescript");
             ArgDescriptTuple ret = new ArgDescriptTuple();
             if (TryLookAhead(ref reader, Token.TokenType.Collon))
             {
@@ -595,6 +601,7 @@ namespace Inscribe.Filter.Core
 
         private static ArgsTuple MakeArgs(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeArgs");
             var ret = new ArgsTuple()
             {
                 ArgBody = MakeArgBody(ref reader),
@@ -613,6 +620,7 @@ namespace Inscribe.Filter.Core
 
         private static ArgConcatrTuple MakeArgConcatr(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeArgConcatr");
             ArgConcatrTuple ret = new ArgConcatrTuple();
             if (TryLookAhead(ref reader, Token.TokenType.Comma))
             {
@@ -631,6 +639,7 @@ namespace Inscribe.Filter.Core
 
         private static ArgBodyTuple MakeArgBody(ref TokenReader reader)
         {
+            System.Diagnostics.Debug.WriteLine("MakeArgBody");
             var token = reader.Get();
             if (token.Type != Token.TokenType.String && token.Type != Token.TokenType.Literal)
             {

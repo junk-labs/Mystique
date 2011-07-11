@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Inscribe.Model;
+using Inscribe.Storage;
+using System.ComponentModel;
 
 namespace Inscribe.Configuration.Settings
 {
@@ -14,6 +17,23 @@ namespace Inscribe.Configuration.Settings
             AutoRetryCount = 3;
             AutoRetryIntervalMSec = 5000;
             ApiTweetReceiveCount = 200;
+        }
+
+        /// <summary>
+        /// 登録済みアカウント一覧<para />
+        /// ここから変更しないでください。AccountStorageで集中的に管理しています。
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public AccountInfo[] Accounts
+        {
+            get { return AccountStorage.Accounts.ToArray(); }
+            set
+            {
+                if (value != null)
+                {
+                    value.ForEach(a => AccountStorage.RegisterAccount(a));
+                }
+            }
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace Inscribe.Communication.Streaming.Connection
 
         static void streamCore_OnExceptionThrown(Exception obj)
         {
-            NotifyStorage.Notify(obj.Message);
+            ExceptionStorage.Register(obj, ExceptionCategory.TwitterError, "User Streams接続でエラーが発生しました。");
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Inscribe.Communication.Streaming.Connection
                     }
                     catch (Exception e)
                     {
-                        NotifyStorage.Notify(e.Message);
+                        streamCore_OnExceptionThrown(e);
                     }
                 }
             }

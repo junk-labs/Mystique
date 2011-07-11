@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Inscribe.Filter;
 using Livet;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels
 {
@@ -11,17 +12,8 @@ namespace Inscribe.ViewModels
     {
         public ColumnOwnerViewModel()
         {
-            var cc = CreateColumn();
-            cc.AddTab(
-                new Inscribe.Configuration.Tabs.TabProperty() { Name = "コ", TweetSources = new[] { new FilterCluster() { ConcatenateAnd = true } } });
-            cc.AddTab(
-                new Inscribe.Configuration.Tabs.TabProperty() { Name = "マ", TweetSources = new[] { new FilterCluster() { ConcatenateAnd = true } } });
-            cc.AddTab(
-                new Inscribe.Configuration.Tabs.TabProperty() { Name = "ン", TweetSources = new[] { new FilterCluster() { ConcatenateAnd = true } } });
-            cc.AddTab(
-                new Inscribe.Configuration.Tabs.TabProperty() { Name = "ド", TweetSources = new[] { new FilterCluster() { ConcatenateAnd = true } } });
-            cc.AddTab(
-                new Inscribe.Configuration.Tabs.TabProperty() { Name = "ー", TweetSources = new[] { new FilterCluster() { ConcatenateAnd = true } } });
+            this.CurrentFocusColumn = CreateColumn();
+            Setting.Instance.StateProperty.TabPropertyProvider = () => Columns.Select(cvm => cvm.TabItems.Select(s => s.TabProperty));
         }
 
         private ObservableCollection<ColumnViewModel> _columns = new ObservableCollection<ColumnViewModel>();

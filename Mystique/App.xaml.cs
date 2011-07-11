@@ -36,6 +36,8 @@ namespace Mystique
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             //TODO:ロギング処理など
+            System.Diagnostics.Debug.WriteLine("ERROR THROWN:");
+            System.Diagnostics.Debug.WriteLine(e.ExceptionObject);
 
             // Environment.Exit(1);
         }

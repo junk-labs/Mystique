@@ -27,8 +27,9 @@ namespace Inscribe.Storage
             Message = Define.DefaultStatusMessage;
         }
 
-        #region NotifyTextChangedイベント
         
+        #region NotifyTextChangedイベント
+
         public static event EventHandler<NotifyUpdatedEventArgs> NotifyTextChanged;
         private static Notificator<NotifyUpdatedEventArgs> _NotifyTextChangedEvent;
         public static Notificator<NotifyUpdatedEventArgs> NotifyTextChangedEvent
@@ -41,7 +42,7 @@ namespace Inscribe.Storage
             set { _NotifyTextChangedEvent = value; }
         }
 
-        static void OnNotifyTextChanged(NotifyUpdatedEventArgs e)
+        private static void OnNotifyTextChanged(NotifyUpdatedEventArgs e)
         {
             var threadSafeHandler = Interlocked.CompareExchange(ref NotifyTextChanged, null, null);
             if (threadSafeHandler != null) threadSafeHandler(null, e);
@@ -49,13 +50,14 @@ namespace Inscribe.Storage
         }
 
         #endregion
-
+      
+      
         public static void Notify(string message, int? showLength = null)
         {
             using (notifyLock.GetWriterLock())
             {
                 notificationStack.Push(new SecondNotifyItem(message,
-                    showLength.GetValueOrDefault(Setting.Instance.ExperienceProperty.StatusMessageDefaultShowLengthSec)));
+                    showLength.GetValueOrDefault(Setting.IsInitialized ? Setting.Instance.ExperienceProperty.StatusMessageDefaultShowLengthSec : 5)));
             }
             UpdateFocus();
         }
@@ -121,9 +123,8 @@ namespace Inscribe.Storage
                 // DisposeされていないメッセージまでPopする
                 using (notifyLock.GetWriterLock())
                 {
-                    while (notificationStack.Count > 0)
+                    while (notificationStack.Count > 0 && notificationStack.Peek().IsDisposed)
                     {
-                        if (notificationStack.Peek().IsDisposed)
                             notificationStack.Pop();
                     }
                     // 新メッセージを適用

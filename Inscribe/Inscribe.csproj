@@ -86,7 +86,6 @@
     <Compile Include="Configuration\KeyAssignment\AssignUtil.cs" />
     <Compile Include="Configuration\KeyAssignment\KeyAssign.cs" />
     <Compile Include="Configuration\Setting.cs" />
-    <Compile Include="Configuration\Settings\AccountProperty.cs" />
     <Compile Include="Configuration\Settings\ColoringProperty.cs" />
     <Compile Include="Configuration\Settings\ConnectionProperty.cs" />
     <Compile Include="Configuration\Settings\ExperienceProperty.cs" />

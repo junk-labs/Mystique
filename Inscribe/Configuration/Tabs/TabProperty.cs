@@ -76,7 +76,7 @@ namespace Inscribe.Configuration.Tabs
             }
         }
 
-        public IEnumerable<string> TweetSourceQueries
+        public string[] TweetSourceQueries
         {
             get { return this.TweetSources.Select(s => s.ToQuery()).ToArray(); }
             set
@@ -104,11 +104,11 @@ namespace Inscribe.Configuration.Tabs
             }
         }
 
-        private IEnumerable<string> _linkAccountScreenNames;
+        private string[] _linkAccountScreenNames;
         /// <summary>
         /// リンクしているアカウントのスクリーン名
         /// </summary>
-        public IEnumerable<string> LinkAccountScreenNames
+        public string[] LinkAccountScreenNames
         {
             get { return this._linkAccountScreenNames ?? new string[0]; }
             set { this._linkAccountScreenNames = value; }
@@ -123,7 +123,7 @@ namespace Inscribe.Configuration.Tabs
                 if (value == null)
                     this.LinkAccountScreenNames = new string[0];
                 else
-                    this.LinkAccountScreenNames = value.Select(i => i.ScreenName).Distinct();
+                    this.LinkAccountScreenNames = value.Select(i => i.ScreenName).Distinct().ToArray();
                 OnLinkAccountInfoChanged(EventArgs.Empty);
             }
         }

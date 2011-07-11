@@ -84,7 +84,7 @@ namespace Inscribe.Storage
                     }
                     catch (Exception e)
                     {
-                        NotifyStorage.Notify(e.Message);
+                        ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "ユーザー情報の受信に失敗しました。(ユーザー @" + userScreenName + " を アカウント @" + acc.ScreenName + " で受信しようとしました。)");
                     }
                     return null;
                 }

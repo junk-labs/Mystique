@@ -13,6 +13,10 @@ using Mystique.ViewModels.PartBlocks.NotifyBlock;
 using Mystique.ViewModels.PartBlocks.InputBlock;
 using Inscribe.Storage;
 using Inscribe.ViewModels;
+using Mystique.ViewModels.Dialogs.Common;
+using System.Windows.Threading;
+using Inscribe.Configuration;
+using System.Threading.Tasks;
 
 namespace Mystique.ViewModels
 {
@@ -27,7 +31,6 @@ namespace Mystique.ViewModels
     {
         public MainWindowViewModel()
         {
-            Inscribe.Communication.CruiseControl.AutoCruiseSchedulerManager.Begin();
             this._columnOwnerViewModel = new ColumnOwnerViewModel();
             this._notifyBlockViewModel = new NotifyBlockViewModel(this);
             // Input block dependents ColumnOwnerViewModel
@@ -52,37 +55,45 @@ namespace Mystique.ViewModels
             get { return this._notifyBlockViewModel; }
         }
 
+        #region LoadedCommand
+        DelegateCommand _LoadedCommand;
 
-        #region AuthCommand
-        DelegateCommand _AuthCommand;
-
-        public DelegateCommand AuthCommand
+        public DelegateCommand LoadedCommand
         {
             get
             {
-                if (_AuthCommand == null)
-                    _AuthCommand = new DelegateCommand(Auth);
-                return _AuthCommand;
+                if (_LoadedCommand == null)
+                    _LoadedCommand = new DelegateCommand(Loaded);
+                return _LoadedCommand;
             }
         }
 
-        private void Auth()
+        private void Loaded()
         {
+            if (AccountStorage.Accounts.Count() == 0)
+            {
+                this.InputBlockViewModel.ShowConfig();
+            }
+            var n = NotifyStorage.NotifyManually("タイムラインを準備しています...");
             DispatcherHelper.BeginInvoke(() =>
+            {
+                try
                 {
-                    var vm = new Mystique.ViewModels.Dialogs.Account.AuthenticateViewModel();
-                    this.Messenger.Raise(new TransitionMessage(vm, TransitionMode.Modal, "AccountInfo"));
-                    if (vm.Success)
+                    Setting.Instance.StateProperty.TabInformations.ForEach(c =>
                     {
-                        var apcvm = new Mystique.ViewModels.Dialogs.Account.AccountPropertyConfigViewModel(vm.GetAccountInfo());
-                        var apc = new Mystique.Views.Dialogs.Account.AccountPropertyConfig();
-                        apc.DataContext = apcvm;
-                        apc.ShowDialog();
-                        AccountStorage.RegisterAccount(apcvm.AccountInfo);
-                    }
-                });
+                        var column = this.ColumnOwnerViewModel.CreateColumn();
+                        c.ForEach(p => column.AddTab(p));
+                    });
+                    this.ColumnOwnerViewModel.GCColumn();
+                }
+                finally
+                {
+                    n.Dispose();
+                    Inscribe.Communication.CruiseControl.AutoCruiseSchedulerManager.Begin();
+                }
+            }, DispatcherPriority.ApplicationIdle);
         }
         #endregion
-      
+
     }
 }
