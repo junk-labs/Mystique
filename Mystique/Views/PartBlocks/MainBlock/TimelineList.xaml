@@ -81,9 +81,15 @@
                        Margin="2"
                        DockPanel.Dock="Left"
                        Source="{StaticResource QueryInvalid}"
-                       ToolTip="クエリに誤りがあります。"
                        Visibility="{Binding IsQueryValid,
-                                            Converter={StaticResource BoolInvisibleConverter}}" />
+                                            Converter={StaticResource BoolInvisibleConverter}}">
+                    <Image.ToolTip>
+                        <TextBlock>
+                            <Run Text="クエリに誤りがあります:" />
+                            <Run Text="{Binding QueryError, Mode=OneWay}" />
+                        </TextBlock>
+                    </Image.ToolTip>
+                </Image>
                 <Border Grid.Column="1"
                         Margin="2"
                         VerticalAlignment="Center"

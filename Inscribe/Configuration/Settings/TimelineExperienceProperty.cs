@@ -40,24 +40,6 @@ namespace Inscribe.Configuration.Settings
         /// </summary>
         public bool TimelineColorLazyUpdate { get; set; }
 
-        /// <summary>
-        /// タイムラインアイテムの初期化ストラテジ
-        /// </summary>
-        public enum ItemInitStrategy
-        {
-            /// <summary>
-            /// 色を設定しません(最速)
-            /// </summary>
-            None,
-            /// <summary>
-            /// 色を常にデフォルトに設定します(普通)
-            /// </summary>
-            DefaultColors,
-            /// <summary>
-            /// 色を完全に設定します(低速)
-            /// </summary>
-            Full
-        }
 
         /// <summary>
         /// タイムラインの各要素の初期化方法
@@ -74,5 +56,34 @@ namespace Inscribe.Configuration.Settings
         /// </summary>
         public int TimelineItemResetBreakWait { get; set; }
 
+    }
+
+    /// <summary>
+    /// タイムラインアイテムの初期化ストラテジ
+    /// </summary>
+    public enum ItemInitStrategy
+    {
+        /// <summary>
+        /// 色を設定しません(最速)
+        /// </summary>
+        None,
+        /// <summary>
+        /// 色を常にデフォルトに設定します(普通)
+        /// </summary>
+        DefaultColors,
+        /// <summary>
+        /// 色を完全に設定します(低速)
+        /// </summary>
+        Full
+    }
+
+    /// <summary>
+    /// 画面遷移の方法
+    /// </summary>
+    public enum TransitionMethod
+    {
+        ViewStack,
+        AddTab,
+        AddColumn
     }
 }

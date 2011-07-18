@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.ViewModels;
-using Inscribe.Data;
+using System.Collections.Concurrent;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
-using System.Collections.Concurrent;
+using Inscribe.ViewModels.Timeline;
 
 namespace Inscribe.Storage
 {

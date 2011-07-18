@@ -8,7 +8,7 @@
     <ProjectGuid>{E3B834E1-51A4-4042-B4DC-F906AD597282}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Octave</RootNamespace>
+    <RootNamespace>Inscribe</RootNamespace>
     <AssemblyName>Octave</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -54,10 +54,6 @@
     <ProjectReference Include="..\Dulcet\Dulcet.csproj">
       <Project>{8D33449B-0BD8-4873-B872-0E91FA7EBC4B}</Project>
       <Name>Dulcet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Inscribe\Inscribe.csproj">
-      <Project>{FE3EC1D6-4A61-4E6D-915B-5EED8AE046D2}</Project>
-      <Name>Inscribe</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

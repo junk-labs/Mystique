@@ -1,0 +1,206 @@
+﻿<Window x:Class="Mystique.Views.Dialogs.TabEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:comctl="clr-namespace:Mystique.Views.Common"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:my="clr-namespace:Mystique.Views.Common.Filter"
+        xmlns:v="clr-namespace:Mystique.Views"
+        Title="タブの編集"
+        Width="525"
+        Height="350"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow">
+    <Window.Resources>
+        <BitmapImage x:Key="Refresh" UriSource="/Resources/retry.png" />
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="Close" Messenger="{Binding Messenger}">
+            <l:WindowInteractionMessageAction />
+        </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="WarningMessage" Messenger="{Binding Messenger}">
+            <l:InformationDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="一般設定">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Margin="4"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="タブの名前" />
+                    <TextBox Grid.Row="0"
+                             Grid.Column="1"
+                             Margin="2"
+                             VerticalAlignment="Center"
+                             Text="{Binding TabName,
+                                            UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Row="1"
+                               Margin="4"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="新着通知音" />
+                    <TextBox Grid.Row="1"
+                             Grid.Column="1"
+                             Margin="2,2,28,2"
+                             VerticalAlignment="Center"
+                             Text="{Binding NotifySoundPath,
+                                            UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="2"
+                            HorizontalAlignment="Right">
+                        <TextBlock Margin="4,0" Text="..." />
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <l:OpenFileDialogInteractionMessageAction>
+                                    <l:DirectInteractionMessage CallbackCommand="{Binding SelectSoundPathCommand}">
+                                        <l:OpeningFileSelectionMessage Title="サウンドを選択" Filter="サウンド|*.wav" />
+                                    </l:DirectInteractionMessage>
+                                </l:OpenFileDialogInteractionMessageAction>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <CheckBox Grid.Row="2"
+                              Grid.Column="1"
+                              Margin="4"
+                              IsChecked="{Binding IsNotifyDisabled}">
+                        <AccessText Text="このタブの新着を通知しない(_N)" />
+                    </CheckBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="フィルタ設定">
+                <Grid>
+                    <my:FilterEditor DataContext="{Binding FilterEditorViewModel}" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="追加受信設定">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.ColumnSpan="2"
+                               Margin="4"
+                               TextWrapping="Wrap">
+                        <Run Text="標準のタイムライン以外に、Twitterから追加で受信するツイートを設定できます。" />
+                        <LineBreak />
+                        <Run Text="アイテムを追加すると、このタブのフィルタ設定に新たなソースとして追加されます。" />
+                    </TextBlock>
+                    <TabControl Grid.Row="1">
+                        <TabItem Header="ストリーミングクエリー">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock Margin="4">
+                                    <Run Text="特定の語句を含むツイートを受信します。" />
+                                    <Run Text="半角英数字のみ指定可能です。" />
+                                </TextBlock>
+                                <DockPanel Grid.Row="1">
+                                    <Button Width="90"
+                                            Command="{Binding RemoveQueryCommand}"
+                                            CommandParameter="{Binding ElementName=StreamingQueries,
+                                                                       Path=SelectedItem}"
+                                            DockPanel.Dock="Right">
+                                        <TextBlock Text="選択を削除" />
+                                    </Button>
+                                    <Button Width="90"
+                                            Command="{Binding AddQueryCommand}"
+                                            DockPanel.Dock="Right">
+                                        <TextBlock Text="追加" />
+                                    </Button>
+                                    <TextBox Text="{Binding AddQueryCandidate, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                                <ListBox x:Name="StreamingQueries"
+                                         Grid.Row="2"
+                                         ItemsSource="{Binding StreamingQueries}" />
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="リスト">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <DockPanel>
+                                    <Button Command="{Binding UpdateListCommand}"
+                                            DockPanel.Dock="Right"
+                                            ToolTip="このアカウントのリスト一覧を更新..."
+                                            Visibility="{Binding IsListLoading,
+                                                                 Converter={StaticResource BoolInvisibleConverter}}">
+                                        <Image Width="16"
+                                               Height="16"
+                                               Source="{StaticResource Refresh}" />
+                                    </Button>
+                                    <comctl:Intermediate Margin="2"
+                                                         DockPanel.Dock="Right"
+                                                         Visibility="{Binding IsListLoading,
+                                                                              Converter={StaticResource BoolVisibleConverter}}" />
+                                    <ComboBox ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedScreenName}" />
+                                </DockPanel>
+                                <ListBox x:Name="ListCandidates"
+                                         Grid.Row="1"
+                                         ItemsSource="{Binding ListItems}" />
+                                <Button Grid.Row="2"
+                                        Command="{Binding AddListCommand}"
+                                        CommandParameter="{Binding ElementName=ListCandidates,
+                                                                   Path=SelectedItem}">
+                                    <TextBlock Text="追加" />
+                                </Button>
+                                <ListBox x:Name="FollowingLists"
+                                         Grid.RowSpan="2"
+                                         Grid.Column="1"
+                                         ItemsSource="{Binding FollowingLists}" />
+                                <Button Grid.Row="2"
+                                        Grid.Column="1"
+                                        Command="{Binding RemoveListCommand}"
+                                        CommandParameter="{Binding ElementName=FollowingLists,
+                                                                   Path=SelectedItem}">
+                                    <TextBlock Text="選択項目を削除" />
+                                </Button>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Button Grid.Row="1"
+                Width="120"
+                HorizontalAlignment="Right"
+                Command="{Binding CloseCommand}"
+                IsDefault="True">
+            <AccessText Margin="4,2" Text="閉じる(_C)" />
+        </Button>
+    </Grid>
+</Window>

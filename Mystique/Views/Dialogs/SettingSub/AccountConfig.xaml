@@ -31,7 +31,6 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Button HorizontalAlignment="Right"
                     Command="{Binding AddAccountCommand}"
@@ -71,7 +70,7 @@
                                                   Width="32"
                                                   Height="32"
                                                   DefaultImage="{StaticResource Loading}"
-                                                  UriSource="{Binding ProfileImage}" />
+                                                  UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
                                     <TextBlock Grid.RowSpan="2"
                                                Grid.Column="1"
                                                Margin="2"
@@ -84,11 +83,7 @@
                                             <Run Text="{Binding ScreenName, Mode=OneWay, StringFormat=@{0}}" />
                                         </Hyperlink>
                                     </TextBlock>
-                                    <Button Grid.Column="2"
-                                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                                             AncestorType={x:Type ItemsControl}},
-                                                              Path=DataContext.MoveUpCommand}"
-                                            CommandParameter="{Binding}">
+                                    <Button Grid.Column="2" Command="{Binding MoveUpCommand}">
                                         <Image Height="6" Source="{StaticResource Chevron}">
                                             <Image.LayoutTransform>
                                                 <RotateTransform Angle="180" />
@@ -97,19 +92,25 @@
                                     </Button>
                                     <Button Grid.Row="1"
                                             Grid.Column="2"
-                                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                                             AncestorType={x:Type ItemsControl}},
-                                                              Path=DataContext.MoveDownCommand}"
-                                            CommandParameter="{Binding}">
+                                            Command="{Binding MoveDownCommand}">
                                         <Image Height="6" Source="{StaticResource Chevron}" />
                                     </Button>
                                     <Button Grid.RowSpan="2"
                                             Grid.Column="3"
-                                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                                             AncestorType={x:Type ItemsControl}},
-                                                              Path=DataContext.DeleteCommand}"
-                                            CommandParameter="{Binding}"
                                             ToolTip="このアカウントを削除します">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Click">
+                                                <l:ConfirmationDialogInteractionMessageAction>
+                                                    <l:DirectInteractionMessage CallbackCommand="{Binding DeleteConfirmCommand}">
+                                                        <l:ConfirmationMessage Button="OKCancel"
+                                                                               Caption="アカウントの削除"
+                                                                               Image="Warning"
+                                                                               Text="{Binding ScreenName,
+                                                                                              StringFormat=アカウント @{0} を削除してもよろしいですか?}" />
+                                                    </l:DirectInteractionMessage>
+                                                </l:ConfirmationDialogInteractionMessageAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
                                         <Image Width="16" Source="{StaticResource Delete}" />
                                     </Button>
                                 </Grid>
@@ -118,26 +119,6 @@
                     </ItemsControl>
                 </ScrollViewer>
             </Border>
-            <Grid Grid.Row="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="0"
-                           Margin="4,2"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Center"
-                           Text="API受信ツイート数(デフォルト:200):" />
-                <TextBox Grid.Row="0"
-                         Grid.Column="1"
-                         Margin="2"
-                         MaxLength="10"
-                         Text="{Binding ReceiveTweetCount}" />
-            </Grid>
         </Grid>
     </Grid>
 </UserControl>

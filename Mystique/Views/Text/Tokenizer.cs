@@ -63,9 +63,9 @@ namespace Mystique.Views.Text
             escaped = RegularExpressions.AtRegex.Replace(escaped, "<A>@$1<");
             escaped = RegularExpressions.HashRegex.Replace(escaped, (m) =>
             {
-                if (m.Captures.Count > 0)
+                if (m.Groups.Count > 0)
                 {
-                    return "<H>" + m.Captures[0].Value + "<";
+                    return "<H>" + m.Groups[0].Value + "<";
                 }
                 else
                 {

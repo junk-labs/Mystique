@@ -19,7 +19,7 @@ namespace Inscribe.Text
         /// <summary>
         /// ハッシュタグ用のregex
         /// </summary>
-        public static Regex HashRegex = new Regex("(?<![A-Za-z0-9])(#[A-Za-z0-9_]+)",
+        public static Regex HashRegex = new Regex(@"(?<!\w)([#＃]\w+)",
             RegexOptions.Compiled | RegexOptions.Singleline);
     }
 }

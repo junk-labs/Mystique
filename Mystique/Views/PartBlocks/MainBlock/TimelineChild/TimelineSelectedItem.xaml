@@ -131,7 +131,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.RowSpan="3"
@@ -251,39 +251,23 @@
                                    HorizontalAlignment="Stretch"
                                    Background="Transparent"
                                    BorderThickness="0"
-                                   DynamicInline="{Binding Path=Tweet.Text,
+                                   DocumentMouseDown="ItemMouseButtonDown"
+                                   DocumentMouseMove="ItemMouseMove"
+                                   DocumentMouseUp="ItemMouseButtonUp"
+                                   DynamicInline="{Binding Path=Tweet.TweetText,
                                                            Converter={StaticResource TextFlowDocumentConverter}}"
                                    InputMethod.IsInputMethodEnabled="False"
                                    IsDocumentEnabled="True"
                                    IsReadOnly="True"
                                    IsUndoEnabled="False"
                                    Padding="0">
-                <tc:DynamicRichTextBox.InputBindings>
-                    <MouseBinding Command="{Binding ConditionalDeselectCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=tc:DynamicRichTextBox},
-                                                             Path=Selection}"
-                                  MouseAction="LeftClick" />
-                </tc:DynamicRichTextBox.InputBindings>
                 <tc:DynamicRichTextBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding BindTestCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type tc:DynamicRichTextBox}}}"
-                                  Header="テスト(_C)" />
-                        <MenuItem Command="{Binding CopyCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type tc:DynamicRichTextBox}}}"
-                                  Header="コピー(_C)" />
-                        <MenuItem Command="{Binding SelectAllCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type tc:DynamicRichTextBox}}}"
-                                  Header="すべて選択(_A)" />
+                        <MenuItem Click="cCopy_Click" Header="コピー(_C)" />
+                        <MenuItem Click="cSelectAll_Click" Header="すべて選択(_A)" />
                         <Separator />
-                        <MenuItem Command="{Binding SearchInKrileCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type tc:DynamicRichTextBox}},
-                                                             Path=Selection}"
-                                  Header="_Krile内で検索..." />
-                        <MenuItem Command="{Binding SearchWithGoogleCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type tc:DynamicRichTextBox}},
-                                                             Path=Selection}"
-                                  Header="_Googleで検索..." />
+                        <MenuItem Click="cSearchInKrile_Click" Header="_Krile内で検索..." />
+                        <MenuItem Click="cGoogle_Click" Header="_Googleで検索..." />
                         <Separator />
                         <MenuItem Command="{Binding Path=MentionCommand}"
                                   Header="返信(_R)"
@@ -478,6 +462,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Command="{Binding FavoriteMultiUserCommand}"
+                            Focusable="False"
                             HorizontalContentAlignment="Right"
                             Style="{DynamicResource FlatButtonStyle}"
                             VerticalContentAlignment="Center">
@@ -486,9 +471,10 @@
                     </Button>
                     <Button VerticalAlignment="Center"
                             Command="{Binding FavoriteCommand}"
+                            Focusable="False"
                             Style="{DynamicResource FlatButtonStyle}">
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Favorite}" />
-                        <Button.ToolTip>Fav...</Button.ToolTip>
+                        <Button.ToolTip>Favる</Button.ToolTip>
                     </Button>
                 </Grid>
                 <Grid VerticalAlignment="Center" Visibility="{Binding ShowRetweetButton, Converter={StaticResource BoolVisibleConverter}}">
@@ -500,6 +486,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Command="{Binding FavoriteMultiUserCommand}"
+                            Focusable="False"
                             HorizontalContentAlignment="Right"
                             Style="{DynamicResource FlatButtonStyle}"
                             VerticalContentAlignment="Center">
@@ -508,13 +495,15 @@
                     </Button>
                     <Button VerticalAlignment="Center"
                             Command="{Binding RetweetCommand}"
+                            Focusable="False"
                             Style="{DynamicResource FlatButtonStyle}">
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Retweet}" />
-                        <Button.ToolTip>公式RT...</Button.ToolTip>
+                        <Button.ToolTip>公式RT</Button.ToolTip>
                     </Button>
                 </Grid>
                 <Button VerticalAlignment="Center"
                         Command="{Binding UnofficialRetweetCommand}"
+                        Focusable="False"
                         Style="{DynamicResource FlatButtonStyle}"
                         Visibility="{Binding ShowUnofficialRetweetButton,
                                              Converter={StaticResource BoolVisibleConverter}}">
@@ -523,6 +512,7 @@
                 </Button>
                 <Button VerticalAlignment="Center"
                         Command="{Binding QuoteTweetCommand}"
+                        Focusable="False"
                         Style="{DynamicResource FlatButtonStyle}"
                         Visibility="{Binding ShowQuoteTweetButton,
                                              Converter={StaticResource BoolVisibleConverter}}">
@@ -531,12 +521,14 @@
                 </Button>
                 <Button VerticalAlignment="Center"
                         Command="{Binding MentionCommand}"
+                        Focusable="False"
                         Style="{DynamicResource FlatButtonStyle}">
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Comment}" />
                     <Button.ToolTip>返信</Button.ToolTip>
                 </Button>
                 <Button VerticalAlignment="Center"
                         Command="{Binding DeleteCommand}"
+                        Focusable="False"
                         Style="{DynamicResource FlatButtonStyle}"
                         Visibility="{Binding ShowDeleteButton,
                                              Converter={StaticResource BoolVisibleConverter}}">
@@ -549,7 +541,7 @@
                            VerticalAlignment="Center"
                            FontSize="11">
                     <Hyperlink Command="{Binding ShowTweetCommand}" Foreground="DodgerBlue">
-                        <Run Text="{Binding Path=CreatedAt, Mode=OneWay, StringFormat=yy/MM/dd HH:mm:ss}" />
+                        <Run Text="{Binding Path=Tweet.CreatedAt, Mode=OneWay, StringFormat=yy/MM/dd HH:mm:ss}" />
                     </Hyperlink>
                 </TextBlock>
                 <TextBlock Margin="4,5"
@@ -557,7 +549,7 @@
                            FontSize="11"
                            Foreground="DimGray"
                            Text="via"
-                           Visibility="{Binding IsStatus,
+                           Visibility="{Binding Path=Tweet.IsStatus,
                                                 Converter={StaticResource BoolVisibleConverter}}" />
                 <tc:DynamicTextBlock Margin="4,5"
                                      VerticalAlignment="Center"

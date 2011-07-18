@@ -7,10 +7,28 @@ namespace Inscribe.Filter.Filters.Text
 {
     public abstract class TextFilterBase : FilterBase
     {
-        public string Needle { get { return this.needle; } }
+        [GuiVisible("検索テキスト")]
+        public string Needle
+        {
+            get { return this.needle; }
+            set
+            {
+                this.needle = value;
+                RaiseRequireReaccept();
+            }
+        }
         protected string needle = String.Empty;
 
-        public bool IsCaseSensitive { get { return this.isCaseSensitive; } }
+        [GuiVisible("大小文字を区別")]
+        public bool IsCaseSensitive
+        {
+            get { return this.isCaseSensitive; }
+            set
+            {
+                this.isCaseSensitive = value;
+                RaiseRequireReaccept();
+            }
+        }
         protected bool isCaseSensitive = false;
 
         protected virtual bool Match(string haystack, string needle, bool isCaseSensitive)
@@ -60,7 +78,7 @@ namespace Inscribe.Filter.Filters.Text
                 if (startsWith && endsWith)
                 {
                     // complete
-                    if(isCaseSensitive)
+                    if (isCaseSensitive)
                         return haystack.Equals(needle, StringComparison.CurrentCulture);
                     else
                         return haystack.Equals(needle, StringComparison.CurrentCultureIgnoreCase);

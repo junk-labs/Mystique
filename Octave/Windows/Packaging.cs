@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Octave.Windows
+namespace Inscribe.Windows
 {
     static class Packaging
     {

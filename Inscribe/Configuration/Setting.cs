@@ -8,6 +8,7 @@ using Inscribe.Storage;
 using Livet;
 using System.Windows;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Inscribe.Configuration
 {
@@ -55,7 +56,6 @@ namespace Inscribe.Configuration
                 return ret;
             }
         }
-   
 
         public static bool IsInitialized
         {
@@ -77,11 +77,22 @@ namespace Inscribe.Configuration
                 {
                     _instance = new Setting();
                 }
+                finally
+                {
+                    while (afterInitializeInvoke.Count > 0)
+                        afterInitializeInvoke.Pop()();
+                }
             }
             else
             {
                 throw new InvalidOperationException("すでに初期化されています。");
             }
+        }
+
+        private static Stack<Action> afterInitializeInvoke = new Stack<Action>();
+        internal static void AddAfterInitInvoke(Action act)
+        {
+            afterInitializeInvoke.Push(act);
         }
 
         #region SettingValueChangedイベント

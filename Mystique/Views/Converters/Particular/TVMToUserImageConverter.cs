@@ -6,6 +6,7 @@ using Inscribe.ViewModels;
 using System.Windows.Data;
 using Dulcet.Twitter;
 using Inscribe.Common;
+using Inscribe.ViewModels.Timeline;
 
 namespace Mystique.Views.Converters.Particular
 {

@@ -78,6 +78,12 @@ namespace Dulcet.Twitter.Streaming
         public event Action<Exception> OnExceptionThrown = _ => { };
 
         /// <summary>
+        /// 接続が切断されました。<br />
+        /// パラメータがfalseの時、予期しない切断であることを示します。
+        /// </summary>
+        public event Action<CredentialProvider, bool> OnDisconnected = (cp, expected) => { };
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public StreamingCore()
@@ -180,6 +186,11 @@ namespace Dulcet.Twitter.Streaming
         internal void RaiseOnExceptionThrown(Exception exception)
         {
             this.OnExceptionThrown(exception);
+        }
+
+        internal void RaiseOnDisconnected(CredentialProvider provider, bool expected)
+        {
+            OnDisconnected(provider, expected);
         }
 
         #endregion

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using Dulcet.Twitter;
 using Inscribe.Configuration.Tabs;
 using Inscribe.Storage;
-using Inscribe.ViewModels;
+using Inscribe.ViewModels.Timeline;
 
 namespace Inscribe.Common
 {

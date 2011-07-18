@@ -8,6 +8,9 @@ using Inscribe.Model;
 using Inscribe.Storage;
 using Livet;
 using System.Threading;
+using System.ComponentModel;
+using Inscribe.Communication.Streaming;
+using Inscribe.Communication.CruiseControl.Lists;
 
 namespace Inscribe.Configuration.Tabs
 {
@@ -38,21 +41,16 @@ namespace Inscribe.Configuration.Tabs
         }
 
         #endregion
-      
+
         /// <summary>
         /// タブ名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// タブがロック状態にあるか
-        /// </summary>
-        public bool IsLock { get; set; }
-
-        /// <summary>
         /// タブの通知が有効か
         /// </summary>
-        public bool IsNotifyEnabled { get; set; }
+        public bool IsNotifyDisabled { get; set; }
 
         /// <summary>
         /// タブ通知の際に利用する音
@@ -70,20 +68,56 @@ namespace Inscribe.Configuration.Tabs
             set
             {
                 if (this._tweetSources == value) return;
-                if (this._tweetSources != null)
-                    this._tweetSources.ForEach(f => f.Dispose());
                 this._tweetSources = value;
             }
         }
 
-        public string[] TweetSourceQueries
+        [XmlArray("TweetSource"), XmlArrayItem("Query"), EditorBrowsable(EditorBrowsableState.Never)]
+        public string[] _TweetSourceQueries
         {
             get { return this.TweetSources.Select(s => s.ToQuery()).ToArray(); }
             set
             {
                 if (value == null) return;
-                this.TweetSources = GenerateFilters(value).ToArray();
+                Setting.AddAfterInitInvoke(() => this.TweetSources = GenerateFilters(value).ToArray());
             }
+        }
+
+        private string[] _streamingQueries = null;
+        [XmlArray("StreamingQueries"), EditorBrowsable(EditorBrowsableState.Never)]
+        public string[] _StreamingQueries
+        {
+            get { return this.StreamingQueries; }
+            set
+            {
+                this.StreamingQueries = value;
+                value.ForEach(q => UserStreamsReceiverManager.AddQuery(q));
+            }
+        }
+        [XmlIgnore()]
+        public string[] StreamingQueries
+        {
+            get { return this._streamingQueries ?? new string[0]; }
+            set { this._streamingQueries = value; }
+        }
+
+        private string[] _followingLists = null;
+        [XmlArray("Lists"), XmlArrayItem("List"), EditorBrowsable(EditorBrowsableState.Never)]
+        public string[] _FollowingLists
+        {
+            get { return this.FollowingLists; }
+            set
+            {
+                this.FollowingLists = value;
+                value.Select(s => s.Split(new[] { "/" }, StringSplitOptions.None))
+                    .ForEach(s => ListReceiverManager.RegisterReceive(s[0], s[1]));
+            }
+        }
+        [XmlIgnore()]
+        public string[] FollowingLists
+        {
+            get { return this._followingLists ?? new string[0]; }
+            set { this._followingLists = value; }
         }
 
         private IEnumerable<FilterCluster> GenerateFilters(IEnumerable<string> queries)
@@ -95,7 +129,7 @@ namespace Inscribe.Configuration.Tabs
                 {
                     cluster = QueryCompiler.ToFilter(s);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     ExceptionStorage.Register(e, ExceptionCategory.ConfigurationError, "フィルタ クエリを読み取れません: " + s);
                 }

@@ -21,7 +21,7 @@
                         <ToggleButton.InputBindings>
                             <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding SelectThisCommand}" />
                         </ToggleButton.InputBindings>
-                        <my:LazyImage Margin="2" Width="32" Height="32" UriSource="{Binding UserProfileImageUri}" />
+                        <my:LazyImage Margin="2" Width="32" Height="32" UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
                         <ToggleButton.ToolTip>
                             <StackPanel Orientation="Vertical">
                                 <TextBlock FontWeight="Bold" Text="{Binding ScreenName, StringFormat=@{0}, Mode=OneWay}" />

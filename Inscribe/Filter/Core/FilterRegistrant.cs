@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace Inscribe.Filter.Core
 {
@@ -21,6 +22,11 @@ namespace Inscribe.Filter.Core
         private static List<Type> filterTypes = new List<Type>();
 
         private static List<Tuple<Type, string>> filterLookup = new List<Tuple<Type, string>>();
+
+        public static IEnumerable<string> FilterKeys
+        {
+            get { return filterLookup.Select(f => f.Item2); }
+        }
 
         /// <summary>
         /// 登録されているフィルタ型一覧を取得します。
@@ -75,17 +81,10 @@ namespace Inscribe.Filter.Core
             if (!filterTypes.Contains(type))
             {
                 FilterBase inst = null;
-                try
-                {
-                    inst = Activator.CreateInstance(type) as FilterBase;
-                }
-                catch (MissingMethodException)
-                {
-                    // Constructor not found?
-                    var ci = type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0];
-                    if (ci != null)
-                        inst = ci.Invoke(new object[0]) as FilterBase;
-                }
+                // Constructor not found?
+                var ci = type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)[0];
+                if (ci != null)
+                    inst = ci.Invoke(new object[0]) as FilterBase;
                 if (inst == null)
                     throw new ArgumentException("フィルタを作成できません。");
                 System.Diagnostics.Debug.WriteLine("Join:" + type.ToString());

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Livet.Command;
-using Inscribe.Data;
-using Inscribe.ViewModels;
-using Livet;
 using System.Threading;
+using Inscribe.Data;
+using Inscribe.ViewModels.Timeline;
+using Livet;
 
 namespace Inscribe.Storage
 {

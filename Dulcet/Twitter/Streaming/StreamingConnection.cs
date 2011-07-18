@@ -21,11 +21,6 @@ namespace Dulcet.Twitter.Streaming
         protected readonly StreamingCore parentCore;
 
         /// <summary>
-        /// Connection disconnected
-        /// </summary>
-        public event Action<bool> OnDisconnected = _ => { };
-
-        /// <summary>
         /// Current credential provider
         /// </summary>
         public CredentialProvider Provider;
@@ -90,7 +85,7 @@ namespace Dulcet.Twitter.Streaming
                 finally
                 {
                     this.parentCore.UnregisterConnection(this);
-                    OnDisconnected(disposed);
+                    this.parentCore.RaiseOnDisconnected(this.Provider, disposed);
                 }
             }
         }

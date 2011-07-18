@@ -9,15 +9,16 @@
         Title="アカウントの認証"
         MinWidth="450"
         ResizeMode="NoResize"
+        ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow">
     <i:Interaction.Triggers>
         <l:InteractionMessageTrigger MessageKey="Close" Messenger="{Binding Messenger}">
-            <l:InteractionWindowAction />
+            <l:WindowInteractionMessageAction />
         </l:InteractionMessageTrigger>
         <l:InteractionMessageTrigger MessageKey="Inform" Messenger="{Binding Messenger}">
-            <l:InteractionInformationDialogAction />
+            <l:InformationDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Window.Resources>
@@ -44,6 +45,14 @@
                            Foreground="White"
                            Padding="6"
                            Text="Authorize Your Account" />
+                <TextBlock HorizontalAlignment="Right"
+                           VerticalAlignment="Bottom"
+                           FontSize="12"
+                           Padding="8">
+                    <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="https://support.twitter.com/articles/252401-">
+                        <Run Foreground="White" Text="What's this?" />
+                    </Hyperlink>
+                </TextBlock>
             </Grid>
             <Border DockPanel.Dock="Top">
                 <Border.Background>
@@ -143,7 +152,9 @@
                            FontSize="10">
                     <Run Foreground="Gray" Text="&quot;OAuth Shiny&quot; Logo Mark from" />
                     <Run Text=" " />
-                    <Hyperlink Command="{Binding NavigateOAuthLogoCommand}" Foreground="CornflowerBlue">
+                    <Hyperlink Command="{Binding ShowBrowserCommand}"
+                               CommandParameter="http://factoryjoe.com/"
+                               Foreground="CornflowerBlue">
                         <Run Text="FactoryJoe" />
                     </Hyperlink>
                 </TextBlock>

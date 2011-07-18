@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Inscribe.Filter.Core;
 using Inscribe.Storage;
 
@@ -10,6 +8,13 @@ namespace Inscribe.Filter.Filters.Numeric
     public class FilterRetweetCount : FilterBase
     {
         private LongRange range;
+
+        [GuiVisible("Retweet数範囲")]
+        public LongRange Range
+        {
+            get { return range ?? LongRange.FromPivotValue(0); }
+            set { range = value; }
+        }
 
         private FilterRetweetCount() { }
 

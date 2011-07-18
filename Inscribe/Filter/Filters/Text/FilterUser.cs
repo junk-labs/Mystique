@@ -1,7 +1,7 @@
 ﻿
 namespace Inscribe.Filter.Filters.Text
 {
-    class FilterUser : TextFilterBase
+    public class FilterUser : TextFilterBase
     {
         private FilterUser() { }
 

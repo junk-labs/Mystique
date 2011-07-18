@@ -10,6 +10,13 @@ namespace Inscribe.Filter.Filters.Numeric
     {
         private LongRange range;
 
+        [GuiVisible("ユーザー数値ID範囲")]
+        public LongRange Range
+        {
+            get { return range ?? LongRange.FromPivotValue(0); }
+            set { range = value; }
+        }
+
         private FilterUserId() { }
 
         public FilterUserId(LongRange range)

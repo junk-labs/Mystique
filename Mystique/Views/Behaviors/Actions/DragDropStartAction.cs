@@ -46,11 +46,29 @@ namespace Mystique.Views.Behaviors.Actions
         public static readonly DependencyProperty AfterDragDropCommandProperty =
             DependencyProperty.Register("AfterDragDropCommand", typeof(ICommand), typeof(DragDropStartAction), new UIPropertyMetadata(null));
 
+        Point oPoint = new Point(double.MinValue, double.MinValue);
+
         protected override void Invoke(object parameter)
         {
             var marg = parameter as MouseEventArgs;
             if (marg != null && marg.LeftButton != MouseButtonState.Pressed)
+            {
+                oPoint = new Point(double.MinValue, double.MinValue);
                 return;
+            }
+            var point = marg.GetPosition(AssociatedObject);
+            if (oPoint.X == double.MinValue || oPoint.Y == double.MinValue)
+            {
+                oPoint = point;
+                return;
+            }
+            else
+            {
+                var dx = oPoint.X - point.X;
+                var dy = oPoint.Y - point.Y;
+                if (dx * dx + dy * dy <= 1)
+                    return;
+            }
             if (this.BeforeDragDropCommand != null)
                 this.BeforeDragDropCommand.Execute(null);
             DragDrop.DoDragDrop(AssociatedObject, this.DragDropData, this.AllowedEffects);

@@ -5,16 +5,16 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         xmlns:my="clr-namespace:Mystique.Views.Dialogs.SettingSub"
-        xmlns:vm="clr-namespace:Mystique.ViewModels.Dialogs"
         Title="設定"
         Width="625"
         Height="400"
         ResizeMode="NoResize"
+        ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow">
     <i:Interaction.Triggers>
         <l:InteractionMessageTrigger MessageKey="Close" Messenger="{Binding Messenger}">
-            <l:InteractionWindowAction />
+            <l:WindowInteractionMessageAction />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid>
@@ -34,11 +34,11 @@
             <ListBoxItem Content="アカウント" />
             <ListBoxItem Content="一般" />
             <ListBoxItem Content="タイムライン" />
+            <ListBoxItem Content="ローカルNG" />
             <ListBoxItem Content="ツイートの表示" />
             <ListBoxItem Content="ツイートの色" />
-            <ListBoxItem Content="入力と入力補助" />
-            <ListBoxItem Content="ローカルNG" />
-            <ListBoxItem Content="スター分類" />
+            <ListBoxItem Content="入力" />
+            <ListBoxItem Content="キーアサイン" />
             <ListBoxItem Content="外部サービス連携" />
             <ListBoxItem Content="拡張機能" />
         </ListBox>

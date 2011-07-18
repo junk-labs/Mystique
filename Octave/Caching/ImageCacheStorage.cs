@@ -7,10 +7,10 @@ using Dulcet.Network;
 using Inscribe.Configuration;
 using Inscribe.Data;
 using Inscribe.Storage;
-using Octave.Windows;
+using Inscribe.Windows;
 using System.Collections.Concurrent;
 
-namespace Octave.Caching
+namespace Inscribe.Caching
 {
     public static class ImageCacheStorage
     {

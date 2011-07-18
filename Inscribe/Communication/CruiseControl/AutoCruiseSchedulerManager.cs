@@ -32,9 +32,8 @@ namespace Inscribe.Communication.CruiseControl
         }
 
         #endregion
-      
 
-        public static ConcurrentDictionary<AccountInfo, AccountScheduler> schedulers;
+        private static ConcurrentDictionary<AccountInfo, AccountScheduler> schedulers;
 
         static AutoCruiseSchedulerManager()
         {

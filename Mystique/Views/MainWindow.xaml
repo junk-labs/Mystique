@@ -10,8 +10,8 @@
         xmlns:main="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
         xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
         xmlns:nb="clr-namespace:Mystique.Views.PartBlocks.NotifyBlock"
-        xmlns:vm="clr-namespace:Mystique.ViewModels"
-        Title="Mystique"
+        xmlns:vm="clr-namespace:Inscribe.ViewModels;assembly=Inscribe"
+        Title="{Binding Title}"
         Width="500"
         Height="300"
         Icon="/Mystique;component/Resources/krile.ico"
@@ -23,9 +23,6 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
-        <l:InteractionMessageTrigger MessageKey="ShowLoading" Messenger="{Binding Messenger}">
-            <ma:TransitionInteractionMessageAction WindowType="{x:Type comdlg:Loading}" />
-        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Window.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

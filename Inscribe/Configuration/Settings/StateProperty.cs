@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Inscribe.Configuration.Tabs;
 using System.Xml.Serialization;
+using Inscribe.Filter;
+using Inscribe.Filter.Filters.ScreenName;
 
 namespace Inscribe.Configuration.Settings
 {
@@ -16,6 +18,23 @@ namespace Inscribe.Configuration.Settings
         {
             SideViewWidth = 350;
             IsSideViewInLeft = false;
+            this.TabInformations = new[]{
+                new[]{
+                    new TabProperty(){
+                        Name = "Home",
+                        TweetSources = new IFilter[]{
+                            new FilterFollowFrom("*"),
+                            new FilterMention("*")
+                        }
+                    },
+                    new TabProperty(){
+                        Name="Mentions",
+                        TweetSources = new IFilter[]{
+                            new FilterMention("*")
+                        }
+                    }
+                }
+            };
         }
 
         public double SideViewWidth { get; set; }

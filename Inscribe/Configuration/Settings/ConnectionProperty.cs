@@ -16,7 +16,6 @@ namespace Inscribe.Configuration.Settings
             UserStreamsConnectionFailedMaxWaitSec = 300;
             AutoRetryCount = 3;
             AutoRetryIntervalMSec = 5000;
-            ApiTweetReceiveCount = 200;
         }
 
         /// <summary>
@@ -55,10 +54,5 @@ namespace Inscribe.Configuration.Settings
         /// APIアクセス自動リトライの際の待機時間
         /// </summary>
         public int AutoRetryIntervalMSec { get; set; }
-
-        /// <summary>
-        /// APIを利用してツイートを受信する場合に受信する数
-        /// </summary>
-        public int ApiTweetReceiveCount { get; set; }
     }
 }

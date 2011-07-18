@@ -9,7 +9,7 @@ using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
 using Inscribe.Plugin;
 using Mystique.Views.Text;
-using Octave.Caching;
+using Inscribe.Caching;
 
 namespace Mystique.Views.Converters.Particular
 {
@@ -34,9 +34,8 @@ namespace Mystique.Views.Converters.Particular
 
                 case FlowDocumentConversion.Digest:
                     return TextToFlowConversionStatic.GenerateDigest(input);
-
                 default:
-            return TextToFlowConversionStatic.Generate(input);
+                    return TextToFlowConversionStatic.Generate(input);
             }
         }
     }

@@ -959,25 +959,25 @@ namespace Inscribe.Filter.Core
             // クラスタ内の全空フィルタクラスタを取得する
             var emptyClusters = cluster.Filters.OfType<FilterCluster>().Where(f => f.Filters.Count() == 0).ToArray();
 
-            // [全ての空フィルタクラスタはANDかNANDである]
-            if (emptyClusters.FirstOrDefault(f => !f.ConcatenateAnd) != null)
-                throw new ArgumentException("All empty filters must be AND or NAND.");
+            // [全ての空フィルタクラスタはORかNORである]
+            if (emptyClusters.FirstOrDefault(f => f.ConcatenateAnd) != null)
+                throw new ArgumentException("All empty filters must be OR or NOR.");
 
             // フィルタと非空フィルタクラスタを待避
             var filters = cluster.Filters.Except(emptyClusters).ToArray();
 
-            // 1    : U [全ツイートの抽出]
+            // 1    : U [全ツイートの抽出: !() [NOR(Φ)]]
             // 0    : F [一つだけ含まれるフィルタ]
-            // -1   : Φ [抽出されるツイート無し]
+            // -1   : Φ [抽出されるツイート無し: () [OR(Φ)]
             int resultValue = 0;
             if (cluster.ConcatenateAnd)
             {
                 // AND 結合モード
 
-                // NAND 空フィルタが含まれていたら resultvalue = -1
-                if (emptyClusters.FirstOrDefault(f => f.Negate) != null)
+                // OR 空フィルタが含まれていたら resultvalue = -1 (Φ)
+                if (emptyClusters.FirstOrDefault(f => !f.Negate) != null)
                     resultValue = -1;
-                // そうでない場合は、唯一含まれるフィルタが存在すればresultValue = 0, でなければ 1
+                // そうでない場合は、フィルタが存在すればresultValue = 0, でなければ 1
                 else if (filters.Length > 0)
                     resultValue = 0;
                 else
@@ -987,10 +987,10 @@ namespace Inscribe.Filter.Core
             {
                 // OR 結合モード
 
-                // AND 空フィルタが含まれていたら resultvalue = 1
-                if (emptyClusters.FirstOrDefault(f => !f.Negate) != null)
+                // NOR 空フィルタが含まれていたら resultvalue = 1 (U)
+                if (emptyClusters.FirstOrDefault(f => f.Negate) != null)
                     resultValue = 1;
-                // そうでない場合は、唯一含まれるフィルタが存在すればresultValue = 0, でなければ -1
+                // そうでない場合は、フィルタが存在すればresultValue = 0, でなければ -1
                 else if (filters.Length > 0)
                     resultValue = 0;
                 else

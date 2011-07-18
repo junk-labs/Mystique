@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Inscribe.Data;
 using Inscribe.Model;
 using Inscribe.Storage;
+using System.Threading.Tasks;
 
 namespace Inscribe.Communication.CruiseControl.Lists
 {
@@ -21,13 +22,10 @@ namespace Inscribe.Communication.CruiseControl.Lists
 
         static ListReceiverManager()
         {
-            AutoCruiseSchedulerManager.SchedulerUpdated += new EventHandler<EventArgs>(AutoCruiseSchedulerManager_SchedulerUpdated);
+            // ?
+            // AutoCruiseSchedulerManager.SchedulerUpdated += new EventHandler<EventArgs>(AutoCruiseSchedulerManager_SchedulerUpdated);
         }
 
-        static void AutoCruiseSchedulerManager_SchedulerUpdated(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         public static void RegisterReceive(string listUser, string listName)
         {
@@ -49,8 +47,8 @@ namespace Inscribe.Communication.CruiseControl.Lists
                             target = AccountStorage.Get(listUser);
                         else
                             target = AccountStorage.GetRandom();
-
                         receivers.Add(fullname, new ListReceiveTask(target, listUser, listName));
+                        Task.Factory.StartNew(() => ListStorage.Get(listUser, listName));
                     }
                 }
             }

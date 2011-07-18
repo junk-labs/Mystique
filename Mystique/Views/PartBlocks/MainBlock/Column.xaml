@@ -1,10 +1,10 @@
 ﻿<UserControl x:Class="Mystique.Views.PartBlocks.MainBlock.Column"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:act="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:ba="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dlg="clr-namespace:Mystique.Views.Dialogs"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
@@ -18,17 +18,10 @@
         <BitmapImage x:Key="AddColumn" UriSource="/Resources/add.png" />
         <cp:NotZeroToVisibleConverter x:Key="NotZeroVisibleConverter" />
         <ContextMenu x:Key="TabParentContextMenu">
-            <MenuItem Header="新しいタブの追加(_N)..." />
+            <MenuItem Command="{Binding AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
             <MenuItem Header="最後に閉じたタブを元に戻す(_R)" />
         </ContextMenu>
-        <ContextMenu x:Key="TabContextMenu">
-            <MenuItem Header="このタブを編集(_E)..." />
-            <Separator />
-            <MenuItem Header="新しいタブ(_N)..." />
-            <MenuItem Header="最後に閉じたタブを元に戻す(_R)" />
-            <Separator />
-            <MenuItem Header="タブを閉じる(_C)" />
-        </ContextMenu>
+
         <Style x:Key="SelectorStyle" TargetType="{x:Type Border}">
             <Style.Resources>
                 <LinearGradientBrush x:Key="InactiveBack" StartPoint="0.5,0" EndPoint="0.5,1">
@@ -54,16 +47,29 @@
                     Margin="0"
                     BorderBrush="Gray"
                     BorderThickness="1"
-                    ContextMenu="{StaticResource TabContextMenu}"
                     Padding="0"
                     Style="{StaticResource SelectorStyle}">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding Path=Parent.EditTabCommand}"
+                                  CommandParameter="{Binding}"
+                                  Header="このタブを編集(_E)..." />
+                        <Separator />
+                        <MenuItem Command="{Binding Path=Parent.AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
+                        <MenuItem Header="最後に閉じたタブを元に戻す(_R)" />
+                        <Separator />
+                        <MenuItem Command="{Binding Path=Parent.CloseCommand}"
+                                  CommandParameter="{Binding}"
+                                  Header="タブを閉じる(_C)" />
+                    </ContextMenu>
+                </Border.ContextMenu>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseMove">
-                        <act:DragDropStartAction AfterDragDropCommand="{Binding Path=DataContext.DragDropFinishCommand,
+                        <ba:DragDropStartAction AfterDragDropCommand="{Binding Path=DataContext.DragDropFinishCommand,
+                                                                               ElementName=TabOwner}"
+                                                BeforeDragDropCommand="{Binding Path=DataContext.DragDropStartCommand,
                                                                                 ElementName=TabOwner}"
-                                                 BeforeDragDropCommand="{Binding Path=DataContext.DragDropStartCommand,
-                                                                                 ElementName=TabOwner}"
-                                                 DragDropData="{Binding}" />
+                                                DragDropData="{Binding}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <Border.Background>
@@ -100,6 +106,11 @@
             <Setter Property="ContentTemplate" Value="{StaticResource ItemTemplate}" />
         </Style>
     </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="EditTab" Messenger="{Binding Messenger}">
+            <ba:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type dlg:TabEditor}" />
+        </l:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -157,7 +168,7 @@
                      VerticalContentAlignment="Stretch">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">
-                        <act:InvokePassThruCommandAction Command="{Binding OnDropCommand}" />
+                        <ba:InvokePassThruCommandAction Command="{Binding OnDropCommand}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ListBox.Style>
@@ -186,7 +197,7 @@
                                         Converter={StaticResource BoolVisibleConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">
-                        <act:InvokePassThruCommandAction Command="{Binding OnDropLeftColumnCommand}" />
+                        <ba:InvokePassThruCommandAction Command="{Binding OnDropLeftColumnCommand}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Image>
@@ -203,7 +214,7 @@
                                         Converter={StaticResource BoolVisibleConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">
-                        <act:InvokePassThruCommandAction Command="{Binding OnDropRightColumnCommand}" />
+                        <ba:InvokePassThruCommandAction Command="{Binding OnDropRightColumnCommand}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Image>

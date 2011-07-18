@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Net;
 using Dulcet.Twitter;
-using Inscribe.Data;
-using Inscribe.Communication;
 using Dulcet.Twitter.Rest;
-using Inscribe.ViewModels;
+using Inscribe.Communication;
+using Inscribe.Data;
+using Inscribe.ViewModels.Timeline;
 namespace Inscribe.Storage
 {
     /// <summary>
@@ -34,6 +34,14 @@ namespace Inscribe.Storage
                     old.Value = list; // 上書き
                 else
                     lists.AddLast(list); // 新規追加
+            }
+        }
+
+        public static bool IsCacheExists(string screenName, string listName)
+        {
+            using (listLock.GetReaderLock())
+            {
+                return Lookup(screenName, listName) != null;
             }
         }
 
@@ -111,19 +119,36 @@ namespace Inscribe.Storage
             {
                 var acInfo = AccountStorage.GetRandom(a => a.IsFollowingList(screenName, listName), true);
                 if (acInfo == null) return null;
-                var members = ApiHelper.ExecApi(() => acInfo.GetListMembersAll(screenName, listName));
-                if (members == null)
+                IEnumerable<TwitterUser> members = null;
+                try
                 {
-                    NotifyStorage.Notify("リストメンバーを読み込めませんでした: @" + screenName + "/" + listName);
-                    return null;
+                    members = ApiHelper.ExecApi(() => acInfo.GetListMembersAll(screenName, listName));
+                    if (members == null)
+                        throw new WebException("Twitter returns empty");
+                }
+                catch (Exception e)
+                {
+                    ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "リストメンバーを読み込めませんでした: @" + screenName + "/" + listName);
                 }
                 var users = members.Select(u => UserStorage.Get(u)).ToArray();
                 // キャッシュ作成
                 using (memberLock.GetWriterLock())
                 {
-                    listMemberDicts.Add(new Tuple<string, string>(screenName, listName), users);
+                    var wkey = new Tuple<string, string>(screenName, listName);
+                    if (!listMemberDicts.ContainsKey(wkey))
+                        listMemberDicts.Add(wkey, users);
                 }
                 return users;
+            }
+        }
+
+        public static bool IsListMemberCached(string screenName, string listName)
+        {
+            using (memberLock.GetReaderLock())
+            {
+                return listMemberDicts.Keys.FirstOrDefault(f =>
+                        f.Item1.Equals(screenName, StringComparison.CurrentCultureIgnoreCase) &&
+                        f.Item2.ToLower().Replace('_', '-').Equals(listName.ToLower().Replace('_', '-'))) != null;
             }
         }
     }

@@ -12,6 +12,7 @@
         Width="460"
         Height="320"
         ResizeMode="NoResize"
+        ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow">
     <Window.Resources>
@@ -34,7 +35,7 @@
             <ma:TransitionInteractionMessageAction IsOwned="True" WindowType="{x:Type auth:Authenticate}" />
         </l:InteractionMessageTrigger>
         <l:InteractionMessageTrigger MessageKey="Close" Messenger="{Binding Messenger}">
-            <l:InteractionWindowAction />
+            <l:WindowInteractionMessageAction />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid>
@@ -55,7 +56,7 @@
                           Height="30"
                           Margin="4"
                           VerticalAlignment="Center"
-                          UriSource="{Binding ProfileImage}" />
+                          UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
             <TextBlock VerticalAlignment="Center" Text="{Binding ScreenName, StringFormat=@{0}}" />
         </DockPanel>
         <TabControl Grid.Row="1" Margin="4">

@@ -1,0 +1,171 @@
+﻿<Window x:Class="Mystique.Views.Dialogs.Common.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:my="clr-namespace:Mystique.Views.Common"
+        xmlns:v="clr-namespace:Mystique.Views"
+        xmlns:vm="clr-namespace:Inscribe.ViewModels.Dialogs.Common;assembly=Inscribe"
+        Title="このアプリケーションについて"
+        Width="520"
+        Height="470"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow">
+    <Window.DataContext>
+        <vm:AboutViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <BitmapImage x:Key="LogoLarge" UriSource="/Resources/krile2_large.png" />
+        <BitmapImage x:Key="Kriletan" UriSource="/Resources/kriletan.png" />
+        <BitmapImage x:Key="Logo" UriSource="/Resources/krile2.png" />
+        <BitmapImage x:Key="Completed" UriSource="/Resources/accept.png" />
+        <BitmapImage x:Key="Failed" UriSource="/Resources/exclamation.png" />
+        <BitmapImage x:Key="Ready" UriSource="/Resources/tick.png" />
+        <Style x:Key="KrileBorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="#E0FFF9" />
+                        <GradientStop Offset="1" Color="White" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ReleaseKind}" Value="Daybreak">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="#E0FFDC" />
+                                <GradientStop Offset="1" Color="White" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ReleaseKind}" Value="Twilight">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="#60C8B4" />
+                                <GradientStop Offset="1" Color="White" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ReleaseKind}" Value="Midnight">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="#BF00322E" />
+                                <GradientStop Offset="1" Color="White" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Border Height="184"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Style="{DynamicResource KrileBorderStyle}" />
+        <Image Margin="10"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Source="{StaticResource LogoLarge}"
+               Stretch="None" />
+        <Image Margin="0,0,-40,15"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Opacity="0.9"
+               Source="{StaticResource Kriletan}"
+               Stretch="None" />
+        <TextBlock Margin="10,157,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"><Run Text="version" /><Run Text=" " /><Run Text="{Binding AppVersion, FallbackValue=Undefined, Mode=OneWay}" />
+        </TextBlock>
+        <TextBlock Margin="10,190,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Foreground="DimGray">
+            <Span Foreground="Black">
+                <Span FontWeight="Bold"><Run Text="Krile" />
+                </Span><Run Text=", the 6th generation." />
+            </Span>
+            <LineBreak /><Run Text="Project Mystique" />
+            <LineBreak />
+            <LineBreak /><Run Text="(C)2009-2011 Karno." />
+            <LineBreak />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://krile.starwing.net"><Run Text="http://krile.starwing.net" />
+            </Hyperlink>
+            <LineBreak />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://twitter.com/karno"><Run Text="@karno" />
+            </Hyperlink>
+            <Run Text="/" />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://twitter.com/kriletan"><Run Text="@kriletan" />
+            </Hyperlink>
+            <LineBreak />
+            <LineBreak /><Run Text="Sounds: " />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://udonge.net/"><Run Text="Chii Ayano" />
+            </Hyperlink>
+            <LineBreak /><Run Text="Icons: " />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://www.famfamfam.com/"><Run Text="Mark James" />
+            </Hyperlink>
+            <LineBreak /><Run Text="krile-tan design: ichimy" />
+            <LineBreak />
+            <LineBreak /><Run Text="Built with" />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://ugaya40.net/livet"><Run Text="Livet" />
+            </Hyperlink>
+            <Run Text="." />
+        </TextBlock>
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <StackPanel.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="White" />
+                    <GradientStop Offset="1" Color="#E0FFF9" />
+                </LinearGradientBrush>
+            </StackPanel.Background>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding CheckState, ConverterParameter=Checking, Converter={StaticResource StringEqualVisibleConverter}}">
+                <my:Intermediate Margin="2" />
+                <TextBlock Margin="2" Text="Krileの更新を確認しています..." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding CheckState, ConverterParameter=Finished, Converter={StaticResource StringEqualVisibleConverter}}">
+                <Image Width="16"
+                       Height="16"
+                       Margin="2"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       Source="{StaticResource Completed}" />
+                <TextBlock Margin="2" Text="ご利用中のKrileは最新版です。" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding CheckState, ConverterParameter=Downloading, Converter={StaticResource StringEqualVisibleConverter}}">
+                <my:Intermediate Margin="2" />
+                <TextBlock Margin="2" Text="更新が見つかりました。更新プログラムをダウンロードしています..." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding CheckState, ConverterParameter=Ready, Converter={StaticResource StringEqualVisibleConverter}}">
+                <Image Width="16"
+                       Height="16"
+                       Margin="2"
+                       VerticalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       Source="{StaticResource Ready}" />
+                <TextBlock Margin="2"
+                           VerticalAlignment="Center"
+                           Text="Krileは次回起動時に更新されます。" />
+                <Button Command="{Binding AppUpdateCommand}"
+                        Content="今すぐにKrileを更新"
+                        Padding="4,2" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding CheckState, ConverterParameter=Failed, Converter={StaticResource StringEqualVisibleConverter}}">
+                <Image Width="16"
+                       Height="16"
+                       Margin="2"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       Source="{StaticResource Failed}" />
+                <TextBlock Margin="2" Text="更新の確認に失敗しました。しばらく間を置いて、再度お試しください。" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

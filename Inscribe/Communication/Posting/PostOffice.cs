@@ -16,6 +16,7 @@ using Inscribe.Configuration;
 using System.Net;
 using System.Xml.Linq;
 using System.Collections.Concurrent;
+using Inscribe.ViewModels.Timeline;
 
 namespace Inscribe.Communication.Posting
 {
@@ -122,6 +123,15 @@ namespace Inscribe.Communication.Posting
         public static bool IsAccountUnderControlled(AccountInfo info)
         {
             return underControls.ContainsKey(info);
+        }
+
+        /// <summary>
+        /// POST規制アカウントが存在することを確認します。
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsExistsUnderControlledAccount()
+        {
+            return underControls.Count > 0;
         }
 
         /// <summary>

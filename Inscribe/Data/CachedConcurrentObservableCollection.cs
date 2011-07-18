@@ -12,7 +12,7 @@ using System.Threading;
 namespace Inscribe.Data
 {
     public class CachedConcurrentObservableCollection<T>
-        : NotifyObject, INotifyCollectionChanged, ICollection<T>
+        : INotifyCollectionChanged, ICollection<T>
     {
         #region Internal storage
 

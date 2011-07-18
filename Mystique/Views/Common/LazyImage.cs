@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Inscribe.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using Octave.Caching;
+using Inscribe.Caching;
 using System.Windows.Threading;
 using System.Windows.Media;
 

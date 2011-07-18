@@ -10,6 +10,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Simple Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <conv:LongStringConverter x:Key="LongStringConverter" />
+            <conv:LongRangeStringConverter x:Key="LongRangeStringConverter" />
             <conv:BooleanToVisibleConverter x:Key="BoolVisibleConverter" />
             <conv:BooleanToInvisibleConverter x:Key="BoolInvisibleConverter" />
             <conv:EnumToRadioConverter x:Key="EnumRadioConverter" />

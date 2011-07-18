@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
 using System.Windows;
-
-using Livet;
-using Inscribe.Threading;
 using Inscribe.Core;
-using Mystique.Core;
+using Inscribe.Threading;
+using Livet;
 
 namespace Mystique
 {

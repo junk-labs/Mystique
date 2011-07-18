@@ -89,33 +89,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Core\Initializer.cs" />
-    <Compile Include="Plugin\PluginLoader.cs" />
-    <Compile Include="ViewModels\Common\ImageStackingViewViewModel.cs" />
-    <Compile Include="ViewModels\Common\UserSelectorViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\Account\AccountPropertyConfigViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\Account\AuthenticateViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\Common\LoadingViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\SettingSub\AccountConfigViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\SettingViewModel.cs" />
-    <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
-    <Compile Include="ViewModels\PartBlocks\InputBlock\InputBlockViewModel.cs" />
-    <Compile Include="ViewModels\PartBlocks\InputBlock\InputDescription.cs" />
-    <Compile Include="ViewModels\PartBlocks\InputBlock\UpdateWorker.cs" />
     <Compile Include="Views\Behaviors\Actions\DragDropStartAction.cs" />
     <Compile Include="Views\Behaviors\Actions\FrameworkSetFocusAction.cs" />
     <Compile Include="Views\Behaviors\Actions\InvokePassThruCommandAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TextBoxSetCaretAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TransitionInteractionMessageAction.cs" />
-    <Compile Include="Views\Behaviors\Messages\TextBoxSetCaretMessage.cs" />
     <Compile Include="Views\Behaviors\Particular\KeyBindingHandlerBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\MouseOverBindBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\SquaredScrollBehavior.cs" />
     <Compile Include="Views\Common\DropDownButton.cs" />
+    <Compile Include="Views\Common\Filter\FilterEditor.xaml.cs">
+      <DependentUpon>FilterEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\Filter\FilterElementEditor.xaml.cs">
+      <DependentUpon>FilterElementEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\Filter\FilterQueryEditor.xaml.cs">
+      <DependentUpon>FilterQueryEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Common\UserSelector.xaml.cs">
       <DependentUpon>UserSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Converters\DoublePercentStringConverter.cs" />
+    <Compile Include="Views\Converters\LongRangeStringConverter.cs" />
+    <Compile Include="Views\Converters\LongStringConverter.cs" />
     <Compile Include="Views\Converters\Particular\NotZeroToVisibleConverter.cs" />
     <Compile Include="Views\Converters\Particular\SourceToInlinesConverter.cs" />
     <Compile Include="Views\Converters\Particular\TweetStringToCountConverter.cs" />
@@ -127,15 +124,15 @@
     <Compile Include="Views\Dialogs\Account\Authenticate.xaml.cs">
       <DependentUpon>Authenticate.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dialogs\Common\Loading.xaml.cs">
-      <DependentUpon>Loading.xaml</DependentUpon>
+    <Compile Include="Views\Dialogs\Common\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\TabEditor.xaml.cs">
+      <DependentUpon>TabEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PartBlocks\BlockCommon\Notifier.xaml.cs">
       <DependentUpon>Notifier.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\PartBlocks\NotifyBlock\SystemInfoViewModel.cs" />
-    <Compile Include="ViewModels\PartBlocks\NotifyBlock\NotifyBlockViewModel.cs" />
-    <Compile Include="ViewModels\PartBlocks\NotifyBlock\TwitterEventInfoViewModel.cs" />
     <Compile Include="Views\Behaviors\Actions\FrameworkActualWidthAction.cs" />
     <Compile Include="Views\Chrome\ButtonChromeEx.cs" />
     <Compile Include="Views\Common\ImageStackingView.xaml.cs">
@@ -202,6 +199,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Common\Filter\FilterEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\Filter\FilterElementEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\Filter\FilterQueryEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Common\UserSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -214,7 +223,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dialogs\Common\Loading.xaml">
+    <Page Include="Views\Dialogs\Common\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\TabEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -246,7 +259,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -433,10 +445,6 @@
     <ProjectReference Include="..\Nightmare\Nightmare.csproj">
       <Project>{2E6A1FEF-EDC5-4588-99A0-A70EC237FB28}</Project>
       <Name>Nightmare</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Octave\Octave.csproj">
-      <Project>{E3B834E1-51A4-4042-B4DC-F906AD597282}</Project>
-      <Name>Octave</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

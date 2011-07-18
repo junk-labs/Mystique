@@ -6,6 +6,7 @@ using Inscribe.Configuration;
 using Inscribe.Model;
 using Inscribe.Storage;
 using Inscribe.Threading;
+using Dulcet.Twitter.Credential;
 
 namespace Inscribe.Communication.Streaming.Connection
 {
@@ -20,6 +21,7 @@ namespace Inscribe.Communication.Streaming.Connection
         {
             streamCore = new StreamingCore();
             streamCore.OnExceptionThrown += new Action<Exception>(streamCore_OnExceptionThrown);
+            streamCore.OnDisconnected += new Action<Dulcet.Twitter.Credential.CredentialProvider, bool>(streamCore_OnDisconnected);
             ThreadHelper.Halt += () => streamPump.Abort();
             ThreadHelper.Halt += () => streamCore.Dispose();
             streamPump = new Thread(PumpTweets);
@@ -30,6 +32,18 @@ namespace Inscribe.Communication.Streaming.Connection
         {
             ExceptionStorage.Register(obj, ExceptionCategory.TwitterError, "User Streams接続でエラーが発生しました。");
         }
+
+        static void streamCore_OnDisconnected(CredentialProvider provider, bool expected)
+        {
+            var info = provider as AccountInfo;
+            if (info == null)
+                return;
+
+            // 再接続処理
+            if (!expected)
+                UserStreamsReceiverManager.RefreshReceiver(info);
+        }
+
 
         /// <summary>
         /// ツイートのポンピングスレッド
@@ -264,11 +278,6 @@ namespace Inscribe.Communication.Streaming.Connection
                 throw new WebException("User Streamsへの接続に失敗しました。", e);
             }
         }
-        
-        /// <summary>
-        /// 接続が切断されました。
-        /// </summary>
-        public event Action<bool> OnDisconnected = _ => { };
 
         public void Dispose()
         {

@@ -8,6 +8,7 @@ using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
 using Dulcet.Twitter;
 using Inscribe.Common;
+using Inscribe.ViewModels.Timeline;
 
 namespace Mystique.Views.Converters.Particular
 {

@@ -1,0 +1,147 @@
+﻿<UserControl x:Class="Mystique.Views.Common.Filter.FilterEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ba="clr-namespace:Mystique.Views.Behaviors.Actions"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:fvm="clr-namespace:Inscribe.ViewModels.Common.Filter;assembly=Inscribe"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:local="clr-namespace:Mystique.Views.Common.Filter"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <BitmapImage x:Key="Filter" UriSource="/Resources/find.png" />
+        <BitmapImage x:Key="Cluster" UriSource="/Resources/find_folder.png" />
+        <BitmapImage x:Key="Edit" UriSource="/Resources/pencil.png" />
+        <BitmapImage x:Key="Add" UriSource="/Resources/add.png" />
+        <BitmapImage x:Key="Delete" UriSource="/Resources/delete.png" />
+    </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="ShowFilterElementEditor" Messenger="{Binding Messenger}">
+            <ba:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type local:FilterElementEditor}" />
+        </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="ShowFilterQueryEditor" Messenger="{Binding Messenger}">
+            <ba:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type local:FilterQueryEditor}" />
+        </l:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel>
+        <Button Command="{Binding EditWithQueryCommand}" DockPanel.Dock="Bottom">
+            <AccessText Text="クエリで編集(_Q)..." />
+        </Button>
+        <TreeView Name="FilterTree"
+                  AllowDrop="True"
+                  HorizontalContentAlignment="Stretch"
+                  ItemsSource="{Binding RootFilterViewModels}">
+            <TreeView.Resources>
+                <!--  フィルタクラスタ用テンプレート  -->
+                <HierarchicalDataTemplate DataType="{x:Type fvm:FilterClusterViewModel}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseMove">
+                                <ba:DragDropStartAction AfterDragDropCommand="{Binding Path=DataContext.DragDropFinishCommand, ElementName=FilterTree}" DragDropData="{Binding}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <Image Width="16"
+                               Height="16"
+                               Margin="2,0"
+                               VerticalAlignment="Center"
+                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                               Source="{StaticResource Cluster}" />
+                        <TextBlock Margin="3,1"
+                                   VerticalAlignment="Center"
+                                   Text="クラスタ:" />
+                        <ComboBox SelectedIndex="{Binding MethodInteger}">
+                            <ComboBoxItem Content="AND" />
+                            <ComboBoxItem Content="OR" />
+                            <ComboBoxItem Content="NAND" />
+                            <ComboBoxItem Content="NOR" />
+                        </ComboBox>
+                        <Button Command="{Binding DeleteCommand}"
+                                Style="{DynamicResource FlatButtonStyle}"
+                                Visibility="{Binding IsDeletable,
+                                                     Converter={StaticResource BoolVisibleConverter}}">
+                            <Image Width="16"
+                                   Height="16"
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                   Source="{StaticResource Delete}" />
+                            <Button.ToolTip>
+                                <TextBlock>
+                                    このフィルタクラスタを削除します。
+                                    <LineBreak />
+                                    このクラスタに含まれているすべてのフィルタも削除されます。
+                                </TextBlock>
+                            </Button.ToolTip>
+                        </Button>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <!--  フィルタ要素用テンプレート  -->
+                <DataTemplate DataType="{x:Type fvm:FilterItemViewModel}">
+                    <DockPanel>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseMove">
+                                <ba:DragDropStartAction AfterDragDropCommand="{Binding Path=DataContext.DragDropFinishCommand, ElementName=FilterTree}" DragDropData="{Binding}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <Image Width="16"
+                               Height="16"
+                               Margin="0,2"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"
+                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                               Source="{StaticResource Filter}" />
+                        <Button Command="{Binding DeleteCommand}"
+                                DockPanel.Dock="Right"
+                                Style="{DynamicResource FlatButtonStyle}">
+                            <Image Width="16"
+                                   Height="16"
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                   Source="{StaticResource Delete}" />
+                        </Button>
+                        <Button Command="{Binding EditCommand}"
+                                DockPanel.Dock="Right"
+                                Style="{DynamicResource FlatButtonStyle}">
+                            <Image Width="16"
+                                   Height="16"
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                   Source="{StaticResource Edit}" />
+                        </Button>
+                        <TextBlock Margin="2,1"
+                                   VerticalAlignment="Center"
+                                   Text="(否定)"
+                                   Visibility="{Binding IsNegate,
+                                                        Converter={StaticResource BoolVisibleConverter}}" />
+                        <TextBlock Margin="3, 1"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding FilterDescription}" />
+                    </DockPanel>
+                </DataTemplate>
+                <!--  追加ボタン用テンプレート  -->
+                <DataTemplate DataType="{x:Type fvm:FilterAdderViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16"
+                               Height="16"
+                               Margin="0,2"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"
+                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                               Source="{StaticResource Add}" />
+                        <Button Command="{Binding AddClusterCommand}" Style="{DynamicResource FlatButtonStyle}">
+                            <AccessText Text="クラスタを追加(_C)" />
+                        </Button>
+                        <Button Command="{Binding AddFilterCommand}" Style="{DynamicResource FlatButtonStyle}">
+                            <AccessText Text="フィルタを追加(_F)..." />
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Drop">
+                    <ba:InvokePassThruCommandAction Command="{Binding OnDropCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TreeView>
+    </DockPanel>
+</UserControl>

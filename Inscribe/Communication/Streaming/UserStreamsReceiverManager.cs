@@ -27,6 +27,7 @@ namespace Inscribe.Communication.Streaming
                 UserInformationManager.ReceiveInidividualInfo(i);
                 recv.UpdateConnection();
             }
+            RefreshQuery();
         }
 
         /// <summary>
@@ -39,5 +40,70 @@ namespace Inscribe.Communication.Streaming
                 throw new ArgumentException("アカウント @" + accountInfo.ScreenName + " は接続登録されていません。");
             receivers[accountInfo].UpdateConnection();
         }
+
+        #region Streaming-Query Control
+
+        static Dictionary<string, AccountInfo> lookupDictionary = new Dictionary<string, AccountInfo>();
+
+        static Dictionary<string, int> referenceCount = new Dictionary<string, int>();
+
+        public static bool AddQuery(string query)
+        {
+            if (referenceCount.ContainsKey(query))
+            {
+                referenceCount[query]++;
+                return true;
+            }
+            else
+            {
+                if (!StartListenQuery(query))
+                    return false;
+                referenceCount.Add(query, 1);
+                return true;
+            }
+        }
+
+        private static bool StartListenQuery(string query)
+        {
+            var info = AccountStorage.Accounts
+                .Where(a => a.AccoutProperty.UseUserStreams && receivers.ContainsKey(a))
+                .OrderByDescending(a => receivers[a].Queries.Count())
+                .FirstOrDefault();
+            if (info == null)
+                return false;
+            lookupDictionary.Add(query, info);
+            var recv = receivers[info];
+            recv.Queries = recv.Queries.Concat(new[] { query }).ToArray();
+            recv.UpdateConnection();
+            return true;
+        }
+
+        public static void RemoveQuery(string query)
+        {
+            if (!referenceCount.ContainsKey(query))
+                return;
+            referenceCount[query]--;
+            if (referenceCount[query] == 0)
+            {
+                referenceCount.Remove(query);
+                var recv = receivers[lookupDictionary[query]];
+                lookupDictionary.Remove(query);
+                recv.Queries = recv.Queries.Except(new[] { query }).ToArray();
+                recv.UpdateConnection();
+            }
+        }
+
+        private static void RefreshQuery()
+        {
+            lookupDictionary.Keys
+                .Where(k => !lookupDictionary[k].AccoutProperty.UseUserStreams)
+                .ForEach(k =>
+                {
+                    lookupDictionary.Remove(k);
+                    StartListenQuery(k);
+                });
+        }
+
+        #endregion
     }
 }

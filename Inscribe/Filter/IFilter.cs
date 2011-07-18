@@ -4,7 +4,7 @@ using Inscribe.Filter.Core;
 
 namespace Inscribe.Filter
 {
-    public interface  IFilter : IQueryConvertable, IDisposable
+    public interface  IFilter : IQueryConvertable
     {
         /// <summary>
         /// フィルタを適用します。<para />

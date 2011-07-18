@@ -9,6 +9,8 @@ using Inscribe.ViewModels;
 using System.Collections.Concurrent;
 using Livet;
 using System.Threading;
+using Inscribe.Storage;
+using Inscribe.ViewModels.Timeline;
 
 namespace Inscribe.Model
 {
@@ -209,7 +211,10 @@ namespace Inscribe.Model
 
         public void RegisterFollowingList(TwitterList list)
         {
+            if (this.followingLists.FirstOrDefault(l => l.User.ScreenName == list.User.ScreenName && l.Name == list.Name) != null)
+                return;
             this.followingLists.AddLast(list);
+            ListStorage.Register(list);
         }
 
         public void RemoveFollowingList(TwitterList list)

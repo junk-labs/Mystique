@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dulcet.Twitter;
 using Inscribe.Threading;
-using Inscribe.ViewModels;
+using Inscribe.ViewModels.Timeline;
 using Livet;
 
 namespace Inscribe.Storage
