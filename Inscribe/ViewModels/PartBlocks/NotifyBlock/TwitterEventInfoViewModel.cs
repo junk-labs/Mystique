@@ -13,12 +13,21 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
     {
         public TwitterEventInfoViewModel()
         {
-            ViewModelHelper.BindNotification(EventStorage.EventRegisteredEvent, this, (o, e) => RaisePropertyChanged(() => Events));
+            ViewModelHelper.BindNotification(EventStorage.EventChangedEvent, this, (o, e) => TwitterEventInfoChanged());
         }
 
-        public IEnumerable<NotifierViewModel> Events
+        private void TwitterEventInfoChanged()
         {
-            get { return EventStorage.Events.Select(e => new NotifierViewModel(e, false)); }
+            var news = EventStorage.Events.Except(this._events.Select(vm => vm.Description)).ToArray();
+            var rems = this._events.Where(vm => !EventStorage.Events.Contains(vm.Description)).ToArray();
+            rems.ForEach(vm => _events.Remove(vm));
+            news.Select(s => new NotificationItemViewModel(s, false)).ForEach(_events.Add);
+        }
+
+        private DispatcherCollection<NotificationItemViewModel> _events = new DispatcherCollection<NotificationItemViewModel>(DispatcherHelper.UIDispatcher);
+        public DispatcherCollection<NotificationItemViewModel> Events
+        {
+            get { return this._events; }
         }
     }
 }

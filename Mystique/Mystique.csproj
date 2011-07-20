@@ -130,8 +130,8 @@
     <Compile Include="Views\Dialogs\TabEditor.xaml.cs">
       <DependentUpon>TabEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PartBlocks\BlockCommon\Notifier.xaml.cs">
-      <DependentUpon>Notifier.xaml</DependentUpon>
+    <Compile Include="Views\PartBlocks\BlockCommon\NotificationItem.xaml.cs">
+      <DependentUpon>NotificationItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Behaviors\Actions\FrameworkActualWidthAction.cs" />
     <Compile Include="Views\Chrome\ButtonChromeEx.cs" />
@@ -159,6 +159,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\SettingSub\AccountConfig.xaml.cs">
       <DependentUpon>AccountConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PartBlocks\BlockCommon\Notifier.xaml.cs">
+      <DependentUpon>Notifier.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PartBlocks\InputBlock\InputBlock.xaml.cs">
       <DependentUpon>InputBlock.xaml</DependentUpon>
@@ -231,7 +234,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PartBlocks\BlockCommon\Notifier.xaml">
+    <Page Include="Views\PartBlocks\BlockCommon\NotificationItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -263,6 +266,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PartBlocks\BlockCommon\Notifier.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PartBlocks\InputBlock\InputBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

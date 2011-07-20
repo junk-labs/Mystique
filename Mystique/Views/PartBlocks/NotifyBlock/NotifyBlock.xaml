@@ -104,11 +104,12 @@
                        ToolTip="現在の処理状態を示します。クリックすると、Twitterイベント履歴を表示します。"
                        VerticalContentAlignment="Center">
             <com:PopupButton Focusable="False"
+                             x:Name="EventPopupButton"
                              HorizontalContentAlignment="Stretch"
                              Style="{StaticResource FlatToggleButtonStyle}">
                 <TextBlock Margin="2" Text="{Binding StatusText, Converter={StaticResource StringRemoveLineConverter}}" />
                 <com:PopupButton.DropDownPopup>
-                    <Popup Placement="Top" StaysOpen="False">
+                    <Popup Placement="Top" StaysOpen="False" x:Name="EventPopup">
                         <Border Background="White"
                                 BorderBrush="Gray"
                                 BorderThickness="1">

@@ -80,7 +80,7 @@ namespace Inscribe.Storage
                 return ret;
             if (createEmpty)
             {
-                var nvm = new TweetViewModel();
+                var nvm = new TweetViewModel(id);
                 empties.AddOrUpdate(id, nvm);
                 return nvm;
             }
@@ -146,10 +146,14 @@ namespace Inscribe.Storage
             {
                 // リツイートのオリジナルステータスを登録
                 Register(status.RetweetedOriginal);
+
                 // リツイートユーザーに登録
-                // たぶん empty にはならないけど、何らかの理由でemptyになった時に備えて true を置いておく
-                Get(status.RetweetedOriginal.Id, true).RegisterRetweeted(UserStorage.Get(status.User));
-                // TODO: イベント通知
+                var vm = Get(status.RetweetedOriginal.Id, true);
+                var user = UserStorage.Get(status.User);
+                vm.RegisterRetweeted(user);
+                if (!vm.IsStatusInfoContains)
+                    vm.SetStatus(status.RetweetedOriginal);
+                EventStorage.OnRetweeted(vm, user);
             }
 
             // 返信先の登録
@@ -183,7 +187,8 @@ namespace Inscribe.Storage
                 {
                     // 既にViewModelが生成済み
                     var vm = empties[statusBase.Id];
-                    vm.SetStatus(statusBase);
+                    if (!vm.IsStatusInfoContains)
+                        vm.SetStatus(statusBase);
                     empties.Remove(statusBase.Id);
                     dictionary.AddOrUpdate(statusBase.Id, vm);
                     Task.Factory.StartNew(() => RaiseStatusAdded(vm));

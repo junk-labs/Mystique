@@ -1,6 +1,7 @@
 ﻿<Window x:Class="Mystique.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:bc="clr-namespace:Mystique.Views.PartBlocks.BlockCommon"
         xmlns:comdlg="clr-namespace:Mystique.Views.Dialogs.Common"
         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -12,9 +13,11 @@
         xmlns:nb="clr-namespace:Mystique.Views.PartBlocks.NotifyBlock"
         xmlns:vm="clr-namespace:Inscribe.ViewModels;assembly=Inscribe"
         Title="{Binding Title}"
-        Width="500"
-        Height="300"
+        Width="800"
+        Height="500"
+        Closing="Window_Closing"
         Icon="/Mystique;component/Resources/krile.ico"
+        Loaded="Window_Loaded"
         ResizeMode="CanResizeWithGrip">
     <Window.DataContext>
         <vm:MainWindowViewModel />
@@ -23,6 +26,9 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
+        <l:InteractionMessageTrigger MessageKey="WindowAction" Messenger="{Binding Messenger}">
+            <l:WindowInteractionMessageAction />
+        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Window.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -33,14 +39,17 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!--  INPUT BLOCK  -->
         <ib:InputBlock DataContext="{Binding InputBlockViewModel}" />
+        <!--  NOTIFIER  -->
+        <bc:Notifier Grid.Row="1" DataContext="{Binding NotifierViewModel}" />
         <!--  TIMELINE CORE  -->
-        <main:ColumnOwner Grid.Row="1" DataContext="{Binding ColumnOwnerViewModel}" />
+        <main:ColumnOwner Grid.Row="2" DataContext="{Binding ColumnOwnerViewModel}" />
         <!--  STATUS BAR AREA  -->
-        <nb:NotifyBlock Grid.Row="2" DataContext="{Binding NotifyBlockViewModel}" />
+        <nb:NotifyBlock Grid.Row="3" DataContext="{Binding NotifyBlockViewModel}" />
     </Grid>
 </Window>

@@ -22,8 +22,14 @@ namespace Mystique.Views.PartBlocks.NotifyBlock
         public NotifyBlock()
         {
             InitializeComponent();
+            EventPopupButton.SizeChanged += (o, e) => UpdateEventPopupWidth();
+            UpdateEventPopupWidth();
         }
 
+        private void UpdateEventPopupWidth()
+        {
+            EventPopup.Width = EventPopupButton.ActualWidth;
+        }
     }
 
     public class MaximizeToInvisibleConverter : OneWayConverter<WindowState, Visibility>

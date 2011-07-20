@@ -9,7 +9,7 @@
         xmlns:vm="clr-namespace:Inscribe.ViewModels.Dialogs.Common;assembly=Inscribe"
         Title="このアプリケーションについて"
         Width="520"
-        Height="470"
+        Height="465"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
@@ -85,39 +85,62 @@
                Stretch="None" />
         <TextBlock Margin="10,157,0,0"
                    HorizontalAlignment="Left"
-                   VerticalAlignment="Top"><Run Text="version" /><Run Text=" " /><Run Text="{Binding AppVersion, FallbackValue=Undefined, Mode=OneWay}" />
+                   VerticalAlignment="Top">
+            <Run Text="version" />
+            <Run Text="{Binding AppVersion, FallbackValue=Undefined, Mode=OneWay}" />
         </TextBlock>
-        <TextBlock Margin="10,190,0,0"
+        <TextBlock Margin="10,185,0,0"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Foreground="DimGray">
             <Span Foreground="Black">
-                <Span FontWeight="Bold"><Run Text="Krile" />
-                </Span><Run Text=", the 6th generation." />
+                <Span FontWeight="Bold">
+                    <Run Text="Krile" />
+                </Span>
+                <Run Text="the 6th generation." />
             </Span>
             <LineBreak /><Run Text="Project Mystique" />
             <LineBreak />
-            <LineBreak /><Run Text="(C)2009-2011 Karno." />
             <LineBreak />
-            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://krile.starwing.net"><Run Text="http://krile.starwing.net" />
+            <Run Text="(C)2009-2011 Karno." />
+            <LineBreak />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://krile.starwing.net">
+                <Run Text="http://krile.starwing.net" />
             </Hyperlink>
             <LineBreak />
-            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://twitter.com/karno"><Run Text="@karno" />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://twitter.com/karno">
+                <Run Text="@karno" />
             </Hyperlink>
             <Run Text="/" />
-            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://twitter.com/kriletan"><Run Text="@kriletan" />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://twitter.com/kriletan">
+                <Run Text="@kriletan" />
             </Hyperlink>
             <LineBreak />
-            <LineBreak /><Run Text="Sounds: " />
-            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://udonge.net/"><Run Text="Chii Ayano" />
+            <LineBreak />
+            <Run Text="Sounds: " />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://udonge.net/">
+                <Run Text="Chii Ayano" />
             </Hyperlink>
-            <LineBreak /><Run Text="Icons: " />
-            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://www.famfamfam.com/"><Run Text="Mark James" />
+            <LineBreak />
+            <Run Text="Icons: " />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://www.famfamfam.com/">
+                <Run Text="Mark James" />
             </Hyperlink>
             <LineBreak /><Run Text="krile-tan design: ichimy" />
             <LineBreak />
             <LineBreak /><Run Text="Built with" />
-            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://ugaya40.net/livet"><Run Text="Livet" />
+            <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://ugaya40.net/livet">
+                <Run Text="Livet" />
+            </Hyperlink>
+            <Run Text="." />
+        </TextBlock>
+        <TextBlock Margin="0,0,5,25"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   FontSize="9">
+            <Run Text="This software is licensed under" />
+            <Hyperlink Command="{Binding ShowLicenseCommand}">
+                <Run Text="MIT/X11 License" />
             </Hyperlink>
             <Run Text="." />
         </TextBlock>
@@ -167,5 +190,31 @@
                 <TextBlock Margin="2" Text="更新の確認に失敗しました。しばらく間を置いて、再度お試しください。" />
             </StackPanel>
         </StackPanel>
+        <ScrollViewer Background="#D0FFFFFF"
+                      VerticalScrollBarVisibility="Auto"
+                      Visibility="{Binding IsVisibleLicense,
+                                           Converter={StaticResource BoolVisibleConverter}}">
+            <TextBlock Margin="4" TextWrapping="Wrap">
+                <Bold>
+                    <Run FontSize="16" Text="The MIT/X11 License" />
+                </Bold>
+                <LineBreak />
+                <Run Text="Copyright© 2011 Karno" />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:" />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software." />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE." />
+                <LineBreak />
+                <LineBreak />
+                <Hyperlink Command="{Binding HideLicenseCommand}">
+                    <Run Text="Close" />
+                </Hyperlink>
+            </TextBlock>
+        </ScrollViewer>
     </Grid>
 </Window>

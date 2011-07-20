@@ -173,6 +173,7 @@
     <Compile Include="Threading\ThreadHelper.cs" />
     <Compile Include="TwitterDefine.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\TextBoxSetCaretMessage.cs" />
+    <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
     <Compile Include="ViewModels\Timeline\ColumnOwnerViewModel.cs" />
     <Compile Include="ViewModels\Timeline\ColumnViewModel.cs" />
     <Compile Include="ViewModels\Common\Filter\FilterAdderViewModel.cs" />
@@ -193,7 +194,7 @@
     <Compile Include="ViewModels\Dialogs\SettingViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\TabEditorViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\BlockCommon\NotificationItemViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputBlockViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputDescription.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\UpdateWorker.cs" />

@@ -8,6 +8,7 @@ using Inscribe.ViewModels.PartBlocks.NotifyBlock;
 using Inscribe.ViewModels.Timeline;
 using Livet;
 using Livet.Commands;
+using Inscribe.ViewModels.PartBlocks.BlockCommon;
 
 namespace Inscribe.ViewModels
 {
@@ -22,7 +23,8 @@ namespace Inscribe.ViewModels
     {
         public MainWindowViewModel()
         {
-            this._columnOwnerViewModel = new ColumnOwnerViewModel();
+            this._columnOwnerViewModel = new ColumnOwnerViewModel(this);
+            this._notifierViewModel = new NotifierViewModel();
             this._notifyBlockViewModel = new NotifyBlockViewModel(this);
             // Input block dependents ColumnOwnerViewModel
             this._inputBlockViewModel = new InputBlockViewModel(this);
@@ -37,6 +39,12 @@ namespace Inscribe.ViewModels
         public InputBlockViewModel InputBlockViewModel
         {
             get { return this._inputBlockViewModel; }
+        }
+
+        private NotifierViewModel _notifierViewModel;
+        public NotifierViewModel NotifierViewModel
+        {
+            get { return _notifierViewModel; }
         }
 
         private ColumnOwnerViewModel _columnOwnerViewModel;
@@ -70,7 +78,7 @@ namespace Inscribe.ViewModels
             {
                 this.InputBlockViewModel.ShowConfig();
             }
-            var n = NotifyStorage.NotifyManually("タイムラインを準備しています...");
+            var n = NotifyStorage.NotifyManually("タブとカラムを読み込んでいます。しばらくお待ちください...");
             DispatcherHelper.BeginInvoke(() =>
             {
                 try

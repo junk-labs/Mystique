@@ -1,159 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Livet;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Inscribe.Configuration;
 using Inscribe.Storage;
-using System.Threading;
-using Livet.Commands;
-using Dulcet.Twitter;
+using Livet;
 
 namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 {
     public class NotifierViewModel : ViewModel
     {
-        private readonly EventDescription description;
-
-        public NotifierViewModel(EventDescription description, bool enableClose = true)
+        public NotifierViewModel()
         {
-            this.description = description;
-            this.EnableClose = enableClose;
+            ViewModelHelper.BindNotification(EventStorage.EventRegisteredEvent, this, OnEventRegistered);
         }
 
-        public EventKind Kind
+        private void OnEventRegistered(object o, EventDescriptionEventArgs e)
         {
-            get { return this.description.Kind; }
-        }
-
-        public string Source
-        {
-            get { return "@" + this.description.SourceUser.TwitterUser.ScreenName; }
-        }
-
-        public string Target
-        {
-            get
-            {
-                switch (this.Kind)
-                {
-                    case EventKind.Favorite:
-                    case EventKind.Retweet:
-                    case EventKind.Unfavorite:
-                        // Show tweet
-                        var status = description.TargetTweet.Status as TwitterStatus;
-                        if(status != null && status.RetweetedOriginal != null)
-                            return "@" + status.RetweetedOriginal.User.ScreenName + ": " 
-                                + status.RetweetedOriginal.Text.ToString();
-                        else
-                            return "@" + description.TargetTweet.Status.User.ScreenName + ": "
-                                + description.TargetTweet.Status.Text.ToString();
-                    default:
-                        // Show user
-                        return "@" + description.TargetUser.TwitterUser.ScreenName;
-                }
-            }
-        }
-
-        public string CreatedAt
-        {
-            get { return this.description.CreatedAt.ToLocalTime().ToString(); }
-        }
-
-        public bool EnableClose { get; private set; }
-
-        #region RequireCloseイベント
-
-        public event EventHandler<NotifierViewModelEventArgs> RequireClose;
-        private Notificator<NotifierViewModelEventArgs> _RequireCloseEvent;
-        public Notificator<NotifierViewModelEventArgs> RequireCloseEvent
-        {
-            get
-            {
-                if (_RequireCloseEvent == null) _RequireCloseEvent = new Notificator<NotifierViewModelEventArgs>();
-                return _RequireCloseEvent;
-            }
-            set { _RequireCloseEvent = value; }
-        }
-
-        protected void OnRequireClose(NotifierViewModelEventArgs e)
-        {
-            var threadSafeHandler = Interlocked.CompareExchange(ref RequireClose, null, null);
-            if (threadSafeHandler != null) threadSafeHandler(this, e);
-            RequireCloseEvent.Raise(e);
-        }
-
-        #endregion
-       
-        #region CloseCommand
-        DelegateCommand _CloseCommand;
-
-        public DelegateCommand CloseCommand
-        {
-            get
-            {
-                if (_CloseCommand == null)
-                    _CloseCommand = new DelegateCommand(Close);
-                return _CloseCommand;
-            }
-        }
-
-        private void Close()
-        {
-            OnRequireClose(new NotifierViewModelEventArgs(this));
-        }
-        #endregion
-        
-        #region ShowUserCommand
-        
-        DelegateCommand _ShowUserCommand;
-
-        public DelegateCommand ShowUserCommand
-        {
-            get
-            {
-                if (_ShowUserCommand == null)
-                    _ShowUserCommand = new DelegateCommand(ShowUser);
-                return _ShowUserCommand;
-            }
-        }
-
-        private void ShowUser()
-        {
-
-        }
-        
-        #endregion
-        
-        #region ShowTargetCommand
-        
-        DelegateCommand _ShowTargetCommand;
-
-        public DelegateCommand ShowTargetCommand
-        {
-            get
-            {
-                if (_ShowTargetCommand == null)
-                    _ShowTargetCommand = new DelegateCommand(ShowTarget);
-                return _ShowTargetCommand;
-            }
-        }
-
-        private void ShowTarget()
-        {
+            var nivm = new NotificationItemViewModel(e.EventDescription);
+            nivm.RequireClose += (no, ne) => _notifications.Remove(nivm);
+            _notifications.Add(nivm);
+            Task.Factory.StartNew(() => Thread.Sleep(Setting.Instance.ExperienceProperty.TwitterActionNotifyShowLength))
+                .ContinueWith(_ => _notifications.Remove(nivm));
 
         }
 
-        #endregion
-      
-    }
-
-    public class NotifierViewModelEventArgs : EventArgs
-    {
-        public NotifierViewModel NotifierViewModel { get; private set; }
-
-        public NotifierViewModelEventArgs(NotifierViewModel notifier)
+        DispatcherCollection<NotificationItemViewModel> _notifications = new DispatcherCollection<NotificationItemViewModel>(DispatcherHelper.UIDispatcher);
+        public DispatcherCollection<NotificationItemViewModel> Notifications
         {
-            this.NotifierViewModel = notifier;
+            get { return _notifications; }
         }
     }
 }

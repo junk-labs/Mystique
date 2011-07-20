@@ -19,29 +19,31 @@ namespace Inscribe.Storage
         public static void Remove(EventDescription evd)
         {
             events.Remove(evd);
+            OnEventChanged(EventArgs.Empty);
         }
 
         private static void Register(EventDescription description)
         {
             events.AddLast(description);
-            OnEventRegistered(EventArgs.Empty);
+            OnEventChanged(EventArgs.Empty);
+            OnEventRegistered(new EventDescriptionEventArgs(description));
         }
 
         #region EventRegisteredイベント
 
-        public static event EventHandler<EventArgs> EventRegistered;
-        private static Notificator<EventArgs> _EventRegisteredEvent;
-        public static Notificator<EventArgs> EventRegisteredEvent
+        public static event EventHandler<EventDescriptionEventArgs> EventRegistered;
+        private static Notificator<EventDescriptionEventArgs> _EventRegisteredEvent;
+        public static Notificator<EventDescriptionEventArgs> EventRegisteredEvent
         {
             get
             {
-                if (_EventRegisteredEvent == null) _EventRegisteredEvent = new Notificator<EventArgs>();
+                if (_EventRegisteredEvent == null) _EventRegisteredEvent = new Notificator<EventDescriptionEventArgs>();
                 return _EventRegisteredEvent;
             }
             set { _EventRegisteredEvent = value; }
         }
 
-        private static void OnEventRegistered(EventArgs e)
+        private static void OnEventRegistered(EventDescriptionEventArgs e)
         {
             var threadSafeHandler = Interlocked.CompareExchange(ref EventRegistered, null, null);
             if (threadSafeHandler != null) threadSafeHandler(null, e);
@@ -49,6 +51,31 @@ namespace Inscribe.Storage
         }
 
         #endregion
+      
+      
+        #region EventChangedイベント
+
+        public static event EventHandler<EventArgs> EventChanged;
+        private static Notificator<EventArgs> _EventChangedEvent;
+        public static Notificator<EventArgs> EventChangedEvent
+        {
+            get
+            {
+                if (_EventChangedEvent == null) _EventChangedEvent = new Notificator<EventArgs>();
+                return _EventChangedEvent;
+            }
+            set { _EventChangedEvent = value; }
+        }
+
+        private static void OnEventChanged(EventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref EventChanged, null, null);
+            if (threadSafeHandler != null) threadSafeHandler(null, e);
+            EventChangedEvent.Raise(e);
+        }
+
+        #endregion
+      
 
         public static void OnRetweeted(TweetViewModel tweet, UserViewModel retweeter)
         {
@@ -110,5 +137,14 @@ namespace Inscribe.Storage
         Unfavorite,
         Follow,
         Unfollow
+    }
+
+    public class EventDescriptionEventArgs : EventArgs
+    {
+        public EventDescription EventDescription { get; private set; }
+        public EventDescriptionEventArgs(EventDescription desc)
+        {
+            this.EventDescription = desc;
+        }
     }
 }

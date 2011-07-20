@@ -18,18 +18,30 @@ namespace Inscribe.ViewModels.Timeline
     {
         public TwitterStatusBase Status { get; private set; }
 
-        public TweetViewModel(TwitterStatusBase status = null)
+        public readonly long bindingId;
+
+        public TweetViewModel(TwitterStatusBase status)
         {
+            if (status == null)
+                throw new ArgumentNullException("status");
             this.Status = status;
+            this.bindingId = status.Id;
         }
+
+        public TweetViewModel(long id)
+        {
+            this.bindingId = id;
+        }
+
 
         /// <summary>
         /// まだステータス情報が関連付けられていない場合に、ステータス情報を関連付けます。
         /// </summary>
         public void SetStatus(TwitterStatusBase status)
         {
-            if (this.Status != null)
-                throw new InvalidOperationException("すでにステータスが実体化されています。");
+            if (this.Status != null) return;
+            if (status.Id != bindingId)
+                throw new ArgumentException("ステータスIDが一致しません。");
             this.Status = status;
         }
 

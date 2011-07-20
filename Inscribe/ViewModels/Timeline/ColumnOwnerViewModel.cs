@@ -10,8 +10,11 @@ namespace Inscribe.ViewModels.Timeline
 {
     public class ColumnOwnerViewModel : ViewModel
     {
-        public ColumnOwnerViewModel()
+        public MainWindowViewModel Parent { get; private set; }
+
+        public ColumnOwnerViewModel(MainWindowViewModel parent)
         {
+            this.Parent = parent;
             this.CurrentFocusColumn = CreateColumn();
             Setting.Instance.StateProperty.TabPropertyProvider = () => Columns.Select(cvm => cvm.TabItems.Select(s => s.TabProperty));
         }

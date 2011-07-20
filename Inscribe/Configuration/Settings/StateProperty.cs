@@ -6,6 +6,7 @@ using Inscribe.Configuration.Tabs;
 using System.Xml.Serialization;
 using Inscribe.Filter;
 using Inscribe.Filter.Filters.ScreenName;
+using System.Windows;
 
 namespace Inscribe.Configuration.Settings
 {
@@ -16,8 +17,8 @@ namespace Inscribe.Configuration.Settings
     {
         public StateProperty()
         {
-            SideViewWidth = 350;
-            IsSideViewInLeft = false;
+            WindowPosition = Rect.Empty;
+            WindowState = System.Windows.WindowState.Normal;
             this.TabInformations = new[]{
                 new[]{
                     new TabProperty(){
@@ -36,10 +37,6 @@ namespace Inscribe.Configuration.Settings
                 }
             };
         }
-
-        public double SideViewWidth { get; set; }
-
-        public bool IsSideViewInLeft { get; set; }
 
         [XmlIgnore()]
         public IEnumerable<IEnumerable<TabProperty>> TabInformations { get; private set; }
@@ -65,5 +62,8 @@ namespace Inscribe.Configuration.Settings
         /// </summary>
         public bool IsInSilentMode { get; set; }
 
+        public Rect WindowPosition { get; set; }
+
+        public WindowState WindowState { get; set; }
     }
 }

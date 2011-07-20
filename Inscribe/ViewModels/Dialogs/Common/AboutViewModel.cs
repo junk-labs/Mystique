@@ -118,6 +118,59 @@ namespace Inscribe.ViewModels.Dialogs.Common
         }
 
         #endregion
+
+        private bool _isVisibleLicense = false;
+        public bool IsVisibleLicense
+        {
+            get { return this._isVisibleLicense; }
+            set
+            {
+                this._isVisibleLicense = value;
+                RaisePropertyChanged(() => IsVisibleLicense);
+            }
+        }
+
+
+        #region ShowLicenseCommand
+        DelegateCommand _ShowLicenseCommand;
+
+        public DelegateCommand ShowLicenseCommand
+        {
+            get
+            {
+                if (_ShowLicenseCommand == null)
+                    _ShowLicenseCommand = new DelegateCommand(ShowLicense);
+                return _ShowLicenseCommand;
+            }
+        }
+
+        private void ShowLicense()
+        {
+            IsVisibleLicense = true;
+        }
+        #endregion
+
+
+        #region HideLicenseCommand
+        DelegateCommand _HideLicenseCommand;
+
+        public DelegateCommand HideLicenseCommand
+        {
+            get
+            {
+                if (_HideLicenseCommand == null)
+                    _HideLicenseCommand = new DelegateCommand(HideLicense);
+                return _HideLicenseCommand;
+            }
+        }
+
+        private void HideLicense()
+        {
+            IsVisibleLicense = false;
+        }
+        #endregion
+      
+      
     }
 
     public enum VersionCheckState
