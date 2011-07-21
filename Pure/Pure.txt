@@ -1,3 +1,0 @@
-﻿Pure Library
-
-Livet非含有アセンブリからの参照テスト用

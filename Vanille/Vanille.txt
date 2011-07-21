@@ -1,6 +1,0 @@
-﻿Vanille Library
-
-Krile2 Mystiqueで利用される一般的なUIシステムを提供します。
-プラグインからも利用可能ですが、Livetへの参照が必要となります。
-
-from Vanille Rouge ave;new feat.佐倉紗織

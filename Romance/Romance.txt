@@ -1,6 +1,0 @@
-﻿Romance Library
-
-Dulcet Libraryを利用し、実際の接続管理やデータコントロールを行います。
-アカウントデータ保持もこのライブラリが行います。
-
-from dulcet ROMANCE -ReBirth-  ave;new feat.佐倉紗織, 大咲美和, 白沢理恵
