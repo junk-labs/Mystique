@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using Inscribe.ViewModels.Timeline;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
 {

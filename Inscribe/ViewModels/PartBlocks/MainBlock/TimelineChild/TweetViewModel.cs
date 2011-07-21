@@ -9,7 +9,7 @@ using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
 
-namespace Inscribe.ViewModels.Timeline
+namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
     /// <summary>
     /// ツイートを保持するViewModel

@@ -183,6 +183,9 @@
     <Compile Include="Views\PartBlocks\MainBlock\TimelineList.xaml.cs">
       <DependentUpon>TimelineList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PartBlocks\ModalParts\UserSelection.xaml.cs">
+      <DependentUpon>UserSelection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PartBlocks\NotifyBlock\NotifyBlock.xaml.cs">
       <DependentUpon>NotifyBlock.xaml</DependentUpon>
     </Compile>
@@ -291,6 +294,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PartBlocks\MainBlock\TimelineList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PartBlocks\ModalParts\UserSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

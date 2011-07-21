@@ -6,8 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using Dulcet.Twitter;
 using Inscribe.Common;
-using Inscribe.ViewModels;
-using Inscribe.ViewModels.Timeline;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Mystique.Views.Converters.Particular
 {

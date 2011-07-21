@@ -3,7 +3,8 @@ using System.Text.RegularExpressions;
 using Dulcet.Twitter;
 using Inscribe.Configuration.Tabs;
 using Inscribe.Storage;
-using Inscribe.ViewModels.Timeline;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Inscribe.Common
 {

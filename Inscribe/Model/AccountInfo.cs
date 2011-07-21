@@ -10,7 +10,7 @@ using System.Collections.Concurrent;
 using Livet;
 using System.Threading;
 using Inscribe.Storage;
-using Inscribe.ViewModels.Timeline;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
 
 namespace Inscribe.Model
 {

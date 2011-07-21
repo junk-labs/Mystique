@@ -90,14 +90,14 @@ namespace Inscribe.Communication.Streaming.Connection
                     break;
                 case ElementKind.Favorite:
                     TweetStorage.Register(elem.Status);
-                    var avm = TweetStorage.Get(elem.Status.Id);
+                    var avm = TweetStorage.Get(elem.Status.Id, true);
                     var uavm = UserStorage.Get(elem.SourceUser);
                     avm.RegisterFavored(uavm);
                     EventStorage.OnFavored(avm, uavm);
                     break;
                 case ElementKind.Unfavorite:
                     TweetStorage.Register(elem.Status);
-                    var rvm = TweetStorage.Get(elem.Status.Id);
+                    var rvm = TweetStorage.Get(elem.Status.Id, true);
                     var urvm = UserStorage.Get(elem.SourceUser);
                     rvm.RemoveFavored(urvm);
                     EventStorage.OnUnfavored(rvm, urvm);

@@ -174,8 +174,8 @@
     <Compile Include="TwitterDefine.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\TextBoxSetCaretMessage.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
-    <Compile Include="ViewModels\Timeline\ColumnOwnerViewModel.cs" />
-    <Compile Include="ViewModels\Timeline\ColumnViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\ColumnOwnerViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\ColumnViewModel.cs" />
     <Compile Include="ViewModels\Common\Filter\FilterAdderViewModel.cs" />
     <Compile Include="ViewModels\Common\Filter\FilterClusterViewModel.cs" />
     <Compile Include="ViewModels\Common\Filter\FilterEditorViewModel.cs" />
@@ -198,16 +198,17 @@
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputBlockViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputDescription.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\UpdateWorker.cs" />
+    <Compile Include="ViewModels\PartBlocks\ModalParts\UserSelectionViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\NotifyBlockViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\SystemInfoViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\TwitterEventInfoViewModel.cs" />
-    <Compile Include="ViewModels\Timeline\TabDependentTweetViewModel.cs" />
-    <Compile Include="ViewModels\Timeline\TabViewModel.cs" />
-    <Compile Include="ViewModels\Timeline\TimelineListViewModel.cs" />
-    <Compile Include="ViewModels\Timeline\TweetViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineChild\TabDependentTweetViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\TabViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineListViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineChild\TweetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\TweetStorage.cs" />
-    <Compile Include="ViewModels\Timeline\UserViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Filter\Filter.txt" />

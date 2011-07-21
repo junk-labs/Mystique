@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.ViewModels;
 using System.Windows.Data;
 using Dulcet.Twitter;
 using Inscribe.Common;
-using Inscribe.ViewModels.Timeline;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Mystique.Views.Converters.Particular
 {

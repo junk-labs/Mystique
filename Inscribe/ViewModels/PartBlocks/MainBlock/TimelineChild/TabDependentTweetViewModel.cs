@@ -14,7 +14,7 @@ using Inscribe.Threading;
 using Livet;
 using Livet.Commands;
 
-namespace Inscribe.ViewModels.Timeline
+namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
     public class TabDependentTweetViewModel : ViewModel
     {

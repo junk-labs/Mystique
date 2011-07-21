@@ -19,6 +19,13 @@ namespace Inscribe.Configuration.Tabs
     /// </summary>
     public class TabProperty
     {
+        public TabProperty()
+        {
+            if (Setting.IsInitialized)
+                this.LinkAccountInfos = AccountStorage.Accounts;
+            this.Name = "Untitled";
+        }
+
         #region LinkAccountInfoChangedイベント
 
         public event EventHandler<EventArgs> LinkAccountInfoChanged;

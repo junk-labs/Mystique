@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Inscribe.Configuration;
 using Inscribe.Storage;
 using Livet;
+using Inscribe.Data;
 
 namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 {
@@ -23,8 +24,8 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 
         }
 
-        DispatcherCollection<NotificationItemViewModel> _notifications = new DispatcherCollection<NotificationItemViewModel>(DispatcherHelper.UIDispatcher);
-        public DispatcherCollection<NotificationItemViewModel> Notifications
+        ConcurrentObservable<NotificationItemViewModel> _notifications = new ConcurrentObservable<NotificationItemViewModel>();
+        public ConcurrentObservable<NotificationItemViewModel> Notifications
         {
             get { return _notifications; }
         }

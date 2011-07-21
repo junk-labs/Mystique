@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
-using Inscribe.ViewModels.Timeline;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
 
 namespace Inscribe.Storage
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Livet;
+using System.Windows;
 
 namespace Inscribe.ViewModels.Common
 {
@@ -16,9 +17,11 @@ namespace Inscribe.ViewModels.Common
         private IEnumerable<ImageStackItem> Layout(IEnumerable<Uri> uris)
         {
             int count = 0;
-            foreach (var item in uris)
+            int max = uris.Count() - 1;
+            foreach (var item in uris.Reverse())
             {
-                yield return new ImageStackItem(count * 10.0, item);
+                yield return new ImageStackItem(count, max, item);
+                count++;
             }
         }
 
@@ -37,13 +40,24 @@ namespace Inscribe.ViewModels.Common
 
     public class ImageStackItem : ViewModel
     {
-        public ImageStackItem(double slideRate, Uri imageSource)
+        int layer;
+        int layerMax;
+        public ImageStackItem(int layer, int layerMax, Uri imageSource)
         {
-            this.SlideMoveRate = slideRate;
+            this.layer = layer;
+            this.layerMax = layerMax;
             this.ImageSource = imageSource;
         }
 
-        public double SlideMoveRate { get; set; }
+        public Thickness Margin
+        {
+            get
+            {
+                var lt = (layerMax - layer) * 10;
+                var rb = layer * 10;
+                return new Thickness(lt, lt, rb, rb);
+            }
+        }
 
         public Uri ImageSource { get; set; }
 

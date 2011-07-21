@@ -6,6 +6,7 @@ using Livet;
 using Inscribe.Storage;
 using Livet.Commands;
 using Inscribe.ViewModels.PartBlocks.BlockCommon;
+using Inscribe.Data;
 
 namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 {
@@ -24,8 +25,8 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             news.Select(s => new NotificationItemViewModel(s, false)).ForEach(_events.Add);
         }
 
-        private DispatcherCollection<NotificationItemViewModel> _events = new DispatcherCollection<NotificationItemViewModel>(DispatcherHelper.UIDispatcher);
-        public DispatcherCollection<NotificationItemViewModel> Events
+        private ConcurrentObservable<NotificationItemViewModel> _events = new ConcurrentObservable<NotificationItemViewModel>();
+        public ConcurrentObservable<NotificationItemViewModel> Events
         {
             get { return this._events; }
         }

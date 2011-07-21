@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using Inscribe.Data;
-using Inscribe.ViewModels.Timeline;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 
 namespace Inscribe.Storage

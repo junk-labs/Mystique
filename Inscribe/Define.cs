@@ -54,12 +54,10 @@ namespace Inscribe
 
         public static readonly string SettingFileName = "krile.xml";
 
-        public static readonly string RemoteVersionUrl = "http://update.starwing.net/krile2/update";
-
-        public static readonly string RemoteUpdaterUrl = "http://update.starwing.net/krile2/kup.exe";
-
         public static readonly string FeedbackAppName = "reporter.exe";
 
         public static readonly string DefaultStatusMessage = "完了";
+
+        public static readonly string RemoteVersionXml = "http://update.starwing.net/k2/update.xml";
     }
 }

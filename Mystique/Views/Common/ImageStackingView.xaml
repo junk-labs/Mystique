@@ -1,14 +1,12 @@
-﻿<UserControl xmlns:my="clr-namespace:Mystique.Views.Common"  x:Class="Mystique.Views.Common.ImageStackingView"
+﻿<UserControl x:Class="Mystique.Views.Common.ImageStackingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:this="clr-namespace:Mystique.Views.Common"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-        <this:DoubleToMarginConverter x:Key="DoubleToMarginConverter" />
-    </UserControl.Resources>
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:my="clr-namespace:Mystique.Views.Common"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
     <Viewbox>
         <ItemsControl ItemsSource="{Binding Images}">
             <ItemsControl.ItemsPanel>
@@ -18,9 +16,10 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <my:LazyImage UriSource="{Binding ImageSource}"
-                            Margin="{Binding SlideMoveRate, Converter={StaticResource DoubleToMarginConverter}}"
-                            Width="40" Height="40" />
+                    <my:LazyImage Width="40"
+                                  Height="40"
+                                  Margin="{Binding Margin}"
+                                  UriSource="{Binding ImageSource}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

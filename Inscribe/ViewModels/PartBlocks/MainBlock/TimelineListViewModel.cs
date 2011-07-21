@@ -8,10 +8,12 @@ using Inscribe.Configuration;
 using Inscribe.Data;
 using Inscribe.Filter;
 using Inscribe.Storage;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 
-namespace Inscribe.ViewModels.Timeline
+namespace Inscribe.ViewModels.MainBlock
 {
     public class TimelineListViewModel : ViewModel
     {

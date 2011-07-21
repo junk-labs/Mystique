@@ -323,7 +323,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
         #endregion
 
-
         #region ReturnToBoxCommand
         DelegateCommand _ReturnToBoxCommand;
 

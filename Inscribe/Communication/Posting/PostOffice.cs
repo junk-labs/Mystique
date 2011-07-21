@@ -1,22 +1,18 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using Inscribe.Model;
-using Inscribe.Data;
-using Livet;
-using Inscribe.Threading;
-using Dulcet.Twitter;
-using System.Threading.Tasks;
-using Dulcet.Twitter.Rest;
-using Inscribe.ViewModels;
-using Inscribe.Storage;
-using Inscribe.Configuration;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
-using System.Collections.Concurrent;
-using Inscribe.ViewModels.Timeline;
+using Dulcet.Twitter.Rest;
+using Inscribe.Configuration;
+using Inscribe.Model;
+using Inscribe.Storage;
+using Inscribe.Threading;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Livet;
 
 namespace Inscribe.Communication.Posting
 {
@@ -153,6 +149,55 @@ namespace Inscribe.Communication.Posting
             }
         }
 
+        public static Tuple<DateTime, int> GetUnderControlChunk(AccountInfo info)
+        {
+            // とりあえずこのユーザーの全ツイートを持ってくる
+            var times = TweetStorage.GetAll(
+                t => t.Status.User.ScreenName == info.ScreenName)
+                .Select(t => t.Status.CreatedAt)
+                .ToArray();
+
+            bool initPointFound = false;
+            // 規制がスタートされたポイントは、[i+127-1]が3h以内のとき
+            int i = 0;
+            for (i = 0; i + TwitterDefine.UnderControlCount < times.Length && i < TwitterDefine.UnderControlCount; i++)
+            {
+                if (times[i] - times[i + TwitterDefine.UnderControlCount - 1] < TwitterDefine.UnderControlTimespan)
+                {
+                    // i - 1 が規制ポイント
+                    i--;
+                    initPointFound = true;
+                    break;
+                }
+                else if (times[i] - times[i + 1] > TwitterDefine.UnderControlTimespan)
+                {
+                    // 三時間以上の間隔があいている
+                    initPointFound = true;
+                    break;
+                }
+            }
+            if (initPointFound && i >= 0)
+            {
+                // 規制開始ポイントが割り出せた
+                return new Tuple<DateTime, int>(times[i].Add(TwitterDefine.UnderControlTimespan), i);
+            }
+            else
+            {
+                // 規制開始ポイントが分からないので、とりあえずウィンドウタイムだけ遡る
+                var window = times.Where(d => d > DateTime.Now.Subtract(TwitterDefine.UnderControlTimespan))
+                    .OrderBy(d => d);
+                var initt = window.FirstOrDefault();
+                if (initt != null)
+                {
+                    return new Tuple<DateTime, int>(initt.Add(TwitterDefine.UnderControlTimespan), window.Count());
+                }
+                else
+                {
+                    return new Tuple<DateTime, int>(DateTime.MinValue, 0);
+                }
+            }
+        }
+
         public static int UpdateTweet(AccountInfo info, string text, long? inReplyToId = null)
         {
             if (Setting.Instance.InputExperienceProperty.TrimBeginSpace)
@@ -167,46 +212,12 @@ namespace Inscribe.Communication.Posting
                 TweetStorage.Register(status);
                 NotifyStorage.Notify("ツイートしました:@" + info.ScreenName + ": " + text);
 
-                var timestamp = DateTime.Now.Subtract(TwitterDefine.UnderControlTimespan);
-                // 過去3時間以内のツイート数を取得
-                var recent = TweetStorage.GetAll(
-                    t => t.Status.User.ScreenName == info.ScreenName &&
-                           timestamp < t.Status.CreatedAt).Count();
-                if (recent >= TwitterDefine.UnderControlWarningThreshold)
+                var chunk = GetUnderControlChunk(info);
+                if(chunk.Item2 > TwitterDefine.UnderControlWarningThreshold)
                 {
-                    // 規制から明けたばかりかもしれない
-                    var times = TweetStorage.GetAll(
-                        t => t.Status.User.ScreenName == info.ScreenName)
-                        .Select(t => t.Status.CreatedAt)
-                        .Take(TwitterDefine.UnderControlCount * 2) // 直近2枠分を持ってこれば良い
-                        .ToArray();
-
-                    // 規制がスタートされたポイントは、[i+127-1]が3h以内のとき
-                    int i = 0;
-                    bool controlPointFound = false;
-                    for (i = 0; i + TwitterDefine.UnderControlCount < times.Length && i < TwitterDefine.UnderControlCount; i++)
-                    {
-                        if (times[i] - times[i + TwitterDefine.UnderControlCount - 1] < TwitterDefine.UnderControlTimespan)
-                        {
-                            // 時間内に規制を行われる以上の投稿を行っている
-                            controlPointFound = true;
-                            break;
-                        }
-                    }
-
-                    if (controlPointFound)
-                    {
-                        // 規制スタートポイントが判明した
-                        if (i >= TwitterDefine.UnderControlWarningThreshold)
-                            throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.NearUnderControl);
-                    }
-                    else
-                    {
-                        // そろそろ規制されるんじゃない？
-                        throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.NearUnderControl);
-                    }
+                    throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.NearUnderControl);
                 }
-                return recent;
+                return chunk.Item2;
             }
             catch (WebException wex)
             {
@@ -271,6 +282,7 @@ namespace Inscribe.Communication.Posting
             }
             return -1;
         }
+
         public static void FavTweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
             Task.Factory.StartNew(() => FavTweetSink(infos, status), TaskCreationOptions.LongRunning);

@@ -34,16 +34,20 @@ namespace Inscribe.Common
 
         public static bool IsUpdateExists()
         {
+            /*
             var update = Dulcet.Network.Http.WebConnectDownloadString(new Uri(Define.RemoteVersionUrl));
             if (!update.Succeeded || String.IsNullOrWhiteSpace(update.Data))
                 throw new Exception("バージョンを確認できません。");
             var remoteVersion = Double.Parse(update.Data);
             var localVersion = Define.GetNumericVersion();
             return remoteVersion > localVersion;
+            */
+            return false;
         }
 
         public static void DownloadUpdate()
         {
+            /*
             // 更新がありました
             using (var msg = NotifyStorage.NotifyManually("Krileの更新が見つかりました。ダウンロードしています..."))
             {
@@ -52,6 +56,7 @@ namespace Inscribe.Common
                 downloader.DownloadFile(Define.RemoteUpdaterUrl, System.IO.Path.Combine(apppath, "kup.exe"));
             }
             NotifyStorage.Notify("Krileは次回起動時に更新されます。");
+            */
         }
     }
 }

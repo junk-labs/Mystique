@@ -6,7 +6,7 @@ using Inscribe.Filter;
 using Livet;
 using Inscribe.Configuration;
 
-namespace Inscribe.ViewModels.Timeline
+namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
     public class ColumnOwnerViewModel : ViewModel
     {

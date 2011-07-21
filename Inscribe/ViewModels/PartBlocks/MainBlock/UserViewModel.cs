@@ -5,7 +5,7 @@ using System.Text;
 using Livet;
 using Dulcet.Twitter;
 
-namespace Inscribe.ViewModels.Timeline
+namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
     public class UserViewModel : ViewModel
     {

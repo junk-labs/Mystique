@@ -8,7 +8,7 @@ using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 
-namespace Inscribe.ViewModels.Timeline
+namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
     public class ColumnViewModel : ViewModel
     {

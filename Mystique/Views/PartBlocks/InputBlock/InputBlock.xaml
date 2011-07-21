@@ -96,7 +96,7 @@
                             <MenuItem Header="チュートリアル(_C)..." />
                             <MenuItem Header="フィードバック(_F)..." />
                             <Separator />
-                            <MenuItem Header="バージョン情報(_A)..." Command="{Binding ShowAboutCommand}" />
+                            <MenuItem Command="{Binding ShowAboutCommand}" Header="バージョン情報(_A)..." />
                         </MenuItem>
                         <MenuItem Header="Krileを終了(_X)" />
                     </ContextMenu>
@@ -421,12 +421,12 @@
                             <TextBlock Grid.Column="2"
                                        VerticalAlignment="Center"
                                        FontSize="10"
-                                       Foreground="DimGray"
+                                       Foreground="Gray"
                                        Padding="2"
                                        Text="{Binding UnderControlCount,
                                                       StringFormat=規制まで:約{0}}"
                                        TextTrimming="CharacterEllipsis"
-                                       Visibility="{Binding IsClosable,
+                                       Visibility="{Binding IsInUpdated,
                                                             Converter={StaticResource BoolVisibleConverter}}" />
                             <Button Grid.Column="3"
                                     Command="{Binding ReturnToBoxCommand}"

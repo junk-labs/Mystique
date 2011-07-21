@@ -5,10 +5,14 @@ using Inscribe.Core;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.InputBlock;
 using Inscribe.ViewModels.PartBlocks.NotifyBlock;
-using Inscribe.ViewModels.Timeline;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
 using Livet.Commands;
 using Inscribe.ViewModels.PartBlocks.BlockCommon;
+using Inscribe.ViewModels.PartBlocks.ModalParts;
+using System;
+using System.Collections.Generic;
+using Inscribe.Model;
 
 namespace Inscribe.ViewModels
 {
@@ -28,6 +32,14 @@ namespace Inscribe.ViewModels
             this._notifyBlockViewModel = new NotifyBlockViewModel(this);
             // Input block dependents ColumnOwnerViewModel
             this._inputBlockViewModel = new InputBlockViewModel(this);
+
+            this._userSelectionViewModel = new UserSelectionViewModel();
+            this._userSelectionViewModel.Finished += () =>
+            {
+                this._isVisibleUserSelection = false;
+                RaisePropertyChanged(() => IsVisibleUserSelection);
+                RaisePropertyChanged(() => IsActivateMain);
+            };
         }
 
         public string Title
@@ -57,6 +69,32 @@ namespace Inscribe.ViewModels
         public NotifyBlockViewModel NotifyBlockViewModel
         {
             get { return this._notifyBlockViewModel; }
+        }
+
+        private UserSelectionViewModel _userSelectionViewModel;
+
+        public UserSelectionViewModel UserSelectionViewModel
+        {
+            get { return _userSelectionViewModel; }
+        }
+
+        public bool IsActivateMain
+        {
+            get { return !this._isVisibleUserSelection; }
+        }
+
+        private bool _isVisibleUserSelection = false;
+        public bool IsVisibleUserSelection
+        {
+            get { return _isVisibleUserSelection; }
+        }
+
+        public void SelectUser(Action<IEnumerable<AccountInfo>> returning)
+        {
+            this.UserSelectionViewModel.BeginInteraction(returning);
+            _isVisibleUserSelection = true;
+            RaisePropertyChanged(() => IsVisibleUserSelection);
+            RaisePropertyChanged(() => IsActivateMain);
         }
 
         #region LoadedCommand

@@ -9,11 +9,12 @@ using Inscribe.Model;
 using Inscribe.Storage;
 using Inscribe.ViewModels.Common;
 using Inscribe.ViewModels.Dialogs;
-using Inscribe.ViewModels.Timeline;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 using Mystique.Views.Behaviors.Messages;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -25,12 +26,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             this.Parent = parent;
             this._ImageStackingViewViewModel = new ImageStackingViewViewModel();
             this._UserSelectorViewModel = new UserSelectorViewModel();
-            this._UserSelectorViewModel.LinkChanged += () =>
-                {
-                    this.LinkUserChanged(this.UserSelectorViewModel.LinkElements);
-                    ImageStackingViewViewModel.ImageUrls = this.UserSelectorViewModel.LinkElements.
-                       Select(ai => ai.ProfileImage).ToArray();
-                };
+            this._UserSelectorViewModel.LinkChanged += () => this.LinkUserChanged(this.UserSelectorViewModel.LinkElements);
 
             // Listen changing tab
             this.Parent.ColumnOwnerViewModel.CurrentTabChanged += new Action<TabViewModel>(CurrentTabChanged);
@@ -278,6 +274,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 currentTarget = this.overrideTargets;
             else
                 currentTarget = this.UserSelectorViewModel.LinkElements;
+            if (currentTarget != null)
+                currentTarget = AccountStorage.Accounts.Where(i => currentTarget.Contains(i)).ToArray();
             Task.Factory.StartNew(() => currentTarget.Select(ai => ai.ProfileImage).ToArray())
                 .ContinueWith(r => DispatcherHelper.BeginInvoke(() => ImageStackingViewViewModel.ImageUrls = r.Result));
         }

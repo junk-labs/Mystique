@@ -61,7 +61,7 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             }
         }
         #endregion
-      
+
     }
 
     public class AccountViewModel : ViewModel
@@ -82,7 +82,7 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 
         public AccountViewModel(AccountInfo info)
         {
-            
+
             this.Info = info;
             this._profileImageProvider = new Common.ProfileImageProvider(info);
             ViewModelHelper.BindNotification(info.UserStreamsConnectionChangedEvent, this, (o, e) => RaisePropertyChanged(() => ConnectState));
@@ -91,6 +91,7 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
                 RaisePropertyChanged(() => ApiRemain);
                 RaisePropertyChanged(() => ApiMax);
                 RaisePropertyChanged(() => ApiReset);
+                Task.Factory.StartNew(() => UpdatePostChunk());
             });
             ViewModelHelper.BindNotification(PostOffice.OnUnderControlChangedEvent, this, (o, e) =>
             {
@@ -157,6 +158,48 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
         public string ApiReset
         {
             get { return this.Info.RateLimitReset.ToLocalTime().ToString(); }
+        }
+
+        private void UpdatePostChunk()
+        {
+            var chunk = PostOffice.GetUnderControlChunk(this.Info);
+            PostChunk = chunk.Item1;
+            PostCount = chunk.Item2.ToString();
+        }
+
+        private string _postCount = "0";
+        public string PostCount
+        {
+            get { return _postCount; }
+            set
+            {
+                _postCount = value;
+                RaisePropertyChanged(() => PostCount);
+            }
+        }
+
+        public string PostWindowCount
+        {
+            get { return TwitterDefine.UnderControlCount.ToString(); }
+        }
+
+        private DateTime _postChunk = DateTime.MinValue;
+        public DateTime PostChunk
+        {
+            get { return _postChunk; }
+            set
+            {
+                _postChunk = value;
+                RaisePropertyChanged(() => PostChunk);
+                RaisePropertyChanged(() => PostChunkString);
+            }
+        }
+        public string PostChunkString
+        {
+            get
+            {
+                return this._postChunk.ToLocalTime().ToString();
+            }
         }
 
         public bool IsAccountUnderControlled
@@ -284,8 +327,8 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
         {
             ExceptionStorage.Remove(desc);
         }
-        
+
         #endregion
-      
+
     }
 }

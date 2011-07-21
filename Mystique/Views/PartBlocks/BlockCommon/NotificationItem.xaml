@@ -38,9 +38,21 @@
         </LinearGradientBrush>
     </UserControl.Resources>
     <Border x:Name="border"
-            BorderBrush="{DynamicResource GrayGradientBackground}"
-            BorderThickness="1"
-            d:IsHidden="True">
+            BorderThickness="0,1" UseLayoutRounding="True">
+    	<Border.BorderBrush>
+    		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+    			<LinearGradientBrush.RelativeTransform>
+    				<TransformGroup>
+    					<ScaleTransform CenterY="0.5" CenterX="0.5"/>
+    					<SkewTransform CenterY="0.5" CenterX="0.5"/>
+    					<RotateTransform Angle="-90" CenterY="0.5" CenterX="0.5"/>
+    					<TranslateTransform/>
+    				</TransformGroup>
+    			</LinearGradientBrush.RelativeTransform>
+    			<GradientStop Color="#004D4D4D" Offset="0.5"/>
+    			<GradientStop Color="#FF4D4D4D"/>
+    		</LinearGradientBrush>
+    	</Border.BorderBrush>
         <Border.LayoutTransform>
             <TransformGroup>
                 <ScaleTransform />
@@ -49,8 +61,7 @@
                 <TranslateTransform />
             </TransformGroup>
         </Border.LayoutTransform>
-        <DockPanel Background="#FFDDDDDD"
-                   d:IsHidden="True"
+        <DockPanel
                    LastChildFill="True">
             <DockPanel.LayoutTransform>
                 <TransformGroup>
@@ -60,9 +71,9 @@
                     <TranslateTransform />
                 </TransformGroup>
             </DockPanel.LayoutTransform>
-            <Grid d:IsHidden="True"
+            <Grid
                   RenderTransformOrigin="0.5,0.5"
-                  SnapsToDevicePixels="False">
+                  SnapsToDevicePixels="False" UseLayoutRounding="True">
                 <Grid.LayoutTransform>
                     <TransformGroup>
                         <ScaleTransform />
@@ -80,13 +91,11 @@
                     </TransformGroup>
                 </Grid.RenderTransform>
                 <DockPanel x:Name="RetweetedPanel"
-                           d:IsHidden="True"
                            Visibility="{Binding Kind,
                                                 ConverterParameter=Retweet,
                                                 Converter={StaticResource StringEqualVisibleConverter}}">
                     <StackPanel Margin="0"
                                 HorizontalAlignment="Stretch"
-                                d:IsHidden="True"
                                 Orientation="Horizontal"
                                 d:LayoutOverrides="Height">
                         <StackPanel.Background>
@@ -100,24 +109,21 @@
                                     </TransformGroup>
                                 </LinearGradientBrush.RelativeTransform>
                                 <GradientStop Offset="0" Color="#FF64FF96" />
-                                <GradientStop Offset="1" Color="White" />
+                                <GradientStop Color="#FFBBFFD1" Offset="1"/>
                             </LinearGradientBrush>
                         </StackPanel.Background>
                         <Image Width="16"
                                Height="16"
                                Margin="4,0,0,0"
-                               d:IsHidden="True"
                                Source="{StaticResource Retweet}" />
-                        <TextBlock Margin="4"
+                        <TextBlock Margin="4,0,4,-1"
                                    VerticalAlignment="Center"
-                                   d:IsHidden="True"
                                    TextWrapping="NoWrap"
                                    d:LayoutOverrides="Width, Height"><Run Language="ja-jp" Text="Retweeted" />
                         </TextBlock>
                     </StackPanel>
                     <Grid Margin="0"
-                          HorizontalAlignment="Left"
-                          d:IsHidden="True">
+                          HorizontalAlignment="Left">
                         <Grid.Background>
                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                 <LinearGradientBrush.RelativeTransform>
@@ -135,14 +141,12 @@
                         <Rectangle Width="1"
                                    Margin="0"
                                    HorizontalAlignment="Left"
-                                   d:IsHidden="True"
                                    Fill="{DynamicResource GrayGradientBackground}"
                                    Stroke="{x:Null}"
                                    StrokeLineJoin="Round" />
                         <ed:RegularPolygon Height="10"
                                            Margin="1,0,0,0"
                                            HorizontalAlignment="Left"
-                                           d:IsHidden="True"
                                            Fill="{DynamicResource GrayHorzGradientBackground}"
                                            InnerRadius="1"
                                            PointCount="3"
@@ -161,7 +165,6 @@
                         <ed:RegularPolygon Height="10"
                                            Margin="-0.25,0,0,0"
                                            HorizontalAlignment="Left"
-                                           d:IsHidden="True"
                                            InnerRadius="1"
                                            PointCount="3"
                                            Stretch="Fill"
@@ -178,7 +181,7 @@
                                         </TransformGroup>
                                     </LinearGradientBrush.RelativeTransform>
                                     <GradientStop Offset="0" Color="#FF64FF96" />
-                                    <GradientStop Offset="1" Color="White" />
+                                    <GradientStop Color="#FFB8FFCF" Offset="1"/>
                                 </LinearGradientBrush>
                             </ed:RegularPolygon.Fill>
                             <ed:RegularPolygon.LayoutTransform>
@@ -194,13 +197,11 @@
                 </DockPanel>
                 <DockPanel x:Name="FavoredPanel"
                            Background="White"
-                           d:IsHidden="True"
                            Visibility="{Binding Kind,
                                                 ConverterParameter=Favorite,
                                                 Converter={StaticResource StringEqualVisibleConverter}}">
                     <StackPanel Margin="0"
                                 HorizontalAlignment="Stretch"
-                                d:IsHidden="True"
                                 Orientation="Horizontal"
                                 d:LayoutOverrides="Height">
                         <StackPanel.Background>
@@ -214,24 +215,21 @@
                                     </TransformGroup>
                                 </LinearGradientBrush.RelativeTransform>
                                 <GradientStop Offset="0" Color="#FFFFFF82" />
-                                <GradientStop Offset="1" Color="White" />
+                                <GradientStop Color="#FFFFFFC3" Offset="1"/>
                             </LinearGradientBrush>
                         </StackPanel.Background>
                         <Image Width="16"
                                Height="16"
                                Margin="4,0,0,0"
-                               d:IsHidden="True"
                                Source="{StaticResource Favorite}" />
-                        <TextBlock Margin="4"
+                        <TextBlock Margin="4,0,4,-1"
                                    VerticalAlignment="Center"
-                                   d:IsHidden="True"
                                    TextWrapping="NoWrap"
                                    d:LayoutOverrides="Width, Height"><Run Language="ja-jp" Text="Favored" />
                         </TextBlock>
                     </StackPanel>
                     <Grid Margin="0"
-                          HorizontalAlignment="Left"
-                          d:IsHidden="True">
+                          HorizontalAlignment="Left">
                         <Grid.Background>
                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                 <LinearGradientBrush.RelativeTransform>
@@ -249,14 +247,12 @@
                         <Rectangle Width="1"
                                    Margin="0"
                                    HorizontalAlignment="Left"
-                                   d:IsHidden="True"
                                    Fill="{DynamicResource GrayGradientBackground}"
                                    Stroke="{x:Null}"
                                    StrokeLineJoin="Round" />
                         <ed:RegularPolygon Height="10"
                                            Margin="1,0,0,0"
                                            HorizontalAlignment="Left"
-                                           d:IsHidden="True"
                                            Fill="{DynamicResource GrayHorzGradientBackground}"
                                            InnerRadius="1"
                                            PointCount="3"
@@ -275,7 +271,6 @@
                         <ed:RegularPolygon Height="10"
                                            Margin="-0.25,0,0,0"
                                            HorizontalAlignment="Left"
-                                           d:IsHidden="True"
                                            InnerRadius="1"
                                            PointCount="3"
                                            Stretch="Fill"
@@ -292,7 +287,7 @@
                                         </TransformGroup>
                                     </LinearGradientBrush.RelativeTransform>
                                     <GradientStop Offset="0" Color="#FFFFFF82" />
-                                    <GradientStop Offset="1" Color="White" />
+                                    <GradientStop Color="#FFFFFFBA" Offset="1"/>
                                 </LinearGradientBrush>
                             </ed:RegularPolygon.Fill>
                             <ed:RegularPolygon.LayoutTransform>
@@ -308,13 +303,11 @@
                 </DockPanel>
                 <DockPanel x:Name="UnfavoredPanel"
                            Background="White"
-                           d:IsHidden="True"
                            Visibility="{Binding Kind,
                                                 ConverterParameter=Unfavorite,
                                                 Converter={StaticResource StringEqualVisibleConverter}}">
                     <StackPanel Margin="0"
                                 HorizontalAlignment="Stretch"
-                                d:IsHidden="True"
                                 Orientation="Horizontal"
                                 d:LayoutOverrides="Height">
                         <StackPanel.Background>
@@ -328,24 +321,21 @@
                                     </TransformGroup>
                                 </LinearGradientBrush.RelativeTransform>
                                 <GradientStop Offset="0" Color="#FF969696" />
-                                <GradientStop Offset="1" Color="White" />
+                                <GradientStop Color="#FFCACACA" Offset="1"/>
                             </LinearGradientBrush>
                         </StackPanel.Background>
                         <Image Width="16"
                                Height="16"
                                Margin="4,0,0,0"
-                               d:IsHidden="True"
                                Source="{StaticResource Unfavorite}" />
-                        <TextBlock Margin="4"
+                        <TextBlock Margin="4,0,4,-1"
                                    VerticalAlignment="Center"
-                                   d:IsHidden="True"
                                    TextWrapping="NoWrap"
                                    d:LayoutOverrides="Width, Height"><Run Language="ja-jp" Text="Unfavored" />
                         </TextBlock>
                     </StackPanel>
                     <Grid Margin="0"
-                          HorizontalAlignment="Left"
-                          d:IsHidden="True">
+                          HorizontalAlignment="Left">
                         <Grid.Background>
                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                 <LinearGradientBrush.RelativeTransform>
@@ -363,14 +353,12 @@
                         <Rectangle Width="1"
                                    Margin="0"
                                    HorizontalAlignment="Left"
-                                   d:IsHidden="True"
                                    Fill="{DynamicResource GrayGradientBackground}"
                                    Stroke="{x:Null}"
                                    StrokeLineJoin="Round" />
                         <ed:RegularPolygon Height="10"
                                            Margin="1,0,0,0"
                                            HorizontalAlignment="Left"
-                                           d:IsHidden="True"
                                            Fill="{DynamicResource GrayHorzGradientBackground}"
                                            InnerRadius="1"
                                            PointCount="3"
@@ -389,7 +377,6 @@
                         <ed:RegularPolygon Height="10"
                                            Margin="-0.25,0,0,0"
                                            HorizontalAlignment="Left"
-                                           d:IsHidden="True"
                                            InnerRadius="1"
                                            PointCount="3"
                                            Stretch="Fill"
@@ -406,7 +393,7 @@
                                         </TransformGroup>
                                     </LinearGradientBrush.RelativeTransform>
                                     <GradientStop Offset="0" Color="#FF969696" />
-                                    <GradientStop Offset="1" Color="White" />
+                                    <GradientStop Color="#FFC9C9C9" Offset="1"/>
                                 </LinearGradientBrush>
                             </ed:RegularPolygon.Fill>
                             <ed:RegularPolygon.LayoutTransform>
@@ -422,32 +409,40 @@
                 </DockPanel>
                 <DockPanel x:Name="FollowedPanel"
                            Background="{DynamicResource FollowGradient}"
-                           d:IsHidden="True"
                            Visibility="{Binding Kind,
                                                 ConverterParameter=Follow,
                                                 Converter={StaticResource StringEqualVisibleConverter}}">
                     <StackPanel Margin="0"
                                 HorizontalAlignment="Stretch"
-                                Background="{DynamicResource FollowGradient}"
-                                d:IsHidden="True"
                                 Orientation="Horizontal"
                                 SnapsToDevicePixels="True"
                                 d:LayoutOverrides="Height">
+                    	<StackPanel.Background>
+                    		<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    			<LinearGradientBrush.RelativeTransform>
+                    				<TransformGroup>
+                    					<ScaleTransform CenterX="0.5" CenterY="0.5" />
+                    					<SkewTransform CenterX="0.5" CenterY="0.5" />
+                    					<RotateTransform Angle="180" CenterX="0.5" CenterY="0.5" />
+                    					<TranslateTransform />
+                    				</TransformGroup>
+                    			</LinearGradientBrush.RelativeTransform>
+                    			<GradientStop Offset="0" Color="#FF64DCFF" />
+                    			<GradientStop Color="#FFAFEDFF" Offset="1"/>
+                    		</LinearGradientBrush>
+                    	</StackPanel.Background>
                         <Image Width="16"
                                Height="16"
                                Margin="4,0,0,0"
-                               d:IsHidden="True"
                                Source="{StaticResource Follow}" />
-                        <TextBlock Margin="4,2"
+                        <TextBlock Margin="4,0,4,-1"
                                    VerticalAlignment="Center"
-                                   d:IsHidden="True"
                                    TextWrapping="NoWrap"
                                    d:LayoutOverrides="Width, Height"><Run Language="ja-jp" Text="Followed" />
                         </TextBlock>
                     </StackPanel>
                     <Grid Margin="0"
-                          HorizontalAlignment="Stretch"
-                          d:IsHidden="True">
+                          HorizontalAlignment="Stretch">
                         <Grid.Background>
                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                 <LinearGradientBrush.RelativeTransform>
@@ -465,13 +460,11 @@
                         <Rectangle Width="1"
                                    Margin="0"
                                    HorizontalAlignment="Left"
-                                   d:IsHidden="True"
                                    Fill="{DynamicResource GrayGradientBackground}"
                                    StrokeLineJoin="Round" />
                         <ed:RegularPolygon Height="10"
                                            Margin="1,0,0,0"
                                            HorizontalAlignment="Left"
-                                           d:IsHidden="True"
                                            Fill="{DynamicResource GrayHorzGradientBackground}"
                                            InnerRadius="1"
                                            PointCount="3"
@@ -489,7 +482,6 @@
                         <ed:RegularPolygon Height="10"
                                            Margin="-0.25,0,0,0"
                                            HorizontalAlignment="Left"
-                                           d:IsHidden="True"
                                            InnerRadius="1"
                                            PointCount="3"
                                            SnapsToDevicePixels="True"
@@ -507,7 +499,7 @@
                                         </TransformGroup>
                                     </LinearGradientBrush.RelativeTransform>
                                     <GradientStop Offset="0" Color="#FF64DCFF" />
-                                    <GradientStop Offset="1" Color="White" />
+                                    <GradientStop Color="#FFB6EEFF" Offset="1"/>
                                 </LinearGradientBrush>
                             </ed:RegularPolygon.Fill>
                             <ed:RegularPolygon.LayoutTransform>
@@ -523,8 +515,7 @@
                 </DockPanel>
             </Grid>
             <Grid Background="White"
-                  d:IsHidden="True"
-                  SnapsToDevicePixels="False">
+                  SnapsToDevicePixels="False" UseLayoutRounding="True">
                 <Grid.LayoutTransform>
                     <TransformGroup>
                         <ScaleTransform />
@@ -534,7 +525,6 @@
                     </TransformGroup>
                 </Grid.LayoutTransform>
                 <TextBlock Margin="4"
-                           d:IsHidden="True"
                            Text="{Binding Source}"
                            TextDecorations="Underline"
                            TextWrapping="NoWrap">
@@ -547,8 +537,7 @@
             </Grid>
             <Grid Margin="0"
                   HorizontalAlignment="Left"
-                  d:IsHidden="True"
-                  SnapsToDevicePixels="False">
+                  SnapsToDevicePixels="False" UseLayoutRounding="True">
                 <Grid.LayoutTransform>
                     <TransformGroup>
                         <ScaleTransform />
@@ -568,13 +557,12 @@
                             </TransformGroup>
                         </LinearGradientBrush.RelativeTransform>
                         <GradientStop Offset="0" Color="#FFAAAAAA" />
-                        <GradientStop Offset="1" Color="#FFDDDDDD" />
+                        <GradientStop Offset="1" Color="#01DDDDDD" />
                     </LinearGradientBrush>
                 </Grid.Background>
                 <Rectangle Width="1"
                            Margin="0"
                            HorizontalAlignment="Left"
-                           d:IsHidden="True"
                            Stroke="{x:Null}"
                            StrokeLineJoin="Round">
                     <Rectangle.Fill>
@@ -595,7 +583,6 @@
                 <ed:RegularPolygon Height="10"
                                    Margin="1,0,0,0"
                                    HorizontalAlignment="Left"
-                                   d:IsHidden="True"
                                    InnerRadius="1"
                                    PointCount="3"
                                    Stretch="Fill"
@@ -627,7 +614,6 @@
                 <ed:RegularPolygon Height="10"
                                    Margin="-0.25,0,0,0"
                                    HorizontalAlignment="Left"
-                                   d:IsHidden="True"
                                    Fill="White"
                                    InnerRadius="1"
                                    PointCount="3"
@@ -645,9 +631,8 @@
                 </ed:RegularPolygon>
             </Grid>
             <Grid x:Name="grid3"
-                  Background="#FFDDDDDD"
-                  d:IsHidden="True"
-                  SnapsToDevicePixels="False">
+                  Background="#00DDDDDD"
+                  SnapsToDevicePixels="False" UseLayoutRounding="True">
                 <Grid.LayoutTransform>
                     <TransformGroup>
                         <ScaleTransform />
@@ -662,7 +647,6 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="4"
-                           d:IsHidden="True"
                            Text="{Binding Target,
                                           Converter={StaticResource StringRemoveLineConverter}}"
                            TextDecorations="Underline"
@@ -678,20 +662,18 @@
                            VerticalAlignment="Center"
                            Foreground="Gray"
                            Text="{Binding CreatedAt,
-                                          FallbackValue=00:00:00}" />
+                                          FallbackValue=00:00:00}" FontSize="10.667" />
                 <Button Grid.Column="2"
                         Margin="2,0,1,0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Command="{Binding CloseCommand}"
-                        d:IsHidden="True"
                         Style="{StaticResource FlatButtonStyle}"
                         Visibility="{Binding EnableClose,
                                              Converter={StaticResource BoolVisibleConverter}}"
                         d:LayoutOverrides="Height">
                     <Image Width="16"
                            Height="16"
-                           d:IsHidden="True"
                            Source="{StaticResource Close}" />
                 </Button>
             </Grid>

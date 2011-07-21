@@ -10,6 +10,7 @@
         xmlns:ma="clr-namespace:Mystique.Views.Behaviors.Actions"
         xmlns:main="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
         xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
+        xmlns:my="clr-namespace:Mystique.Views.PartBlocks.ModalParts"
         xmlns:nb="clr-namespace:Mystique.Views.PartBlocks.NotifyBlock"
         xmlns:vm="clr-namespace:Inscribe.ViewModels;assembly=Inscribe"
         Title="{Binding Title}"
@@ -37,19 +38,22 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <!--  INPUT BLOCK  -->
-        <ib:InputBlock DataContext="{Binding InputBlockViewModel}" />
-        <!--  NOTIFIER  -->
-        <bc:Notifier Grid.Row="1" DataContext="{Binding NotifierViewModel}" />
-        <!--  TIMELINE CORE  -->
-        <main:ColumnOwner Grid.Row="2" DataContext="{Binding ColumnOwnerViewModel}" />
-        <!--  STATUS BAR AREA  -->
-        <nb:NotifyBlock Grid.Row="3" DataContext="{Binding NotifyBlockViewModel}" />
+        <Grid IsEnabled="{Binding IsActivateMain}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!--  INPUT BLOCK  -->
+            <ib:InputBlock DataContext="{Binding InputBlockViewModel}" />
+            <!--  NOTIFIER  -->
+            <bc:Notifier Grid.Row="1" DataContext="{Binding NotifierViewModel}" />
+            <!--  TIMELINE CORE  -->
+            <main:ColumnOwner Grid.Row="2" DataContext="{Binding ColumnOwnerViewModel}" />
+            <!--  STATUS BAR AREA  -->
+            <nb:NotifyBlock Grid.Row="3" DataContext="{Binding NotifyBlockViewModel}" />
+        </Grid>
+        <my:UserSelection Visibility="{Binding IsVisibleUserSelection, Converter={StaticResource BoolVisibleConverter}}" />
     </Grid>
 </Window>
