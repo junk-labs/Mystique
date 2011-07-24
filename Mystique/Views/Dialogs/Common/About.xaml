@@ -6,7 +6,7 @@
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         xmlns:my="clr-namespace:Mystique.Views.Common"
         xmlns:v="clr-namespace:Mystique.Views"
-        xmlns:vm="clr-namespace:Inscribe.ViewModels.Dialogs.Common;assembly=Inscribe"
+        xmlns:vm="clr-namespace:Inscribe.ViewModels.Dialogs.Common;assembly=core"
         Title="このアプリケーションについて"
         Width="520"
         Height="465"
@@ -190,7 +190,7 @@
                 <TextBlock Margin="2" Text="更新の確認に失敗しました。しばらく間を置いて、再度お試しください。" />
             </StackPanel>
         </StackPanel>
-        <ScrollViewer Background="#D0FFFFFF"
+        <ScrollViewer Background="#E0FFFFFF"
                       VerticalScrollBarVisibility="Auto"
                       Visibility="{Binding IsVisibleLicense,
                                            Converter={StaticResource BoolVisibleConverter}}">

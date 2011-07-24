@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Supervisor
+namespace Inscribe.Commnuication.CruiseControl.Core
 {
     public abstract class ScheduledTask
     {

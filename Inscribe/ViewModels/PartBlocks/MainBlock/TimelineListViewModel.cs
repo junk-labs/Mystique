@@ -12,6 +12,7 @@ using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
+using Inscribe.ViewModels.Behaviors.Messaging;
 
 namespace Inscribe.ViewModels.MainBlock
 {
@@ -56,15 +57,36 @@ namespace Inscribe.ViewModels.MainBlock
             set
             {
                 if (this.sources == value) return;
-                this.sources = value;
+                var prev = this.sources;
+                this.sources = (value ?? new IFilter[0]).ToArray();
+                UpdateReacceptionChain(prev, false);
+                UpdateReacceptionChain(value, true);
                 RaisePropertyChanged(() => Sources);
             }
+        }
+
+        private void UpdateReacceptionChain(IEnumerable<IFilter> filter, bool join)
+        {
+            if (filter != null)
+            {
+                if (join)
+                    filter.ForEach(f => f.RequireReaccept += f_RequireReaccept);
+                else
+                    filter.ForEach(f => f.RequireReaccept -= f_RequireReaccept);
+            }
+        }
+
+        void f_RequireReaccept()
+        {
+            System.Diagnostics.Debug.WriteLine("received reacception");
+            Task.Factory.StartNew(() => this.RefreshCache()).ContinueWith(_ => this.Commit(true));
         }
 
         public TimelineListViewModel(TabViewModel parent, IEnumerable<IFilter> sources = null)
         {
             this.Parent = parent;
             this.sources = sources;
+            UpdateReacceptionChain(sources, true);
             // binding nortifications
             ViewModelHelper.BindNotification(TweetStorage.Notificator, this, TweetStorageChanged);
             ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, SettingValueChanged);
@@ -73,13 +95,19 @@ namespace Inscribe.ViewModels.MainBlock
             this._tweetCollectionView = new CollectionViewSource();
             this._tweetCollectionView.Source = this._tweetsSource;
             // Generate timeline
-            Task.Factory.StartNew(() => InvalidateAll())
+            Task.Factory.StartNew(() => RefreshCache())
                 .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => UpdateSortDescription()));
         }
 
         public void Commit(bool reinvalidate)
         {
-            this._tweetsSource.Commit(reinvalidate);
+            DispatcherHelper.BeginInvoke(() =>
+            {
+                using (var disp = this._tweetCollectionView.DeferRefresh())
+                {
+                    this._tweetsSource.Commit(reinvalidate);
+                }
+            });
         }
 
         private void TweetStorageChanged(object o, TweetStorageChangedEventArgs e)
@@ -94,7 +122,7 @@ namespace Inscribe.ViewModels.MainBlock
                     }
                     break;
                 case TweetActionKind.Refresh:
-                    Task.Factory.StartNew(InvalidateAll);
+                    Task.Factory.StartNew(RefreshCache);
                     break;
                 case TweetActionKind.Changed:
                     var tdtvm = new TabDependentTweetViewModel(e.Tweet, this.Parent);
@@ -140,7 +168,7 @@ namespace Inscribe.ViewModels.MainBlock
                 .Any(f => f.Filter(viewModel.Status));
         }
 
-        public void InvalidateAll()
+        public void RefreshCache()
         {
             this._tweetsSource.Clear();
             TweetStorage.GetAll(vm => CheckFilters(vm))
@@ -163,11 +191,10 @@ namespace Inscribe.ViewModels.MainBlock
             {
                 this._selectedTweetViewModel = value;
                 RaisePropertyChanged(() => SelectedTweetViewModel);
-                Task.Factory.StartNew(() => this._tweetsSource.Commit())
+                Task.Factory.StartNew(() => this.Commit(false))
                     .ContinueWith(_ => Parallel.ForEach(this._tweetsSource, vm => vm.PendingColorChanged()));
             }
         }
-
 
         #region GetFocusCommand
         DelegateCommand _GetFocusCommand;
@@ -187,5 +214,10 @@ namespace Inscribe.ViewModels.MainBlock
             this.OnGetFocus();
         }
         #endregion
+
+        public void SetSelect(ListSelectionKind kind)
+        {
+            Messenger.Raise(new SetListSelectionMessage("SetListSelection", kind));
+        }
     }
 }

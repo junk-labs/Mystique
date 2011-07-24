@@ -7,6 +7,9 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <BitmapImage x:Key="Painting" UriSource="/Resources/painting.png" />
+    </UserControl.Resources>
     <Viewbox>
         <ItemsControl ItemsSource="{Binding Images}">
             <ItemsControl.ItemsPanel>
@@ -18,6 +21,7 @@
                 <DataTemplate>
                     <my:LazyImage Width="40"
                                   Height="40"
+                                  DefaultImage="{StaticResource Painting}"
                                   Margin="{Binding Margin}"
                                   UriSource="{Binding ImageSource}" />
                 </DataTemplate>

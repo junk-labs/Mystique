@@ -18,6 +18,7 @@
     <Window.Resources>
         <conv:DoublePercentStringConverter x:Key="DoublePercentStringConverter" />
         <BitmapImage x:Key="Delete" UriSource="/Resources/delete.png" />
+        <BitmapImage x:Key="Painting" UriSource="/Resources/painting.png" />
         <Style TargetType="TextBox">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">
@@ -56,6 +57,7 @@
                           Height="30"
                           Margin="4"
                           VerticalAlignment="Center"
+                          DefaultImage="{StaticResource Painting}"
                           UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
             <TextBlock VerticalAlignment="Center" Text="{Binding ScreenName, StringFormat=@{0}}" />
         </DockPanel>

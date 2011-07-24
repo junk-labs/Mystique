@@ -13,6 +13,7 @@ using Inscribe.ViewModels.MainBlock;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using Inscribe.Filter.Filters.ScreenName;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -171,7 +172,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                         .Select(s => s.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries));
                     filter = uqsplitted.Select(s => new FilterCluster(){
                         ConcatenateAnd = true,
-                        Filters = s.Select(un => new Filter.Filters.Text.FilterUser(un)).ToArray()}).ToArray();
+                        Filters = s.Select(un => new FilterUser(un)).ToArray()}).ToArray();
                     break;
                 case 't':
                 case 'T':
@@ -208,7 +209,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
             this.IsQueryValid = true;
             this.CurrentForegroundTimeline.Sources = filter;
-            Task.Factory.StartNew(() => this.CurrentForegroundTimeline.InvalidateAll())
+            Task.Factory.StartNew(() => this.CurrentForegroundTimeline.RefreshCache())
                 .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => this.CurrentForegroundTimeline.Commit(true)));
         }
 
@@ -230,7 +231,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
             else if (this.CurrentForegroundTimeline.Sources.All(
                 c => (c is FilterCluster) && ((FilterCluster)c).Filters
-                    .All(f => f is Filter.Filters.Text.FilterUser)))
+                    .All(f => f is FilterUser)))
             {
                 // u:
                 this._queryTextBuffer = "u:" +
@@ -344,10 +345,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.RemoveTopTimeline(false);
         }
         #endregion
-      
-        internal void SetFocus()
-        {
-            this.Messenger.Raise(new InteractionMessage("SetFocus"));
-        }
+
     }
 }

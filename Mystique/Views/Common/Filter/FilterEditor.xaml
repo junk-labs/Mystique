@@ -4,7 +4,7 @@
              xmlns:ba="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-             xmlns:fvm="clr-namespace:Inscribe.ViewModels.Common.Filter;assembly=Inscribe"
+             xmlns:fvm="clr-namespace:Inscribe.ViewModels.Common.Filter;assembly=core"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:local="clr-namespace:Mystique.Views.Common.Filter"

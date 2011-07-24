@@ -13,10 +13,10 @@
              d:DesignWidth="400"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <BitmapImage x:Key="Loading" UriSource="/Resources/refresh_large.png" />
         <BitmapImage x:Key="Chevron" UriSource="/Resources/chevron.png" />
         <BitmapImage x:Key="Add" UriSource="/Resources/add.png" />
         <BitmapImage x:Key="Delete" UriSource="/Resources/delete.png" />
+        <BitmapImage x:Key="Painting" UriSource="/Resources/painting.png" />
     </UserControl.Resources>
     <i:Interaction.Triggers>
         <l:InteractionMessageTrigger MessageKey="ShowConfig" Messenger="{Binding Messenger}">
@@ -69,7 +69,7 @@
                                     <my:LazyImage Grid.RowSpan="2"
                                                   Width="32"
                                                   Height="32"
-                                                  DefaultImage="{StaticResource Loading}"
+                                                  DefaultImage="{StaticResource Painting}"
                                                   UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
                                     <TextBlock Grid.RowSpan="2"
                                                Grid.Column="1"

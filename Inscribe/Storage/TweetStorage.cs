@@ -44,10 +44,11 @@ namespace Inscribe.Storage
         /// <summary>
         /// ツイートストレージの作業用スレッドディスパッチャ
         /// </summary>
-        static QueueTaskDispatcher operationDispatcher = new QueueTaskDispatcher(1);
+        static QueueTaskDispatcher operationDispatcher;
 
         static TweetStorage()
         {
+            operationDispatcher = new QueueTaskDispatcher(1);
             ThreadHelper.Halt += () => operationDispatcher.Dispose();
         }
 
@@ -150,10 +151,14 @@ namespace Inscribe.Storage
                 // リツイートユーザーに登録
                 var vm = Get(status.RetweetedOriginal.Id, true);
                 var user = UserStorage.Get(status.User);
-                vm.RegisterRetweeted(user);
-                if (!vm.IsStatusInfoContains)
-                    vm.SetStatus(status.RetweetedOriginal);
-                EventStorage.OnRetweeted(vm, user);
+                if (vm.RegisterRetweeted(user))
+                {
+                    if (!vm.IsStatusInfoContains)
+                        vm.SetStatus(status.RetweetedOriginal);
+                    // 自分が関係していれば
+                    if (AccountStorage.Contains(status.User.ScreenName) || AccountStorage.Contains(user.TwitterUser.ScreenName))
+                        EventStorage.OnRetweeted(vm, user);
+                }
             }
 
             // 返信先の登録

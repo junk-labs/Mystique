@@ -17,6 +17,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             {
                 this._inReplyToId = value;
                 RaisePropertyChanged(() => InReplyToId);
+                RaisePropertyChanged(() => InReplyToIdStatus);
                 RaisePropertyChanged(() => IsInReplyToEnabled);
             }
         }

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:Mystique.Views.Converters"
         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-        xmlns:fvm="clr-namespace:Inscribe.ViewModels.Common.Filter;assembly=Inscribe"
+        xmlns:fvm="clr-namespace:Inscribe.ViewModels.Common.Filter;assembly=core"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         Title="フィルタの編集"

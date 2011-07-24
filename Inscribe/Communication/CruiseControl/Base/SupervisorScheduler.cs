@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Supervisor.Random;
+using Inscribe.Random;
 
-namespace Supervisor
+namespace Inscribe.Commnuication.CruiseControl.Core
 {
     /// <summary>
     /// スーパーバイザスケジューラ

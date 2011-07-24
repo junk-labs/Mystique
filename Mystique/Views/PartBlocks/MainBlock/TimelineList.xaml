@@ -97,7 +97,10 @@
                         BorderBrush="Silver"
                         BorderThickness="1"
                         CornerRadius="1">
-                    <TextBox Padding="2" BorderThickness="0" Text="{Binding QueryText, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox BorderThickness="0"
+                             Padding="2"
+                             Text="{Binding QueryText,
+                                            UpdateSourceTrigger=PropertyChanged}">
                         <i:Interaction.Triggers>
                             <l:InteractionMessageTrigger MessageKey="FocusToSearch" Messenger="{Binding Messenger}">
                                 <ba:FrameworkSetFocusAction />
@@ -142,6 +145,11 @@
                             <i:Interaction.Behaviors>
                                 <pb:SquaredScrollBehavior />
                             </i:Interaction.Behaviors>
+                            <i:Interaction.Triggers>
+                                <l:InteractionMessageTrigger MessageKey="SetListSelection" Messenger="{Binding Messenger}">
+                                    <ba:SetListSelectionInteractionMessageAction />
+                                </l:InteractionMessageTrigger>
+                            </i:Interaction.Triggers>
                         </ListBox>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -135,6 +135,7 @@ namespace Inscribe.Configuration
             this.TimelineFilteringProperty = new TimelineFilterlingProperty();
             this.ExternalServiceProperty = new ExternalServiceProperty();
             this.ColoringProperty = new ColoringProperty();
+            this.KeyAssignProperty = new KeyAssignProperty();
             this.NotificationProperty = new Settings.NotificationProperty();
             this.StateProperty = new StateProperty();
         }
@@ -156,6 +157,8 @@ namespace Inscribe.Configuration
         public ExternalServiceProperty ExternalServiceProperty { get; set; }
 
         public ColoringProperty ColoringProperty { get; set; }
+
+        public KeyAssignProperty KeyAssignProperty { get; set; }
 
         public NotificationProperty NotificationProperty { get; set; }
 

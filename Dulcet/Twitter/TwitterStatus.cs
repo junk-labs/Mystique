@@ -36,5 +36,10 @@ namespace Dulcet.Twitter
         public string InReplyToUserScreenName { get; set; }
 
         public TwitterStatus RetweetedOriginal { get; set; }
+
+        public override string ToString()
+        {
+            return "@" + this.User.ScreenName + ": " + this.Text;
+        }
     }
 }

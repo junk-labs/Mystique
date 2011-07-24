@@ -352,8 +352,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         internal void SetFocus()
         {
-            if (this.SelectedTabViewModel != null)
-                this.SelectedTabViewModel.SetFocus();
+            this.Messenger.Raise(new InteractionMessage("SetFocus"));
         }
     }
 }

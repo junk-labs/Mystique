@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Windows;
 
 namespace Inscribe
 {
@@ -8,7 +9,7 @@ namespace Inscribe
     {
         public static string GetExecutingPath()
         {
-            return Assembly.GetExecutingAssembly().Location;
+            return Process.GetCurrentProcess().MainModule.FileName;
         }
 
         public static FileVersionInfo GetVersion()
@@ -53,6 +54,10 @@ namespace Inscribe
         public static readonly string ApplicationName = "Krile";
 
         public static readonly string SettingFileName = "krile.xml";
+
+        public static readonly string KeyAssignDirectory = "assigns";
+
+        public static readonly string PluginDirectory = "plugins";
 
         public static readonly string FeedbackAppName = "reporter.exe";
 

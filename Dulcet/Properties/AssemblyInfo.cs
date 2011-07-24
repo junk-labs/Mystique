@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("Dulcet")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Network Libary")]
+[assembly: AssemblyDescription("Twitter And Common Network Operations Library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Dulcet")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyCompany("StarWing Network")]
+[assembly: AssemblyProduct("Mystique")]
+[assembly: AssemblyCopyright("Copyright © 2011 Karno")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

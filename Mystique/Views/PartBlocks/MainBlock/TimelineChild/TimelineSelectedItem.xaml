@@ -4,6 +4,9 @@
              xmlns:com="clr-namespace:Mystique.Views.Common"
              xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:my="clr-namespace:Mystique.Views.CustomPanels"
              xmlns:tc="clr-namespace:Mystique.Views.PartBlocks.MainBlock.TimelineChild"
@@ -55,13 +58,13 @@
             <MenuItem Command="{Binding UnofficialRetweetCommand}"
                       Header="非公式RT(_E)"
                       InputGestureText="Ctrl+Shift+R"
-                      Visibility="{Binding ShowUnofficialRetweetButton,
+                      Visibility="{Binding Path=Tweet.ShowUnofficialRetweetButton,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource UORetweet}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{Binding QuoteTweetCommand}"
+            <MenuItem Command="{Binding QuoteCommand}"
                       Header="QT(_Q)"
                       InputGestureText="Ctrl+Q"
                       Visibility="{Binding ShowQuoteTweetButton,
@@ -73,7 +76,7 @@
             <MenuItem Command="{Binding DeleteCommand}"
                       Header="削除(_D)"
                       InputGestureText="Delete"
-                      Visibility="{Binding ShowDeleteButton,
+                      Visibility="{Binding Path=Tweet.ShowDeleteButton,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Delete}" />
@@ -81,16 +84,16 @@
             </MenuItem>
             <Separator />
             <MenuItem Command="{Binding OpenConversationCommand}"
-                      Header="返信先とこのユーザーの会話を表示(_C)"
+                      Header="返信先とこのユーザーの会話を表示(_.)"
                       InputGestureText="Q, .(Period)"
-                      Visibility="{Binding Path=IsMention,
+                      Visibility="{Binding Path=Tweet.IsMention,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Conversation}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <Separator Visibility="{Binding Path=IsMention, Converter={StaticResource BoolVisibleConverter}}" />
-            <MenuItem Command="{Binding ShowTweetCommand}"
+            <Separator Visibility="{Binding Path=Tweet.IsMention, Converter={StaticResource BoolVisibleConverter}}" />
+            <MenuItem Command="{Binding Path=Tweet.ShowTweetCommand}"
                       Header="ブラウザーで開く(_W)..."
                       InputGestureText="W" />
             <MenuItem Header="このユーザー(_U)">
@@ -101,7 +104,7 @@
                           Header="ダイレクトメッセージを送信(_D)"
                           InputGestureText="D" />
                 <Separator />
-                <MenuItem Command="{Binding ReportAsSpamCommand}"
+                <MenuItem Command="{Binding ReportForSpamCommand}"
                           CommandParameter="Red"
                           Header="スパムとして報告(_R)"
                           InputGestureText="F10">
@@ -119,7 +122,13 @@
             </MenuItem>
         </ContextMenu>
     </UserControl.Resources>
-    <Grid Name="OwnerPanel"
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger Messenger="{Binding Messenger}"
+                                     MessageKey="Confirm">
+            <l:ConfirmationDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
+        <Grid Name="OwnerPanel"
           Background="{Binding BackBrush}"
           ContextMenu="{StaticResource TweetContextMenu}">
         <Grid.InputBindings>
@@ -293,16 +302,16 @@
                         <MenuItem Command="{Binding UnofficialRetweetCommand}"
                                   Header="非公式RT(_E)"
                                   InputGestureText="Ctrl+Shift+R"
-                                  Visibility="{Binding ShowUnofficialRetweetButton,
+                                  Visibility="{Binding Path=Tweet.ShowUnofficialRetweetButton,
                                                        Converter={StaticResource BoolVisibleConverter}}">
                             <MenuItem.Icon>
                                 <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource UORetweet}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding QuoteTweetCommand}"
+                        <MenuItem Command="{Binding QuoteCommand}"
                                   Header="QT(_Q)"
                                   InputGestureText="Ctrl+Q"
-                                  Visibility="{Binding Path=ShowQuoteTweetButton,
+                                  Visibility="{Binding Path=Tweet.ShowQuoteButton,
                                                        Converter={StaticResource BoolVisibleConverter}}">
                             <MenuItem.Icon>
                                 <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource QuoteTweet}" />
@@ -321,14 +330,14 @@
                         <MenuItem Command="{Binding OpenConversationCommand}"
                                   Header="返信先とこのユーザーの会話を表示(_C)"
                                   InputGestureText="Q, .(Period)"
-                                  Visibility="{Binding Path=IsMention,
+                                  Visibility="{Binding Path=Tweet.IsMention,
                                                        Converter={StaticResource BoolVisibleConverter}}">
                             <MenuItem.Icon>
                                 <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Conversation}" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <Separator Visibility="{Binding Path=IsMention, Converter={StaticResource BoolVisibleConverter}}" />
-                        <MenuItem Command="{Binding ShowTweetCommand}"
+                        <Separator Visibility="{Binding Path=Tweet.IsMention, Converter={StaticResource BoolVisibleConverter}}" />
+                        <MenuItem Command="{Binding Path=Tweet.ShowTweetCommand}"
                                   Header="ブラウザーで開く(_W)..."
                                   InputGestureText="W" />
                         <MenuItem Header="このユーザー(_U)">
@@ -339,7 +348,7 @@
                                       Header="ダイレクトメッセージを送信(_D)"
                                       InputGestureText="D" />
                             <Separator />
-                            <MenuItem Command="{Binding ReportAsSpamCommand}"
+                            <MenuItem Command="{Binding ReportForSpamCommand}"
                                       CommandParameter="Red"
                                       Header="スパムとして報告(_R)"
                                       InputGestureText="F10">
@@ -477,7 +486,7 @@
                         <Button.ToolTip>Favる</Button.ToolTip>
                     </Button>
                 </Grid>
-                <Grid VerticalAlignment="Center" Visibility="{Binding ShowRetweetButton, Converter={StaticResource BoolVisibleConverter}}">
+                <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.ShowRetweetButton, Converter={StaticResource BoolVisibleConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="11" />
@@ -505,16 +514,16 @@
                         Command="{Binding UnofficialRetweetCommand}"
                         Focusable="False"
                         Style="{DynamicResource FlatButtonStyle}"
-                        Visibility="{Binding ShowUnofficialRetweetButton,
+                        Visibility="{Binding Path=Tweet.ShowUnofficialRetweetButton,
                                              Converter={StaticResource BoolVisibleConverter}}">
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource UORetweet}" />
                     <Button.ToolTip>非公式RT</Button.ToolTip>
                 </Button>
                 <Button VerticalAlignment="Center"
-                        Command="{Binding QuoteTweetCommand}"
+                        Command="{Binding QuoteCommand}"
                         Focusable="False"
                         Style="{DynamicResource FlatButtonStyle}"
-                        Visibility="{Binding ShowQuoteTweetButton,
+                        Visibility="{Binding Path=Tweet.ShowQuoteButton,
                                              Converter={StaticResource BoolVisibleConverter}}">
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource QuoteTweet}" />
                     <Button.ToolTip>QT</Button.ToolTip>
@@ -530,7 +539,7 @@
                         Command="{Binding DeleteCommand}"
                         Focusable="False"
                         Style="{DynamicResource FlatButtonStyle}"
-                        Visibility="{Binding ShowDeleteButton,
+                        Visibility="{Binding Path=Tweet.ShowDeleteButton,
                                              Converter={StaticResource BoolVisibleConverter}}">
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Delete}" />
                     <Button.ToolTip>ツイートを削除...</Button.ToolTip>
@@ -540,7 +549,7 @@
                 <TextBlock Margin="4,5"
                            VerticalAlignment="Center"
                            FontSize="11">
-                    <Hyperlink Command="{Binding ShowTweetCommand}" Foreground="DodgerBlue">
+                    <Hyperlink Command="{Binding Path=Tweet.ShowTweetCommand}" Foreground="DodgerBlue">
                         <Run Text="{Binding Path=Tweet.CreatedAt, Mode=OneWay, StringFormat=yy/MM/dd HH:mm:ss}" />
                     </Hyperlink>
                 </TextBlock>

@@ -75,7 +75,9 @@ namespace Inscribe.Data
 
         public bool Remove(T item)
         {
-            return this.BehindCollection.Remove(item);
+            var ret = this.BehindCollection.Remove(item);
+            RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            return ret;
         }
 
         public IEnumerator<T> GetEnumerator()

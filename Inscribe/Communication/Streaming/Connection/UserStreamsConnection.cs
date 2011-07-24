@@ -44,7 +44,6 @@ namespace Inscribe.Communication.Streaming.Connection
                 UserStreamsReceiverManager.RefreshReceiver(info);
         }
 
-
         /// <summary>
         /// ツイートのポンピングスレッド
         /// </summary>
@@ -92,15 +91,15 @@ namespace Inscribe.Communication.Streaming.Connection
                     TweetStorage.Register(elem.Status);
                     var avm = TweetStorage.Get(elem.Status.Id, true);
                     var uavm = UserStorage.Get(elem.SourceUser);
-                    avm.RegisterFavored(uavm);
-                    EventStorage.OnFavored(avm, uavm);
+                    if (avm.RegisterFavored(uavm))
+                        EventStorage.OnFavored(avm, uavm);
                     break;
                 case ElementKind.Unfavorite:
                     TweetStorage.Register(elem.Status);
                     var rvm = TweetStorage.Get(elem.Status.Id, true);
                     var urvm = UserStorage.Get(elem.SourceUser);
-                    rvm.RemoveFavored(urvm);
-                    EventStorage.OnUnfavored(rvm, urvm);
+                    if (rvm.RemoveFavored(urvm))
+                        EventStorage.OnUnfavored(rvm, urvm);
                     break;
                 case ElementKind.Delete:
                     TweetStorage.Remove(elem.DeletedStatusId);

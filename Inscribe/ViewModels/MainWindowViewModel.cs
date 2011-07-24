@@ -72,7 +72,6 @@ namespace Inscribe.ViewModels
         }
 
         private UserSelectionViewModel _userSelectionViewModel;
-
         public UserSelectionViewModel UserSelectionViewModel
         {
             get { return _userSelectionViewModel; }
@@ -89,9 +88,9 @@ namespace Inscribe.ViewModels
             get { return _isVisibleUserSelection; }
         }
 
-        public void SelectUser(Action<IEnumerable<AccountInfo>> returning)
+        public void SelectUser(SelectionKind kind, IEnumerable<AccountInfo> defaultSelect, Action<IEnumerable<AccountInfo>> returning)
         {
-            this.UserSelectionViewModel.BeginInteraction(returning);
+            this.UserSelectionViewModel.BeginInteraction(kind, defaultSelect, returning);
             _isVisibleUserSelection = true;
             RaisePropertyChanged(() => IsVisibleUserSelection);
             RaisePropertyChanged(() => IsActivateMain);

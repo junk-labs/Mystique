@@ -29,30 +29,30 @@ namespace Inscribe.Filter
             }
             set
             {
-                UpdateChain(false);
-                _filters = value;
-                UpdateChain(true);
+                if (value == _filters) return;
+                var prev = _filters;
+                _filters = (value ?? new IFilter[0]).ToArray();
+                UpdateChain(prev, false);
+                UpdateChain(value, true);
             }
         }
 
         #region Reacception chain
 
-        private void UpdateChain(bool attach)
+        private void UpdateChain(IEnumerable<IFilter> filter, bool attach)
         {
-            if (_filters != null)
+            if (filter != null)
             {
-                foreach (var f in _filters)
-                {
-                    if (attach)
-                        f.RequireReaccept += filter_RequireReaccept;
-                    else
-                        f.RequireReaccept -= filter_RequireReaccept;
-                }
+                if (attach)
+                    filter.ForEach(f => f.RequireReaccept += filter_RequireReaccept);
+                else
+                    filter.ForEach(f => f.RequireReaccept -= filter_RequireReaccept);
             }
         }
 
         void filter_RequireReaccept()
         {
+            System.Diagnostics.Debug.WriteLine("chainning reacception");
             // 再適用の伝播
             this.RequireReaccept();
         }

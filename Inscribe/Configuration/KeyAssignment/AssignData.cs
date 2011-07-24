@@ -24,11 +24,13 @@ namespace Inscribe.Configuration.KeyAssignment
             }
         }
 
-        private static AssignDescription LoadAssign(XElement elem)
+        private static AssignDescription LoadAssign(XElement root)
         {
-            var assigns = elem.Element("KeyAssign").Descendants("Assigns");
+            var name = root.Attribute("Name").Value;
+            var assigns = root.Element("AssignGroups").Descendants("AssignGroup");
             return new AssignDescription()
             {
+                Name = name,
                 AssignDatas = assigns.Select(a => new Tuple<AssignRegion, IEnumerable<AssignItem>>(
                     ConvertToRegion(a.Attribute("Region").Value), a.Elements("Assign").Select(ae => ConvertToAssignItem(ae))))
             };
@@ -42,28 +44,32 @@ namespace Inscribe.Configuration.KeyAssignment
         private static AssignItem ConvertToAssignItem(XElement region)
         {
             var kstr = region.Attribute("Key").Value;
-            var meth = region.Attribute("Method").Value;
-            var eit = region.Attribute("EnableInTextBox");
-            if (eit != null)
-                return new AssignItem(kstr, meth, bool.Parse(eit.Value));
+            var action = region.Attribute("Action").Value;
+            if (String.IsNullOrWhiteSpace(kstr) || String.IsNullOrWhiteSpace(action))
+                throw new Exception("キーとアクションが無い要素があります。");
+            var preview = region.Attribute("Preview");
+            if (preview != null)
+                return new AssignItem(kstr, action, bool.Parse(preview.Value));
             else
-                return new AssignItem(kstr, meth);
+                return new AssignItem(kstr, action);
         }
     }
 
     public class AssignDescription
     {
+        public string Name { get; set; }
+
         public IEnumerable<Tuple<AssignRegion, IEnumerable<AssignItem>>> AssignDatas { get; set; }
     }
 
     public class AssignItem
     {
-        public AssignItem(Key key, ModifierKeys modifiers, string method, bool allowInText = false)
+        public AssignItem(Key key, ModifierKeys modifiers, string action, bool preview = false)
         {
             this.Key = key;
             this.Modifiers = modifiers;
-            this.Method = method;
-            this.AllowedInTextBox = allowInText;
+            this.ActionId = action;
+            this.LookInPreview = preview;
         }
 
         public AssignItem(string key, string method, bool allowInText = false)
@@ -80,8 +86,8 @@ namespace Inscribe.Configuration.KeyAssignment
                         this.Modifiers |= m;
                 }
                 this.Key = (Key)(new KeyConverter().ConvertFromString(kexs.Last()));
-                this.Method = method;
-                this.AllowedInTextBox = allowInText;
+                this.ActionId = method;
+                this.LookInPreview = allowInText;
             }
             catch (Exception e)
             {
@@ -99,7 +105,7 @@ namespace Inscribe.Configuration.KeyAssignment
             }
             else if (modStr.Equals("Alt", StringComparison.CurrentCultureIgnoreCase) ||
                 modStr.Equals("A", StringComparison.CurrentCultureIgnoreCase) ||
-                modStr.Equals("Alternate", StringComparison.CurrentCultureIgnoreCase) || 
+                modStr.Equals("Alternate", StringComparison.CurrentCultureIgnoreCase) ||
                 modStr.Equals("Meta", StringComparison.CurrentCultureIgnoreCase))
             {
                 return ModifierKeys.Alt;
@@ -108,6 +114,12 @@ namespace Inscribe.Configuration.KeyAssignment
                 modStr.Equals("S", StringComparison.CurrentCultureIgnoreCase))
             {
                 return ModifierKeys.Alt;
+            }
+            else if (modStr.Equals("Win", StringComparison.CurrentCultureIgnoreCase) ||
+                modStr.Equals("Windows", StringComparison.CurrentCultureIgnoreCase) ||
+                modStr.Equals("W", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return ModifierKeys.Windows;
             }
             else
             {
@@ -119,8 +131,8 @@ namespace Inscribe.Configuration.KeyAssignment
 
         public ModifierKeys Modifiers { get; private set; }
 
-        public string Method { get; private set; }
+        public string ActionId { get; private set; }
 
-        public bool AllowedInTextBox { get; private set; }
+        public bool LookInPreview { get; private set; }
     }
 }

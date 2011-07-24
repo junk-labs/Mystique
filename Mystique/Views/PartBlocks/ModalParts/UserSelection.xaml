@@ -2,11 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:my="clr-namespace:Mystique.Views.Common"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:my="clr-namespace:Mystique.Views.Common"
              Background="#50696969"
              mc:Ignorable="d">
     <UserControl.Resources>
@@ -27,7 +27,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Visibility="{Binding IsRetweet, Converter={StaticResource BoolVisibleConverter}}">
                 <Image Source="{StaticResource RetweetLarge}" Stretch="None" />
                 <TextBlock Margin="4"
                            VerticalAlignment="Center"
@@ -35,7 +35,7 @@
                            Foreground="RoyalBlue"
                            Text="Retweet" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Visibility="{Binding IsFavorite, Converter={StaticResource BoolVisibleConverter}}">
                 <Image Source="{StaticResource FavoriteLarge}" Stretch="None" />
                 <TextBlock Margin="4"
                            VerticalAlignment="Center"
@@ -43,7 +43,7 @@
                            Foreground="Orange"
                            Text="Favorite" />
             </StackPanel>
-            <my:UserSelector Grid.Row="1" />
+            <my:UserSelector Grid.Row="1" DataContext="{Binding UserSelectorViewModel}" />
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -52,10 +52,12 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="1"
                         Width="90"
+                        Command="{Binding OkCommand}"
                         Content="OK"
                         Padding="4,2" />
                 <Button Grid.Column="2"
                         Width="90"
+                        Command="{Binding CancelCommand}"
                         Content="キャンセル"
                         Padding="4,2" />
             </Grid>

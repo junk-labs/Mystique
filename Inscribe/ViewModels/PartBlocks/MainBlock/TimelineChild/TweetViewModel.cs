@@ -7,6 +7,7 @@ using Inscribe.Configuration;
 using Inscribe.Data;
 using Inscribe.Storage;
 using Livet;
+using System.Linq;
 using Livet.Commands;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
@@ -95,20 +96,22 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private ConcurrentObservable<UserViewModel> _retweeteds = new ConcurrentObservable<UserViewModel>();
 
-        public void RegisterRetweeted(UserViewModel user)
+        public bool RegisterRetweeted(UserViewModel user)
         {
-            if (user == null)
-                return;
+            if (user == null || this._retweeteds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
+                return false;
             this._retweeteds.Add(user);
             TweetStorage.NotifyTweetStateChanged(this);
+            return true;
         }
 
-        public void RemoveRetweeted(UserViewModel user)
+        public bool RemoveRetweeted(UserViewModel user)
         {
-            if (user == null)
-                return;
+            if (user == null || this._retweeteds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) == null)
+                return false;
             this._retweeteds.Remove(user);
             TweetStorage.NotifyTweetStateChanged(this);
+            return true;
         }
 
         public IEnumerable<UserViewModel> RetweetedUsers
@@ -122,20 +125,22 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private ConcurrentObservable<UserViewModel> _favoreds = new ConcurrentObservable<UserViewModel>();
 
-        public void RegisterFavored(UserViewModel user)
+        public bool RegisterFavored(UserViewModel user)
         {
-            if (user == null)
-                return;
+            if (user == null || this._favoreds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
+                return false;
             this._favoreds.Add(user);
             TweetStorage.NotifyTweetStateChanged(this);
+            return true;
         }
 
-        public void RemoveFavored(UserViewModel user)
+        public bool RemoveFavored(UserViewModel user)
         {
-            if (user == null)
-                return;
+            if (user == null || this._favoreds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) == null)
+                return false;
             this._favoreds.Remove(user);
             TweetStorage.NotifyTweetStateChanged(this);
+            return true;
         }
 
         public IEnumerable<UserViewModel> FavoredUsers
@@ -290,12 +295,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
 
-        public bool ShowQuoteTweetButton
+        public bool ShowQuoteButton
         {
             get
             {
-                return Setting.Instance.TweetExperienceProperty.ShowQuoteTweetButton;
+                return Setting.Instance.TweetExperienceProperty.ShowQuoteButton;
             }
+        }
+
+        public bool ShowDeleteButton
+        {
+            get { return AccountStorage.Contains(this.Status.User.ScreenName); }
         }
 
         public bool IsMyTweet

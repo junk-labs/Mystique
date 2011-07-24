@@ -7,7 +7,12 @@ namespace Inscribe.Filter.Filters.ScreenName
 {
     public abstract class ScreenNameFilterBase : TextFilterBase
     {
-        protected bool Match(string haystack, string needle)
+        public bool Match(string haystack, string needle)
+        {
+            return this.Match(haystack, needle, false);
+        }
+
+        protected sealed override bool Match(string haystack, string needle, bool isCasesSensitive)
         {
             if (needle == "*")
             {

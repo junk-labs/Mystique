@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<KeyAssign Name="Krile Default">
+	<AssignGroups>
+		<AssignGroup Region="General">
+			<Assign Action="FocusToTimeline" Key="Ctrl+T" />
+			<Assign Action="OpenInput" Key="Ctrl+I" />
+			<Assign Action="OpenInput" Key="Enter" />
+		</AssignGroup>
+		<AssignGroup Region="Timeline">
+			<!-- Move -->
+			<Assign Action="OpenInput" Key="Enter" Preview="True" />
+			<Assign Action="MoveDown" Key="J" />
+			<Assign Action="MoveUp" Key="K" />
+			<Assign Action="MoveLeft" Key="H" />
+			<Assign Action="MoveRight" Key="L" />
+			<Assign Action="MoveLeftColumn" Key="Shift+H" />
+			<Assign Action="MoveRightColumn" Key="Shift+L" />
+			<Assign Action="MoveLeft" Key="Left" Preview="True" />
+			<Assign Action="MoveRight" Key="Right" Preview="True" />
+			<Assign Action="MoveLeftColumn" Key="Shift+Left" Preview="True" />
+			<Assign Action="MoveRightColumn" Key="Shift+Right" Preview="True" />
+			<Assign Action="Deselect" Key="Escape" />
+			<Assign Action="MoveTop" Key="0" />
+			<!-- Action -->
+			<Assign Action="Mention" Key="R" />
+			<Assign Action="Mention" Key="Space" Preview="True" />
+			<Assign Action="Favorite" Key="F" />
+			<Assign Action="FavoriteMulti" Key="Shift+F" />
+			<Assign Action="Retweet" Key="Ctrl+R" />
+			<Assign Action="RetweetMulti" Key="Ctrl+Shift+R" />
+			<Assign Action="UnofficialRetweet" Key="Ctrl+Shift+R" />
+			<Assign Action="QuoteTweet" Key="Ctrl+Q" />
+			<Assign Action="Delete" Key="Delete" />
+			<Assign Action="Search" Key="F3" Preview="True" />
+      <Assign Action="RemoveViewStackTop" Key="F4" Preview="True" />
+      <Assign Action="CloseTab" Key="Ctrl+F4" Preview="True" />
+      <Assign Action="CreateTab" Key="Ctrl+N" Preview="True" />
+		</AssignGroup>
+		<AssignGroup Region="Input">
+			<Assign Action="Post" Key="Ctrl+Enter" Preview="True" />
+			<Assign Action="PostAndClose" Key="Ctrl+Shift+Enter" Preview="True" />
+			<Assign Action="CloseInput" Key="Escape" Preview="True" />
+		</AssignGroup>
+	</AssignGroups>
+</KeyAssign>

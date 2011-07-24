@@ -12,13 +12,15 @@
         xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
         xmlns:my="clr-namespace:Mystique.Views.PartBlocks.ModalParts"
         xmlns:nb="clr-namespace:Mystique.Views.PartBlocks.NotifyBlock"
-        xmlns:vm="clr-namespace:Inscribe.ViewModels;assembly=Inscribe"
+        xmlns:vm="clr-namespace:Inscribe.ViewModels;assembly=core"
         Title="{Binding Title}"
         Width="800"
         Height="500"
         Closing="Window_Closing"
-        Icon="/Mystique;component/Resources/krile.ico"
+        Icon="/krile;component/Resources/krile.ico"
+        KeyDown="Window_KeyDown"
         Loaded="Window_Loaded"
+        PreviewKeyDown="Window_PreviewKeyDown"
         ResizeMode="CanResizeWithGrip">
     <Window.DataContext>
         <vm:MainWindowViewModel />
@@ -54,6 +56,8 @@
             <!--  STATUS BAR AREA  -->
             <nb:NotifyBlock Grid.Row="3" DataContext="{Binding NotifyBlockViewModel}" />
         </Grid>
-        <my:UserSelection Visibility="{Binding IsVisibleUserSelection, Converter={StaticResource BoolVisibleConverter}}" />
+        <Grid Visibility="{Binding IsVisibleUserSelection, Converter={StaticResource BoolVisibleConverter}}">
+            <my:UserSelection DataContext="{Binding UserSelectionViewModel}" />
+        </Grid>
     </Grid>
 </Window>

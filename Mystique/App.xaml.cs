@@ -3,6 +3,9 @@ using System.Windows;
 using Inscribe.Core;
 using Inscribe.Threading;
 using Livet;
+using System.Text;
+using System.IO;
+using Inscribe;
 
 namespace Mystique
 {
@@ -32,7 +35,16 @@ namespace Mystique
             //TODO:ロギング処理など
             System.Diagnostics.Debug.WriteLine("ERROR THROWN:");
             System.Diagnostics.Debug.WriteLine(e.ExceptionObject);
-
+            StringBuilder body = new StringBuilder();
+            body.AppendLine("********************************************************************************");
+            body.AppendLine(" ERROR TRACE: " + DateTime.Now.ToString());
+            body.AppendLine("********************************************************************************");
+            body.AppendLine(e.ToString());
+            body.AppendLine();
+            body.AppendLine("MEMORY USAGE:");
+            var cp = System.Diagnostics.Process.GetCurrentProcess();
+            body.AppendLine("paged:" + cp.PagedMemorySize64 + " / peak-virtual:" + cp.PeakVirtualMemorySize64);
+            System.IO.File.AppendAllText(Path.Combine(Path.GetDirectoryName(Define.GetExecutingPath()), "unhandled.txt"), body.ToString());
             // Environment.Exit(1);
         }
     }

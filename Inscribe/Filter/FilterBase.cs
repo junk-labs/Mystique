@@ -32,6 +32,7 @@ namespace Inscribe.Filter
         /// </summary>
         protected void RaiseRequireReaccept()
         {
+            System.Diagnostics.Debug.WriteLine("raising reacception");
             RequireReaccept();
         }
 

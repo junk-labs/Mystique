@@ -53,7 +53,6 @@ namespace Inscribe.Storage
 
         #endregion
       
-      
         #region EventChangedイベント
 
         public static event EventHandler<EventArgs> EventChanged;
@@ -76,7 +75,6 @@ namespace Inscribe.Storage
         }
 
         #endregion
-      
 
         public static void OnRetweeted(TweetViewModel tweet, UserViewModel retweeter)
         {

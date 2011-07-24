@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Supervisor.Random
+namespace Inscribe.Random
 {
     /// <summary>
     /// 各種擬似乱数ジェネレーター用基底クラス。

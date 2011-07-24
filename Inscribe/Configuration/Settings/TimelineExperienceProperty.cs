@@ -17,6 +17,11 @@ namespace Inscribe.Configuration.Settings
             TimelineItemInitStrategy = ItemInitStrategy.DefaultColors;
             TimelineItemResetBreakCount = 50;
             TimelineItemResetBreakWait = 250;
+            KeywordSearchTransition = TransitionMethod.ViewStack;
+            UserExtractTransition = TransitionMethod.AddTab;
+            ConversationTransition = TransitionMethod.ViewStack;
+            IsShowConversationTree = true;
+            MoveUpToDeselect = true;
         }
 
         public bool FastScrolling { get; set; }
@@ -56,6 +61,21 @@ namespace Inscribe.Configuration.Settings
         /// </summary>
         public int TimelineItemResetBreakWait { get; set; }
 
+        public TransitionMethod KeywordSearchTransition { get; set; }
+
+        public TransitionMethod UserExtractTransition { get; set; }
+
+        public TransitionMethod ConversationTransition { get; set; }
+
+        /// <summary>
+        /// 会話をツリーとして展開するか
+        /// </summary>
+        public bool IsShowConversationTree { get; set; }
+
+        /// <summary>
+        /// タイムラインの一番上の要素を選択している時にさらに上に移動しようとした時、選択を外す
+        /// </summary>
+        public bool MoveUpToDeselect { get; set; }
     }
 
     /// <summary>

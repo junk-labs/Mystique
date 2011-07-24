@@ -1,27 +1,37 @@
-﻿<UserControl xmlns:my="clr-namespace:Mystique.Views.Common" x:Class="Mystique.Views.Common.UserSelector"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="300"
-        d:DesignWidth="300">
+﻿<UserControl x:Class="Mystique.Views.Common.UserSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:my="clr-namespace:Mystique.Views.Common"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
     <UserControl.Resources>
-        <BitmapImage UriSource="/Resources/bullet_green.png" x:Key="CheckAll" />
-        <BitmapImage UriSource="/Resources/bullet_red.png" x:Key="UncheckAll" />
+        <BitmapImage x:Key="CheckAll" UriSource="/Resources/bullet_green.png" />
+        <BitmapImage x:Key="UncheckAll" UriSource="/Resources/bullet_red.png" />
+        <BitmapImage x:Key="Painting" UriSource="/Resources/painting.png" />
     </UserControl.Resources>
-        <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical">
         <ItemsControl MaxWidth="480" ItemsSource="{Binding LinkDatas}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <WrapPanel HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <ToggleButton IsChecked="{Binding IsLink, Mode=TwoWay}">
                         <ToggleButton.InputBindings>
-                            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding SelectThisCommand}" />
+                            <MouseBinding Command="{Binding SelectThisCommand}" MouseAction="LeftDoubleClick" />
                         </ToggleButton.InputBindings>
-                        <my:LazyImage Margin="2" Width="32" Height="32" UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
+                        <my:LazyImage Width="32"
+                                      Height="32"
+                                      Margin="2"
+                                      DefaultImage="{StaticResource Painting}"
+                                      UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
                         <ToggleButton.ToolTip>
                             <StackPanel Orientation="Vertical">
                                 <TextBlock FontWeight="Bold" Text="{Binding ScreenName, StringFormat=@{0}, Mode=OneWay}" />
@@ -33,11 +43,17 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <StackPanel Orientation="Horizontal">
-            <Button ToolTip="全てチェックする" Command="{Binding CheckAllCommand}">
-                <Image Source="{StaticResource CheckAll}" Width="8" Height="8" Margin="2" />
+            <Button Command="{Binding CheckAllCommand}" ToolTip="全てチェックする">
+                <Image Width="8"
+                       Height="8"
+                       Margin="2"
+                       Source="{StaticResource CheckAll}" />
             </Button>
-            <Button ToolTip="全てチェックを外す" Command="{Binding UncheckAllCommand}">
-                <Image Source="{StaticResource UncheckAll}" Width="8" Height="8" Margin="2" />
+            <Button Command="{Binding UncheckAllCommand}" ToolTip="全てチェックを外す">
+                <Image Width="8"
+                       Height="8"
+                       Margin="2"
+                       Source="{StaticResource UncheckAll}" />
             </Button>
         </StackPanel>
     </StackPanel>

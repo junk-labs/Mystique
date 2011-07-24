@@ -14,6 +14,8 @@
              xmlns:v="clr-namespace:Mystique.Views"
              d:DesignHeight="200"
              d:DesignWidth="500"
+             KeyDown="UserControl_KeyDown"
+             PreviewKeyDown="UserControl_PreviewKeyDown"
              mc:Ignorable="d">
     <i:Interaction.Triggers>
         <l:InteractionMessageTrigger MessageKey="OpenFile" Messenger="{Binding Messenger}">
@@ -91,6 +93,7 @@
                 <com:DropDownButton.DropDownMenu>
                     <ContextMenu>
                         <MenuItem Command="{Binding ShowConfigCommand}" Header="設定(_S)..." />
+                        <MenuItem Header="キーアサイン ビューア(_K)..." />
                         <Separator />
                         <MenuItem Header="ヘルプ(_H)...">
                             <MenuItem Header="チュートリアル(_C)..." />
@@ -98,7 +101,7 @@
                             <Separator />
                             <MenuItem Command="{Binding ShowAboutCommand}" Header="バージョン情報(_A)..." />
                         </MenuItem>
-                        <MenuItem Header="Krileを終了(_X)" />
+                        <MenuItem Command="{Binding ExitCommand}" Header="Krileを終了(_X)" />
                     </ContextMenu>
                 </com:DropDownButton.DropDownMenu>
             </com:DropDownButton>

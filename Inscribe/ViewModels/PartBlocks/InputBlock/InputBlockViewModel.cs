@@ -15,6 +15,8 @@ using Livet.Commands;
 using Livet.Messaging;
 using Mystique.Views.Behaviors.Messages;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Inscribe.Configuration.KeyAssignment;
+using System.Windows;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -30,6 +32,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
             // Listen changing tab
             this.Parent.ColumnOwnerViewModel.CurrentTabChanged += new Action<TabViewModel>(CurrentTabChanged);
+            RegisterKeyAssign();
         }
 
         void UserSelectorLinkChanged(object sender, EventArgs e)
@@ -78,7 +81,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
         #endregion
 
-
         #region ShowAboutCommand
         DelegateCommand _ShowAboutCommand;
 
@@ -97,6 +99,25 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             Messenger.Raise(new TransitionMessage("ShowAbout"));
         }
         #endregion
+
+        #region ExitCommand
+        DelegateCommand _ExitCommand;
+
+        public DelegateCommand ExitCommand
+        {
+            get
+            {
+                if (_ExitCommand == null)
+                    _ExitCommand = new DelegateCommand(Exit);
+                return _ExitCommand;
+            }
+        }
+
+        private void Exit()
+        {
+            Application.Current.Shutdown();
+        }
+        #endregion
       
 
         #endregion
@@ -110,6 +131,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             {
                 if (this._currentInputDescription == null)
                 {
+                    System.Diagnostics.Debug.WriteLine("input description initialized");
                     this._currentInputDescription = new InputDescription();
                     this._currentInputDescription.PropertyChanged += (o, e) => UpdateCommand.RaiseCanExecuteChanged();
                 }
@@ -119,6 +141,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         private void ResetInputDescription()
         {
+            System.Diagnostics.Debug.WriteLine("input description resetted");
             this._currentInputDescription = null;
             this.overrideTargets = null;
             RaisePropertyChanged(() => CurrentInputDescription);
@@ -150,16 +173,20 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     var screens = SplitTweet(this.CurrentInputDescription.InputText, out remain);
                     if (screens.FirstOrDefault(s => s.Equals(tweet.Status.User.ScreenName, StringComparison.CurrentCultureIgnoreCase)) != null)
                     {
+                        // 選択ユーザーのスクリーン名だけ抜く
                         this.CurrentInputDescription.InputText = "." +
-                            screens.Where(s => s.Equals(tweet.Status.User.ScreenName, StringComparison.CurrentCultureIgnoreCase)).JoinString(" ") + " " +
+                            screens.Where(s => !s.Equals(tweet.Status.User.ScreenName, StringComparison.CurrentCultureIgnoreCase))
+                            .Select(s => "@" + s)
+                            .JoinString(" ") + " " +
                             remain;
                     }
                     else
                     {
                         this.CurrentInputDescription.InputText = "." +
-                            screens.JoinString(" ") + " " +
-                            tweet.Status.User.ScreenName + " " +
+                            screens.Select(s => "@" + s).JoinString(" ") + " " +
+                            "@" + tweet.Status.User.ScreenName + " " +
                             remain;
+                        this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                     }
                     this.CurrentInputDescription.InReplyToId = 0;
                 }
@@ -176,10 +203,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         string remain;
                         var screens = SplitTweet(this.CurrentInputDescription.InputText, out remain);
                         this.CurrentInputDescription.InputText = "." +
-                            screens.JoinString(" ") + " " +
-                            tweet.Status.User.ScreenName +  " " +
+                            screens.Select(s => "@" + s).JoinString(" ") + " " +
+                            "@" + tweet.Status.User.ScreenName +  " " +
                             remain;
                         this.CurrentInputDescription.InReplyToId = 0;
+                        this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                     }
                     this.overrideTargets = null;
                 }
@@ -190,7 +218,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     if (tweet.Status is TwitterDirectMessage)
                     {
                         this.OverrideTarget(new[] { AccountStorage.Get(((TwitterDirectMessage)tweet.Status).Recipient.ScreenName) });
-                        this.CurrentInputDescription.InputText = "d @" + tweet.Status.User.ScreenName;
+                        this.CurrentInputDescription.InputText = "d @" + tweet.Status.User.ScreenName + " ";
                     }
                     else
                     {
@@ -198,8 +226,9 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         {
                             this.OverrideTarget(new[] { AccountStorage.Get(((TwitterStatus)tweet.Status).InReplyToUserScreenName) });
                         }
-                        this.CurrentInputDescription.InputText = "@" + tweet.Status.User.ScreenName;
+                        this.CurrentInputDescription.InputText = "@" + tweet.Status.User.ScreenName + " ";
                     }
+                    this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                 }
             }
         }
@@ -220,7 +249,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     c => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_'))
                 {
                     // valid screen name
-                    screens.Add(splitted[i]);
+                    screens.Add(splitted[i].Substring(1));
                 }
                 else
                 {
@@ -297,8 +326,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public void SetOpenText(bool isOpen, bool setFocus = false)
         {
-            this.IsOpenInput = isOpen;
-            ResetInputDescription();
+            if (this.IsOpenInput != isOpen)
+            {
+                this.IsOpenInput = isOpen;
+                ResetInputDescription();
+            }
             if (setFocus && isOpen)
                 this.Messenger.Raise(new InteractionMessage("FocusToText"));
         }
@@ -470,6 +502,30 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
 
         #endregion
+        
+        #region KeyAssign
 
+        public void RegisterKeyAssign()
+        {
+            KeyAssign.RegisterOperation("OpenInput", () => this.OpenInput());
+            KeyAssign.RegisterOperation("CloseInput", () => 
+            {
+                this.CloseInput();
+                this.Parent.ColumnOwnerViewModel.SetFocus();
+            });
+            KeyAssign.RegisterOperation("RemoveInReplyTo", () => this.RemoveInReplyTo());
+            KeyAssign.RegisterOperation("AttachImage", () => this.AttachImage());
+            KeyAssign.RegisterOperation("Post", () => this.Update());
+            KeyAssign.RegisterOperation("PostAndClose", () =>
+            {
+                this.Update();
+                this.CloseInput();
+                this.Parent.ColumnOwnerViewModel.SetFocus();
+            });
+            KeyAssign.RegisterOperation("ShowConfig", () => this.ShowConfig());
+            KeyAssign.RegisterOperation("ShowAbout", () => this.ShowAbout());
+        }
+
+        #endregion
     }
 }

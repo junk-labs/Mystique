@@ -5,6 +5,9 @@ using System.Linq;
 using Inscribe.Filter;
 using Livet;
 using Inscribe.Configuration;
+using Inscribe.Configuration.KeyAssignment;
+using Inscribe.ViewModels.Behaviors.Messaging;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -17,6 +20,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.Parent = parent;
             this.CurrentFocusColumn = CreateColumn();
             Setting.Instance.StateProperty.TabPropertyProvider = () => Columns.Select(cvm => cvm.TabItems.Select(s => s.TabProperty));
+            RegisterKeyAssign();
         }
 
         private ObservableCollection<ColumnViewModel> _columns = new ObservableCollection<ColumnViewModel>();
@@ -50,7 +54,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 .ForEach(v => this._columns.Remove(v));
             // 少なくとも1つのカラムは必要
             if (this._columns.Count == 0)
-                this._columns.Add(new ColumnViewModel(this));
+                CreateColumn();
         }
 
         private ColumnViewModel _currentFocusColumn = null;
@@ -75,7 +79,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public TabViewModel CurrentTab
         {
-            get { return this.CurrentFocusColumn.SelectedTabViewModel; }
+            get
+            {
+                if (this.CurrentFocusColumn == null)
+                    return null;
+                return this.CurrentFocusColumn.SelectedTabViewModel;
+            }
         }
 
         public event Action<TabViewModel> CurrentTabChanged;
@@ -108,6 +117,114 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             this.CurrentFocusColumn.SetFocus();
         }
+
+        #region KeyAssign
+
+        public void RegisterKeyAssign()
+        {
+            // Moving focus
+            KeyAssign.RegisterOperation("FocusToTimeline", this.SetFocus);
+            KeyAssign.RegisterOperation("MoveLeft", () => MoveHorizontal(false, false));
+            KeyAssign.RegisterOperation("MoveLeftColumn", () => MoveHorizontal(false, true));
+            KeyAssign.RegisterOperation("MoveRight", () => MoveHorizontal(true, false));
+            KeyAssign.RegisterOperation("MoveRightColumn", () => MoveHorizontal(true, true));
+            KeyAssign.RegisterOperation("MoveDown", () => MoveVertical(ListSelectionKind.SelectBelow));
+            KeyAssign.RegisterOperation("MoveUp", () => MoveVertical(ListSelectionKind.SelectAbove));
+            KeyAssign.RegisterOperation("MoveTop", () => MoveVertical(ListSelectionKind.SelectFirst));
+            KeyAssign.RegisterOperation("MoveBottom", () => MoveVertical(ListSelectionKind.SelectLast));
+            KeyAssign.RegisterOperation("Deselect", () => MoveVertical(ListSelectionKind.Deselect));
+
+            // Timeline action
+            KeyAssign.RegisterOperation("Mention", () => ExecTVMAction(vm => vm.MentionCommand.Execute()));
+            KeyAssign.RegisterOperation("Favorite", ()=>ExecTVMAction(vm => vm.FavoriteCommand.Execute()));
+            KeyAssign.RegisterOperation("FavoriteMulti", ()=>ExecTVMAction(vm => vm.FavoriteMultiUserCommand.Execute()));
+            KeyAssign.RegisterOperation("Retweet", ()=>ExecTVMAction(vm => vm.RetweetCommand.Execute()));
+            KeyAssign.RegisterOperation("RetweetMulti", ()=>ExecTVMAction(vm => vm.RetweetMultiUserCommand.Execute()));
+            KeyAssign.RegisterOperation("UnofficialRetweet", () => ExecTVMAction(vm => vm.UnofficialRetweetCommand.Execute()));
+            KeyAssign.RegisterOperation("QuoteTweet", () => ExecTVMAction(vm => vm.QuoteCommand.Execute()));
+            KeyAssign.RegisterOperation("Delete", () => ExecTVMAction(vm => vm.DeleteCommand.Execute()));
+            KeyAssign.RegisterOperation("ReportForSpam", () => ExecTVMAction(vm => vm.ReportForSpamCommand.Execute()));
+            KeyAssign.RegisterOperation("ShowConversation", () => ExecTVMAction(vm => vm.OpenConversationCommand.Execute()));
+            KeyAssign.RegisterOperation("CreateSelectedUserTab", () => ExecTVMAction(vm => vm.CreateUserTabCommand.Execute()));
+            KeyAssign.RegisterOperation("OpenTweetWeb", () => ExecTVMAction(vm => vm.Tweet.ShowTweetCommand.Execute()));
+
+            // Tab Action
+            KeyAssign.RegisterOperation("Search", () => ExecTabAction(vm => vm.AddTopTimeline(null)));
+            KeyAssign.RegisterOperation("RemoveViewStackTop", () => ExecTabAction(vm => vm.RemoveTopTimeline(false)));
+            KeyAssign.RegisterOperation("RemoveViewStackAll", () => ExecTabAction(vm => vm.RemoveTopTimeline(true)));
+            KeyAssign.RegisterOperation("CreateTab", () => ExecTabAction(vm => vm.Parent.AddNewTabCommand.Execute()));
+            KeyAssign.RegisterOperation("CloseTab", () => ExecTabAction(vm => vm.Parent.CloseTab(vm)));
+        }
+
+        private void MoveHorizontal(bool directionRight, bool moveInColumn)
+        {
+            var cc = this.CurrentFocusColumn;
+            if (cc == null) return;
+            int idxofc = this.Columns.IndexOf(cc);
+            int idx = cc.TabItems.IndexOf(cc.SelectedTabViewModel);
+            if (directionRight)
+            {
+                idx++;
+                // →
+                if (idx >= cc.TabItems.Count || moveInColumn)
+                {
+                    // move column
+                    idx = 0;
+                    idxofc++;
+                    idxofc %= this.Columns.Count;
+                    this.CurrentFocusColumn = this.Columns[idxofc];
+                    this.CurrentFocusColumn.SelectedTabViewModel = this.CurrentFocusColumn.TabItems[0];
+                }
+                else
+                {
+                    cc.SelectedTabViewModel = cc.TabItems[idx];
+                }
+            }
+            else
+            {
+                // ←
+                idx--;
+                if (idx < 0 || moveInColumn)
+                {
+                    idx = 0;
+                    idxofc--;
+                    idxofc += this.Columns.Count;
+                    idxofc %= this.Columns.Count;
+                    this.CurrentFocusColumn = this.Columns[idxofc];
+                    this.CurrentFocusColumn.SelectedTabViewModel = this.CurrentFocusColumn.TabItems[this.CurrentFocusColumn.TabItems.Count - 1];
+                }
+                else
+                {
+                    cc.SelectedTabViewModel = cc.TabItems[idx];
+                }
+            }
+        }
+
+        private void MoveVertical(ListSelectionKind selectKind)
+        {
+            var cc = this.CurrentTab == null ? null :this.CurrentTab.CurrentForegroundTimeline;
+            if (selectKind == ListSelectionKind.SelectAbove && Setting.Instance.TimelineExperienceProperty.MoveUpToDeselect)
+                selectKind = ListSelectionKind.SelectAboveAndNull;
+            if (cc != null)
+                cc.SetSelect(selectKind);
+        }
+
+        private void ExecTabAction(Action<TabViewModel> action)
+        {
+            if (this.CurrentTab != null)
+                action(this.CurrentTab);
+        }
+
+        private void ExecTVMAction(Action<TabDependentTweetViewModel> action)
+        {
+            var cc = this.CurrentTab != null ? this.CurrentTab.CurrentForegroundTimeline : null;
+            if (cc == null) return;
+            var vm = cc.SelectedTweetViewModel;
+            if (vm == null) return;
+            action(vm);
+        }
+
+        #endregion
     }
 
     public enum ColumnsLocation

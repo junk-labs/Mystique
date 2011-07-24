@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO.Packaging;
 
 namespace Inscribe.Common
 {
@@ -11,13 +12,13 @@ namespace Inscribe.Common
         {
             if (!relativePath.StartsWith("/"))
                 relativePath = "/" + relativePath;
-            return new Uri("pack://application:,,," + relativePath);
+            return PackUriHelper.Create(new Uri("application:///"),
+                new Uri(relativePath, UriKind.Relative));
         }
 
         public static Uri ToPackUri(this Uri relativePath)
         {
             return ToPackUri(relativePath.OriginalString);
         }
-
     }
 }

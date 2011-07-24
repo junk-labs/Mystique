@@ -1,10 +1,15 @@
-﻿<UserControl xmlns:my="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
-        x:Class="Mystique.Views.PartBlocks.MainBlock.ColumnOwner"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
-        xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular" d:DesignHeight="300" d:DesignWidth="300">
+﻿<UserControl x:Class="Mystique.Views.PartBlocks.MainBlock.ColumnOwner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:my="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             KeyDown="UserControl_KeyDown"
+             PreviewKeyDown="UserControl_PreviewKeyDown"
+             mc:Ignorable="d">
     <UserControl.Resources>
         <cp:TwoOrMoreVisibleConverter x:Key="TwoOrMoreVisibleConverter" />
     </UserControl.Resources>

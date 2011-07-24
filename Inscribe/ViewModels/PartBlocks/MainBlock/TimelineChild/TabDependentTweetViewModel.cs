@@ -13,6 +13,16 @@ using Inscribe.Storage;
 using Inscribe.Threading;
 using Livet;
 using Livet.Commands;
+using Inscribe.Communication.Posting;
+using Dulcet.Twitter.Rest;
+using Livet.Messaging;
+using Inscribe.Communication;
+using Inscribe.Filter.Filters.Numeric;
+using Inscribe.Filter.Filters.Text;
+using Inscribe.Filter.Filters.Particular;
+using Inscribe.Filter;
+using System.Collections.Generic;
+using Inscribe.Filter.Filters.ScreenName;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -380,6 +390,62 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             return Tweet.GetHashCode();
         }
 
+        #region Navigation Commands
+
+        #region OpenConversationCommand
+        DelegateCommand _OpenConversationCommand;
+
+        public DelegateCommand OpenConversationCommand
+        {
+            get
+            {
+                if (_OpenConversationCommand == null)
+                    _OpenConversationCommand = new DelegateCommand(OpenConversation);
+                return _OpenConversationCommand;
+            }
+        }
+
+        private void OpenConversation()
+        {
+
+            IEnumerable<IFilter> filter = null;
+            string description = String.Empty;
+            if (Setting.Instance.TimelineExperienceProperty.IsShowConversationTree)
+            {
+                filter = new[] { new FilterMentionTree(this.Tweet.Status.Id) };
+                description = "@#" + this.Tweet.Status.Id.ToString();
+            }
+            else
+            {
+                filter = new[] { new FilterConversation(this.Tweet.Status.User.ScreenName, ((TwitterStatus)this.Tweet.Status).InReplyToUserScreenName) };
+                description = "Cv:@" + this.Tweet.Status.User.ScreenName + "&@" + ((TwitterStatus)this.Tweet.Status).InReplyToUserScreenName;
+            }
+            switch (Setting.Instance.TimelineExperienceProperty.ConversationTransition)
+            {
+                case TransitionMethod.ViewStack:
+                    this.Parent.AddTopTimeline(filter);
+                    break;
+                case TransitionMethod.AddTab:
+                    this.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty()
+                    {
+                        Name = description,
+                        TweetSources = filter
+                    });
+                    break;
+                case TransitionMethod.AddColumn:
+                    var column = this.Parent.Parent.Parent.CreateColumn();
+                    column.AddTab(new Configuration.Tabs.TabProperty()
+                    {
+                        Name = description,
+                        TweetSources = filter
+                    });
+                    break;
+            }
+        }
+        #endregion
+      
+        #endregion
+
         #region Timeline Action Commands
 
         #region MentionCommand
@@ -397,6 +463,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Mention()
         {
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(this.Tweet);
         }
         #endregion
 
@@ -415,7 +483,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Favorite()
         {
-            // TODO:Implementation
+            PostOffice.FavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
         }
         #endregion
 
@@ -434,7 +502,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void FavoriteMultiUser()
         {
-            // TODO:Implementation
+            this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.Favorite, this.Parent.TabProperty.LinkAccountInfos, u => PostOffice.FavTweet(u, this.Tweet));
         }
         #endregion
 
@@ -453,7 +521,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Retweet()
         {
-            // TODO:Implementation
+            PostOffice.Retweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
         }
         #endregion
 
@@ -472,7 +540,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void RetweetMultiUser()
         {
-            // TODO:Implementation
+            this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.Retweet, this.Parent.TabProperty.LinkAccountInfos, u => PostOffice.Retweet(u, this.Tweet));
         }
         #endregion
 
@@ -491,7 +559,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void UnofficialRetweet()
         {
-            // TODO:Implementation
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
+            var status = this.Tweet.Status;
+            if(status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
+                status = ((TwitterStatus)status).RetweetedOriginal;
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText("RT @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Text);
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInputCaretIndex(0);
         }
         #endregion
       
@@ -510,7 +583,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Quote()
         {
-            // TODO:Implementation
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(null);
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(this.Tweet);
+            var status = this.Tweet.Status;
+            if (status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
+                status = ((TwitterStatus)status).RetweetedOriginal;
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText("RT @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Text);
+
         }
         #endregion
 
@@ -529,26 +609,41 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Delete()
         {
-            // TODO:Implementation
+            if (!this.Tweet.ShowDeleteButton) return;
+            var conf = new ConfirmationMessage("ツイート @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Status.Text + " を削除してもよろしいですか？", 
+                "ツイートの削除", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
+            this.Messenger.Raise(conf);
+            if (conf.Response)
+            {
+                PostOffice.RemoveTweet(AccountStorage.Get(this.Tweet.Status.User.ScreenName), this.Tweet.Status.Id);
+            }
         }
         #endregion
 
-        #region ReportAsSpamCommand
-        DelegateCommand _ReportAsSpamCommand;
+        #region ReportForSpamCommand
+        DelegateCommand _ReportForSpamCommand;
 
-        public DelegateCommand ReportAsSpamCommand
+        public DelegateCommand ReportForSpamCommand
         {
             get
             {
-                if (_ReportAsSpamCommand == null)
-                    _ReportAsSpamCommand = new DelegateCommand(ReportAsSpam);
-                return _ReportAsSpamCommand;
+                if (_ReportForSpamCommand == null)
+                    _ReportForSpamCommand = new DelegateCommand(ReportForSpam);
+                return _ReportForSpamCommand;
             }
         }
 
-        private void ReportAsSpam()
+        private void ReportForSpam()
         {
-            // TODO:Implementation
+            var conf = new ConfirmationMessage("ユーザー @" + this.Tweet.Status.User.ScreenName + " をスパム報告してもよろしいですか？" + Environment.NewLine +
+                "(Krileに存在するすべてのアカウントでスパム報告を行います)",
+                "スパム報告の確認", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
+            this.Messenger.Raise(conf);
+            if (conf.Response)
+            {
+                AccountStorage.Accounts.ForEach(i => Task.Factory.StartNew(() => ApiHelper.ExecApi(() => i.ReportSpam(this.Tweet.Status.User.NumericId))));
+                TweetStorage.Remove(this.Tweet.Status.Id);
+            }
         }
         #endregion
       
@@ -586,7 +681,20 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void CreateUserTab()
         {
-            // TODO:Implementation
+            var filter = new[] { new FilterUser(this.Tweet.Status.User.ScreenName) };
+            switch (Setting.Instance.TimelineExperienceProperty.UserExtractTransition)
+            {
+                case TransitionMethod.ViewStack:
+                    this.Parent.AddTopTimeline(filter);
+                    break;
+                case TransitionMethod.AddTab:
+                    this.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty() { Name = "@" + this.Tweet.Status.User.ScreenName, TweetSources = filter });
+                    break;
+                case TransitionMethod.AddColumn:
+                    var column = this.Parent.Parent.Parent.CreateColumn();
+                    column.AddTab(new Configuration.Tabs.TabProperty() { Name = "@" + this.Tweet.Status.User.ScreenName, TweetSources = filter });
+                    break;
+            }
         }
         #endregion
 

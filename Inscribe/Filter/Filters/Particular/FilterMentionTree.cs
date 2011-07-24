@@ -33,27 +33,41 @@ namespace Inscribe.Filter.Filters.Particular
         {
             origTracePoint = id;
             tracePoint = id;
-            Task.Factory.StartNew(() => RecursiveCheckId(id)).ContinueWith(_ => RaiseRequireReaccept());
+            Task.Factory.StartNew(() => RecursiveCheckId(id));
         }
 
         private void RecursiveCheckId(long id)
         {
-            if (id == 0) return;
+            if (id == 0)
+            {
+                RaiseRequireReaccept();
+                return;
+            }
             var cont = TweetStorage.Contains(id);
             if (cont == TweetExistState.Exists)
             {
                 // データをチェックして、先があれば再帰
                 var tweet = TweetStorage.Get(id);
-                if (tweet == null) return;
+                if (tweet == null)
+                {
+                    RaiseRequireReaccept();
+                    return;
+                }
                 var ts = tweet.Status as TwitterStatus;
-                if (ts == null) return;
-                if (ts.InReplyToStatusId == 0) return;
-                this.tracePoint = ts.InReplyToStatusId;
-                RecursiveCheckId(ts.InReplyToStatusId);
+                if (ts != null && ts.InReplyToStatusId != 0)
+                {
+                    this.tracePoint = ts.InReplyToStatusId;
+                    RecursiveCheckId(ts.InReplyToStatusId);
+                }
+                else
+                {
+                    RaiseRequireReaccept();
+                }
             }
             else if (cont == TweetExistState.ServerDeleted)
             {
                 // 消されてるからダメ
+                RaiseRequireReaccept();
                 return;
             }
             else
@@ -68,7 +82,11 @@ namespace Inscribe.Filter.Filters.Particular
                         if (status != null)
                         {
                             TweetStorage.Register(status);
-                            Task.Factory.StartNew(() => RecursiveCheckId(id)).ContinueWith(_ => RaiseRequireReaccept());
+                            Task.Factory.StartNew(() => RecursiveCheckId(id));
+                        }
+                        else
+                        {
+                            RaiseRequireReaccept();
                         }
                     }
                     catch (Exception e)
@@ -93,7 +111,7 @@ namespace Inscribe.Filter.Filters.Particular
             if (vm.Status.Id == tracePoint)
                 return true;
             var ts = vm.Status as TwitterStatus;
-            if (ts.InReplyToStatusId == 0)
+            if (ts == null || ts.InReplyToStatusId == 0)
                 return false;
             else
                 return TraceId(ts.InReplyToStatusId);

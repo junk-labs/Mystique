@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Inscribe.Configuration;
+using Inscribe.Configuration.KeyAssignment;
 
 namespace Mystique.Views
 {
@@ -35,6 +36,16 @@ namespace Mystique.Views
                 Setting.Instance.StateProperty.WindowPosition = rect;
                 Setting.Instance.StateProperty.WindowState = this.WindowState;
             }
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            KeyAssign.HandleEvent(e, AssignRegion.General);
+        }
+
+        private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            KeyAssign.HandlePreviewEvent(e, AssignRegion.General);
         }
     }
 }

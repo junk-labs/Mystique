@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Supervisor.Random
+namespace Inscribe.Random
 {
     /// <summary>
     /// SFMTの擬似乱数ジェネレータークラス。

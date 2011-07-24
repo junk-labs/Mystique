@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using Inscribe.Caching;
 using System.Windows.Threading;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Mystique.Views.Common
 {
@@ -47,33 +48,46 @@ namespace Mystique.Views.Common
             var img = o as LazyImage;
             var uri = e.NewValue as Uri;
             if (img == null) return;
-            taskrun.Enqueue(() =>
+            if (uri != null)
             {
-                if (uri != null)
+                if (uri.Scheme == "pack")
                 {
-                    var bi = ImageCacheStorage.DownloadImage(uri);
-                    if (bi != null)
-                    {
-                        img.Dispatcher.BeginInvoke(() =>
-                        {
-                            try
-                            {
-                                if (img.UriSource == uri)
-                                    img.Source = bi.Clone();
-                            }
-                            catch { }
-                        }, DispatcherPriority.ContextIdle);
-
-                    }
+                    SetImage(img, new BitmapImage(uri), uri);
                 }
                 else
                 {
-                    img.Dispatcher.BeginInvoke(() =>
+                    var cache = ImageCacheStorage.GetImageCache(uri);
+                    if (cache != null)
                     {
-                        img.Source = img.DefaultImage;
-                    }, DispatcherPriority.ContextIdle);
+                        SetImage(img, cache, uri);
+                    }
+                    else
+                    {
+                        img.Dispatcher.BeginInvoke(() => img.Source = img.DefaultImage);
+                        taskrun.Enqueue(() =>
+                        {
+                            var bi = ImageCacheStorage.DownloadImage(uri);
+                            SetImage(img, bi, uri);
+                        });
+                    }
                 }
-            });
+            }
+        }
+
+        private static void SetImage(LazyImage image, ImageSource bitmap, Uri checkUri)
+        {
+            if (bitmap != null)
+            {
+                image.Dispatcher.BeginInvoke(() =>
+                {
+                    try
+                    {
+                        if (checkUri == null || image.UriSource == checkUri)
+                            image.Source = bitmap;
+                    }
+                    catch { }
+                }, DispatcherPriority.ContextIdle);
+            }
         }
     }
 }

@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using Dulcet.Twitter;
+using Inscribe.Commnuication.CruiseControl.Core;
 using Inscribe.Storage;
-using Supervisor;
 
 namespace Inscribe.Communication.CruiseControl
 {
@@ -23,7 +23,7 @@ namespace Inscribe.Communication.CruiseControl
             {
                 var t = DateTime.Now.Subtract(previousReceived).TotalMilliseconds;
                 var tp = t * newbiesRate;
-                return tp / (tp + this.ReceiveCount * timesPerTweet);
+                return Math.Sqrt(tp / (tp + this.ReceiveCount * timesPerTweet));
             }
         }
 

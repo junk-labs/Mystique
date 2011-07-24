@@ -4,6 +4,7 @@ using System.Windows;
 using Inscribe.Common;
 using Inscribe.Communication.Streaming;
 using Inscribe.Configuration;
+using Inscribe.Configuration.KeyAssignment;
 
 namespace Inscribe.Core
 {
@@ -22,6 +23,7 @@ namespace Inscribe.Core
             Dulcet.Network.Http.Expect100Continue = false;
             Dulcet.Network.Http.MaxConnectionLimit = Int32.MaxValue;
             Setting.Initialize();
+            KeyAssign.ReloadAssign();
             UpdateReceiver.Start();
             Application.Current.Exit += new ExitEventHandler(AppExit);
         }

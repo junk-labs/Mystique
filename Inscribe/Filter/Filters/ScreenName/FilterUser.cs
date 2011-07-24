@@ -1,7 +1,11 @@
-﻿
-namespace Inscribe.Filter.Filters.Text
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Inscribe.Filter.Filters.ScreenName
 {
-    public class FilterUser : TextFilterBase
+    public class FilterUser : ScreenNameFilterBase
     {
         private FilterUser() { }
 

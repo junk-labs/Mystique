@@ -33,5 +33,10 @@ namespace Dulcet.Twitter
         }
 
         public TwitterUser Recipient { get; set; }
+
+        public override string ToString()
+        {
+            return "@" + this.Sender.ScreenName + ": " + this.Text;
+        }
     }
 }

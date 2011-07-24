@@ -9,7 +9,6 @@ namespace Inscribe.Configuration.KeyAssignment
     {
         General,
         Timeline,
-        TweetBox,
-        SideView,
+        Input,
     }
 }

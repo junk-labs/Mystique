@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using Inscribe.Filter;
 using Inscribe.Filter.Filters.ScreenName;
 using System.Windows;
+using Inscribe.Filter.Filters.Attributes;
 
 namespace Inscribe.Configuration.Settings
 {
@@ -25,13 +26,20 @@ namespace Inscribe.Configuration.Settings
                         Name = "Home",
                         TweetSources = new IFilter[]{
                             new FilterFollowFrom("*"),
-                            new FilterMention("*")
+                            new FilterMention("*"),
+                            new FilterUser("*")
                         }
                     },
                     new TabProperty(){
                         Name="Mentions",
                         TweetSources = new IFilter[]{
                             new FilterMention("*")
+                        }
+                    },
+                    new TabProperty(){
+                        Name="Messages",
+                        TweetSources = new IFilter[]{
+                            new FilterDirectMessage()
                         }
                     }
                 }

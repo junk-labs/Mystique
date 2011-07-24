@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Livet;
 using System.Windows;
+using Inscribe.Common;
 
 namespace Inscribe.ViewModels.Common
 {
@@ -11,7 +12,7 @@ namespace Inscribe.ViewModels.Common
     {
         public IEnumerable<ImageStackItem> Images
         {
-            get { return Layout(this._images ?? new Uri[0]); }
+            get { return Layout(this._images ?? new[] { "/Resources/painting.png".ToPackUri() }); }
         }
 
         private IEnumerable<ImageStackItem> Layout(IEnumerable<Uri> uris)
@@ -31,7 +32,10 @@ namespace Inscribe.ViewModels.Common
             get { return this._images; }
             set
             {
+                if (this._images == value) return;
                 this._images = value;
+                if (value == null || value.Count() == 0)
+                    this._images = null;
                 RaisePropertyChanged(() => ImageUrls);
                 RaisePropertyChanged(() => Images);
             }

@@ -7,12 +7,12 @@ using System.Windows;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("Mystique")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Krile")]
+[assembly: AssemblyDescription("Krile Mystique")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("StarWing Network")]
 [assembly: AssemblyProduct("Mystique")]
-[assembly: AssemblyCopyright("Copyright c  2011")]
+[assembly: AssemblyCopyright("Copyright © 2011 Karno")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

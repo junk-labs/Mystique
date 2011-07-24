@@ -65,9 +65,8 @@ namespace Inscribe.ViewModels.Common.Filter
         {
             var f = this.Root.EditFilter(_filter);
             if (f == null) return;
-            this.Filter = f;
-            RaisePropertyChanged(() => FilterDescription);
-            RaisePropertyChanged(() => IsNegate);
+            // 再生成される
+            this.Parent.ReplaceChild(this.Filter, f);
         }
         #endregion
 

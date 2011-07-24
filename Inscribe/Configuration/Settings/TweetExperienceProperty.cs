@@ -10,7 +10,7 @@ namespace Inscribe.Configuration.Settings
         public TweetExperienceProperty()
         {
             ShowUnofficialRetweetButton = true;
-            ShowQuoteTweetButton = false;
+            ShowQuoteButton = false;
             P3StyleIcon = true;
             NameAreaWidth = 120;
             UserNameMode = NameViewMode.ID;
@@ -19,8 +19,6 @@ namespace Inscribe.Configuration.Settings
         }
 
         public bool ShowUnofficialRetweetButton { get; set; }
-
-        public bool ShowQuoteTweetButton { get; set; }
 
         public bool P3StyleIcon { get; set; }
 
@@ -54,5 +52,7 @@ namespace Inscribe.Configuration.Settings
         public UrlResolveStrategy UrlResolving { get; set; }
 
         public int UrlTooltipShowLength { get; set; }
+
+        public bool ShowQuoteButton { get; set; }
     }
 }

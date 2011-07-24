@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Inscribe</RootNamespace>
-    <AssemblyName>Inscribe</AssemblyName>
+    <AssemblyName>core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ExpressionBlendVersion>4.0.20621.0</ExpressionBlendVersion>
@@ -69,6 +69,8 @@
     <Compile Include="Communication\APIHelper.cs" />
     <Compile Include="Communication\CruiseControl\AccountScheduler.cs" />
     <Compile Include="Communication\CruiseControl\AutoCruiseSchedulerManager.cs" />
+    <Compile Include="Communication\CruiseControl\Base\ScheduledTask.cs" />
+    <Compile Include="Communication\CruiseControl\Base\SupervisorScheduler.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\DirectMessageReceiveTask.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\FavoritesReceiveTask.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\HomeReceiveTask.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Configuration\Settings\ExternalServiceProperty.cs" />
     <Compile Include="Configuration\Settings\InputExperienceProperty.cs" />
     <Compile Include="Configuration\Settings\KernelProperty.cs" />
+    <Compile Include="Configuration\Settings\KeyAssignProperty.cs" />
     <Compile Include="Configuration\Settings\NotificationProperty.cs" />
     <Compile Include="Configuration\Settings\StateProperty.cs" />
     <Compile Include="Configuration\Settings\TimelineExperienceProperty.cs" />
@@ -138,9 +141,9 @@
     <Compile Include="Filter\Filters\ScreenName\FilterFollowTo.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterMention.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterRetweetFrom.cs" />
+    <Compile Include="Filter\Filters\ScreenName\FilterUser.cs" />
     <Compile Include="Filter\Filters\Text\FilterText.cs" />
     <Compile Include="Filter\Filters\Text\FilterUserName.cs" />
-    <Compile Include="Filter\Filters\Text\FilterUser.cs" />
     <Compile Include="Filter\Filters\Text\FilterUserBio.cs" />
     <Compile Include="Filter\Filters\Text\FilterUserLocation.cs" />
     <Compile Include="Filter\Filters\Text\FilterUserWeb.cs" />
@@ -152,13 +155,14 @@
     <Compile Include="Filter\Core\Escaping.cs" />
     <Compile Include="Filter\Core\IQueryConvertable.cs" />
     <Compile Include="Filter\Core\QueryCompiler.cs" />
-    <Compile Include="KeyAssign\AssignManager.cs" />
     <Compile Include="Model\AccountInfo.cs" />
     <Compile Include="Model\CredentialCore.cs" />
     <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="Plugin\PluginManager.cs" />
     <Compile Include="Plugin\ShortenManager.cs" />
     <Compile Include="Plugin\UploaderManager.cs" />
+    <Compile Include="Random\RandomBase.cs" />
+    <Compile Include="Random\SFMT.cs" />
     <Compile Include="Storage\AccountStorage.cs" />
     <Compile Include="Storage\EventStorage.cs" />
     <Compile Include="Storage\ExceptionStorage.cs" />
@@ -172,6 +176,7 @@
     <Compile Include="Threading\RestrictedTask.cs" />
     <Compile Include="Threading\ThreadHelper.cs" />
     <Compile Include="TwitterDefine.cs" />
+    <Compile Include="ViewModels\Behaviors\Messaging\SetListSelectionMessage.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\TextBoxSetCaretMessage.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\ColumnOwnerViewModel.cs" />
@@ -222,10 +227,6 @@
     <ProjectReference Include="..\Dulcet\Dulcet.csproj">
       <Project>{8D33449B-0BD8-4873-B872-0E91FA7EBC4B}</Project>
       <Name>Dulcet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Supervisor\Supervisor.csproj">
-      <Project>{A476C562-E73E-41EC-BB2C-F47E07A8D0D5}</Project>
-      <Name>Supervisor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

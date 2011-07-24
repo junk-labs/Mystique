@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
+using System.Windows.Input;
+using Inscribe.Configuration.Settings;
+using Inscribe.Storage;
+using Livet;
 
 namespace Inscribe.Configuration.KeyAssignment
 {
@@ -12,28 +17,162 @@ namespace Inscribe.Configuration.KeyAssignment
     {
         private static Dictionary<string, Action> callbacks;
 
-        private static bool isInitalizing = false;
+        private static AssignDescription assignDescription = null;
+
+        #region KeyAssignUpdatedイベント
+
+        public static event EventHandler<EventArgs> KeyAssignUpdated;
+        private static Notificator<EventArgs> _KeyAssignUpdatedEvent;
+        public static Notificator<EventArgs> KeyAssignUpdatedEvent
+        {
+            get
+            {
+                if (_KeyAssignUpdatedEvent == null) _KeyAssignUpdatedEvent = new Notificator<EventArgs>();
+                return _KeyAssignUpdatedEvent;
+            }
+            set { _KeyAssignUpdatedEvent = value; }
+        }
+
+        private static void OnKeyAssignUpdated(EventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref KeyAssignUpdated, null, null);
+            if (threadSafeHandler != null) threadSafeHandler(null, e);
+            KeyAssignUpdatedEvent.Raise(e);
+        }
+
+        #endregion
 
         static KeyAssign()
         {
             callbacks = new Dictionary<string, Action>();
         }
 
-        public static void BeginInitialize()
+        public static string GetKeyAssignMaps()
         {
-            isInitalizing = true;
+            return callbacks.Keys.Select(k => k + " : " + LookupKeyFromId(k))
+                .JoinString(Environment.NewLine);
         }
 
-        public static void Register(Action method, string identifier)
+        public static void RegisterOperation(string id, Action callback)
         {
-            if (!isInitalizing)
-                throw new InvalidOperationException("初期化状態にないため、メソッド登録を受け付けられません。");
-            callbacks.Add(identifier, method);
+            if (id == null)
+                throw new ArgumentNullException("id");
+            if (callbacks.ContainsKey(id))
+                throw new ArgumentException("すでにIDが登録されています。");
+            callbacks.Add(id, callback);
         }
 
-        public static void EndInitialize()
+        public static String GetPath(string fileName)
         {
-            isInitalizing = false;
+            return Path.Combine(Path.GetDirectoryName(Define.GetExecutingPath()), Define.KeyAssignDirectory, fileName);
+        }
+
+        public static String LookupKeyFromId(string id)
+        {
+            if (assignDescription == null)
+                return String.Empty;
+            return assignDescription.AssignDatas.SelectMany(s => s.Item2)
+                .Where(i => i.ActionId == id)
+                .Select(s => KeyToString(s.Modifiers, s.Key)).JoinString(", ");
+        }
+
+        private static String KeyToString(ModifierKeys modkeys, Key key)
+        {
+            String ret = key.ToString();
+            if (modkeys.HasFlag(ModifierKeys.Shift))
+                ret = "Shift+" + ret;
+            if(modkeys.HasFlag(ModifierKeys.Windows))
+                ret = "Win+" + ret;
+            if(modkeys.HasFlag(ModifierKeys.Alt))
+                ret = "Alt+" + ret;
+            if(modkeys.HasFlag(ModifierKeys.Control))
+                ret = "Control+" + ret;
+            return ret;
+        }
+
+        public static void ReloadAssign()
+        {
+            assignDescription = null;
+            if (!String.IsNullOrEmpty(Setting.Instance.KeyAssignProperty.KeyAssignFile) &&
+                Setting.Instance.KeyAssignProperty.KeyAssignFile != KeyAssignProperty.DefaultAssignFileName)
+            {
+                try
+                {
+                    assignDescription = AssignLoader.LoadAssign(GetPath(Setting.Instance.KeyAssignProperty.KeyAssignFile));
+                }
+                catch (Exception e)
+                {
+                    ExceptionStorage.Register(e, ExceptionCategory.ConfigurationError,
+                        "キーアサインファイルを読み込めませんでした: " + Setting.Instance.KeyAssignProperty.KeyAssignFile,
+                        ReloadAssign);
+                    assignDescription = null;
+                }
+            }
+            if (assignDescription == null)
+            {
+                try
+                {
+                    assignDescription = AssignLoader.LoadAssign(GetPath(KeyAssignProperty.DefaultAssignFileName));
+                }
+                catch (Exception e)
+                {
+                    ExceptionStorage.Register(e, ExceptionCategory.InternalError,
+                        "デフォルト キーアサインファイルが破損しています。Krileを再インストールしてください。",
+                        ReloadAssign);
+                }
+            }
+            OnKeyAssignUpdated(EventArgs.Empty);
+        }
+
+        public static void HandlePreviewEvent(KeyEventArgs e, AssignRegion region)
+        {
+            if (HandleEventSink(e.Key, region, true))
+            {
+                e.Handled = true;
+            }
+        }
+
+        public static void HandleEvent(KeyEventArgs e, AssignRegion region)
+        {
+            if (HandleEventSink(e.Key, region, false))
+                e.Handled = true;
+        }
+
+        private static bool HandleEventSink(Key key, AssignRegion region, bool preview)
+        {
+            var modifier = Keyboard.Modifiers;
+            System.Diagnostics.Debug.WriteLine(modifier.ToString() + " " + key.ToString() + " / " + region.ToString() + " ? " + preview.ToString());
+            if (assignDescription == null) return false;
+            try
+            {
+                return assignDescription.AssignDatas
+                    .First(a => a.Item1 == region)
+                    .Item2
+                    .Where(a => a.Key == key && a.Modifiers == modifier && (a.LookInPreview || !preview))
+                    .Select(a => a.ActionId)
+                    .Dispatch();
+            }
+            catch (Exception ex)
+            {
+                ExceptionStorage.Register(ex, ExceptionCategory.ConfigurationError,
+                    "キーアサインを処理中にエラーが発生しました :" + ex.Message);
+                return false;
+            }
+        }
+
+        private static bool Dispatch(this IEnumerable<string> actionIds)
+        {
+            bool dispatched = false;
+            foreach (var id in actionIds)
+            {
+                Action action;
+                if (callbacks.TryGetValue(id, out action))
+                    action();
+                else
+                    throw new ArgumentException("オペレーションID \"" + id + "\" は見つかりませんでした。");
+                dispatched = true;
+            }
+            return dispatched;
         }
     }
 }
