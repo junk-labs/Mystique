@@ -37,9 +37,9 @@ namespace Inscribe.Filter.Filters.Text
             {
                 // regular expressions
                 if (isCaseSensitive)
-                    return Regex.IsMatch(haystack, needle);
+                    return Regex.IsMatch(haystack, needle.Substring(1));
                 else
-                    return Regex.IsMatch(haystack, needle, RegexOptions.IgnoreCase);
+                    return Regex.IsMatch(haystack, needle.Substring(1), RegexOptions.IgnoreCase);
             }
             else
             {

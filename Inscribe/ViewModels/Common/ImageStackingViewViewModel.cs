@@ -12,7 +12,7 @@ namespace Inscribe.ViewModels.Common
     {
         public IEnumerable<ImageStackItem> Images
         {
-            get { return Layout(this._images ?? new[] { "/Resources/painting.png".ToPackUri() }); }
+            get { return Layout(this._images ?? new[] { "/Resources/empty.png".ToPackUri() }); }
         }
 
         private IEnumerable<ImageStackItem> Layout(IEnumerable<Uri> uris)

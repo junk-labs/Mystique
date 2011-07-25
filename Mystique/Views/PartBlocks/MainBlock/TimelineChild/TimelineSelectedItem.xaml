@@ -395,12 +395,12 @@
                             <DataTemplate>
                                 <com:LazyImage Width="22"
                                                Height="22"
-                                               UriSource="{Binding ProfileImageUrl}">
+                                               UriSource="{Binding Path=TwitterUser.ProfileImage}">
                                     <com:LazyImage.InputBindings>
                                         <MouseBinding Command="{Binding OpenUserCommand}" MouseAction="LeftClick" />
                                     </com:LazyImage.InputBindings>
                                     <com:LazyImage.ToolTip>
-                                        <TextBlock Text="{Binding ScreenName, StringFormat=@{0}}" />
+                                        <TextBlock Text="{Binding Path=TwitterUser.ScreenName, StringFormat=@{0}}" />
                                     </com:LazyImage.ToolTip>
                                 </com:LazyImage>
                             </DataTemplate>
@@ -441,7 +441,7 @@
                             <DataTemplate>
                                 <com:LazyImage Width="22"
                                                Height="22"
-                                               UriSource="{Binding ProfileImageUrl}">
+                                               UriSource="{Binding ProfileImage}">
                                     <com:LazyImage.InputBindings>
                                         <MouseBinding Command="{Binding OpenUserCommand}" MouseAction="LeftClick" />
                                     </com:LazyImage.InputBindings>

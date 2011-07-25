@@ -187,6 +187,12 @@
     <Compile Include="Views\PartBlocks\MainBlock\TimelineList.xaml.cs">
       <DependentUpon>TimelineList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PartBlocks\MainBlock\TimelineListCore.xaml.cs">
+      <DependentUpon>TimelineListCore.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PartBlocks\MainBlock\UserPage.xaml.cs">
+      <DependentUpon>UserPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PartBlocks\ModalParts\UserSelection.xaml.cs">
       <DependentUpon>UserSelection.xaml</DependentUpon>
     </Compile>
@@ -301,6 +307,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\PartBlocks\MainBlock\TimelineListCore.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PartBlocks\MainBlock\UserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PartBlocks\ModalParts\UserSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -343,7 +357,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\white.png" />
+    <Resource Include="Resources\empty.png" />
     <Resource Include="Resources\painting.png" />
     <None Include="assigns\default.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

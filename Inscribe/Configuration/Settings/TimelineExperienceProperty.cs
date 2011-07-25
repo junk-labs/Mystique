@@ -20,6 +20,7 @@ namespace Inscribe.Configuration.Settings
             KeywordSearchTransition = TransitionMethod.ViewStack;
             UserExtractTransition = TransitionMethod.AddTab;
             ConversationTransition = TransitionMethod.ViewStack;
+            UserOpenTransition = TransitionMethod.AddTab;
             IsShowConversationTree = true;
             MoveUpToDeselect = true;
         }
@@ -67,6 +68,8 @@ namespace Inscribe.Configuration.Settings
 
         public TransitionMethod ConversationTransition { get; set; }
 
+        public TransitionMethod UserOpenTransition { get; set; }
+
         /// <summary>
         /// 会話をツリーとして展開するか
         /// </summary>
@@ -76,6 +79,7 @@ namespace Inscribe.Configuration.Settings
         /// タイムラインの一番上の要素を選択している時にさらに上に移動しようとした時、選択を外す
         /// </summary>
         public bool MoveUpToDeselect { get; set; }
+
     }
 
     /// <summary>

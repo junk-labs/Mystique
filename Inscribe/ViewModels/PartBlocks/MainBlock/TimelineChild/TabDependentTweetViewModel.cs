@@ -443,6 +443,49 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
         #endregion
+
+
+        #region OpenDMConversationCommand
+        DelegateCommand _OpenDMConversationCommand;
+
+        public DelegateCommand OpenDMConversationCommand
+        {
+            get
+            {
+                if (_OpenDMConversationCommand == null)
+                    _OpenDMConversationCommand = new DelegateCommand(OpenDMConversation);
+                return _OpenDMConversationCommand;
+            }
+        }
+
+        private void OpenDMConversation()
+        {
+            var filter = new[] { new FilterConversation(this.Tweet.Status.User.ScreenName, ((TwitterStatus)this.Tweet.Status).InReplyToUserScreenName) };
+            var description = "DM:@" + this.Tweet.Status.User.ScreenName + "&@" + ((TwitterStatus)this.Tweet.Status).InReplyToUserScreenName;
+            switch (Setting.Instance.TimelineExperienceProperty.ConversationTransition)
+            {
+                case TransitionMethod.ViewStack:
+                    this.Parent.AddTopTimeline(filter);
+                    break;
+                case TransitionMethod.AddTab:
+                    this.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty()
+                    {
+                        Name = description,
+                        TweetSources = filter
+                    });
+                    break;
+                case TransitionMethod.AddColumn:
+                    var column = this.Parent.Parent.Parent.CreateColumn();
+                    column.AddTab(new Configuration.Tabs.TabProperty()
+                    {
+                        Name = description,
+                        TweetSources = filter
+                    });
+                    break;
+            }
+        }
+        #endregion
+      
       
         #endregion
 

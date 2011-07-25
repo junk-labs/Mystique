@@ -69,7 +69,7 @@ namespace Inscribe.Communication.Posting
 
             try
             {
-                var recvs = ApiHelper.ExecApi(() => info.GetUserTimeline(count: 200, include_rts: true));
+                var recvs = ApiHelper.ExecApi(() => info.GetUserTimeline(count: 150, include_rts: true));
                 if (recvs != null)
                     recvs.ForEach(TweetStorage.Register);
 
@@ -77,10 +77,18 @@ namespace Inscribe.Communication.Posting
 
                 // 127tweet/3hours
                 var originate = TweetStorage.GetAll(
-                    t => t.Status.User.ScreenName == info.ScreenName)
+                    t => t.Status.User.ScreenName == info.ScreenName && DateTime.Now.Subtract(t.CreatedAt) < TwitterDefine.UnderControlTimespan)
                     .OrderByDescending((t) => t.Status.CreatedAt)
                     .Skip(TwitterDefine.UnderControlCount - 1)
                     .FirstOrDefault();
+
+                if (originate == null)
+                {
+                    originate = TweetStorage.GetAll(
+                        t => t.Status.User.ScreenName == info.ScreenName && DateTime.Now.Subtract(t.CreatedAt) < TwitterDefine.UnderControlTimespan)
+                        .OrderByDescending((t) => t.Status.CreatedAt)
+                        .LastOrDefault();
+                }
 
                 if (originate == null)
                 {

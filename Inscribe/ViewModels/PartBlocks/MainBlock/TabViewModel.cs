@@ -9,7 +9,6 @@ using Inscribe.Configuration.Tabs;
 using Inscribe.Filter;
 using Inscribe.Filter.Core;
 using Inscribe.Filter.Filters.Text;
-using Inscribe.ViewModels.MainBlock;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
@@ -87,7 +86,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
             this._tabProperty = property ?? new TabProperty();
             ViewModelHelper.BindNotification(this._tabProperty.LinkAccountInfoChangedEvent, this, (o, e) =>
-                this._timelines.SelectMany(vm => vm.TweetsSource).ForEach(t => t.PendingColorChanged(true)));
+                this.StackingTimelines.OfType<TimelineListViewModel>().SelectMany(vm => vm.TweetsSource).ForEach(t => t.PendingColorChanged(true)));
 
             this.AddTopTimeline(null);
         }
@@ -99,18 +98,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public void Commit(bool reinvalidate)
         {
-            this._timelines.ForEach(f => f.Commit(reinvalidate));
+            this.StackingTimelines.ForEach(f => f.Commit(reinvalidate));
         }
 
-        private ObservableCollection<TimelineListViewModel> _timelines = new ObservableCollection<TimelineListViewModel>();
-        public IEnumerable<TimelineListViewModel> Timelines
+        private ObservableCollection<TimelineCoreViewModelBase> _stackings = new ObservableCollection<TimelineCoreViewModelBase>();
+        public IEnumerable<TimelineCoreViewModelBase> StackingTimelines
         {
-            get { return this._timelines; }
+            get { return _stackings; }
         }
 
-        public TimelineListViewModel CurrentForegroundTimeline
+        public TimelineCoreViewModelBase CurrentForegroundTimeline
         {
-            get { return this._timelines.Last(); }
+            get { return this._stackings.Last(); }
         }
 
         private bool _isQueryValid = true;
@@ -156,6 +155,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void AnalyzeCurrentQuery()
         {
+            var cf = this.CurrentForegroundTimeline as TimelineListViewModel;
+            if (cf == null) return;
             if (this.TimelinesCount == 1)
                 this._queryTextBuffer = String.Empty;
             IEnumerable<IFilter> filter = null;
@@ -170,9 +171,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     var uqsplitted = this._queryTextBuffer.Substring(2)
                         .Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(s => s.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries));
-                    filter = uqsplitted.Select(s => new FilterCluster(){
+                    filter = uqsplitted.Select(s => new FilterCluster()
+                    {
                         ConcatenateAnd = true,
-                        Filters = s.Select(un => new FilterUser(un)).ToArray()}).ToArray();
+                        Filters = s.Select(un => new FilterUser(un)).ToArray()
+                    }).ToArray();
                     break;
                 case 't':
                 case 'T':
@@ -180,9 +183,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     var tsplitted = this._queryTextBuffer.Substring(2)
                         .Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(s => s.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries));
-                    filter = tsplitted.Select(s => new FilterCluster(){
+                    filter = tsplitted.Select(s => new FilterCluster()
+                    {
                         ConcatenateAnd = true,
-                        Filters = s.Select(un => new Filter.Filters.Text.FilterText(un)).ToArray()}).ToArray();
+                        Filters = s.Select(un => new Filter.Filters.Text.FilterText(un)).ToArray()
+                    }).ToArray();
                     break;
                 case 'q':
                 case 'Q':
@@ -202,47 +207,51 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     var tosplitted = this._queryTextBuffer
                         .Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(s => s.Split(new[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries));
-                    filter = tosplitted.Select(s => new FilterCluster(){
+                    filter = tosplitted.Select(s => new FilterCluster()
+                    {
                         ConcatenateAnd = true,
-                        Filters = s.Select(un => new Filter.Filters.Text.FilterText(un)).ToArray()}).ToArray();
+                        Filters = s.Select(un => new Filter.Filters.Text.FilterText(un)).ToArray()
+                    }).ToArray();
                     break;
             }
             this.IsQueryValid = true;
-            this.CurrentForegroundTimeline.Sources = filter;
-            Task.Factory.StartNew(() => this.CurrentForegroundTimeline.RefreshCache())
-                .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => this.CurrentForegroundTimeline.Commit(true)));
+            cf.Sources = filter;
+            Task.Factory.StartNew(() => cf.RefreshCache())
+                .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => cf.Commit(true)));
         }
 
         private void WritebackQuery()
         {
+            var cf = this.CurrentForegroundTimeline as TimelineListViewModel;
+            if (cf == null) return;
             if (this.TimelinesCount == 1)
                 this._queryTextBuffer = String.Empty;
-            if (this.CurrentForegroundTimeline.Sources == null)
+            if (cf.Sources == null)
                 this._queryTextBuffer = String.Empty;
-            else if(this.CurrentForegroundTimeline.Sources.All(
+            else if (cf.Sources.All(
                 c => (c is FilterCluster) && ((FilterCluster)c).Filters
                     .All(f => f is Filter.Filters.Text.FilterText)))
             {
                 // t:
                 this._queryTextBuffer =
-                    this.CurrentForegroundTimeline.Sources.Select(
+                    cf.Sources.Select(
                     c => ((FilterCluster)c).Filters.Select(f =>
                         ((FilterText)f).Needle).JoinString(" ")).JoinString("|");
             }
-            else if (this.CurrentForegroundTimeline.Sources.All(
+            else if (cf.Sources.All(
                 c => (c is FilterCluster) && ((FilterCluster)c).Filters
                     .All(f => f is FilterUser)))
             {
                 // u:
                 this._queryTextBuffer = "u:" +
-                    this.CurrentForegroundTimeline.Sources.Select(
+                    cf.Sources.Select(
                     c => ((FilterCluster)c).Filters.Select(f =>
                         ((FilterUser)f).Needle).JoinString(" ")).JoinString("|");
             }
             else
             {
                 this._queryTextBuffer = "q:(" +
-                    this.CurrentForegroundTimeline.Sources.Select(
+                    cf.Sources.Select(
                     s => s.ToQuery()).JoinString("|") + ")";
             }
             RaisePropertyChanged(() => QueryText);
@@ -250,12 +259,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public int TimelinesCount
         {
-            get { return this._timelines.Count; }
+            get { return this._stackings.Count; }
         }
 
         public bool IsContainsSingle
         {
-            get { return this._timelines.Count == 1; }
+            get { return this._stackings.Count == 1; }
         }
 
         /// <summary>
@@ -266,9 +275,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             do
             {
-                this._timelines.RemoveAt(this._timelines.Count - 1);
-            } while (removeAllStackings && this._timelines.Count > 2);
-            this._timelines.ForEach(t => t.InvalidateIsActive());
+                this._stackings.RemoveAt(this._stackings.Count - 1);
+            } while (removeAllStackings && this._stackings.Count > 2);
+            this._stackings.ForEach(t => t.InvalidateIsActive());
             RaisePropertyChanged(() => TimelinesCount);
             RaisePropertyChanged(() => IsContainsSingle);
             WritebackQuery();
@@ -281,11 +290,16 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         /// <param name="description"></param>
         public void AddTopTimeline(IEnumerable<IFilter> newFilter)
         {
-            this._timelines.Add(new TimelineListViewModel(this, newFilter));
-            this._timelines.ForEach(t => t.InvalidateIsActive());
+            this._stackings.Add(new TimelineListViewModel(this, newFilter));
+            this._stackings.ForEach(t => t.InvalidateIsActive());
             RaisePropertyChanged(() => TimelinesCount);
             RaisePropertyChanged(() => IsContainsSingle);
             WritebackQuery();
+        }
+
+        public void AddTopUser(string userId)
+        {
+            this._stackings.Add(new UserPageViewModel(this, userId));
         }
 
         #region ClearNewTweetsCountCommand

@@ -75,8 +75,10 @@ namespace Inscribe.Data
 
         public bool Remove(T item)
         {
+            var idx = Array.IndexOf(this.BehindCollection.ToArray(), item);
             var ret = this.BehindCollection.Remove(item);
-            RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            if(idx  >= 0)
+                RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, idx));
             return ret;
         }
 

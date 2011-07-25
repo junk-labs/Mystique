@@ -7,10 +7,11 @@
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:mainblock="clr-namespace:Inscribe.ViewModels.PartBlocks.MainBlock;assembly=core"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:my="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
              xmlns:pb="clr-namespace:Mystique.Views.Behaviors.Particular"
              xmlns:pc="clr-namespace:Mystique.Views.Converters.Particular"
-             xmlns:tchild="clr-namespace:Mystique.Views.PartBlocks.MainBlock.TimelineChild"
              d:DesignHeight="200"
              d:DesignWidth="300"
              mc:Ignorable="d">
@@ -18,22 +19,6 @@
         <BitmapImage x:Key="Search" UriSource="/Resources/find.png" />
         <BitmapImage x:Key="Close" UriSource="/Resources/cross.png" />
         <BitmapImage x:Key="QueryInvalid" UriSource="/Resources/exclamation.png" />
-        <DataTemplate x:Key="NormalStatusTemplate">
-            <tchild:TimelineItem HorizontalAlignment="Stretch" />
-        </DataTemplate>
-        <DataTemplate x:Key="SelectedStatusTemplate">
-            <tchild:TimelineSelectedItem HorizontalAlignment="Stretch" />
-        </DataTemplate>
-        <Style x:Key="ContainerStyle" TargetType="{x:Type ListBoxItem}">
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="ContentTemplate" Value="{StaticResource NormalStatusTemplate}" />
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="ContentTemplate" Value="{StaticResource SelectedStatusTemplate}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
     </UserControl.Resources>
     <Border Background="White"
             BorderBrush="Gray"
@@ -117,7 +102,15 @@
                            Source="{StaticResource Close}" />
                 </Button>
             </Grid>
-            <ItemsControl ItemsSource="{Binding Timelines}">
+            <ItemsControl ItemsSource="{Binding StackingTimelines}">
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type mainblock:UserPageViewModel}">
+                        <my:UserPage />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type mainblock:TimelineListViewModel}">
+                        <my:TimelineListCore />
+                    </DataTemplate>
+                </ItemsControl.Resources>
                 <i:Interaction.Behaviors>
                     <pb:MouseOverBindBehavior IsMouseOver="{Binding IsMouseOver, Mode=OneWayToSource}" />
                 </i:Interaction.Behaviors>
@@ -126,33 +119,6 @@
                         <cp:FillPanel />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ListBox x:Name="List"
-                                 BorderThickness="0"
-                                 HorizontalContentAlignment="Stretch"
-                                 InputMethod.IsInputMethodEnabled="False"
-                                 ItemContainerStyle="{StaticResource ContainerStyle}"
-                                 ItemsSource="{Binding Path=TweetCollectionView.View}"
-                                 Padding="0"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                 ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                 SelectedItem="{Binding SelectedTweetViewModel}"
-                                 VirtualizingStackPanel.IsVirtualizing="True"
-                                 VirtualizingStackPanel.VirtualizationMode="Recycling"
-                                 Visibility="{Binding IsActive,
-                                                      Converter={StaticResource BoolVisibleConverter}}">
-                            <i:Interaction.Behaviors>
-                                <pb:SquaredScrollBehavior />
-                            </i:Interaction.Behaviors>
-                            <i:Interaction.Triggers>
-                                <l:InteractionMessageTrigger MessageKey="SetListSelection" Messenger="{Binding Messenger}">
-                                    <ba:SetListSelectionInteractionMessageAction />
-                                </l:InteractionMessageTrigger>
-                            </i:Interaction.Triggers>
-                        </ListBox>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
             </ItemsControl>
         </DockPanel>
     </Border>

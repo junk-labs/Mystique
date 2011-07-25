@@ -92,11 +92,23 @@
                 </StackPanel>
                 <com:DropDownButton.DropDownMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding ShowConfigCommand}" Header="設定(_S)..." />
-                        <MenuItem Header="キーアサイン ビューア(_K)..." />
+                        <MenuItem Header="タブの管理(_T)">
+                            <MenuItem Header="新しいカラム(_C)..." />
+                            <MenuItem Header="新しいタブ(_T)..." />
+                            <Separator />
+                            <MenuItem Header="全てのカラムをまとめる(_C)" />
+                            <MenuItem Header="クローズドタブスタックをクリア(_C)" />
+                        </MenuItem>
+                        <MenuItem Header="メンテナンス(_M)">
+                            <MenuItem Header="User Streamsをすべて再接続(_R)" />
+                            <MenuItem Header="キャッシュのクリア(_C)">
+                                <MenuItem Header="画像キャッシュ(_I)" />
+                            </MenuItem>
+                        </MenuItem>
                         <Separator />
-                        <MenuItem Header="ヘルプ(_H)...">
-                            <MenuItem Header="チュートリアル(_C)..." />
+                        <MenuItem Command="{Binding ShowConfigCommand}" Header="設定(_S)..." />
+                        <MenuItem Header="ヘルプ(_H)">
+                            <MenuItem Header="キーアサイン ビューア(_K)..." />
                             <MenuItem Header="フィードバック(_F)..." />
                             <Separator />
                             <MenuItem Command="{Binding ShowAboutCommand}" Header="バージョン情報(_A)..." />

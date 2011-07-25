@@ -203,6 +203,8 @@
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputBlockViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputDescription.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\UpdateWorker.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineCoreViewModelBase.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\UserPageViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\ModalParts\UserSelectionViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\NotifyBlockViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\SystemInfoViewModel.cs" />

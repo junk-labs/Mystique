@@ -202,7 +202,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void MoveVertical(ListSelectionKind selectKind)
         {
-            var cc = this.CurrentTab == null ? null :this.CurrentTab.CurrentForegroundTimeline;
+            var cc = this.CurrentTab == null ? null : this.CurrentTab.CurrentForegroundTimeline;
             if (selectKind == ListSelectionKind.SelectAbove && Setting.Instance.TimelineExperienceProperty.MoveUpToDeselect)
                 selectKind = ListSelectionKind.SelectAboveAndNull;
             if (cc != null)

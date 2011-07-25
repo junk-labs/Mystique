@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Livet;
 using Dulcet.Twitter;
+using Livet.Commands;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -18,6 +19,24 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.TwitterUser = user;
         }
 
+        #region OpenUserCommand
+        DelegateCommand _OpenUserCommand;
 
+        public DelegateCommand OpenUserCommand
+        {
+            get
+            {
+                if (_OpenUserCommand == null)
+                    _OpenUserCommand = new DelegateCommand(OpenUser);
+                return _OpenUserCommand;
+            }
+        }
+
+        private void OpenUser()
+        {
+
+        }
+        #endregion
+      
     }
 }

@@ -8,24 +8,23 @@ using Inscribe.Configuration;
 using Inscribe.Data;
 using Inscribe.Filter;
 using Inscribe.Storage;
-using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
-using Inscribe.ViewModels.Behaviors.Messaging;
 
-namespace Inscribe.ViewModels.MainBlock
+namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
-    public class TimelineListViewModel : ViewModel
+    public sealed class TimelineListViewModel : TimelineCoreViewModelBase
     {
         public TabViewModel Parent { get; private set; }
 
-        public bool IsActive
+        public override bool IsActive
         {
             get { return Parent.CurrentForegroundTimeline == this; }
         }
 
-        public void InvalidateIsActive()
+        public override void InvalidateIsActive()
         {
             RaisePropertyChanged(() => IsActive);
         }
@@ -36,18 +35,6 @@ namespace Inscribe.ViewModels.MainBlock
             var handler = NewTweetReceived;
             if (handler != null)
                 NewTweetReceived(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// このタイムラインがフォーカスを得た
-        /// </summary>
-        public event EventHandler GotFocus;
-        protected void OnGetFocus()
-        {
-
-            var fchandler = GotFocus;
-            if (fchandler != null)
-                fchandler(this, EventArgs.Empty);
         }
 
         private IEnumerable<IFilter> sources;
@@ -99,7 +86,7 @@ namespace Inscribe.ViewModels.MainBlock
                 .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => UpdateSortDescription()));
         }
 
-        public void Commit(bool reinvalidate)
+        public override void Commit(bool reinvalidate)
         {
             DispatcherHelper.BeginInvoke(() =>
             {
@@ -184,7 +171,7 @@ namespace Inscribe.ViewModels.MainBlock
         public CollectionViewSource TweetCollectionView { get { return this._tweetCollectionView; } }
 
         private TabDependentTweetViewModel _selectedTweetViewModel = null;
-        public TabDependentTweetViewModel SelectedTweetViewModel
+        public override TabDependentTweetViewModel SelectedTweetViewModel
         {
             get { return _selectedTweetViewModel; }
             set
@@ -215,7 +202,7 @@ namespace Inscribe.ViewModels.MainBlock
         }
         #endregion
 
-        public void SetSelect(ListSelectionKind kind)
+        public override void SetSelect(ListSelectionKind kind)
         {
             Messenger.Raise(new SetListSelectionMessage("SetListSelection", kind));
         }
