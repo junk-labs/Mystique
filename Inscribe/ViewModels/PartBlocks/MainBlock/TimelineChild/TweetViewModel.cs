@@ -98,7 +98,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public bool RegisterRetweeted(UserViewModel user)
         {
-            if (user == null || this._retweeteds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
+            if (user == null || this._retweeteds.Select(s => s.TwitterUser.ScreenName)
+                .FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
                 return false;
             this._retweeteds.Add(user);
             TweetStorage.NotifyTweetStateChanged(this);
@@ -127,7 +128,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public bool RegisterFavored(UserViewModel user)
         {
-            if (user == null || this._favoreds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
+            if (user == null || this._favoreds.Select(s => s.TwitterUser.ScreenName)
+                .FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
                 return false;
             this._favoreds.Add(user);
             TweetStorage.NotifyTweetStateChanged(this);

@@ -41,9 +41,7 @@
              ScrollViewer.VerticalScrollBarVisibility="Visible"
              SelectedItem="{Binding SelectedTweetViewModel}"
              VirtualizingStackPanel.IsVirtualizing="True"
-             VirtualizingStackPanel.VirtualizationMode="Recycling"
-             Visibility="{Binding IsActive,
-                                  Converter={StaticResource BoolVisibleConverter}}">
+             VirtualizingStackPanel.VirtualizationMode="Recycling">
         <i:Interaction.Behaviors>
             <pb:SquaredScrollBehavior />
         </i:Interaction.Behaviors>

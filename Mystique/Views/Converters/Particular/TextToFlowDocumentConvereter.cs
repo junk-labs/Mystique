@@ -10,6 +10,9 @@ using Inscribe.Configuration.Settings;
 using Inscribe.Plugin;
 using Mystique.Views.Text;
 using Inscribe.Caching;
+using Mystique.Views.Common;
+using Inscribe.Core;
+using Inscribe.Filter.Filters.Text;
 
 namespace Mystique.Views.Converters.Particular
 {
@@ -20,7 +23,7 @@ namespace Mystique.Views.Converters.Particular
         Source,
     }
 
-    public class TextToFlowDocumentConvereter : OneWayConverter<string, IEnumerable<Inline>>
+    public class TextToFlowDocumentConverter : OneWayConverter<string, IEnumerable<Inline>>
     {
         public override IEnumerable<Inline> ToTarget(string input, object parameter)
         {
@@ -77,7 +80,7 @@ namespace Mystique.Views.Converters.Particular
                             case TweetExperienceProperty.UrlResolveStrategy.OnPointed:
                             case TweetExperienceProperty.UrlResolveStrategy.Never:
                                 urllink.Inlines.Add(new Run(ctt));
-                                // TODO: urllink.ToolTip = new UrlTooltip(ctt);
+                                urllink.ToolTip = new UrlTooltip(ctt);
                                 break;
                             case TweetExperienceProperty.UrlResolveStrategy.OnReceived:
                                 string nurl = null;
@@ -98,12 +101,12 @@ namespace Mystique.Views.Converters.Particular
                                 if (String.IsNullOrEmpty(nurl))
                                 {
                                     urllink.Inlines.Add(new Run(ctt));
-                                    // TODO: urllink.ToolTip = new UrlTooltip(ctt);
+                                    urllink.ToolTip = new UrlTooltip(ctt);
                                 }
                                 else
                                 {
                                     urllink.Inlines.Add(new Run(nurl));
-                                    // TODO: urllink.ToolTip = new UrlTooltip(nurl);
+                                    urllink.ToolTip = new UrlTooltip(nurl);
                                 }
                                 break;
                         }
@@ -195,7 +198,10 @@ namespace Mystique.Views.Converters.Particular
             switch (kind)
             {
                 case InternalLinkKind.User:
-                    // TODO: Open user information
+                    if (KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn != null &&
+                        KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn.SelectedTabViewModel != null)
+                        KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn
+                            .SelectedTabViewModel.AddTopUser(source);
                     break;
                 case InternalLinkKind.Hash:
                     System.Diagnostics.Debug.WriteLine("Extracting hash:" + source);
@@ -205,7 +211,10 @@ namespace Mystique.Views.Converters.Particular
                     }
                     else
                     {
-                        // TODO: Open hash extraction in internal view
+                        if (KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn != null &&
+                            KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn.SelectedTabViewModel != null)
+                            KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn
+                                .SelectedTabViewModel.AddTopTimeline(new[] { new FilterText(source) });
                     }
                     break;
                 default:

@@ -1,18 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Inscribe.Filter;
-using Livet;
 using Inscribe.Configuration;
 using Inscribe.Configuration.KeyAssignment;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Livet;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
     public class ColumnOwnerViewModel : ViewModel
     {
+        #region Closed tab stack control
+
+        private ConcurrentStack<TabViewModel> _closedTabStacks = new ConcurrentStack<TabViewModel>();
+
+        public void PushClosedTabStack(TabViewModel viewmodel)
+        {
+            this._closedTabStacks.Push(viewmodel);
+            this._columns.ForEach(c => c.RebirthTabCommand.RaiseCanExecuteChanged());
+        }
+
+        public TabViewModel PopClosedTab()
+        {
+            TabViewModel ret;
+            this._closedTabStacks.TryPop(out ret);
+            this._columns.ForEach(c => c.RebirthTabCommand.RaiseCanExecuteChanged());
+            return ret;
+        }
+
+        public bool IsExistedClosedTab()
+        {
+            return this._closedTabStacks.Count > 0;
+        }
+
+        public void ClearClosedTab()
+        {
+            this._closedTabStacks.Clear();
+            this._columns.ForEach(c => c.RebirthTabCommand.RaiseCanExecuteChanged());
+        }
+
+        #endregion
+
         public MainWindowViewModel Parent { get; private set; }
 
         public ColumnOwnerViewModel(MainWindowViewModel parent)
@@ -66,6 +96,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 this._currentFocusColumn = value;
                 RaisePropertyChanged(() => CurrentFocusColumn);
                 RaisePropertyChanged(() => CurrentTab);
+                this._columns.SelectMany(c => c.TabItems).ForEach(vm => vm.UpdateIsCurrentFocused());
                 var cfc = this.CurrentColumnChanged;
                 if (cfc != null)
                     cfc(value);

@@ -27,6 +27,7 @@ namespace Inscribe.ViewModels
     {
         public MainWindowViewModel()
         {
+            KernelService.MainWindowViewModel = this;
             this._columnOwnerViewModel = new ColumnOwnerViewModel(this);
             this._notifierViewModel = new NotifierViewModel();
             this._notifyBlockViewModel = new NotifyBlockViewModel(this);

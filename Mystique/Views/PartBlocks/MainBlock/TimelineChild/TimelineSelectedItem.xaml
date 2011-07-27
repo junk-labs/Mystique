@@ -14,7 +14,7 @@
              d:DesignWidth="500"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <cp:TextToFlowDocumentConvereter x:Key="TextFlowDocumentConverter" />
+        <cp:TextToFlowDocumentConverter x:Key="TextFlowDocumentConverter" />
         <cp:TVMToUserNameConverter x:Key="TweetUserNameConverter" />
         <cp:TVMToUserImageConverter x:Key="TweetUserImageConverter" />
         <cp:CollectionToCountConverter x:Key="CollectionCountConverter" />
@@ -441,12 +441,12 @@
                             <DataTemplate>
                                 <com:LazyImage Width="22"
                                                Height="22"
-                                               UriSource="{Binding ProfileImage}">
+                                               UriSource="{Binding Path=TwitterUser.ProfileImage}">
                                     <com:LazyImage.InputBindings>
                                         <MouseBinding Command="{Binding OpenUserCommand}" MouseAction="LeftClick" />
                                     </com:LazyImage.InputBindings>
                                     <com:LazyImage.ToolTip>
-                                        <TextBlock Text="{Binding ScreenName, StringFormat=@{0}}" />
+                                        <TextBlock Text="{Binding Path=TwitterUser.ScreenName, StringFormat=@{0}}" />
                                     </com:LazyImage.ToolTip>
                                 </com:LazyImage>
                             </DataTemplate>
@@ -483,7 +483,7 @@
                             Focusable="False"
                             Style="{DynamicResource FlatButtonStyle}">
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Favorite}" />
-                        <Button.ToolTip>Favる</Button.ToolTip>
+                        <Button.ToolTip>Fav追加</Button.ToolTip>
                     </Button>
                 </Grid>
                 <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.ShowRetweetButton, Converter={StaticResource BoolVisibleConverter}}">
@@ -494,7 +494,7 @@
                     <Button Grid.ColumnSpan="2"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            Command="{Binding FavoriteMultiUserCommand}"
+                            Command="{Binding RetweetMultiUserCommand}"
                             Focusable="False"
                             HorizontalContentAlignment="Right"
                             Style="{DynamicResource FlatButtonStyle}"

@@ -108,6 +108,7 @@
     <Compile Include="Configuration\Settings\TweetExperienceProperty.cs" />
     <Compile Include="Configuration\Tabs\TabProperty.cs" />
     <Compile Include="Core\Initializer.cs" />
+    <Compile Include="Core\KernelService.cs" />
     <Compile Include="Core\StateProxy.cs" />
     <Compile Include="Core\Statistics.cs" />
     <Compile Include="Data\CachedConcurrentObservableCollection.cs" />
@@ -178,6 +179,9 @@
     <Compile Include="TwitterDefine.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\SetListSelectionMessage.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\TextBoxSetCaretMessage.cs" />
+    <Compile Include="ViewModels\Common\UrlTooltipViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\Common\AssignViewerViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\Common\FollowManagerViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\ColumnOwnerViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\ColumnViewModel.cs" />
@@ -194,7 +198,6 @@
     <Compile Include="ViewModels\Dialogs\Account\AccountPropertyConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\Account\AuthenticateViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\Common\AboutViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\Common\LoadingViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\AccountConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\TabEditorViewModel.cs" />
@@ -204,6 +207,7 @@
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputDescription.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\UpdateWorker.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineCoreViewModelBase.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineListCoreViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\UserPageViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\ModalParts\UserSelectionViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\NotifyBlock\NotifyBlockViewModel.cs" />

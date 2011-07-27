@@ -25,9 +25,10 @@
 			<Assign Action="Mention" Key="R" />
 			<Assign Action="Mention" Key="Space" Preview="True" />
 			<Assign Action="Favorite" Key="F" />
-			<Assign Action="FavoriteMulti" Key="Shift+F" />
+			<Assign Action="Favorite" Key="Oem1" /> <!-- SEMICOLON -->
+			<Assign Action="FavoriteMulti" Key="Alt+F" />
 			<Assign Action="Retweet" Key="Ctrl+R" />
-			<Assign Action="RetweetMulti" Key="Ctrl+Shift+R" />
+			<Assign Action="RetweetMulti" Key="Ctrl+Alt+R" />
 			<Assign Action="UnofficialRetweet" Key="Ctrl+Shift+R" />
 			<Assign Action="QuoteTweet" Key="Ctrl+Q" />
 			<Assign Action="Delete" Key="Delete" />

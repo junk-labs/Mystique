@@ -23,7 +23,7 @@ namespace Dulcet.Twitter
                 IsProtected = node.Element("protected").ParseBool(),
                 IsVerified = node.Element("verified").ParseBool(),
                 Tweets = node.Element("statuses_count").ParseLong(),
-                Favorites = node.Element("favorites_count").ParseLong(),
+                Favorites = node.Element("favourites_count").ParseLong(),
                 Followings = node.Element("friends_count").ParseLong(),
                 Followers = node.Element("followers_count").ParseLong(),
                 Listed = node.Element("listed_count").ParseLong(),

@@ -19,7 +19,7 @@
         <cp:NotZeroToVisibleConverter x:Key="NotZeroVisibleConverter" />
         <ContextMenu x:Key="TabParentContextMenu">
             <MenuItem Command="{Binding AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
-            <MenuItem Header="最後に閉じたタブを元に戻す(_R)" />
+            <MenuItem Command="{Binding RebirthTabCommand}" Header="最後に閉じたタブを元に戻す(_R)" />
         </ContextMenu>
 
         <Style x:Key="SelectorStyle" TargetType="{x:Type Border}">
@@ -56,7 +56,7 @@
                                   Header="このタブを編集(_E)..." />
                         <Separator />
                         <MenuItem Command="{Binding Path=Parent.AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
-                        <MenuItem Header="最後に閉じたタブを元に戻す(_R)" />
+                        <MenuItem Command="{Binding Path=Parent.RebirthTabCommand}" Header="最後に閉じたタブを元に戻す(_R)" />
                         <Separator />
                         <MenuItem Command="{Binding Path=Parent.CloseCommand}"
                                   CommandParameter="{Binding}"
@@ -78,19 +78,32 @@
                         <GradientStop Offset="1" Color="Silver" />
                     </LinearGradientBrush>
                 </Border.Background>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center"
-                               Foreground="Black"
-                               Padding="4"
-                               Text="{Binding Path=TabProperty.Name}" />
-                    <Button Margin="1"
-                            Command="{Binding ClearNewTweetsCountCommand}"
-                            Style="{DynamicResource FlatButtonStyle}"
-                            Visibility="{Binding Converter={StaticResource NotZeroVisibleConverter},
-                                                 Path=NewTweetsCount}">
-                        <TextBlock Text="{Binding Path=NewTweetsCount}" TextBlock.FontWeight="Bold" />
-                    </Button>
-                </StackPanel>
+                <Grid>
+                    <Rectangle Height="3"
+                               VerticalAlignment="Top"
+                               Visibility="{Binding IsCurrentFocused,
+                                                    Converter={StaticResource BoolVisibleConverter}}">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="#A087CEFA" />
+                                <GradientStop Offset="1" Color="#0087CEFA" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center"
+                                   Foreground="Black"
+                                   Padding="4"
+                                   Text="{Binding Path=TabProperty.Name}" />
+                        <Button Margin="1"
+                                Command="{Binding ClearNewTweetsCountCommand}"
+                                Style="{DynamicResource FlatButtonStyle}"
+                                Visibility="{Binding Converter={StaticResource NotZeroVisibleConverter},
+                                                     Path=NewTweetsCount}">
+                            <TextBlock Text="{Binding Path=NewTweetsCount}" TextBlock.FontWeight="Bold" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
             </Border>
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
@@ -118,8 +131,7 @@
         </Grid.RowDefinitions>
         <!--  For design reasons, Timeline list comes before Tabs list.  -->
         <!--  Timeline  -->
-        <ItemsControl 
-                      Grid.Row="1"
+        <ItemsControl Grid.Row="1"
                       Margin="0,-2,0,0"
                       ItemsSource="{Binding TabItems}">
             <i:Interaction.Triggers>

@@ -11,6 +11,8 @@ using Inscribe.Storage;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Livet;
 using Livet.Commands;
+using Livet.Messaging;
+using Inscribe.ViewModels.Dialogs.Common;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -31,15 +33,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public UserPageViewModel(TabViewModel parent, string userId)
         {
             this.Parent = parent;
-            this._timelineListViewModel = new TimelineListViewModel(parent);
+            this._timelineListCoreViewModel = new TimelineListCoreViewModel(parent, new IFilter[0]);
             this.SetUser(userId);
         }
 
-        private TimelineListViewModel _timelineListViewModel;
-
-        public TimelineListViewModel TimelineListViewModel
+        private TimelineListCoreViewModel _timelineListCoreViewModel;
+        public TimelineListCoreViewModel TimelineListCoreViewModel
         {
-            get { return _timelineListViewModel; }
+            get { return _timelineListCoreViewModel; }
         }
 
         private UserViewModel _user = null;
@@ -67,18 +68,19 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 RaisePropertyChanged(() => Following);
                 RaisePropertyChanged(() => Followers);
                 RaisePropertyChanged(() => Listed);
-                SetUserTimeline();
+                SetUserTimeline(value);
             }
         }
 
-        public bool _isCommunicating = false;
-        public bool IsCommunicating
+        private bool _isStandby = true;
+
+        public bool IsStandby
         {
-            get { return _isCommunicating; }
+            get { return _isStandby; }
             set
             {
-                _isCommunicating = value;
-                RaisePropertyChanged(() => IsCommunicating);
+                _isStandby = value;
+                RaisePropertyChanged(() => IsStandby);
             }
         }
 
@@ -138,7 +140,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
-
         #region OpenLinkCommand
         DelegateCommand<string> _OpenLinkCommand;
 
@@ -160,7 +161,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 Browser.Start("http://twitter.com/" + User.TwitterUser.ScreenName + "/" + parameter);
         }
         #endregion
-
 
         #region OpenUserWebCommand
         DelegateCommand _OpenUserWebCommand;
@@ -252,7 +252,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
-
         #region CreateUserTabCommand
         DelegateCommand _CreateUserTabCommand;
 
@@ -297,7 +296,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
 
-
         #region ReceiveTimelineCommand
         DelegateCommand _ReceiveTimelineCommand;
 
@@ -314,7 +312,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         private void ReceiveTimeline()
         {
             if (User == null) return;
-            IsCommunicating = true;
+            IsStandby = false;
             Task.Factory.StartNew(() =>
             {
                 try
@@ -330,23 +328,21 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 }
                 finally
                 {
-                    IsCommunicating = false;
+                    IsStandby = true;
                 }
             });
         }
         #endregion
 
-        private void SetUserTimeline()
+        private void SetUserTimeline(UserViewModel user)
         {
-            if (User != null)
-            {
-                this.TimelineListViewModel.Sources = new[] { new FilterUserId(this.User.TwitterUser.NumericId) };
-                this.TimelineListViewModel.Commit(true);
-            }
+            if (user == null) return;
+            this.TimelineListCoreViewModel.Sources = new[] { new FilterUserId(user.TwitterUser.NumericId) };
+            Task.Factory.StartNew(() => this.TimelineListCoreViewModel.RefreshCache())
+                .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => this.Commit(true)));
         }
 
         public event Action CloseRequired = () => { };
-
 
         #region ManageFollowCommand
         DelegateCommand _ManageFollowCommand;
@@ -363,7 +359,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void ManageFollow()
         {
-            // todo:implementation
+            this.Messenger.Raise(new TransitionMessage(new FollowManagerViewModel(this.User), "ShowFollowManager"));
         }
         #endregion
 
@@ -389,21 +385,23 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region EditFinishCommand
-        DelegateCommand<bool> _EditFinishCommand;
+        DelegateCommand<String> _EditFinishCommand;
 
-        public DelegateCommand<bool> EditFinishCommand
+        public DelegateCommand<String> EditFinishCommand
         {
             get
             {
                 if (_EditFinishCommand == null)
-                    _EditFinishCommand = new DelegateCommand<bool>(EditFinish);
+                    _EditFinishCommand = new DelegateCommand<String>(EditFinish);
                 return _EditFinishCommand;
             }
         }
 
-        private void EditFinish(bool parameter)
+        private void EditFinish(String parameter)
         {
-            if (parameter && !String.IsNullOrEmpty(EditScreenName))
+            bool condition;
+            if (!Boolean.TryParse(parameter, out condition) && condition &&
+                !String.IsNullOrEmpty(EditScreenName))
                 this.SetUser(EditScreenName);
             else
                 InputMode = false;
@@ -426,7 +424,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             {
                 InputMode = false;
                 screenName = screenName.TrimStart('@', ' ', '\t');
-                this.IsCommunicating = true;
+                this.IsStandby = false;
                 Task.Factory.StartNew(() =>
                 {
                     try
@@ -437,24 +435,20 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                             var cred = AccountStorage.GetRandom();
                             if (cred != null)
                             {
-                                this.User = UserStorage.Get(ApiHelper.ExecApi(() => cred.GetUserByScreenName(screenName)));
+                                user = UserStorage.Get(ApiHelper.ExecApi(() => cred.GetUserByScreenName(screenName)));
                             }
                         }
-                        DispatcherHelper.BeginInvoke(() =>
-                            {
-                                IsCommunicating = false;
-                                if (user != null)
-                                    User = user;
-                                else
-                                    this.Messenger.Raise(new Livet.Messaging.InformationMessage(
+                        if (user != null)
+                            User = user;
+                        else
+                            this.Messenger.Raise(new Livet.Messaging.InformationMessage(
                                         "ユーザー @" + screenName + "の情報を取得できません。",
                                         "ユーザー情報取得エラー", System.Windows.MessageBoxImage.Warning,
                                         "InformationMessage"));
-                            });
                     }
                     finally
                     {
-                        IsCommunicating = false;
+                        IsStandby = true;
                     }
                 });
             }
@@ -481,25 +475,24 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public override void SetSelect(ListSelectionKind kind)
         {
-            Messenger.Raise(new SetListSelectionMessage("SetListSelection", kind));
+            this.TimelineListCoreViewModel.SetSelect(kind);
         }
 
         public override TimelineChild.TabDependentTweetViewModel SelectedTweetViewModel
         {
             get
             {
-                return this.TimelineListViewModel.SelectedTweetViewModel;
+                return this.TimelineListCoreViewModel.SelectedTweetViewModel;
             }
             set
             {
-                this.TimelineListViewModel.SelectedTweetViewModel = value;
+                this.TimelineListCoreViewModel.SelectedTweetViewModel = value;
             }
         }
 
         public override void Commit(bool reinvalidate)
         {
-            this.TimelineListViewModel.Commit(reinvalidate);
+            this.TimelineListCoreViewModel.Commit(reinvalidate);
         }
     }
-
 }

@@ -18,7 +18,7 @@ namespace Mystique
         {
             Application.Current.Exit += new ExitEventHandler(Exitting);
             DispatcherHelper.UIDispatcher = Dispatcher;
-#if RELEASE
+#if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 #endif
             Initializer.Init();
@@ -39,7 +39,7 @@ namespace Mystique
             body.AppendLine("********************************************************************************");
             body.AppendLine(" ERROR TRACE: " + DateTime.Now.ToString());
             body.AppendLine("********************************************************************************");
-            body.AppendLine(e.ToString());
+            body.AppendLine(e.ExceptionObject.ToString());
             body.AppendLine();
             body.AppendLine("MEMORY USAGE:");
             var cp = System.Diagnostics.Process.GetCurrentProcess();

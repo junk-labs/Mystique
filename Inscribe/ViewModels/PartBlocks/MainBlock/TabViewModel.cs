@@ -52,17 +52,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 if (value)
                     this.NewTweetsCount = 0;
                 RaisePropertyChanged(() => IsSelected);
+                RaisePropertyChanged(() => IsCurrentFocused);
             }
         }
 
-        private bool _isMouseOver = false;
-        public bool IsMouseOver
+        private bool _isTimelineMouseOver = false;
+        public bool IsTimelineMouseOver
         {
-            get { return this._isMouseOver; }
+            get { return this._isTimelineMouseOver; }
             set
             {
-                this._isMouseOver = value;
-                RaisePropertyChanged(() => IsMouseOver);
+                this._isTimelineMouseOver = value;
+                RaisePropertyChanged(() => IsTimelineMouseOver);
             }
         }
 
@@ -80,13 +81,29 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
+        public bool IsCurrentFocused
+        {
+            get
+            {
+                return this.Parent.Parent.CurrentFocusColumn == this.Parent &&
+                    IsSelected;
+            }
+        }
+
+        public void UpdateIsCurrentFocused()
+        {
+            RaisePropertyChanged(() => IsCurrentFocused);
+        }
+
         public TabViewModel(ColumnViewModel parent, TabProperty property = null)
         {
             this.Parent = parent;
 
             this._tabProperty = property ?? new TabProperty();
             ViewModelHelper.BindNotification(this._tabProperty.LinkAccountInfoChangedEvent, this, (o, e) =>
-                this.StackingTimelines.OfType<TimelineListViewModel>().SelectMany(vm => vm.TweetsSource).ForEach(t => t.PendingColorChanged(true)));
+                this.StackingTimelines.OfType<TimelineListViewModel>()
+                .SelectMany(vm => vm.TimelineListCoreViewModel.TweetsSource)
+                .ForEach(t => t.PendingColorChanged(true)));
 
             this.AddTopTimeline(null);
         }
@@ -215,8 +232,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     break;
             }
             this.IsQueryValid = true;
-            cf.Sources = filter;
-            Task.Factory.StartNew(() => cf.RefreshCache())
+            cf.TimelineListCoreViewModel.Sources = filter;
+            Task.Factory.StartNew(() => cf.TimelineListCoreViewModel.RefreshCache())
                 .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => cf.Commit(true)));
         }
 
@@ -226,32 +243,32 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             if (cf == null) return;
             if (this.TimelinesCount == 1)
                 this._queryTextBuffer = String.Empty;
-            if (cf.Sources == null)
+            if (cf.TimelineListCoreViewModel.Sources == null)
                 this._queryTextBuffer = String.Empty;
-            else if (cf.Sources.All(
+            else if (cf.TimelineListCoreViewModel.Sources.All(
                 c => (c is FilterCluster) && ((FilterCluster)c).Filters
                     .All(f => f is Filter.Filters.Text.FilterText)))
             {
                 // t:
                 this._queryTextBuffer =
-                    cf.Sources.Select(
+                    cf.TimelineListCoreViewModel.Sources.Select(
                     c => ((FilterCluster)c).Filters.Select(f =>
                         ((FilterText)f).Needle).JoinString(" ")).JoinString("|");
             }
-            else if (cf.Sources.All(
+            else if (cf.TimelineListCoreViewModel.Sources.All(
                 c => (c is FilterCluster) && ((FilterCluster)c).Filters
                     .All(f => f is FilterUser)))
             {
                 // u:
                 this._queryTextBuffer = "u:" +
-                    cf.Sources.Select(
+                    cf.TimelineListCoreViewModel.Sources.Select(
                     c => ((FilterCluster)c).Filters.Select(f =>
                         ((FilterUser)f).Needle).JoinString(" ")).JoinString("|");
             }
             else
             {
                 this._queryTextBuffer = "q:(" +
-                    cf.Sources.Select(
+                    cf.TimelineListCoreViewModel.Sources.Select(
                     s => s.ToQuery()).JoinString("|") + ")";
             }
             RaisePropertyChanged(() => QueryText);
@@ -267,6 +284,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return this._stackings.Count == 1; }
         }
 
+        public bool IsStackTopUserPage
+        {
+            get { return this.CurrentForegroundTimeline is UserPageViewModel; }
+        }
+
         /// <summary>
         /// 現在のスタックトップタイムラインを削除します。
         /// </summary>
@@ -280,6 +302,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this._stackings.ForEach(t => t.InvalidateIsActive());
             RaisePropertyChanged(() => TimelinesCount);
             RaisePropertyChanged(() => IsContainsSingle);
+            RaisePropertyChanged(() => IsStackTopUserPage);
             WritebackQuery();
         }
 
@@ -294,12 +317,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this._stackings.ForEach(t => t.InvalidateIsActive());
             RaisePropertyChanged(() => TimelinesCount);
             RaisePropertyChanged(() => IsContainsSingle);
+            RaisePropertyChanged(() => IsStackTopUserPage);
             WritebackQuery();
         }
 
         public void AddTopUser(string userId)
         {
             this._stackings.Add(new UserPageViewModel(this, userId));
+            this._stackings.ForEach(t => t.InvalidateIsActive());
+            RaisePropertyChanged(() => TimelinesCount);
+            RaisePropertyChanged(() => IsContainsSingle);
+            RaisePropertyChanged(() => IsStackTopUserPage);
         }
 
         #region ClearNewTweetsCountCommand

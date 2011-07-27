@@ -76,7 +76,7 @@ namespace Inscribe.Configuration.KeyAssignment
                 .Select(s => KeyToString(s.Modifiers, s.Key)).JoinString(", ");
         }
 
-        private static String KeyToString(ModifierKeys modkeys, Key key)
+        public static String KeyToString(ModifierKeys modkeys, Key key)
         {
             String ret = key.ToString();
             if (modkeys.HasFlag(ModifierKeys.Shift))

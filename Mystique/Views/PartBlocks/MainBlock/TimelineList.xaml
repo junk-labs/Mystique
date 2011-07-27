@@ -82,16 +82,30 @@
                         BorderBrush="Silver"
                         BorderThickness="1"
                         CornerRadius="1">
-                    <TextBox BorderThickness="0"
-                             Padding="2"
-                             Text="{Binding QueryText,
-                                            UpdateSourceTrigger=PropertyChanged}">
-                        <i:Interaction.Triggers>
-                            <l:InteractionMessageTrigger MessageKey="FocusToSearch" Messenger="{Binding Messenger}">
-                                <ba:FrameworkSetFocusAction />
-                            </l:InteractionMessageTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBox>
+                    <Grid>
+                        <TextBox BorderThickness="0"
+                                 Padding="2"
+                                 Text="{Binding QueryText,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 Visibility="{Binding IsStackTopUserPage,
+                                                      Converter={StaticResource BoolInvisibleConverter}}">
+                            <i:Interaction.Triggers>
+                                <l:InteractionMessageTrigger MessageKey="FocusToSearch" Messenger="{Binding Messenger}">
+                                    <ba:FrameworkSetFocusAction />
+                                </l:InteractionMessageTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                        <TextBlock Cursor="IBeam"
+                                   Foreground="Gray"
+                                   Padding="2"
+                                   Text="Input here to search timeline..."
+                                   Visibility="{Binding IsStackTopUserPage,
+                                                        Converter={StaticResource BoolVisibleConverter}}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding CreateTopTimelineCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </Grid>
                 </Border>
                 <Button Grid.Column="2"
                         Command="{Binding RemoveTopTimelineCommand}"
@@ -105,10 +119,14 @@
             <ItemsControl ItemsSource="{Binding StackingTimelines}">
                 <ItemsControl.Resources>
                     <DataTemplate DataType="{x:Type mainblock:UserPageViewModel}">
-                        <my:UserPage />
+                        <Grid Visibility="{Binding IsActive, Converter={StaticResource BoolVisibleConverter}}">
+                            <my:UserPage />
+                        </Grid>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type mainblock:TimelineListViewModel}">
-                        <my:TimelineListCore />
+                        <Grid Visibility="{Binding IsActive, Converter={StaticResource BoolVisibleConverter}}">
+                            <my:TimelineListCore DataContext="{Binding TimelineListCoreViewModel}" />
+                        </Grid>
                     </DataTemplate>
                 </ItemsControl.Resources>
                 <i:Interaction.Behaviors>

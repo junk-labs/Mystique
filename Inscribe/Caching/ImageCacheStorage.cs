@@ -46,6 +46,11 @@ namespace Inscribe.Caching
                 .ToArray().AsParallel().ForAll(d => imageDataDictionary.Remove(d));
         }
 
+        public static void ClearAllCache()
+        {
+            imageDataDictionary.Clear();
+        }
+
         /// <summary>
         /// キャッシュがヒットした場合のみBitmapImageを返します。<para />
         /// ヒットしなかった場合はnullが返ります。

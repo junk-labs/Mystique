@@ -123,6 +123,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public void CloseTab(TabViewModel tabViewModel)
         {
             RemoveTab(tabViewModel);
+            this.Parent.PushClosedTabStack(tabViewModel);
+            this.Parent.GCColumn();
         }
 
         public void RemoveTab(TabViewModel tabViewModel)
@@ -320,6 +322,31 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.AddTab(property);
         }
         #endregion
+
+        #region RebirthTabCommand
+        DelegateCommand _RebirthTabCommand;
+
+        public DelegateCommand RebirthTabCommand
+        {
+            get
+            {
+                if (_RebirthTabCommand == null)
+                    _RebirthTabCommand = new DelegateCommand(RebirthTab, CanRebirthTab);
+                return _RebirthTabCommand;
+            }
+        }
+
+        private bool CanRebirthTab()
+        {
+            return this.Parent.IsExistedClosedTab();
+        }
+
+        private void RebirthTab()
+        {
+            this.AddTab(this.Parent.PopClosedTab());
+        }
+        #endregion
+      
 
         #region CloseCommand
         DelegateCommand<TabViewModel> _CloseCommand;

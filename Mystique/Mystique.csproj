@@ -111,6 +111,9 @@
     <Compile Include="Views\Common\Filter\FilterQueryEditor.xaml.cs">
       <DependentUpon>FilterQueryEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\UrlTooltip.xaml.cs">
+      <DependentUpon>UrlTooltip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Common\UserSelector.xaml.cs">
       <DependentUpon>UserSelector.xaml</DependentUpon>
     </Compile>
@@ -130,6 +133,12 @@
     </Compile>
     <Compile Include="Views\Dialogs\Common\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Common\AssignViewer.xaml.cs">
+      <DependentUpon>AssignViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Common\FollowManager.xaml.cs">
+      <DependentUpon>FollowManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\TabEditor.xaml.cs">
       <DependentUpon>TabEditor.xaml</DependentUpon>
@@ -227,6 +236,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Common\UrlTooltip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Common\UserSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -240,6 +253,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\Common\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\Common\AssignViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\Common\FollowManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -156,7 +156,8 @@ namespace Inscribe.Storage
                     if (!vm.IsStatusInfoContains)
                         vm.SetStatus(status.RetweetedOriginal);
                     // 自分が関係していれば
-                    if (AccountStorage.Contains(status.User.ScreenName) || AccountStorage.Contains(user.TwitterUser.ScreenName))
+                    if (AccountStorage.Contains(status.RetweetedOriginal.User.ScreenName)
+                        || AccountStorage.Contains(user.TwitterUser.ScreenName))
                         EventStorage.OnRetweeted(vm, user);
                 }
             }

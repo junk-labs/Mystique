@@ -392,6 +392,49 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         #region Navigation Commands
 
+        #region ShowUserDetailCommand
+        DelegateCommand _ShowUserDetailCommand;
+
+        public DelegateCommand ShowUserDetailCommand
+        {
+            get
+            {
+                if (_ShowUserDetailCommand == null)
+                    _ShowUserDetailCommand = new DelegateCommand(ShowUserDetail);
+                return _ShowUserDetailCommand;
+            }
+        }
+
+        private void ShowUserDetail()
+        {
+            var tweet = this.Tweet.Status as TwitterStatus;
+            if (tweet != null && tweet.RetweetedOriginal != null)
+                this.Parent.AddTopUser(tweet.RetweetedOriginal.User.ScreenName);
+            else
+                this.Parent.AddTopUser(this.Tweet.Status.User.ScreenName);
+        }
+        #endregion
+
+        #region RetweetedUserDetailCommand
+        DelegateCommand _RetweetedUserDetailCommand;
+
+        public DelegateCommand RetweetedUserDetailCommand
+        {
+            get
+            {
+                if (_RetweetedUserDetailCommand == null)
+                    _RetweetedUserDetailCommand = new DelegateCommand(RetweetedUserDetail);
+                return _RetweetedUserDetailCommand;
+            }
+        }
+
+        private void RetweetedUserDetail()
+        {
+            this.Parent.AddTopUser(this.Tweet.Status.User.ScreenName);
+        }
+        #endregion
+      
+
         #region OpenConversationCommand
         DelegateCommand _OpenConversationCommand;
 
@@ -444,7 +487,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
         #endregion
 
-
         #region OpenDMConversationCommand
         DelegateCommand _OpenDMConversationCommand;
 
@@ -485,7 +527,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
         #endregion
-      
       
         #endregion
 
@@ -686,6 +727,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             {
                 AccountStorage.Accounts.ForEach(i => Task.Factory.StartNew(() => ApiHelper.ExecApi(() => i.ReportSpam(this.Tweet.Status.User.NumericId))));
                 TweetStorage.Remove(this.Tweet.Status.Id);
+                NotifyStorage.Notify("R4Sしました: @" + this.Tweet.Status.User.ScreenName);
             }
         }
         #endregion

@@ -17,6 +17,8 @@ using Mystique.Views.Behaviors.Messages;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Inscribe.Configuration.KeyAssignment;
 using System.Windows;
+using Inscribe.Communication.Streaming;
+using Inscribe.Caching;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -78,6 +80,149 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         {
             var vm = new SettingViewModel();
             Messenger.Raise(new TransitionMessage(vm, "ShowConfig"));
+        }
+        #endregion
+
+        #region CreateNewColumnCommand
+        DelegateCommand _CreateNewColumnCommand;
+
+        public DelegateCommand CreateNewColumnCommand
+        {
+            get
+            {
+                if (_CreateNewColumnCommand == null)
+                    _CreateNewColumnCommand = new DelegateCommand(CreateNewColumn);
+                return _CreateNewColumnCommand;
+            }
+        }
+
+        private void CreateNewColumn()
+        {
+            var col = this.Parent.ColumnOwnerViewModel.CreateColumn();
+            col.AddNewTabCommand.Execute();
+        }
+        #endregion
+
+        #region CreateNewTabCommand
+        DelegateCommand _CreateNewTabCommand;
+
+        public DelegateCommand CreateNewTabCommand
+        {
+            get
+            {
+                if (_CreateNewTabCommand == null)
+                    _CreateNewTabCommand = new DelegateCommand(CreateNewTab);
+                return _CreateNewTabCommand;
+            }
+        }
+
+        private void CreateNewTab()
+        {
+            this.Parent.ColumnOwnerViewModel.CurrentFocusColumn.AddNewTabCommand.Execute();
+        }
+        #endregion
+
+        #region CollectTabsCommand
+        DelegateCommand _CollectTabsCommand;
+
+        public DelegateCommand CollectTabsCommand
+        {
+            get
+            {
+                if (_CollectTabsCommand == null)
+                    _CollectTabsCommand = new DelegateCommand(CollectTabs);
+                return _CollectTabsCommand;
+            }
+        }
+
+        private void CollectTabs()
+        {
+            var tabs = this.Parent.ColumnOwnerViewModel.Columns
+                .SelectMany(cvm =>
+                    cvm.TabItems.ToArray().Select(t =>
+                    {
+                        cvm.RemoveTab(t);
+                        return t;
+                    })).ToArray();
+            var nc = this.Parent.ColumnOwnerViewModel.CreateColumn();
+            tabs.ForEach(t => nc.AddTab(t));
+            this.Parent.ColumnOwnerViewModel.GCColumn();
+        }
+        #endregion
+      
+        #region ClearClosedTabStackCommand
+        DelegateCommand _ClearClosedTabStackCommand;
+
+        public DelegateCommand ClearClosedTabStackCommand
+        {
+            get
+            {
+                if (_ClearClosedTabStackCommand == null)
+                    _ClearClosedTabStackCommand = new DelegateCommand(ClearClosedTabStack);
+                return _ClearClosedTabStackCommand;
+            }
+        }
+
+        private void ClearClosedTabStack()
+        {
+            this.Parent.ColumnOwnerViewModel.ClearClosedTab();
+        }
+        #endregion
+
+        #region ShowAssignViewerCommand
+        DelegateCommand _ShowAssignViewerCommand;
+
+        public DelegateCommand ShowAssignViewerCommand
+        {
+            get
+            {
+                if (_ShowAssignViewerCommand == null)
+                    _ShowAssignViewerCommand = new DelegateCommand(ShowAssignViewer);
+                return _ShowAssignViewerCommand;
+            }
+        }
+
+        private void ShowAssignViewer()
+        {
+            Messenger.Raise(new TransitionMessage("ShowAssignViewer"));
+        }
+        #endregion
+
+        #region ReconnectStreamsCommand
+        DelegateCommand _ReconnectStreamsCommand;
+
+        public DelegateCommand ReconnectStreamsCommand
+        {
+            get
+            {
+                if (_ReconnectStreamsCommand == null)
+                    _ReconnectStreamsCommand = new DelegateCommand(ReconnectStreams);
+                return _ReconnectStreamsCommand;
+            }
+        }
+
+        private void ReconnectStreams()
+        {
+            UserStreamsReceiverManager.RefreshReceivers();
+        }
+        #endregion
+
+        #region ClearImageCachesCommand
+        DelegateCommand _ClearImageCachesCommand;
+
+        public DelegateCommand ClearImageCachesCommand
+        {
+            get
+            {
+                if (_ClearImageCachesCommand == null)
+                    _ClearImageCachesCommand = new DelegateCommand(ClearImageCaches);
+                return _ClearImageCachesCommand;
+            }
+        }
+
+        private void ClearImageCaches()
+        {
+            ImageCacheStorage.ClearAllCache();
         }
         #endregion
 

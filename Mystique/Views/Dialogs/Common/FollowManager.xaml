@@ -1,0 +1,274 @@
+﻿<Window x:Class="Mystique.Views.Dialogs.Common.FollowManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:my="clr-namespace:Mystique.Views.Common"
+        xmlns:v="clr-namespace:Mystique.Views"
+        Title="フォロー状態の管理"
+        Width="500"
+        Height="300"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow">
+    <Window.Resources>
+        <BitmapImage x:Key="Following" UriSource="/Resources/accept.png" />
+        <BitmapImage x:Key="Removing" UriSource="/Resources/remove.png" />
+        <BitmapImage x:Key="Blocking" UriSource="/Resources/exclamation.png" />
+        <BitmapImage x:Key="Follow" UriSource="/Resources/add.png" />
+        <BitmapImage x:Key="Remove" UriSource="/Resources/delete.png" />
+        <BitmapImage x:Key="Block" UriSource="/Resources/cross.png" />
+        <BitmapImage x:Key="ReportSpam" UriSource="/Resources/report_spam.png" />
+        <BitmapImage x:Key="BlockOption" UriSource="/Resources/cancel.png" />
+        <BitmapImage x:Key="Chevron" UriSource="/Resources/chevron.png" />
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="WindowAction" Messenger="{Binding Messenger}">
+            <l:WindowInteractionMessageAction />
+        </l:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid IsEnabled="{Binding IsStandby}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <my:LazyImage Width="40"
+                              Height="40"
+                              UriSource="{Binding TargetProfileImageUrl}" />
+                <TextBlock Grid.Column="1" Margin="3"><Run Text="{Binding TargetScreenName, Mode=OneWay, StringFormat=@\{0\}}" />
+                    <LineBreak /><Run Text="このユーザーについてのフォロー設定:" />
+                </TextBlock>
+            </Grid>
+            <Border Grid.Row="1"
+                    BorderBrush="DimGray"
+                    BorderThickness="1">
+                <ScrollViewer HorizontalContentAlignment="Stretch"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Relations}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid IsEnabled="{Binding IsStandby}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Button VerticalAlignment="Center" Command="{Binding RefreshInfoCommand}">
+                                            <Button.ToolTip>
+                                                <TextBlock Text="フォロー/フォロワー情報を更新..." />
+                                            </Button.ToolTip>
+                                            <my:LazyImage Width="40"
+                                                          Height="40"
+                                                          VerticalAlignment="Stretch"
+                                                          UriSource="{Binding UserProfileImageUrl}" />
+                                        </Button>
+                                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                                            <StackPanel Margin="0,2" Orientation="Horizontal">
+                                                <TextBlock Margin="0,2" VerticalAlignment="Center"><Run Text="{Binding UserScreenName, Mode=OneWay, StringFormat=@\{0\}}" /><Run Text=" " /><Run Text="のフォロー状態:" />
+                                                </TextBlock>
+                                                <TextBlock Foreground="RoyalBlue"
+                                                           Text="(相手からfollowあり)"
+                                                           Visibility="{Binding IsFollowbacked,
+                                                                                Converter={StaticResource BoolVisibleConverter}}" />
+                                                <TextBlock Foreground="Gray"
+                                                           Text="(相手からfollow無し)"
+                                                           Visibility="{Binding IsFollowbacked,
+                                                                                Converter={StaticResource BoolInvisibleConverter}}" />
+                                            </StackPanel>
+                                            <DockPanel Grid.Row="1" Visibility="{Binding Blocking, Converter={StaticResource BoolInvisibleConverter}}">
+
+                                                <my:DropDownButton DockPanel.Dock="Right">
+                                                    <my:DropDownButton.ToolTip>
+                                                        <TextBlock Margin="2" Text="ブロック オプション" />
+                                                    </my:DropDownButton.ToolTip>
+                                                    <my:DropDownButton.DropDownMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem Command="{Binding BlockCommand}">
+                                                                <MenuItem.Icon>
+                                                                    <Image Width="16"
+                                                                           Height="16"
+                                                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                                           Source="{StaticResource Block}" />
+                                                                </MenuItem.Icon>
+                                                                <MenuItem.Header>
+                                                                    <AccessText Text="このユーザーをブロック(_B)" />
+                                                                </MenuItem.Header>
+                                                            </MenuItem>
+                                                            <MenuItem Command="{Binding ReportForSpamCommand}">
+                                                                <MenuItem.Icon>
+                                                                    <Image Width="16"
+                                                                           Height="16"
+                                                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                                           Source="{StaticResource ReportSpam}" />
+                                                                </MenuItem.Icon>
+                                                                <MenuItem.Header>
+                                                                    <AccessText Text="このユーザーをスパム報告(_R)" />
+                                                                </MenuItem.Header>
+                                                            </MenuItem>
+                                                        </ContextMenu>
+                                                    </my:DropDownButton.DropDownMenu>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Image Width="16"
+                                                               Height="16"
+                                                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                               Source="{StaticResource BlockOption}" />
+                                                        <Image Width="8"
+                                                               Height="8"
+                                                               VerticalAlignment="Center"
+                                                               Source="{StaticResource Chevron}" />
+                                                    </StackPanel>
+                                                </my:DropDownButton>
+                                                <Grid>
+                                                    <Button x:Name="FollowButton"
+                                                            Command="{Binding FollowCommand}"
+                                                            DockPanel.Dock="Left"
+                                                            Padding="10,2"
+                                                            Visibility="{Binding IsFollowing,
+                                                                                 Converter={StaticResource BoolInvisibleConverter}}">
+                                                        <DockPanel>
+                                                            <StackPanel x:Name="UnfollowingStateView" Orientation="Horizontal">
+                                                                <Image Width="16"
+                                                                       Height="16"
+                                                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                                       Source="{StaticResource Removing}" />
+                                                                <TextBlock Text="フォローしていません" />
+                                                            </StackPanel>
+                                                            <StackPanel x:Name="UnfollowingOperateView"
+                                                                        Orientation="Horizontal"
+                                                                        Visibility="Collapsed">
+                                                                <Image Width="16"
+                                                                       Height="16"
+                                                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                                       Source="{StaticResource Follow}" />
+                                                                <TextBlock FontWeight="Bold"
+                                                                           Foreground="ForestGreen"
+                                                                           Text="フォローします" />
+                                                            </StackPanel>
+                                                        </DockPanel>
+                                                    </Button>
+                                                    <Button x:Name="RemoveButton"
+                                                            Command="{Binding RemoveCommand}"
+                                                            DockPanel.Dock="Left"
+                                                            Padding="10,2"
+                                                            Visibility="{Binding IsFollowing,
+                                                                                 Converter={StaticResource BoolVisibleConverter}}">
+                                                        <DockPanel>
+                                                            <StackPanel x:Name="FollowingStateView" Orientation="Horizontal">
+                                                                <Image Width="16"
+                                                                       Height="16"
+                                                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                                       Source="{StaticResource Following}" />
+                                                                <TextBlock FontWeight="Bold"
+                                                                           Foreground="ForestGreen"
+                                                                           Text="フォローしています" />
+                                                            </StackPanel>
+                                                            <StackPanel x:Name="FollowingOperateView"
+                                                                        Orientation="Horizontal"
+                                                                        Visibility="Collapsed">
+                                                                <Image Width="16"
+                                                                       Height="16"
+                                                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                                       Source="{StaticResource Remove}" />
+                                                                <TextBlock FontWeight="Bold"
+                                                                           Foreground="Red"
+                                                                           Text="リムーブします" />
+                                                            </StackPanel>
+                                                        </DockPanel>
+                                                    </Button>
+                                                </Grid>
+                                            </DockPanel>
+                                            <Button x:Name="UnblockButton"
+                                                    Grid.Row="1"
+                                                    Command="{Binding UnblockCommand}"
+                                                    Padding="10,2"
+                                                    Visibility="{Binding Blocking,
+                                                                         Converter={StaticResource BoolVisibleConverter}}">
+                                                <DockPanel>
+                                                    <StackPanel x:Name="BlockingStateView" Orientation="Horizontal">
+                                                        <Image Width="16"
+                                                               Height="16"
+                                                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                               Source="{StaticResource Blocking}" />
+                                                        <TextBlock FontWeight="Bold"
+                                                                   Foreground="Red"
+                                                                   Text="ブロックしています" />
+                                                    </StackPanel>
+                                                    <StackPanel x:Name="BlockingOperateView"
+                                                                Orientation="Horizontal"
+                                                                Visibility="Collapsed">
+                                                        <Image Width="16"
+                                                               Height="16"
+                                                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                               Source="{StaticResource Removing}" />
+                                                        <TextBlock Foreground="Blue" Text="ブロックを解除します" />
+                                                    </StackPanel>
+                                                </DockPanel>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Background="#99FFFFFF" Visibility="{Binding IsStandby, Converter={StaticResource BoolInvisibleConverter}}">
+                                        <StackPanel HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Horizontal">
+                                            <my:Intermediate Margin="2, 2, 0, 2" VerticalAlignment="Center" />
+                                            <TextBlock Margin="1, 4, 2, 4"
+                                                       VerticalAlignment="Center"
+                                                       Text="情報を更新中..." />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                                <DataTemplate.Triggers>
+                                    <Trigger SourceName="RemoveButton" Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="FollowingStateView" Property="Visibility" Value="Collapsed" />
+                                        <Setter TargetName="FollowingOperateView" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                    <Trigger SourceName="FollowButton" Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="UnfollowingStateView" Property="Visibility" Value="Collapsed" />
+                                        <Setter TargetName="UnfollowingOperateView" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                    <Trigger SourceName="UnblockButton" Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="BlockingStateView" Property="Visibility" Value="Collapsed" />
+                                        <Setter TargetName="BlockingOperateView" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+            <StackPanel Grid.Row="2"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <Button Width="100"
+                        Height="25"
+                        Command="{Binding CommitCommand}"
+                        Content="OK"
+                        IsDefault="True" />
+                <Button Width="100"
+                        Height="25"
+                        Command="{Binding CancelCommand}"
+                        Content="キャンセル"
+                        IsCancel="True" />
+            </StackPanel>
+        </Grid>
+        <Grid Background="#99FFFFFF" Visibility="{Binding IsCommunicating, Converter={StaticResource BoolVisibleConverter}}">
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                <my:Intermediate VerticalAlignment="Center" />
+                <TextBlock Margin="4"
+                           VerticalAlignment="Center"
+                           Text="フォロー状態を更新しています..." />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
