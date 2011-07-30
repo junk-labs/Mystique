@@ -103,6 +103,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 return false;
             this._retweeteds.Add(user);
             TweetStorage.NotifyTweetStateChanged(this);
+            RaisePropertyChanged(() => RetweetedUsers);
             return true;
         }
 
@@ -112,10 +113,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 return false;
             this._retweeteds.Remove(user);
             TweetStorage.NotifyTweetStateChanged(this);
+            RaisePropertyChanged(() => RetweetedUsers);
             return true;
         }
 
-        public IEnumerable<UserViewModel> RetweetedUsers
+        public ConcurrentObservable<UserViewModel> RetweetedUsers
         {
             get { return this._retweeteds; }
         }
@@ -133,6 +135,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 return false;
             this._favoreds.Add(user);
             TweetStorage.NotifyTweetStateChanged(this);
+            RaisePropertyChanged(() => FavoredUsers);
             return true;
         }
 
@@ -142,10 +145,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 return false;
             this._favoreds.Remove(user);
             TweetStorage.NotifyTweetStateChanged(this);
+            RaisePropertyChanged(() => FavoredUsers);
             return true;
         }
 
-        public IEnumerable<UserViewModel> FavoredUsers
+        public ConcurrentObservable<UserViewModel> FavoredUsers
         {
             get { return this._favoreds; }
         }
@@ -185,6 +189,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             RaisePropertyChanged(() => Status);
             RaisePropertyChanged(() => NameAreaWidth);
+        }
+
+        public void RefreshInReplyToInfo()
+        {
+            RaisePropertyChanged(() => ReplyText);
         }
         
         #endregion

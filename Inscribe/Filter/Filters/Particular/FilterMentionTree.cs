@@ -58,6 +58,7 @@ namespace Inscribe.Filter.Filters.Particular
                 {
                     this.tracePoint = ts.InReplyToStatusId;
                     RecursiveCheckId(ts.InReplyToStatusId);
+                    tweet.RefreshInReplyToInfo(); // 返信情報の更新を通知
                 }
                 else
                 {

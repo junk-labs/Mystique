@@ -26,6 +26,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Visibility="{Binding IsRetweet, Converter={StaticResource BoolVisibleConverter}}">
                 <Image Source="{StaticResource RetweetLarge}" Stretch="None" />
@@ -43,8 +44,15 @@
                            Foreground="Orange"
                            Text="Favorite" />
             </StackPanel>
-            <my:UserSelector Grid.Row="1" DataContext="{Binding UserSelectorViewModel}" />
-            <Grid Grid.Row="2">
+            <my:UserSelector Grid.Row="1"
+                             MaxWidth="320"
+                             HorizontalAlignment="Center"
+                             DataContext="{Binding UserSelectorViewModel}" />
+            <TextBlock Grid.Row="2"
+                       Margin="4"
+                       Text="{Binding SelectedUsers,
+                                      Mode=OneWay, StringFormat=With:{0}}" />
+            <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />

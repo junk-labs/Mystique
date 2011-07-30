@@ -82,6 +82,11 @@ namespace Inscribe.Data
             return ret;
         }
 
+        public T[] ToArrayVolatile()
+        {
+            return this.BehindCollection.ToArray();
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return this.BehindArray.Cast<T>().GetEnumerator();

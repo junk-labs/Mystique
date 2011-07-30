@@ -6,6 +6,7 @@ using Livet;
 using System.Text;
 using System.IO;
 using Inscribe;
+using Inscribe.Filter.Core;
 
 namespace Mystique
 {
@@ -22,6 +23,9 @@ namespace Mystique
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 #endif
             Initializer.Init();
+            var quer = QueryCompiler.ToFilter("text:\"1\" | !(text:\"2\")");
+            System.Diagnostics.Debug.WriteLine(quer.ToQuery());
+            System.Diagnostics.Debug.WriteLine(quer.ToQuery());
         }
 
         void Exitting(object sender, ExitEventArgs e)

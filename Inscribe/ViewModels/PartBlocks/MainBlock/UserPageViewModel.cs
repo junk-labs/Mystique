@@ -338,8 +338,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             if (user == null) return;
             this.TimelineListCoreViewModel.Sources = new[] { new FilterUserId(user.TwitterUser.NumericId) };
-            Task.Factory.StartNew(() => this.TimelineListCoreViewModel.RefreshCache())
-                .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => this.Commit(true)));
+            Task.Factory.StartNew(() => this.TimelineListCoreViewModel.InvalidateCache(true));
         }
 
         public event Action CloseRequired = () => { };
@@ -490,9 +489,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
-        public override void Commit(bool reinvalidate)
+        public override void InvalidateCache()
         {
-            this.TimelineListCoreViewModel.Commit(reinvalidate);
+            this.TimelineListCoreViewModel.InvalidateCache(true);
         }
     }
 }

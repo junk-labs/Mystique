@@ -30,6 +30,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public abstract TabDependentTweetViewModel SelectedTweetViewModel { get; set; }
 
-        public abstract void Commit(bool reinvalidate);
+        public abstract void InvalidateCache();
     }
 }

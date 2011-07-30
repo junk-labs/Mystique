@@ -7,6 +7,8 @@ using Inscribe.ViewModels.Dialogs;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Inscribe.Filter.Filters.ScreenName;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -117,7 +119,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 SelectedTabViewModel = insert;
 
             // タブ変更のコミット
-            insert.Commit(true);
+            insert.InvalidateCache();
         }
 
         public void CloseTab(TabViewModel tabViewModel)
@@ -185,13 +187,32 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         private void OnDrop(DragEventArgs parameter)
         {
             var data = parameter.Data.GetData(typeof(TabViewModel)) as TabViewModel;
-            if (data == null) return;
-            var odo = parameter.OriginalSource as FrameworkElement;
-            var tvm = odo != null ? odo.DataContext as TabViewModel : null;
-            if (tvm == data) return;
-            Parent.Columns.ForEach(cvm => cvm.RemoveTab(data));
-            this.InsertBefore(data, tvm);
-            this.SelectedTabViewModel = data;
+            if (data != null)
+            {
+                var odo = parameter.OriginalSource as FrameworkElement;
+                var tvm = odo != null ? odo.DataContext as TabViewModel : null;
+                if (tvm == data) return;
+                Parent.Columns.ForEach(cvm => cvm.RemoveTab(data));
+                this.InsertBefore(data, tvm);
+                this.SelectedTabViewModel = data;
+                return;
+            }
+            var td = parameter.Data.GetData(typeof(TweetViewModel)) as TweetViewModel;
+            if (td != null)
+            {
+                var odo = parameter.OriginalSource as FrameworkElement;
+                var tvm = odo != null ? odo.DataContext as TabViewModel : null;
+                if (tvm != null)
+                {
+                    tvm.TabProperty.TweetSources = tvm.TabProperty.TweetSources.Concat(new[] { new FilterUser("^" + td.Status.User.ScreenName + "$") }).ToArray();
+                    tvm.InvalidateCache();
+                }
+                else
+                {
+                    this.AddTab(new TabProperty() { Name = "@" + td.Status.User.ScreenName, TweetSources = new[] { new FilterUser(td.Status.User.ScreenName) } });
+                }
+                return;
+            }
         }
         #endregion
 
@@ -299,7 +320,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         private void EditTab(TabViewModel parameter)
         {
             parameter.TabProperty = ShowTabEditor(parameter.TabProperty);
-            parameter.Commit(true);
+            parameter.InvalidateCache();
         }
         #endregion
 

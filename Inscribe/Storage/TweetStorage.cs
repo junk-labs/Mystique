@@ -241,27 +241,27 @@ namespace Inscribe.Storage
 
         #region Notifications
 
-        private static readonly Notificator<TweetStorageChangedEventArgs> _notificator = new Notificator<TweetStorageChangedEventArgs>();
-        public static Notificator<TweetStorageChangedEventArgs> Notificator { get { return _notificator; } }
+        private static readonly Notificator<TweetStorageChangedEventArgs> _tweetStorageChangedEvent = new Notificator<TweetStorageChangedEventArgs>();
+        public static Notificator<TweetStorageChangedEventArgs> TweetStorageChangedEvent { get { return _tweetStorageChangedEvent; } }
 
         static void RaiseStatusAdded(TweetViewModel added)
         {
-            Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Added, added));
+            TweetStorageChangedEvent.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Added, added));
         }
 
         static void RaiseStatusRemoved(TweetViewModel removed)
         {
-            Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Removed, removed));
+            TweetStorageChangedEvent.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Removed, removed));
         }
 
         static void RaiseStatusStateChanged(TweetViewModel changed)
         {
-            Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Changed, changed));
+            TweetStorageChangedEvent.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Changed, changed));
         }
 
         static void RaiseRefreshTweets()
         {
-            Notificator.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Refresh));
+            TweetStorageChangedEvent.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Refresh));
         }
 
 

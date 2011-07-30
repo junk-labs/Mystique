@@ -92,15 +92,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Views\Behaviors\Actions\DragDropStartAction.cs" />
     <Compile Include="Views\Behaviors\Actions\FrameworkSetFocusAction.cs" />
     <Compile Include="Views\Behaviors\Actions\InvokePassThruCommandAction.cs" />
     <Compile Include="Views\Behaviors\Actions\SetListSelectionInteractionMessageAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TextBoxSetCaretAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TransitionInteractionMessageAction.cs" />
+    <Compile Include="Views\Behaviors\DragDropBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\KeyBindingHandlerBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\MouseOverBindBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\SquaredScrollBehavior.cs" />
+    <Compile Include="Views\Behaviors\TimelineScrollLockBehavior.cs" />
     <Compile Include="Views\Common\DropDownButton.cs" />
     <Compile Include="Views\Common\Filter\FilterEditor.xaml.cs">
       <DependentUpon>FilterEditor.xaml</DependentUpon>

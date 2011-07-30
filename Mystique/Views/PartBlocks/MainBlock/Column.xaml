@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="Mystique.Views.PartBlocks.MainBlock.Column"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:b="clr-namespace:Mystique.Views.Behaviors"
              xmlns:ba="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -63,15 +64,13 @@
                                   Header="タブを閉じる(_C)" />
                     </ContextMenu>
                 </Border.ContextMenu>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseMove">
-                        <ba:DragDropStartAction AfterDragDropCommand="{Binding Path=DataContext.DragDropFinishCommand,
-                                                                               ElementName=TabOwner}"
-                                                BeforeDragDropCommand="{Binding Path=DataContext.DragDropStartCommand,
-                                                                                ElementName=TabOwner}"
-                                                DragDropData="{Binding}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                <i:Interaction.Behaviors>
+                    <b:DragDropBehavior AfterDragDropCommand="{Binding Path=DataContext.DragDropFinishCommand,
+                                                                       ElementName=TabOwner}"
+                                        BeforeDragDropCommand="{Binding Path=DataContext.DragDropStartCommand,
+                                                                        ElementName=TabOwner}"
+                                        DragDropData="{Binding}" />
+                </i:Interaction.Behaviors>
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                         <GradientStop Offset="0.3" Color="White" />
@@ -79,7 +78,7 @@
                     </LinearGradientBrush>
                 </Border.Background>
                 <Grid>
-                    <Rectangle Height="3"
+                    <Rectangle Height="5"
                                VerticalAlignment="Top"
                                Visibility="{Binding IsCurrentFocused,
                                                     Converter={StaticResource BoolVisibleConverter}}">

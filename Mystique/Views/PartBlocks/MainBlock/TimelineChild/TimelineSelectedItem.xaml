@@ -1,6 +1,8 @@
 ﻿<UserControl x:Class="Mystique.Views.PartBlocks.MainBlock.TimelineChild.TimelineSelectedItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:b="clr-namespace:Mystique.Views.Behaviors"
+             xmlns:ba="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:com="clr-namespace:Mystique.Views.Common"
              xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -67,7 +69,7 @@
             <MenuItem Command="{Binding QuoteCommand}"
                       Header="QT(_Q)"
                       InputGestureText="Ctrl+Q"
-                      Visibility="{Binding ShowQuoteTweetButton,
+                      Visibility="{Binding Path=Tweet.ShowQuoteTweetButton,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource QuoteTweet}" />
@@ -123,12 +125,11 @@
         </ContextMenu>
     </UserControl.Resources>
     <i:Interaction.Triggers>
-        <l:InteractionMessageTrigger Messenger="{Binding Messenger}"
-                                     MessageKey="Confirm">
+        <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
             <l:ConfirmationDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
-        <Grid Name="OwnerPanel"
+    <Grid Name="OwnerPanel"
           Background="{Binding BackBrush}"
           ContextMenu="{StaticResource TweetContextMenu}">
         <Grid.InputBindings>
@@ -153,9 +154,18 @@
                                UriSource="{Binding Path=Tweet,
                                                    Converter={StaticResource TweetUserImageConverter},
                                                    ConverterParameter=Suggested}">
-                    <com:LazyImage.InputBindings>
-                        <MouseBinding Command="{Binding CreateUserTabCommand}" MouseAction="LeftClick" />
-                    </com:LazyImage.InputBindings>
+                    <i:Interaction.Behaviors>
+                        <b:DragDropBehavior DragDropData="{Binding Path=Tweet}"
+                                            OnClickCommand="{Binding CreateUserTabCommand}"
+                                            OverrideClickEvent="True" />
+                    </i:Interaction.Behaviors>
+                    <com:LazyImage.ToolTip>
+                        <TextBlock>
+                            <Run Text="クリックするとこのユーザーのタブを新しく作ります。" />
+                            <LineBreak />
+                            <Run Text="また、タブにドラッグ&amp;ドロップすることで、そのタブにこのユーザーのツイートを含めることができます。" />
+                        </TextBlock>
+                    </com:LazyImage.ToolTip>
                 </com:LazyImage>
                 <StackPanel HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
@@ -320,7 +330,7 @@
                         <MenuItem Command="{Binding DeleteCommand}"
                                   Header="削除(_D)"
                                   InputGestureText="Delete"
-                                  Visibility="{Binding Path=ShowDeleteButton,
+                                  Visibility="{Binding Path=Tweet.ShowDeleteButton,
                                                        Converter={StaticResource BoolVisibleConverter}}">
                             <MenuItem.Icon>
                                 <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Delete}" />
@@ -397,7 +407,11 @@
                                                Height="22"
                                                UriSource="{Binding Path=TwitterUser.ProfileImage}">
                                     <com:LazyImage.InputBindings>
-                                        <MouseBinding Command="{Binding OpenUserCommand}" MouseAction="LeftClick" />
+                                        <MouseBinding Command="{Binding Path=DataContext.OpenUserCommand,
+                                                                        RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                                                       AncestorType={x:Type ItemsControl}}}"
+                                                      CommandParameter="{Binding}"
+                                                      MouseAction="LeftClick" />
                                     </com:LazyImage.InputBindings>
                                     <com:LazyImage.ToolTip>
                                         <TextBlock Text="{Binding Path=TwitterUser.ScreenName, StringFormat=@{0}}" />
@@ -443,7 +457,11 @@
                                                Height="22"
                                                UriSource="{Binding Path=TwitterUser.ProfileImage}">
                                     <com:LazyImage.InputBindings>
-                                        <MouseBinding Command="{Binding OpenUserCommand}" MouseAction="LeftClick" />
+                                        <MouseBinding Command="{Binding Path=DataContext.OpenUserCommand,
+                                                                        RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                                                       AncestorType={x:Type ItemsControl}}}"
+                                                      CommandParameter="{Binding}"
+                                                      MouseAction="LeftClick" />
                                     </com:LazyImage.InputBindings>
                                     <com:LazyImage.ToolTip>
                                         <TextBlock Text="{Binding Path=TwitterUser.ScreenName, StringFormat=@{0}}" />

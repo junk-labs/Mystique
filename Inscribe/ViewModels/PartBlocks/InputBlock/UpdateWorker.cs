@@ -113,7 +113,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 this.ExceptionString = e.ToString();
                 ParseFailException(e);
                 this.RecentPostCount = -1;
-                return false;
+                return this.WorkingState == InputBlock.WorkingState.Annotated;
             }
         }
 

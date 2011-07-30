@@ -113,9 +113,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.Parent = newParent;
         }
 
-        public void Commit(bool reinvalidate)
+        public void InvalidateCache()
         {
-            this.StackingTimelines.ForEach(f => f.Commit(reinvalidate));
+            this.StackingTimelines.ForEach(f => f.InvalidateCache());
         }
 
         private ObservableCollection<TimelineCoreViewModelBase> _stackings = new ObservableCollection<TimelineCoreViewModelBase>();
@@ -128,6 +128,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             get { return this._stackings.Last(); }
         }
+
+        #region Binding Property
 
         private bool _isQueryValid = true;
         public bool IsQueryValid
@@ -167,6 +169,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                             this.AnalyzeCurrentQuery();
                         }
                     });
+            }
+        }
+
+        private bool _isMouseOver = false;
+
+        public bool IsMouseOver
+        {
+            get { return _isMouseOver; }
+            set
+            {
+                _isMouseOver = value;
+                RaisePropertyChanged(() => IsMouseOver);
             }
         }
 
@@ -233,8 +247,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
             this.IsQueryValid = true;
             cf.TimelineListCoreViewModel.Sources = filter;
-            Task.Factory.StartNew(() => cf.TimelineListCoreViewModel.RefreshCache())
-                .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => cf.Commit(true)));
+            Task.Factory.StartNew(() => cf.TimelineListCoreViewModel.InvalidateCache(true));
         }
 
         private void WritebackQuery()
@@ -288,6 +301,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             get { return this.CurrentForegroundTimeline is UserPageViewModel; }
         }
+
+        #endregion
 
         /// <summary>
         /// 現在のスタックトップタイムラインを削除します。

@@ -23,6 +23,7 @@ using Inscribe.Filter.Filters.Particular;
 using Inscribe.Filter;
 using System.Collections.Generic;
 using Inscribe.Filter.Filters.ScreenName;
+using System.Windows.Input;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -567,7 +568,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Favorite()
         {
-            PostOffice.FavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                FavoriteMultiUser();
+            else
+                PostOffice.FavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
         }
         #endregion
 
@@ -605,7 +609,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Retweet()
         {
-            PostOffice.Retweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                RetweetMultiUser();
+            else
+                PostOffice.Retweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
         }
         #endregion
 
@@ -647,7 +654,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             var status = this.Tweet.Status;
             if(status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
                 status = ((TwitterStatus)status).RetweetedOriginal;
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText("RT @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Text);
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" RT @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Text);
             this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInputCaretIndex(0);
         }
         #endregion
@@ -673,7 +680,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             var status = this.Tweet.Status;
             if (status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
                 status = ((TwitterStatus)status).RetweetedOriginal;
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText("RT @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Text);
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" QT @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Text);
 
         }
         #endregion
@@ -728,6 +735,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 AccountStorage.Accounts.ForEach(i => Task.Factory.StartNew(() => ApiHelper.ExecApi(() => i.ReportSpam(this.Tweet.Status.User.NumericId))));
                 TweetStorage.Remove(this.Tweet.Status.Id);
                 NotifyStorage.Notify("R4Sしました: @" + this.Tweet.Status.User.ScreenName);
+                Task.Factory.StartNew(() =>
+                    TweetStorage.GetAll(t => t.Status.User.NumericId == this.Tweet.Status.User.NumericId)
+                    .ForEach(vm => TweetStorage.Remove(vm.Status.Id)));
             }
         }
         #endregion
@@ -782,6 +792,82 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
         #endregion
+
+        #region DirectMessageCommand
+        DelegateCommand _DirectMessageCommand;
+
+        public DelegateCommand DirectMessageCommand
+        {
+            get
+            {
+                if (_DirectMessageCommand == null)
+                    _DirectMessageCommand = new DelegateCommand(DirectMessage);
+                return _DirectMessageCommand;
+            }
+        }
+
+        private void DirectMessage()
+        {
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel
+                .SetText("d @" + this.Tweet.Status.User.ScreenName + " ");
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel
+                .SetInputCaretIndex(this.Parent.Parent.Parent.Parent.InputBlockViewModel.CurrentInputDescription.InputText.Length);
+        }
+        #endregion
+
+        #region MuteCommand
+        DelegateCommand _MuteCommand;
+
+        public DelegateCommand MuteCommand
+        {
+            get
+            {
+                if (_MuteCommand == null)
+                    _MuteCommand = new DelegateCommand(Mute);
+                return _MuteCommand;
+            }
+        }
+
+        private void Mute()
+        {
+            // TODO: Implementation
+        }
+        #endregion
+
+        #region OpenUserCommand
+        DelegateCommand<UserViewModel> _OpenUserCommand;
+
+        public DelegateCommand<UserViewModel> OpenUserCommand
+        {
+            get
+            {
+                if (_OpenUserCommand == null)
+                    _OpenUserCommand = new DelegateCommand<UserViewModel>(OpenUser);
+                return _OpenUserCommand;
+            }
+        }
+
+        private void OpenUser(UserViewModel parameter)
+        {
+            var filter = new[] { new FilterUser("^" + parameter.TwitterUser.ScreenName + "$") };
+            var desc = "@" + parameter.TwitterUser.ScreenName;
+            switch (Setting.Instance.TimelineExperienceProperty.UserOpenTransition)
+            {
+                case TransitionMethod.ViewStack:
+                    this.Parent.AddTopTimeline(filter);
+                    break;
+                case TransitionMethod.AddTab:
+                    this.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
+                    break;
+                case TransitionMethod.AddColumn:
+                    var column = this.Parent.Parent.Parent.CreateColumn();
+                    column.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
+                    break;
+            }
+        }
+
+        #endregion
+      
 
         #endregion
     }

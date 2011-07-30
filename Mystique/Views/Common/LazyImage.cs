@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Inscribe.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using Inscribe.Caching;
-using System.Windows.Threading;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using Inscribe.Caching;
+using Inscribe.Threading;
 
 namespace Mystique.Views.Common
 {
@@ -52,14 +49,14 @@ namespace Mystique.Views.Common
             {
                 if (uri.Scheme == "pack")
                 {
-                    SetImage(img, new BitmapImage(uri), uri);
+                    img.Dispatcher.BeginInvoke(() => SetImage(img, new BitmapImage(uri), uri));
                 }
                 else
                 {
                     var cache = ImageCacheStorage.GetImageCache(uri);
                     if (cache != null)
                     {
-                        SetImage(img, cache, uri);
+                        img.Dispatcher.BeginInvoke(() => SetImage(img, cache, uri));
                     }
                     else
                     {
@@ -74,7 +71,7 @@ namespace Mystique.Views.Common
                         taskrun.Enqueue(() =>
                         {
                             var bi = ImageCacheStorage.DownloadImage(uri);
-                            SetImage(img, bi, uri);
+                            img.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri), DispatcherPriority.ContextIdle);
                         });
                     }
                 }
@@ -85,15 +82,12 @@ namespace Mystique.Views.Common
         {
             if (bitmap != null)
             {
-                image.Dispatcher.BeginInvoke(() =>
+                try
                 {
-                    try
-                    {
-                        if (checkUri == null || image.UriSource == checkUri)
-                            image.Source = bitmap;
-                    }
-                    catch { }
-                }, DispatcherPriority.ContextIdle);
+                    if (checkUri == null || image.UriSource == checkUri)
+                        image.Source = bitmap;
+                }
+                catch { }
             }
         }
     }

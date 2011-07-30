@@ -35,7 +35,7 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
                 RaisePropertyChanged(() => TweetSpeedRank);
             });
             ViewModelHelper.BindNotification(PostOffice.OnUnderControlChangedEvent, this, (o, e) => RaisePropertyChanged(() => State));
-            ViewModelHelper.BindNotification(TweetStorage.Notificator, this, (o, e) => RaisePropertyChanged(() => Tweets));
+            ViewModelHelper.BindNotification(TweetStorage.TweetStorageChangedEvent, this, (o, e) => RaisePropertyChanged(() => Tweets));
             ImageCacheStorage.DownloadingChanged += () => RaisePropertyChanged(() => ImageDownloading);
         }
 

@@ -904,6 +904,7 @@ namespace Inscribe.Filter.Core
 
         private static IEnumerable<IFilter> OptimizeCo(IFilter filter, FilterCluster parent)
         {
+            System.Diagnostics.Debug.WriteLine("Current focus: " + filter.ToQuery() + " / on " + parent.ToQuery());
             if (filter is FilterCluster)
                 return OptimizeCoCluster((FilterCluster)filter, parent);
             else
@@ -914,7 +915,9 @@ namespace Inscribe.Filter.Core
         {
             if (parent == null)
                 throw new ArgumentNullException("parent");
-            var items = (cluster.Filters ?? new IFilter[0]).SelectMany(f => OptimizeCo(f, cluster)).ToArray();
+            var items = (cluster.Filters ?? new IFilter[0])
+                .SelectMany(f =>  OptimizeCo(f, cluster))
+                .ToArray();
             if (items.Length == 0)
             {
                 // 要素無しのフィルタ
@@ -933,7 +936,12 @@ namespace Inscribe.Filter.Core
                 // 要素が1つしかない場合、このクラスタをスルーする
                 // このクラスタがNegateであれば、直下アイテムのNegate値を変更する
                 if (cluster.Negate)
+                {
+                    System.Diagnostics.Debug.WriteLine("Inverse");
                     items[0].Negate = !items[0].Negate;
+                    // 多重処理されないようにNegateをリセットする
+                    cluster.Negate = false;
+                }
                 // 所属を変更する
                 return OptimizeCo(items[0], parent);
             }

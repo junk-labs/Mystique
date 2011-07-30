@@ -13,6 +13,7 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
         public UserSelectionViewModel()
         {
             this._userSelectorViewModel = new UserSelectorViewModel();
+            this._userSelectorViewModel.LinkChanged += () => RaisePropertyChanged(() => SelectedUsers);
         }
 
         public event Action Finished;
@@ -46,10 +47,17 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
         }
 
         private UserSelectorViewModel _userSelectorViewModel;
-
         public UserSelectorViewModel UserSelectorViewModel
         {
             get { return _userSelectorViewModel; }
+        }
+
+        public string SelectedUsers
+        {
+            get
+            {
+                return this._userSelectorViewModel.LinkElements.Select(a => "@" + a.ScreenName).JoinString(", ");
+            }
         }
 
         #region OkCommand

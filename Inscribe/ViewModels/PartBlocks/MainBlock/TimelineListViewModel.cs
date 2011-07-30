@@ -42,9 +42,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return _timelineListCoreViewModel; }
         }
 
-        public override void Commit(bool reinvalidate)
+        public override void InvalidateCache()
         {
-            this._timelineListCoreViewModel.Commit(reinvalidate);
+            this._timelineListCoreViewModel.InvalidateCache(true);
         }
 
         #region GetFocusCommand
