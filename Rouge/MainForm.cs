@@ -10,12 +10,13 @@ using Vanille;
 using System.IO;
 using System.IO.Compression;
 using System.Security;
+using System.Security.Cryptography;
 
 namespace Rouge
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -128,5 +129,49 @@ namespace Rouge
             Application.DoEvents();
         }
 
+        private void button6_Click(object sender, EventArgs e)
+        {
+            String openFile = String.Empty;
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Title = "署名するファイルを選択";
+                if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    openFile = ofd.FileName;
+                }
+            }
+            if (String.IsNullOrEmpty(openFile))
+                return;
+            String pkeyFile = String.Empty;
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "private key|*.prv";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    pkeyFile = ofd.FileName;
+                }
+            }
+            if (String.IsNullOrEmpty(pkeyFile))
+                return;
+            var write = openFile + ".sig";
+            var sign = GetSignature(File.ReadAllBytes(openFile), File.ReadAllText(pkeyFile));
+            File.WriteAllBytes(write, sign);
+        }
+
+        private byte[] GetSignature(byte[] bytes, String privateKey)
+        {
+            using (var sha = new SHA256Cng())
+            using (var rsa = new RSACryptoServiceProvider())
+            {
+                // Compute hash
+                var hash = sha.ComputeHash(bytes);
+                // RSA Initialize
+                rsa.FromXmlString(privateKey);
+                // format
+                var formatter = new RSAPKCS1SignatureFormatter(rsa);
+                formatter.SetHashAlgorithm("SHA256");
+                return formatter.CreateSignature(hash);
+            }
+        }
     }
 }

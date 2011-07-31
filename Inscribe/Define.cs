@@ -5,14 +5,14 @@ namespace Inscribe
 {
     public static class Define
     {
-        public static string GetExecutingPath()
+        public static string GetExeFilePath()
         {
             return Process.GetCurrentProcess().MainModule.FileName;
         }
 
         public static FileVersionInfo GetVersion()
         {
-            return FileVersionInfo.GetVersionInfo(GetExecutingPath());
+            return FileVersionInfo.GetVersionInfo(GetExeFilePath());
         }
 
         public static string GetFormattedVersion()
@@ -58,6 +58,8 @@ namespace Inscribe
         public static readonly string PluginDirectory = "plugins";
 
         public static readonly string FeedbackAppName = "reporter.exe";
+
+        public static readonly string UpdateFileName = "kup.exe";
 
         public static readonly string DefaultStatusMessage = "完了";
 

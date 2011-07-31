@@ -13,6 +13,7 @@
         <cp:CollectionExistToVisibleConverter x:Key="CollectionExistToVisibleConverter" />
         <BitmapImage x:Key="Config" UriSource="/Resources/wrench.png" />
         <BitmapImage x:Key="Retry" UriSource="/Resources/retry.png" />
+        <BitmapImage x:Key="Copy" UriSource="/Resources/copy.png" />
         <BitmapImage x:Key="Delete" UriSource="/Resources/delete.png" />
     </UserControl.Resources>
     <Grid>
@@ -147,6 +148,14 @@
                                                    Height="16"
                                                    Source="{StaticResource Retry}" />
                                             <TextBlock VerticalAlignment="Center" Text="再実行" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Command="{Binding CopyCommand}" DockPanel.Dock="Right">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Width="16"
+                                                   Height="16"
+                                                   Source="{StaticResource Copy}" />
+                                            <TextBlock VerticalAlignment="Center" Text="コピー" />
                                         </StackPanel>
                                     </Button>
                                     <TextBlock Margin="4,2"

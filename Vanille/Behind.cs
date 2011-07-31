@@ -71,9 +71,12 @@ namespace Vanille
             {
                 Application.Exit();
             }
-            p.EnableRaisingEvents = true;
-            p.SynchronizingObject = this;
-            p.Exited += new EventHandler(p_Exited);
+            else
+            {
+                p.EnableRaisingEvents = true;
+                p.SynchronizingObject = this;
+                p.Exited += new EventHandler(p_Exited);
+            }
         }
 
         void p_Exited(object sender, EventArgs e)

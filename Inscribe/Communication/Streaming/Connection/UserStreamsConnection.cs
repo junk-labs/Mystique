@@ -39,10 +39,14 @@ namespace Inscribe.Communication.Streaming.Connection
             if (info == null)
                 return;
 
+
             // 再接続処理
             if (!expected)
+            {
                 UserStreamsReceiverManager.RefreshReceiver(info);
+            }
         }
+
 
         /// <summary>
         /// ツイートのポンピングスレッド

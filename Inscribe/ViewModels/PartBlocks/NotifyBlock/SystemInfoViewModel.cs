@@ -13,6 +13,7 @@ using System.Windows.Media;
 using Livet.Commands;
 using System.Threading.Tasks;
 using Inscribe.ViewModels.Common;
+using System.Windows;
 
 namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 {
@@ -309,6 +310,27 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
         }
 
         #endregion
+
+        #region CopyCommand
+        DelegateCommand _CopyCommand;
+
+        public DelegateCommand CopyCommand
+        {
+            get
+            {
+                if (_CopyCommand == null)
+                    _CopyCommand = new DelegateCommand(Copy);
+                return _CopyCommand;
+            }
+        }
+
+        private void Copy()
+        {
+            Clipboard.SetText(desc.Exception.ToString());
+            NotifyStorage.Notify("コピーしました");
+        }
+        #endregion
+      
 
         #region RemoveCommand
 

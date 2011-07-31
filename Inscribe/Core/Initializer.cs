@@ -27,7 +27,7 @@ namespace Inscribe.Core
 
             var apppath = System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
             // アップデータの存在を確認
-            var updater = System.IO.Path.Combine(apppath, "kup.exe");
+            var updater = System.IO.Path.Combine(apppath, Define.UpdateFileName);
             if (System.IO.File.Exists(updater))
             {
                 // .completeファイルが存在するか
@@ -39,17 +39,13 @@ namespace Inscribe.Core
                 }
                 else
                 {
-                    // .completeファイルを作成する
-                    System.IO.File.Create(updater + ".completed");
-
                     // アップデータを起動して終了
-                    System.Diagnostics.Process.Start(updater, Define.GetNumericVersion().ToString() + " " + System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
-                    Application.Current.Shutdown();
+                    UpdateReceiver.StartUpdateArchive();
                     return;
                 }
             }
 
-            UpdateReceiver.Start();
+            UpdateReceiver.StartSchedule();
             Application.Current.Exit += new ExitEventHandler(AppExit);
         }
 

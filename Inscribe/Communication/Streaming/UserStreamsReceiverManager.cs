@@ -25,7 +25,17 @@ namespace Inscribe.Communication.Streaming
                 // 新規接続
                 var recv = new UserStreamsReceiver(i);
                 UserInformationManager.ReceiveInidividualInfo(i);
+                receivers.Add(i, recv);
                 recv.UpdateConnection();
+            }
+            foreach (var i in removes)
+            {
+                // 登録削除
+                receivers.Remove(i);
+            }
+            foreach (var i in keeps)
+            {
+                RefreshReceiver(i);
             }
             RefreshQuery();
         }

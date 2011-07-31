@@ -21,7 +21,7 @@ namespace Inscribe.Configuration
 
         private static string settingFilePath
         {
-            get { return Path.Combine(Path.GetDirectoryName(Define.GetExecutingPath()), Define.SettingFileName); }
+            get { return Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), Define.SettingFileName); }
         }
 
         public static Setting Instance

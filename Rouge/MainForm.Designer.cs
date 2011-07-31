@@ -1,6 +1,6 @@
 ﻿namespace Rouge
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// 必要なデザイナー変数です。
@@ -40,6 +40,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.button6 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label3
@@ -115,11 +116,11 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(16, 171);
+            this.button4.Location = new System.Drawing.Point(16, 170);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(355, 22);
+            this.button4.Size = new System.Drawing.Size(183, 23);
             this.button4.TabIndex = 11;
-            this.button4.Text = "Generate Keys";
+            this.button4.Text = "Generate keys...";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -149,11 +150,22 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "pkey";
             // 
-            // Form1
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(205, 170);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(164, 23);
+            this.button6.TabIndex = 12;
+            this.button6.Text = "Sign to file...";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(381, 205);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label4);
@@ -167,7 +179,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Krile Patch Generator";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -188,6 +200,7 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button button6;
 
     }
 }

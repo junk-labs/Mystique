@@ -1,13 +1,12 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 using System.Windows;
+using Inscribe;
+using Inscribe.Common;
 using Inscribe.Core;
 using Inscribe.Threading;
 using Livet;
-using System.Text;
-using System.IO;
-using Inscribe;
-using Inscribe.Filter.Core;
-using Mystique.Update;
 
 namespace Mystique
 {
@@ -24,7 +23,7 @@ namespace Mystique
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 #endif
             Initializer.Init();
-            UpdateReceiver.Start();
+            UpdateReceiver.StartSchedule();
         }
 
         void Exitting(object sender, ExitEventArgs e)
@@ -47,7 +46,7 @@ namespace Mystique
             body.AppendLine("MEMORY USAGE:");
             var cp = System.Diagnostics.Process.GetCurrentProcess();
             body.AppendLine("paged:" + cp.PagedMemorySize64 + " / peak-virtual:" + cp.PeakVirtualMemorySize64);
-            System.IO.File.AppendAllText(Path.Combine(Path.GetDirectoryName(Define.GetExecutingPath()), "unhandled.txt"), body.ToString());
+            System.IO.File.AppendAllText(Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), "unhandled.txt"), body.ToString());
             // Environment.Exit(1);
         }
     }

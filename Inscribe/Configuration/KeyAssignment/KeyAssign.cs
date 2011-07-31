@@ -66,7 +66,7 @@ namespace Inscribe.Configuration.KeyAssignment
 
         public static String GetPath(string fileName)
         {
-            return Path.Combine(Path.GetDirectoryName(Define.GetExecutingPath()), Define.KeyAssignDirectory, fileName);
+            return Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), Define.KeyAssignDirectory, fileName);
         }
 
         public static String LookupKeyFromId(string id)

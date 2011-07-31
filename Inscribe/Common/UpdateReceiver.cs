@@ -1,62 +1,171 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using Inscribe.Storage;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using Inscribe;
+using Inscribe.Configuration;
+using Inscribe.Storage;
+using System.Security;
+using System.Security.Cryptography;
+using System.Diagnostics;
+using System.Windows;
 
 namespace Inscribe.Common
 {
     public static class UpdateReceiver
     {
-        static Timer updateCheckTimer = null;
+        static Timer updateTimer;
+        static bool updateReceived = false;
 
-        public static void Start()
+        public static void StartSchedule()
         {
-            updateCheckTimer = new Timer(CheckUpdate, null, 1000 * 10, 1000 * 60 * 60 * 3);
+            updateTimer = new Timer(CheckUpdate, null, 1000 * 10, 1000 * 60 * 60 * 3);
         }
 
         private static void CheckUpdate(object o)
         {
             try
             {
-                if (IsUpdateExists())
-                {
-                    DownloadUpdate();
-                }
+                if (updateReceived) return;
+                updateReceived = CheckUpdate();
+                if (updateReceived)
+                    NotifyStorage.Notify("Krileは次回起動時に最新バージョンへ更新されます。");
             }
             catch (Exception e)
             {
-                ExceptionStorage.Register(e, ExceptionCategory.InternalError, "Krileの更新確認に失敗しました。", () => CheckUpdate(null));
+                ExceptionStorage.Register(e, ExceptionCategory.InternalError, "Krileの更新を確認できませんでした。", () => CheckUpdate());
             }
         }
 
-        public static bool IsUpdateExists()
+        public static bool CheckUpdate()
         {
-            /*
-            var update = Dulcet.Network.Http.WebConnectDownloadString(new Uri(Define.RemoteVersionUrl));
-            if (!update.Succeeded || String.IsNullOrWhiteSpace(update.Data))
-                throw new Exception("バージョンを確認できません。");
-            var remoteVersion = Double.Parse(update.Data);
-            var localVersion = Define.GetNumericVersion();
-            return remoteVersion > localVersion;
-            */
-            return false;
-        }
-
-        public static void DownloadUpdate()
-        {
-            /*
-            // 更新がありました
-            using (var msg = NotifyStorage.NotifyManually("Krileの更新が見つかりました。ダウンロードしています..."))
+            try
             {
-                var apppath = System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-                var downloader = new WebClient();
-                downloader.DownloadFile(Define.RemoteUpdaterUrl, System.IO.Path.Combine(apppath, "kup.exe"));
+                var xmlstream = DownloadStream(new Uri(Define.RemoteVersionXml));
+                if (xmlstream != null)
+                {
+                    var xmldoc = XDocument.Load(xmlstream);
+                    var versionstr = xmldoc.Element("update").Element("latests").Elements("version")
+                        .Where(xe => int.Parse(xe.Attribute("kind").Value) <= Setting.Instance.ExperienceProperty.UpdateKind)
+                        .Select(xe => xe.Attribute("ver").Value).FirstOrDefault();
+                    // NO RECORD
+                    if (versionstr == null)
+                        return false;
+                    var version = double.Parse(versionstr);
+                    var bin = xmldoc.Element("update").Element("bin").Value;
+                    var sig = xmldoc.Element("update").Element("sig").Value;
+                    if (version != 0 && version > Define.GetNumericVersion())
+                    {
+                        DownloadUpdate(new Uri(bin), new Uri(sig));
+                        return true;
+                    }
+                }
+                return false;
             }
-            NotifyStorage.Notify("Krileは次回起動時に更新されます。");
-            */
+            catch (Exception ex)
+            {
+                ExceptionStorage.Register(ex,
+                    ExceptionCategory.InternalError,
+                    "Krileの更新パッケージの確認中に問題が発生しました。");
+                return false;
+            }
+        }
+
+        private static void DownloadUpdate(Uri binary, Uri signature)
+        {
+            using (var binstream = DownloadStream(binary))
+            using (var sigstream = DownloadStream(signature))
+            {
+                var binarray = binstream.ToArray();
+                var sigarray = sigstream.ToArray();
+                var pubkey = Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), Define.PublicKeyFile);
+                if (!File.Exists(pubkey))
+                    throw new FileNotFoundException("パブリックキーが見つかりません。Krileを再インストールしてください。");
+                if (VerifySignature(binarray, sigarray, File.ReadAllText(pubkey)))
+                {
+                    File.WriteAllBytes(Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), Define.UpdateFileName), binarray);
+                }
+                else
+                {
+                    throw new SecurityException("アップデータの鍵が一致しません。手動でアップデートすることをお勧めします。");
+                }
+            }
+        }
+
+        private static bool VerifySignature(byte[] file, byte[] sign, String pubkey)
+        {
+            try
+            {
+                using (var sha = new SHA256Cng())
+                using (var rsa = new RSACryptoServiceProvider())
+                {
+                    // Compute hash
+                    var hash = sha.ComputeHash(file);
+                    // RSA Initialize
+                    rsa.FromXmlString(pubkey);
+                    // deformat
+                    var deformatter = new RSAPKCS1SignatureDeformatter(rsa);
+                    deformatter.SetHashAlgorithm("SHA256");
+                    return deformatter.VerifySignature(hash, sign);
+                }
+            }
+            catch (SecurityException sex)
+            {
+                ExceptionStorage.Register(sex,
+                     ExceptionCategory.InternalError,
+                     "Krileの更新パッケージの署名を検証できません。手動更新してください。", () => CheckUpdate());
+                return false;
+            }
+        }
+
+        private static MemoryStream DownloadStream(Uri uri)
+        {
+            try
+            {
+                WebRequest request = HttpWebRequest.Create(uri);
+                var ret = request.GetResponse();
+                if (ret != null)
+                {
+                    MemoryStream memoryStream = new MemoryStream();
+                    using (var stream = ret.GetResponseStream())
+                    {
+                        byte[] buf = new byte[2048];
+                        while (true)
+                        {
+                            int rlen = stream.Read(buf, 0, buf.Length);
+                            if (rlen == 0) break;
+                            memoryStream.Write(buf, 0, rlen);
+                        }
+                    }
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    return memoryStream;
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                ExceptionStorage.Register(e, ExceptionCategory.InternalError, "更新確認に失敗しました", () => CheckUpdate());
+                return null;
+            }
+        }
+
+        public static void StartUpdateArchive()
+        {
+            var path = Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), Define.UpdateFileName);
+            if (File.Exists(path))
+            {
+                // .completeファイルを作成する
+                System.IO.File.Create(path + ".completed");
+                Process.Start(
+                    path,
+                    Define.GetNumericVersion().ToString() + " " +
+                    Setting.Instance.ExperienceProperty.UpdateKind.ToString() + " " +
+                    Process.GetCurrentProcess().Id.ToString());
+                Application.Current.Shutdown();
+            }
         }
     }
 }

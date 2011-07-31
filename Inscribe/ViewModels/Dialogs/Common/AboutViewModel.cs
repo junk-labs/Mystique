@@ -70,10 +70,8 @@ namespace Inscribe.ViewModels.Dialogs.Common
             try
             {
                 CheckState = VersionCheckState.Checking;
-                if (UpdateReceiver.IsUpdateExists())
+                if (UpdateReceiver.CheckUpdate())
                 {
-                    CheckState = VersionCheckState.Downloading;
-                    UpdateReceiver.DownloadUpdate();
                     CheckState = VersionCheckState.Ready;
                 }
                 else
@@ -102,19 +100,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
 
         private void AppUpdate()
         {
-            var apppath = System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-            // アップデータの存在を確認
-            var updater = System.IO.Path.Combine(apppath, "kup.exe");
-            if (System.IO.File.Exists(updater))
-            {
-                // アップデータを起動して終了
-                System.Diagnostics.Process.Start(updater, Define.GetNumericVersion().ToString() + " " + System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
-                Application.Current.Shutdown();
-            }
-            else
-            {
-                throw new InvalidOperationException("Updater unexisted.");
-            }
+            UpdateReceiver.StartUpdateArchive();
         }
 
         #endregion
