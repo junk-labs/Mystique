@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -7,6 +8,7 @@ using System.Windows.Input;
 using Inscribe.Configuration.Settings;
 using Inscribe.Storage;
 using Livet;
+using System.Windows.Controls.Primitives;
 
 namespace Inscribe.Configuration.KeyAssignment
 {
@@ -126,16 +128,31 @@ namespace Inscribe.Configuration.KeyAssignment
 
         public static void HandlePreviewEvent(KeyEventArgs e, AssignRegion region)
         {
-            if (HandleEventSink(e.Key, region, true))
-            {
+            if (HandleEventSink(CheckIme(e), region, true))
                 e.Handled = true;
-            }
         }
 
         public static void HandleEvent(KeyEventArgs e, AssignRegion region)
         {
-            if (HandleEventSink(e.Key, region, false))
+            if (HandleEventSink(CheckIme(e), region, false))
                 e.Handled = true;
+        }
+
+        private static Key CheckIme(KeyEventArgs e)
+        {
+            if (e.Key == Key.ImeProcessed && e.OriginalSource is TextBoxBase)
+            {
+                return Key.None;
+            }
+            else if (e.Key == Key.ImeProcessed)
+            {
+                InputMethod.Current.ImeState = InputMethodState.Off;
+                return e.ImeProcessedKey;
+            }
+            else
+            {
+                return e.Key;
+            }
         }
 
         private static bool HandleEventSink(Key key, AssignRegion region, bool preview)

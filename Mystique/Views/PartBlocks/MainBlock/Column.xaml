@@ -14,6 +14,7 @@
              xmlns:my="clr-namespace:Mystique.Views.CustomPanels"
              d:DesignHeight="50"
              d:DesignWidth="300"
+             InputMethod.IsInputMethodEnabled="False"
              mc:Ignorable="d">
     <UserControl.Resources>
         <BitmapImage x:Key="AddColumn" UriSource="/Resources/add.png" />

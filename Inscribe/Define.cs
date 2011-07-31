@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reflection;
-using System.Windows;
 
 namespace Inscribe
 {
@@ -63,6 +61,8 @@ namespace Inscribe
 
         public static readonly string DefaultStatusMessage = "完了";
 
-        public static readonly string RemoteVersionXml = "http://update.starwing.net/k2/update.xml";
+        public static readonly string RemoteVersionXml = "http://krile.starwing.net/update/update.xml";
+
+        public static readonly string PublicKeyFile = "kup.pub";
     }
 }

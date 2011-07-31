@@ -18,6 +18,7 @@
         Height="500"
         Closing="Window_Closing"
         Icon="/krile;component/Resources/krile.ico"
+        InputMethod.IsInputMethodEnabled="False"
         KeyDown="Window_KeyDown"
         Loaded="Window_Loaded"
         PreviewKeyDown="Window_PreviewKeyDown"

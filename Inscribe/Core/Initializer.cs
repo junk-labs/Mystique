@@ -24,6 +24,31 @@ namespace Inscribe.Core
             Dulcet.Network.Http.MaxConnectionLimit = Int32.MaxValue;
             Setting.Initialize();
             KeyAssign.ReloadAssign();
+
+            var apppath = System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+            // アップデータの存在を確認
+            var updater = System.IO.Path.Combine(apppath, "kup.exe");
+            if (System.IO.File.Exists(updater))
+            {
+                // .completeファイルが存在するか
+                if (System.IO.File.Exists(updater + ".completed"))
+                {
+                    // アップデータを削除
+                    System.IO.File.Delete(updater);
+                    System.IO.File.Delete(updater + ".completed");
+                }
+                else
+                {
+                    // .completeファイルを作成する
+                    System.IO.File.Create(updater + ".completed");
+
+                    // アップデータを起動して終了
+                    System.Diagnostics.Process.Start(updater, Define.GetNumericVersion().ToString() + " " + System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
+                    Application.Current.Shutdown();
+                    return;
+                }
+            }
+
             UpdateReceiver.Start();
             Application.Current.Exit += new ExitEventHandler(AppExit);
         }

@@ -29,13 +29,6 @@ namespace Inscribe.Configuration.Settings
 
         public bool UseAscendingSort { get; set; }
 
-        public enum ScrollLock
-        {
-            None,
-            OnMouseCaptured,
-            OnSelected,
-            //OnScrolled
-        }
 
         public ScrollLock ScrollLockMode { get; set; }
 
@@ -109,5 +102,17 @@ namespace Inscribe.Configuration.Settings
         ViewStack,
         AddTab,
         AddColumn
+    }
+
+    public enum ScrollLock
+    {
+        // スクロールロックしない
+        None,
+        // マウスがリスト上に存在する時
+        OnMouseCaptured,
+        // 要素を選択している時
+        OnSelected,
+        // 常にスクロールロック
+        Always,
     }
 }

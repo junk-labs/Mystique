@@ -60,10 +60,10 @@ namespace Mystique.Views.Behaviors
                 var vm = this.AssociatedObject.DataContext as TimelineListCoreViewModel;
                 switch (Setting.Instance.TimelineExperienceProperty.ScrollLockMode)
                 {
-                    case TimelineExperienceProperty.ScrollLock.None:
+                    case ScrollLock.None:
                         // ロックなし
                         return;
-                    case TimelineExperienceProperty.ScrollLock.OnMouseCaptured:
+                    case ScrollLock.OnMouseCaptured:
                         // マウスキャプチャ時はロックする
                         if (!vm.Parent.IsMouseOver) return;
                         break;
@@ -72,8 +72,11 @@ namespace Mystique.Views.Behaviors
                     // Dispatcherに問い合わせないといけないためコストがかかりすぎる
                     // →保留
                     // return;
-                    case TimelineExperienceProperty.ScrollLock.OnSelected:
+                    case ScrollLock.OnSelected:
                         if (vm.SelectedTweetViewModel == null) return;
+                        break;
+                    case ScrollLock.Always:
+                        // 常にスクロールロック
                         break;
                 }
                 // scroll down

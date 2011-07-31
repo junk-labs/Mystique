@@ -167,6 +167,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
             // Timeline action
             KeyAssign.RegisterOperation("Mention", () => ExecTVMAction(vm => vm.MentionCommand.Execute()));
+            KeyAssign.RegisterOperation("SendDirectMessage", () => ExecTVMAction(vm => vm.DirectMessageCommand.Execute()));
             KeyAssign.RegisterOperation("Favorite", ()=>ExecTVMAction(vm => vm.FavoriteCommand.Execute()));
             KeyAssign.RegisterOperation("FavoriteMulti", ()=>ExecTVMAction(vm => vm.FavoriteMultiUserCommand.Execute()));
             KeyAssign.RegisterOperation("Retweet", ()=>ExecTVMAction(vm => vm.RetweetCommand.Execute()));
@@ -174,10 +175,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssign.RegisterOperation("UnofficialRetweet", () => ExecTVMAction(vm => vm.UnofficialRetweetCommand.Execute()));
             KeyAssign.RegisterOperation("QuoteTweet", () => ExecTVMAction(vm => vm.QuoteCommand.Execute()));
             KeyAssign.RegisterOperation("Delete", () => ExecTVMAction(vm => vm.DeleteCommand.Execute()));
+            KeyAssign.RegisterOperation("Mute", () => ExecTVMAction(vm => vm.MuteCommand.Execute()));
             KeyAssign.RegisterOperation("ReportForSpam", () => ExecTVMAction(vm => vm.ReportForSpamCommand.Execute()));
             KeyAssign.RegisterOperation("ShowConversation", () => ExecTVMAction(vm => vm.OpenConversationCommand.Execute()));
             KeyAssign.RegisterOperation("CreateSelectedUserTab", () => ExecTVMAction(vm => vm.CreateUserTabCommand.Execute()));
             KeyAssign.RegisterOperation("OpenTweetWeb", () => ExecTVMAction(vm => vm.Tweet.ShowTweetCommand.Execute()));
+            KeyAssign.RegisterOperation("ShowUserDetail", () => ExecTVMAction(vm => vm.ShowUserDetailCommand.Execute()));
 
             // Tab Action
             KeyAssign.RegisterOperation("Search", () => ExecTabAction(vm => vm.AddTopTimeline(null)));

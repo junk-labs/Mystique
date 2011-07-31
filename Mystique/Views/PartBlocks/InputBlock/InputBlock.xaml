@@ -272,11 +272,10 @@
                                        Source="{StaticResource Chevron}" />
                                 <com:DropDownButton.DropDownMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="ハッシュタグ(_H)..." />
                                         <MenuItem Header="全てのバインドを削除(_D)" />
                                         <Separator />
-                                        <MenuItem Header="自動バインドの設定(_A)..." />
                                         <MenuItem Header="自動バインドを有効にする(_E)" />
+                                        <MenuItem Header="自動バインドの設定(_A)..." />
                                     </ContextMenu>
                                 </com:DropDownButton.DropDownMenu>
                             </com:DropDownButton>

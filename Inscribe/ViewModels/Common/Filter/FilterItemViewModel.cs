@@ -85,6 +85,10 @@ namespace Inscribe.ViewModels.Common.Filter
 
         private void Delete()
         {
+            if (this.Parent != null)
+                this.Parent.RemoveChild(this._filter);
+            else
+                this.Root.RemoveChild(this._filter);
         }
         #endregion
       

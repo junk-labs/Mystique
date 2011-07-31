@@ -9,6 +9,7 @@ using Inscribe.Storage;
 using Livet;
 using System.Linq;
 using Livet.Commands;
+using Inscribe.Configuration.KeyAssignment;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -195,7 +196,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             RaisePropertyChanged(() => ReplyText);
         }
-        
+
         #endregion
 
         #region Setting dependent property
@@ -343,7 +344,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #region Commands
 
         #region ShowTweetCommand
-        
+
         DelegateCommand _ShowTweetCommand;
 
         public DelegateCommand ShowTweetCommand
@@ -365,4 +366,5 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         #endregion
     }
+
 }

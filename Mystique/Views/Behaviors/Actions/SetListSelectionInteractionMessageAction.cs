@@ -42,6 +42,7 @@ namespace Mystique.Views.Behaviors.Actions
                     this.AssociatedObject.SelectedIndex = this.AssociatedObject.Items.Count - 1;
                     break;
             }
+            this.AssociatedObject.ScrollIntoView(this.AssociatedObject.SelectedItem);
         }
     }
 }

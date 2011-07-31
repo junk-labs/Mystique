@@ -119,6 +119,7 @@
       <DependentUpon>UserSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Converters\DoublePercentStringConverter.cs" />
+    <Compile Include="Views\Converters\KeyAssign\KeyAssignConverter.cs" />
     <Compile Include="Views\Converters\LongRangeStringConverter.cs" />
     <Compile Include="Views\Converters\LongStringConverter.cs" />
     <Compile Include="Views\Converters\Particular\NotZeroToVisibleConverter.cs" />

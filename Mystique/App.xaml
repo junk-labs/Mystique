@@ -4,6 +4,7 @@
              StartupUri="Views\MainWindow.xaml"
              Startup="Application_Startup"
              xmlns:conv="clr-namespace:Mystique.Views.Converters"
+             xmlns:convk="clr-namespace:Mystique.Views.Converters.KeyAssign"
              xmlns:chrome="clr-namespace:Mystique.Views.Chrome">
     <Application.Resources>
         <ResourceDictionary>
@@ -16,6 +17,7 @@
             <conv:BooleanToInvisibleConverter x:Key="BoolInvisibleConverter" />
             <conv:EnumToRadioConverter x:Key="EnumRadioConverter" />
             <conv:StringEqVisibleConverter x:Key="StringEqualVisibleConverter" />
+            <convk:KeyAssignConverter x:Key="KeyAssignConverter" />
             <Style TargetType="{x:Type Hyperlink}">
                 <Setter Property="TextDecorations" Value="None" />
                 <Setter Property="Foreground" Value="RoyalBlue" />

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Inscribe.Configuration;
 using Inscribe.Configuration.KeyAssignment;
+using System.Windows.Input;
 
 namespace Mystique.Views
 {
@@ -18,6 +19,7 @@ namespace Mystique.Views
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("IME:" + this.IsInputMethodEnabled);
             if (!Setting.Instance.StateProperty.WindowPosition.IsEmpty)
             {
                 this.Left = Setting.Instance.StateProperty.WindowPosition.Left;

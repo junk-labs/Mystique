@@ -7,6 +7,7 @@
              xmlns:my="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
              d:DesignHeight="300"
              d:DesignWidth="300"
+             InputMethod.IsInputMethodEnabled="False"
              KeyDown="UserControl_KeyDown"
              PreviewKeyDown="UserControl_PreviewKeyDown"
              mc:Ignorable="d">

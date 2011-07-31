@@ -11,6 +11,7 @@
              xmlns:pc="clr-namespace:Mystique.Views.Converters.Particular"
              d:DesignHeight="50"
              d:DesignWidth="500"
+             InputMethod.IsInputMethodEnabled="False"
              mc:Ignorable="d">
     <UserControl.Resources>
         <BitmapImage x:Key="Comment" UriSource="/Resources/comment_edit.png" />
@@ -195,7 +196,7 @@
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            SnapsToDevicePixels="True"
                            Source="{StaticResource Favorited}" />
-                    <Button.ToolTip>Favoriteに追加</Button.ToolTip>
+                    <Button.ToolTip>Favoriteに追加(+ShiftでマルチFav)</Button.ToolTip>
                 </Button>
                 <Button Grid.Column="2"
                         Command="{Binding Path=RetweetCommand,
@@ -209,7 +210,7 @@
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            SnapsToDevicePixels="True"
                            Source="{StaticResource Retweeted}" />
-                    <Button.ToolTip>Retweetする</Button.ToolTip>
+                    <Button.ToolTip>Retweetする(+ShiftでマルチRT)</Button.ToolTip>
                 </Button>
             </Grid>
         </cp:FillPanel>
