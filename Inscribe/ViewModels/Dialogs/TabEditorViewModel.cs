@@ -5,16 +5,15 @@ using Dulcet.Twitter.Rest;
 using Inscribe.Communication.CruiseControl.Lists;
 using Inscribe.Communication.Streaming;
 using Inscribe.Configuration.Tabs;
-using Inscribe.Filter;
 using Inscribe.Filter.Filters.Particular;
 using Inscribe.Filter.Filters.Text;
 using Inscribe.Storage;
+using Inscribe.ViewModels.Common.Filter;
 using Livet;
 using Livet.Commands;
+using Livet.Messaging;
 using Livet.Messaging.IO;
 using Livet.Messaging.Windows;
-using Inscribe.ViewModels.Common.Filter;
-using Livet.Messaging;
 
 namespace Inscribe.ViewModels.Dialogs
 {

@@ -54,6 +54,7 @@ namespace Inscribe.Storage
       
         public static void Notify(string message, int? showLength = null)
         {
+            System.Diagnostics.Debug.WriteLine("Notify: " + message);
             using (notifyLock.GetWriterLock())
             {
                 notificationStack.Push(new SecondNotifyItem(message,

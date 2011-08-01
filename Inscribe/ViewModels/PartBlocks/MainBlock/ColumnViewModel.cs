@@ -9,6 +9,9 @@ using Livet.Commands;
 using Livet.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Inscribe.Filter.Filters.ScreenName;
+using Inscribe.Communication.Streaming;
+using Inscribe.Communication.CruiseControl.Lists;
+using Inscribe.Storage;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -125,6 +128,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public void CloseTab(TabViewModel tabViewModel)
         {
             RemoveTab(tabViewModel);
+            // cleanup additional receiver
+            foreach (var query in tabViewModel.TabProperty.StreamingQueries)
+            {
+                UserStreamsReceiverManager.RemoveQuery(query);
+            }
+
+            foreach (var list in tabViewModel.TabProperty.FollowingLists)
+            {
+                var split = list.Split('/');
+                ListReceiverManager.RemoveReceive(split[0], split[1]);
+            }
             this.Parent.PushClosedTabStack(tabViewModel);
             this.Parent.GCColumn();
         }
@@ -364,7 +378,25 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void RebirthTab()
         {
-            this.AddTab(this.Parent.PopClosedTab());
+            var tabViewModel = this.Parent.PopClosedTab();
+            this.AddTab(tabViewModel);
+            foreach (var query in tabViewModel.TabProperty.StreamingQueries.ToArray())
+            {
+                if (!UserStreamsReceiverManager.AddQuery(query))
+                {
+                    ExceptionStorage.Register(new Exception("クエリリッスンに失敗"),
+                         ExceptionCategory.InternalError,
+                        "ストリーミングクエリ―の登録に失敗しました。");
+                    tabViewModel.TabProperty.StreamingQueries =
+                        tabViewModel.TabProperty.StreamingQueries.Except(new[] { query }).ToArray();
+                }
+            }
+
+            foreach (var list in tabViewModel.TabProperty.FollowingLists)
+            {
+                var split = list.Split('/');
+                ListReceiverManager.RegisterReceive(split[0], split[1]);
+            }
         }
         #endregion
       

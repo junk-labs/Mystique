@@ -47,48 +47,52 @@ namespace Mystique.Views.Common
             if (img == null) return;
             if (uri != null)
             {
-                if (uri.Scheme == "pack")
+                try
                 {
-                    img.Dispatcher.BeginInvoke(() => SetImage(img, new BitmapImage(uri), uri));
-                }
-                else
-                {
-                    var cache = ImageCacheStorage.GetImageCache(uri);
-                    if (cache != null)
+                    if (uri.Scheme == "pack")
                     {
-                        img.Dispatcher.BeginInvoke(() => SetImage(img, cache, uri));
+                        img.Dispatcher.BeginInvoke(() => SetImage(img, new BitmapImage(uri), uri));
                     }
                     else
                     {
-                        img.Dispatcher.BeginInvoke(() =>
+                        var cache = ImageCacheStorage.GetImageCache(uri);
+                        if (cache != null)
                         {
-                            try
+                            img.Dispatcher.BeginInvoke(() => SetImage(img, cache, uri));
+                        }
+                        else
+                        {
+                            img.Dispatcher.BeginInvoke(() =>
                             {
-                                img.Source = img.DefaultImage;
-                            }
-                            catch { }
-                        });
-                        taskrun.Enqueue(() =>
-                        {
-                            var bi = ImageCacheStorage.DownloadImage(uri);
-                            img.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri), DispatcherPriority.ContextIdle);
-                        });
+                                try
+                                {
+                                    img.Source = img.DefaultImage;
+                                }
+                                catch { }
+                            });
+                            taskrun.Enqueue(() =>
+                            {
+                                var bi = ImageCacheStorage.DownloadImage(uri);
+                                img.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri), DispatcherPriority.ContextIdle);
+                            });
+                        }
                     }
                 }
+                catch { }
             }
         }
 
         private static void SetImage(LazyImage image, ImageSource bitmap, Uri checkUri)
         {
-            if (bitmap != null)
+            try
             {
-                try
+                if (bitmap != null)
                 {
                     if (checkUri == null || image.UriSource == checkUri)
                         image.Source = bitmap;
                 }
-                catch { }
             }
+            catch { }
         }
     }
 }

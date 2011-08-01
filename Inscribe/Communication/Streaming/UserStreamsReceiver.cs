@@ -29,10 +29,15 @@ namespace Inscribe.Communication.Streaming
 
         private UserStreamsConnection usConnection;
 
+        private string[] _queries = null;
         /// <summary>
         /// このレシーバに関連付けるクエリー
         /// </summary>
-        public string[] Queries { get; set; }
+        public string[] Queries
+        {
+            get { return this._queries ?? new string[0]; }
+            set { this._queries = value; }
+        }
 
         public UserStreamsReceiver(AccountInfo linkAccount)
         {

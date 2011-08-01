@@ -195,7 +195,7 @@ namespace Inscribe.Communication.Streaming.Connection
         {
             try
             {
-                int failureCounter = 0;
+                int failureCount = 0;
                 while (true)
                 {
                     // 接続
@@ -239,18 +239,18 @@ namespace Inscribe.Communication.Streaming.Connection
                         return;
                     }
 
-                    if (failureCounter > 0)
+                    if (failureCount > 0)
                     {
-                        if (failureCounter > Setting.Instance.ConnectionProperty.UserStreamsConnectionFailedMaxWaitSec)
+                        if (failureCount > Setting.Instance.ConnectionProperty.UserStreamsConnectionFailedMaxWaitSec)
                         {
                             throw new WebException("User Streamsへの接続に失敗しました。");
                         }
                         else
                         {
-                            NotifyStorage.Notify("@" + info.ScreenName + ": User Streamsへの接続に失敗。再試行まで" + (failureCounter / 1000).ToString() + "秒待機...", failureCounter / 1000);
+                            NotifyStorage.Notify("@" + info.ScreenName + ": User Streamsへの接続に失敗。再試行まで" + (failureCount / 1000).ToString() + "秒待機...", failureCount / 1000);
 
                             // ウェイトカウント
-                            Thread.Sleep(failureCounter);
+                            Thread.Sleep(failureCount);
                             NotifyStorage.Notify("@" + info.ScreenName + ": User Streamsへの接続を再試行します...");
                         }
                     }
@@ -262,13 +262,13 @@ namespace Inscribe.Communication.Streaming.Connection
                     // 最初に失敗したらすぐに再接続
                     // ２回目以降はその倍に増やしていく
                     // 300を超えたら接続失敗で戻る
-                    if (failureCounter == 0)
+                    if (failureCount == 0)
                     {
-                        failureCounter = Setting.Instance.ConnectionProperty.UserStreamsConnectionFailedInitialWaitSec;
+                        failureCount = Setting.Instance.ConnectionProperty.UserStreamsConnectionFailedInitialWaitSec;
                     }
                     else
                     {
-                        failureCounter *= 2;
+                        failureCount *= 2;
                     }
                 }
             }
@@ -298,6 +298,7 @@ namespace Inscribe.Communication.Streaming.Connection
         {
             if (this.disposed) return;
             this.disposed = true;
+            this.connection.Dispose();
         }
     }
 }
