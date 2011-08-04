@@ -203,7 +203,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         private void ReconnectStreams()
         {
-            UserStreamsReceiverManager.RefreshReceivers();
+            Task.Factory.StartNew(() => UserStreamsReceiverManager.RefreshReceivers());
         }
         #endregion
 

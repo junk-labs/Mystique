@@ -109,7 +109,10 @@ namespace Dulcet.Twitter.Streaming
             var con = new StreamingConnection(this, provider, request, streaming);
             if (con == null)
                 throw new InvalidOperationException("受信開始に失敗しました。");
-            connections.Add(con);
+            lock (conLock)
+            {
+                connections.Add(con);
+            }
             return con;
         }
 
@@ -168,6 +171,7 @@ namespace Dulcet.Twitter.Streaming
 
         #region Connection control
 
+        private object conLock = new object();
         private List<StreamingConnection> connections = new List<StreamingConnection>();
 
         /// <summary>
@@ -175,12 +179,21 @@ namespace Dulcet.Twitter.Streaming
         /// </summary>
         public IEnumerable<StreamingConnection> AliveConnections
         {
-            get { return this.connections; }
+            get
+            {
+                lock (conLock)
+                {
+                    return this.connections.ToArray();
+                }
+            }
         }
 
         internal void UnregisterConnection(StreamingConnection connection)
         {
-            connections.Remove(connection);
+            lock (conLock)
+            {
+                connections.Remove(connection);
+            }
         }
 
         internal void RaiseOnExceptionThrown(Exception exception)
