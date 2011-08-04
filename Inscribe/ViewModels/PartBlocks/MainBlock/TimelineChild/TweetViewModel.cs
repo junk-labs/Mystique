@@ -26,8 +26,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             if (status == null)
                 throw new ArgumentNullException("status");
-            this.Status = status;
             this.bindingId = status.Id;
+            this.Status = status;
         }
 
         public TweetViewModel(long id)
@@ -365,6 +365,20 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            var tdtv = obj as TweetViewModel;
+            if (tdtv != null)
+                return this.bindingId == tdtv.bindingId;
+            else
+                return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)this.bindingId;
+        }
     }
 
 }

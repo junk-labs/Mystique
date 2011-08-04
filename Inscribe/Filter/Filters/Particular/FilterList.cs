@@ -65,8 +65,12 @@ namespace Inscribe.Filter.Filters.Particular
                 {
                     Task.Factory.StartNew(() =>
                     {
-                        ListStorage.GetListMembers(this.listUser, this.listName).ToArray();
-                        this.RaiseRequireReaccept();
+                        try
+                        {
+                            ListStorage.GetListMembers(this.listUser, this.listName).ToArray();
+                            this.RaiseRequireReaccept();
+                        }
+                        catch { }
                     });
                 }
                 return false;

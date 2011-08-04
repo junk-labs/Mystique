@@ -37,8 +37,10 @@ namespace Inscribe.Communication.Streaming.Connection
         {
             var info = provider as AccountInfo;
             if (info == null)
+            {
+                ExceptionStorage.Register(new Exception(), ExceptionCategory.InternalError, "プロバイダがアカウント情報を保持していません。");
                 return;
-
+            }
 
             // 再接続処理
             if (!expected)
@@ -298,7 +300,8 @@ namespace Inscribe.Communication.Streaming.Connection
         {
             if (this.disposed) return;
             this.disposed = true;
-            this.connection.Dispose();
+            if(this.connection != null)
+                this.connection.Dispose();
         }
     }
 }

@@ -122,7 +122,7 @@ namespace Inscribe.Storage
                 IEnumerable<TwitterUser> members = null;
                 try
                 {
-                    members = ApiHelper.ExecApi(() => acInfo.GetListMembersAll(screenName, listName));
+                    members = ApiHelper.ExecApi(() => acInfo.GetListMembersAll(screenName, listName).ToArray());
                     if (members == null)
                         throw new WebException("Twitter returns empty");
                 }

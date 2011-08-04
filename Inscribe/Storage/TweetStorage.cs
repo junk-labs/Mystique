@@ -7,6 +7,7 @@ using Dulcet.Twitter;
 using Inscribe.Threading;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
+using System.Threading;
 
 namespace Inscribe.Storage
 {
@@ -239,34 +240,50 @@ namespace Inscribe.Storage
             Task.Factory.StartNew(() => RaiseStatusStateChanged(tweet));
         }
 
-        #region Notifications
+        #region TweetStorageChangedイベント
 
-        private static readonly Notificator<TweetStorageChangedEventArgs> _tweetStorageChangedEvent = new Notificator<TweetStorageChangedEventArgs>();
-        public static Notificator<TweetStorageChangedEventArgs> TweetStorageChangedEvent { get { return _tweetStorageChangedEvent; } }
+        public static event EventHandler<TweetStorageChangedEventArgs> TweetStorageChanged;
+        private static Notificator<TweetStorageChangedEventArgs> _TweetStorageChangedEvent;
+        public static Notificator<TweetStorageChangedEventArgs> TweetStorageChangedEvent
+        {
+            get
+            {
+                if (_TweetStorageChangedEvent == null) _TweetStorageChangedEvent = new Notificator<TweetStorageChangedEventArgs>();
+                return _TweetStorageChangedEvent;
+            }
+            set { _TweetStorageChangedEvent = value; }
+        }
+
+        private static void OnTweetStorageChanged(TweetStorageChangedEventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref TweetStorageChanged, null, null);
+            if (threadSafeHandler != null) threadSafeHandler(null, e);
+            TweetStorageChangedEvent.Raise(e);
+        }
+
+        #endregion
 
         static void RaiseStatusAdded(TweetViewModel added)
         {
-            TweetStorageChangedEvent.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Added, added));
+            OnTweetStorageChanged(new TweetStorageChangedEventArgs(TweetActionKind.Added, added));
         }
 
         static void RaiseStatusRemoved(TweetViewModel removed)
         {
-            TweetStorageChangedEvent.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Removed, removed));
+            OnTweetStorageChanged(new TweetStorageChangedEventArgs(TweetActionKind.Removed, removed));
         }
 
         static void RaiseStatusStateChanged(TweetViewModel changed)
         {
-            TweetStorageChangedEvent.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Changed, changed));
+            OnTweetStorageChanged(new TweetStorageChangedEventArgs(TweetActionKind.Changed, changed));
         }
 
         static void RaiseRefreshTweets()
         {
-            TweetStorageChangedEvent.Raise(new TweetStorageChangedEventArgs(TweetActionKind.Refresh));
+            OnTweetStorageChanged(new TweetStorageChangedEventArgs(TweetActionKind.Refresh));
         }
-
-
-        #endregion
     }
+    
 
     public class TweetStorageChangedEventArgs : EventArgs
     {

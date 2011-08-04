@@ -9,17 +9,14 @@ namespace Inscribe.Filter.Filters.ScreenName
     {
         private FilterUser() { }
 
-        public FilterUser(string needle) : this(needle, false) { }
-
-        public FilterUser(string needle, bool isCaseSensitive)
+        public FilterUser(string needle)
         {
             this.needle = needle;
-            this.isCaseSensitive = isCaseSensitive;
         }
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
-            return Match(status.User.ScreenName, needle, isCaseSensitive);
+            return Match(status.User.ScreenName, needle);
         }
 
         public override string Identifier

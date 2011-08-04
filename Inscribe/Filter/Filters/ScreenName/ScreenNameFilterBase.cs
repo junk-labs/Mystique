@@ -2,21 +2,34 @@
 using Inscribe.Filter.Core;
 using Inscribe.Storage;
 using Inscribe.Filter.Filters.Text;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace Inscribe.Filter.Filters.ScreenName
 {
-    public abstract class ScreenNameFilterBase : TextFilterBase
+    public abstract class ScreenNameFilterBase : FilterBase
     {
-        public bool Match(string haystack, string needle)
+        [GuiVisible("検索@ID")]
+        public string Needle
         {
-            return this.Match(haystack, needle, false);
-        }
-
-        protected sealed override bool Match(string haystack, string needle, bool isCasesSensitive)
-        {
-            if (needle == "*")
+            get { return this.needle; }
+            set
             {
-                return AccountStorage.Contains(haystack);
+                this.needle = value;
+                RaiseRequireReaccept();
+            }
+        }
+        protected string needle = String.Empty;
+
+        protected virtual bool Match(string haystack, string needle, bool isCaseSensitive)
+        {
+            if (needle.StartsWith("/"))
+            {
+                // regular expressions
+                if (isCaseSensitive)
+                    return Regex.IsMatch(haystack, needle.Substring(1));
+                else
+                    return Regex.IsMatch(haystack, needle.Substring(1), RegexOptions.IgnoreCase);
             }
             else
             {
@@ -82,6 +95,76 @@ namespace Inscribe.Filter.Filters.ScreenName
                         return haystack.IndexOf(needle, StringComparison.CurrentCultureIgnoreCase) >= 0;
                 }
             }
+        }
+
+        public override string FilterStateString
+        {
+            get { return this.Description + "から@" + this.needle + " を検索"; }
+        }
+
+        public bool Match(string haystack, string needle)
+        {
+            if (needle == "*")
+            {
+                return AccountStorage.Contains(haystack);
+            }
+            else
+            {
+                bool startsWith = false;
+                bool endsWith = false;
+
+                if (needle.StartsWith("\\/"))
+                {
+                    // 先頭のスラッシュエスケープを削除
+                    needle = needle.Substring(1);
+                }
+
+                if (needle.StartsWith("^"))
+                {
+                    startsWith = true;
+                    needle = needle.Substring(1);
+                }
+                else if (needle.StartsWith("\\^"))
+                {
+                    needle = needle.Substring(1);
+                }
+
+                if (needle.EndsWith("$"))
+                {
+                    if (needle.EndsWith("\\$"))
+                    {
+                        needle = needle.Substring(0, needle.Length - 2) + "$";
+                    }
+                    else
+                    {
+                        endsWith = true;
+                        needle = needle.Substring(0, needle.Length - 1);
+                    }
+                }
+                var unescaped = needle.UnescapeFromQuery();
+                if (startsWith && endsWith)
+                {
+                    // complete
+                    return haystack.Equals(needle, StringComparison.CurrentCultureIgnoreCase);
+                }
+                else if (startsWith)
+                {
+                    return haystack.StartsWith(needle, StringComparison.CurrentCultureIgnoreCase);
+                }
+                else if (endsWith)
+                {
+                    return haystack.EndsWith(needle, StringComparison.CurrentCultureIgnoreCase);
+                }
+                else
+                {
+                    return haystack.IndexOf(needle, StringComparison.CurrentCultureIgnoreCase) >= 0;
+                }
+            }
+        }
+
+        public override System.Collections.Generic.IEnumerable<object> GetArgumentsForQueryify()
+        {
+            yield return needle;
         }
     }
 }
