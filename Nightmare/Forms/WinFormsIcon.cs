@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace Nightmare.Forms
@@ -8,7 +11,7 @@ namespace Nightmare.Forms
     /// <summary>
     /// System.Windows.Forms.Iconのラッパ実装です。
     /// </summary>
-    public class WinFormsIcon
+    public class WinFormsIcon : IDisposable
     {
         private Icon winFormsIcon;
         internal Icon IconInstance { get { return this.winFormsIcon; } }
@@ -25,22 +28,22 @@ namespace Nightmare.Forms
 
         public WinFormsIcon(BitmapImage image)
         {
-            Bitmap bitmap = null;
             var width = image.PixelWidth;
             var height = image.PixelHeight;
             var stride = width * ((image.Format.BitsPerPixel + 7) / 8);
-            var bits = new byte[height * stride];
-            unsafe
+            IntPtr ptr = Marshal.AllocHGlobal(height * stride);
+            try
             {
-                fixed (byte* pB = bits)
+                image.CopyPixels(new Int32Rect(0, 0, width, height), ptr, height * stride, stride);
+                using (var bitmap = new Bitmap(width, height, stride, PixelFormat.Format32bppArgb, ptr))
                 {
-                    var ptr = new IntPtr(pB);
-                    bitmap = new Bitmap(width, height, stride,
-                        System.Drawing.Imaging.PixelFormat.Format32bppPArgb,
-                        ptr);
+                    this.winFormsIcon = Icon.FromHandle(bitmap.GetHicon());
                 }
             }
-            this.winFormsIcon = Icon.FromHandle(bitmap.GetHicon());
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
         }
 
         internal WinFormsIcon(Icon icon)
@@ -48,5 +51,9 @@ namespace Nightmare.Forms
             this.winFormsIcon = icon;
         }
 
+        public void Dispose()
+        {
+            this.winFormsIcon.Dispose();
+        }
     }
 }
