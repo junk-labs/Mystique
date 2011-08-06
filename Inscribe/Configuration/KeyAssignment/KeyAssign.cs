@@ -140,7 +140,7 @@ namespace Inscribe.Configuration.KeyAssignment
 
         private static Key CheckIme(KeyEventArgs e)
         {
-            if (e.Key == Key.ImeProcessed && e.OriginalSource is TextBoxBase)
+            if (e.Key == Key.ImeProcessed || e.OriginalSource is TextBoxBase)
             {
                 return Key.None;
             }
