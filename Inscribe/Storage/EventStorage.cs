@@ -84,15 +84,8 @@ namespace Inscribe.Storage
 
         public static void OnFavored(TweetViewModel tweet, UserViewModel favorer)
         {
-            try
-            {
-                Register(new EventDescription(EventKind.Favorite, favorer,
-                    UserStorage.Get(tweet.Status.User), tweet));
-            }
-            catch (NullReferenceException e)
-            {
-                throw;
-            }
+            Register(new EventDescription(EventKind.Favorite, favorer,
+                 UserStorage.Get(tweet.Status.User), tweet));
         }
 
         public static void OnUnfavored(TweetViewModel tweet, UserViewModel favorer)
@@ -111,6 +104,13 @@ namespace Inscribe.Storage
         {
             Register(new EventDescription(EventKind.Unfollow,
                 fromUser, toUser));
+        }
+
+        public static void OnMention(TweetViewModel tweet)
+        {
+            Register(new EventDescription(EventKind.Mention,
+                UserStorage.Get(tweet.Status.User), null, tweet));
+                
         }
     }
 
@@ -142,7 +142,8 @@ namespace Inscribe.Storage
         Favorite,
         Unfavorite,
         Follow,
-        Unfollow
+        Unfollow,
+        Mention
     }
 
     public class EventDescriptionEventArgs : EventArgs
