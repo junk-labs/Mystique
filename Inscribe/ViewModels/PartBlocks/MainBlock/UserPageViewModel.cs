@@ -43,6 +43,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return _timelineListCoreViewModel; }
         }
 
+        public override TimelineListCoreViewModel CoreViewModel
+        {
+            get { return TimelineListCoreViewModel; }
+        }
+
         private UserViewModel _user = null;
         public UserViewModel User
         {

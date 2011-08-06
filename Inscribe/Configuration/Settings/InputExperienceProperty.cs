@@ -12,17 +12,11 @@ namespace Inscribe.Configuration.Settings
         public InputExperienceProperty()
         {
             TrimBeginSpace = true;
-            ReplyAccountAutoDecision = true;
-            ClosePostBoxAfterPost = false;
             UseInputSuggesting = true;
             AutoBindInputtedHashtag = false;
         }
 
         public bool TrimBeginSpace { get; set; }
-
-        public bool ReplyAccountAutoDecision { get; set; }
-
-        public bool ClosePostBoxAfterPost { get; set; }
 
         public bool UseInputSuggesting { get; set; }
 
@@ -38,13 +32,6 @@ namespace Inscribe.Configuration.Settings
 
     public class HashtagAutoBindDescription
     {
-        public enum AutoBindStrategy
-        {
-            Contains = 0,
-            StartsWith = 1,
-            EndsWith = 2,
-            Regex = 3
-        }
 
         public AutoBindStrategy Strategy { get; set; }
 
@@ -89,5 +76,13 @@ namespace Inscribe.Configuration.Settings
             return "#" + TagText + " : " + (IsNegateCondition ? "!" : "") +
                 "\"" + ConditionText + "\" - " + Strategy.ToString();
         }
+    }
+
+    public enum AutoBindStrategy
+    {
+        Contains = 0,
+        StartsWith = 1,
+        EndsWith = 2,
+        Regex = 3
     }
 }

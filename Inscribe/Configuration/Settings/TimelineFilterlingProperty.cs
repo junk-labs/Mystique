@@ -14,10 +14,7 @@ namespace Inscribe.Configuration.Settings
         public TimelineFilterlingProperty()
         {
             this.MuteFilterCluster = new FilterCluster() { Negate = true, ConcatenateAnd = false };
-
-            this.RedStarUsers = new string[0];
-            this.BlueStarUsers = new string[0];
-            this.GreenStarUsers = new string[0];
+            this.ShareBlocking = false;
         }
 
         /// <summary>
@@ -37,7 +34,7 @@ namespace Inscribe.Configuration.Settings
                 }
                 catch (Exception e)
                 {
-                    ExceptionStorage.Register(e, ExceptionCategory.UserError, "クエリのコンパイルに失敗しました。(クエリ:" + value +")");
+                    ExceptionStorage.Register(e, ExceptionCategory.UserError, "クエリのコンパイルに失敗しました。(クエリ:" + value + ")");
                 }
             }
         }
@@ -47,24 +44,9 @@ namespace Inscribe.Configuration.Settings
             this.MuteFilterCluster.Join(filter);
         }
 
-        public string[] RedStarUsers { get; set; }
-
-        public string[] BlueStarUsers { get; set; }
-
-        public string[] GreenStarUsers { get; set; }
-
-        public event Action<StarKind> StarChanged = _ => { };
-
-        public void RaiseStarChanged(StarKind kind)
-        {
-            StarChanged(kind);
-        }
-    }
-
-    public enum StarKind
-    {
-        Red,
-        Blue,
-        Green
+        /// <summary>
+        /// ブロックを共有する
+        /// </summary>
+        public bool ShareBlocking { get; set; }
     }
 }

@@ -81,20 +81,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
-        public bool IsCurrentFocused
-        {
-            get
-            {
-                return this.Parent.Parent.CurrentFocusColumn == this.Parent &&
-                    IsSelected;
-            }
-        }
-
-        public void UpdateIsCurrentFocused()
-        {
-            RaisePropertyChanged(() => IsCurrentFocused);
-        }
-
         public TabViewModel(ColumnViewModel parent, TabProperty property = null)
         {
             this.Parent = parent;
@@ -118,10 +104,29 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.StackingTimelines.ForEach(f => f.InvalidateCache());
         }
 
+        public bool IsCurrentFocused
+        {
+            get
+            {
+                return this.Parent.Parent.CurrentFocusColumn == this.Parent &&
+                    IsSelected;
+            }
+        }
+
+        public void UpdateIsCurrentFocused()
+        {
+            RaisePropertyChanged(() => IsCurrentFocused);
+        }
+
         private ObservableCollection<TimelineCoreViewModelBase> _stackings = new ObservableCollection<TimelineCoreViewModelBase>();
         public IEnumerable<TimelineCoreViewModelBase> StackingTimelines
         {
             get { return _stackings; }
+        }
+
+        public TimelineCoreViewModelBase BaseTimeline
+        {
+            get { return this._stackings.First(); }
         }
 
         public TimelineCoreViewModelBase CurrentForegroundTimeline
@@ -328,6 +333,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         /// <param name="description"></param>
         public void AddTopTimeline(IEnumerable<IFilter> newFilter)
         {
+            if (this._stackings.Count > 0 && newFilter == null)
+                throw new ArgumentNullException("スタックベースとなる時以外、デフォルトフィルタがNULLのタイムラインを追加できません。");
             this._stackings.Add(new TimelineListViewModel(this, newFilter));
             this._stackings.ForEach(t => t.InvalidateIsActive());
             RaisePropertyChanged(() => TimelinesCount);
@@ -379,7 +386,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void CreateTopView()
         {
-            this.AddTopTimeline(null);
+            this.AddTopTimeline(new[] { new FilterCluster() });
             this.Messenger.Raise(new InteractionMessage("FocusToSearch"));
         }
         #endregion
@@ -403,5 +410,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
 
+        internal void NotifyNewTweetReceived(TimelineListCoreViewModel timelineListCoreViewModel)
+        {
+            if (Setting.Instance.NotificationProperty.TabNotifyStackTopTimeline)
+            {
+                if (this.CurrentForegroundTimeline.CoreViewModel == timelineListCoreViewModel)
+                    this.NewTweetsCount++;
+            }
+            else
+            {
+                if (this.BaseTimeline.CoreViewModel == timelineListCoreViewModel)
+                    this.NewTweetsCount++;
+            }
+        }
     }
 }

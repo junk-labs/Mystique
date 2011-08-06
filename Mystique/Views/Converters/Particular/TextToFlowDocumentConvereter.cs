@@ -75,14 +75,14 @@ namespace Mystique.Views.Converters.Particular
                         break;
                     case Tokenizer.Token.TokenKind.URL:
                         var urllink = new Hyperlink();
-                        switch (Setting.Instance.TweetExperienceProperty.UrlResolving)
+                        switch (Setting.Instance.TweetExperienceProperty.UrlResolveMode)
                         {
-                            case TweetExperienceProperty.UrlResolveStrategy.OnPointed:
-                            case TweetExperienceProperty.UrlResolveStrategy.Never:
+                            case UrlResolve.OnPointed:
+                            case UrlResolve.Never:
                                 urllink.Inlines.Add(new Run(ctt));
                                 urllink.ToolTip = new UrlTooltip(ctt);
                                 break;
-                            case TweetExperienceProperty.UrlResolveStrategy.OnReceived:
+                            case UrlResolve.OnReceived:
                                 string nurl = null;
                                 if ((nurl = UrlResolveCacheStorage.Lookup(ctt)) == null)
                                 {

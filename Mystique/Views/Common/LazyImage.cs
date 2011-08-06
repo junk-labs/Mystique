@@ -72,8 +72,12 @@ namespace Mystique.Views.Common
                             });
                             taskrun.Enqueue(() =>
                             {
-                                var bi = ImageCacheStorage.DownloadImage(uri);
-                                img.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri), DispatcherPriority.ContextIdle);
+                                try
+                                {
+                                    var bi = ImageCacheStorage.DownloadImage(uri);
+                                    img.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri), DispatcherPriority.ContextIdle);
+                                }
+                                catch { }
                             });
                         }
                     }

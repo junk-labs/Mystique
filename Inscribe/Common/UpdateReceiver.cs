@@ -99,7 +99,7 @@ namespace Inscribe.Common
         {
             try
             {
-                using (var sha = new SHA256Cng())
+                using (var sha = new SHA256Managed())
                 using (var rsa = new RSACryptoServiceProvider())
                 {
                     // Compute hash

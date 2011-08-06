@@ -160,7 +160,7 @@ namespace Rouge
 
         private byte[] GetSignature(byte[] bytes, String privateKey)
         {
-            using (var sha = new SHA256Cng())
+            using (var sha = new SHA256CryptoServiceProvider())
             using (var rsa = new RSACryptoServiceProvider())
             {
                 // Compute hash

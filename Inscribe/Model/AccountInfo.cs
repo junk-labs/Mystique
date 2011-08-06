@@ -100,7 +100,7 @@ namespace Inscribe.Model
 
 
         private ConnectionState _userStreamsConnectionState = ConnectionState.Disconnected;
-        public ConnectionState UserStreamsConnectionState
+        public ConnectionState ConnectionState
         {
             get { return this._userStreamsConnectionState; }
             set

@@ -84,8 +84,15 @@ namespace Inscribe.Storage
 
         public static void OnFavored(TweetViewModel tweet, UserViewModel favorer)
         {
-            Register(new EventDescription(EventKind.Favorite,
-                favorer, UserStorage.Get(tweet.Status.User), tweet));
+            try
+            {
+                Register(new EventDescription(EventKind.Favorite, favorer,
+                    UserStorage.Get(tweet.Status.User), tweet));
+            }
+            catch (NullReferenceException e)
+            {
+                throw;
+            }
         }
 
         public static void OnUnfavored(TweetViewModel tweet, UserViewModel favorer)

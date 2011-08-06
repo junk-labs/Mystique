@@ -10,6 +10,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
     public abstract class TimelineCoreViewModelBase : ViewModel
     {
+        public abstract TimelineListCoreViewModel CoreViewModel { get; }
+
         public abstract bool IsActive { get; }
 
         public abstract void InvalidateIsActive();

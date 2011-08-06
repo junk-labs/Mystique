@@ -9,51 +9,27 @@ namespace Inscribe.Configuration.Settings
     {
         public TimelineExperienceProperty()
         {
-            this.UseAscendingSort = false;
+            this.OrderByAscending = false;
             FastScrolling = true;
             ScrollLockMode = ScrollLock.OnSelected;
             QueryApplyWait = 200;
-            TimelineColorLazyUpdate = true;
-            TimelineItemInitStrategy = ItemInitStrategy.DefaultColors;
-            TimelineItemResetBreakCount = 50;
-            TimelineItemResetBreakWait = 250;
             KeywordSearchTransition = TransitionMethod.ViewStack;
             UserExtractTransition = TransitionMethod.AddTab;
             ConversationTransition = TransitionMethod.ViewStack;
             UserOpenTransition = TransitionMethod.AddTab;
-            IsShowConversationTree = true;
-            MoveUpToDeselect = true;
+            IsShowConversationAsTree = true;
+            MoveAboveTopToDeselect = true;
         }
 
         public bool FastScrolling { get; set; }
 
-        public bool UseAscendingSort { get; set; }
+        public bool OrderByAscending { get; set; }
 
+        public ItemInitStrategy TimelineItemInitStrategy { get; set; }
 
         public ScrollLock ScrollLockMode { get; set; }
 
         public int QueryApplyWait;
-
-        /// <summary>
-        /// タイムラインの色設定を遅延反映する(パフォーマンス向上、ただし大量に処理対象がある場合処理が遅延する場合あり)
-        /// </summary>
-        public bool TimelineColorLazyUpdate { get; set; }
-
-
-        /// <summary>
-        /// タイムラインの各要素の初期化方法
-        /// </summary>
-        public ItemInitStrategy TimelineItemInitStrategy { get; set; }
-
-        /// <summary>
-        /// タイムラインの要素を一気に追加する際、一時的に休止するカウント数
-        /// </summary>
-        public int TimelineItemResetBreakCount { get; set; }
-
-        /// <summary>
-        /// タイムラインの要素を一気に追加する際、一時的に休止する長さ
-        /// </summary>
-        public int TimelineItemResetBreakWait { get; set; }
 
         public TransitionMethod KeywordSearchTransition { get; set; }
 
@@ -66,13 +42,12 @@ namespace Inscribe.Configuration.Settings
         /// <summary>
         /// 会話をツリーとして展開するか
         /// </summary>
-        public bool IsShowConversationTree { get; set; }
+        public bool IsShowConversationAsTree { get; set; }
 
         /// <summary>
         /// タイムラインの一番上の要素を選択している時にさらに上に移動しようとした時、選択を外す
         /// </summary>
-        public bool MoveUpToDeselect { get; set; }
-
+        public bool MoveAboveTopToDeselect { get; set; }
     }
 
     /// <summary>

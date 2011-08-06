@@ -36,16 +36,15 @@ namespace Mystique.Views.Converters.Particular
                     if (input == null) return String.Empty;
                     return input.Status.User.ScreenName;
                 case UserNameViewKind.ViewName:
-                    switch (Setting.Instance.TweetExperienceProperty.UserNameMode)
+                    switch (Setting.Instance.TweetExperienceProperty.UserNameViewMode)
                     {
-                        case TweetExperienceProperty.NameViewMode.ID:
+                        case NameView.ID:
                             return ScreenName(input);
-                        case TweetExperienceProperty.NameViewMode.Name:
+                        case NameView.Name:
                             return UserName(input);
-                        case TweetExperienceProperty.NameViewMode.Both:
-                            return ScreenName(input) + " (" + UserName(input) + ")";
+                        case NameView.Both:
                         default:
-                            return String.Empty;
+                            return ScreenName(input) + " (" + UserName(input) + ")";
                     }
                 case UserNameViewKind.DirectMessageTarget:
                     if (input == null || !(input.Status is TwitterDirectMessage)) return String.Empty;

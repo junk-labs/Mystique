@@ -29,17 +29,21 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             RaisePropertyChanged(() => IsActive);
         }
 
-        public TimelineListViewModel(TabViewModel parent, IEnumerable<IFilter> sources = null)
+        public TimelineListViewModel(TabViewModel parent, IEnumerable<IFilter> sources)
         {
             this.Parent = parent;
             this._timelineListCoreViewModel = new TimelineListCoreViewModel(parent, sources);
         }
 
         private TimelineListCoreViewModel _timelineListCoreViewModel;
-
         public TimelineListCoreViewModel TimelineListCoreViewModel
         {
             get { return _timelineListCoreViewModel; }
+        }
+
+        public override TimelineListCoreViewModel CoreViewModel
+        {
+            get { return TimelineListCoreViewModel; }
         }
 
         public override void InvalidateCache()

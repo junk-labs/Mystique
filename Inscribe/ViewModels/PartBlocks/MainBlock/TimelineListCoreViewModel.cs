@@ -66,7 +66,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             Task.Factory.StartNew(() => this.InvalidateCache(true));
         }
 
-        public TimelineListCoreViewModel(TabViewModel parent, IEnumerable<IFilter> sources = null)
+        public TimelineListCoreViewModel(TabViewModel parent, IEnumerable<IFilter> sources)
         {
             this.Parent = parent;
             this.sources = sources;
@@ -86,23 +86,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public void Commit(bool reinvalidate)
         {
             this._tweetsSource.Commit(reinvalidate);
-            /*
-            DispatcherHelper.BeginInvoke(() =>
-            {
-                IDisposable defer = this._tweetCollectionView.DeferRefresh();
-                Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        this._tweetsSource.Commit(reinvalidate);
-                    }
-                    finally
-                    {
-                        DispatcherHelper.BeginInvoke(() => defer.Dispose());
-                    }
-                });
-            });
-            */
         }
 
         private void TweetStorageChanged(object o, TweetStorageChangedEventArgs e)
@@ -114,6 +97,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     {
                         this._tweetsSource.Add(new TabDependentTweetViewModel(e.Tweet, this.Parent));
                         OnNewTweetReceived();
+                        this.Parent.NotifyNewTweetReceived(this);
                     }
                     break;
                 case TweetActionKind.Refresh:
@@ -147,7 +131,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             {
                 this._tweetsSource.Commit();
                 this._tweetCollectionView.SortDescriptions.Clear();
-                if (Setting.Instance.TimelineExperienceProperty.UseAscendingSort)
+                if (Setting.Instance.TimelineExperienceProperty.OrderByAscending)
                     this._tweetCollectionView.SortDescriptions.Add(
                         new SortDescription("Tweet.CreatedAt", ListSortDirection.Ascending));
                 else

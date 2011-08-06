@@ -25,7 +25,7 @@ namespace Inscribe.ViewModels.Common
             isBeginResolved = true;
             Task.Factory.StartNew(() =>
             {
-                if (Setting.Instance.TweetExperienceProperty.UrlResolving == Configuration.Settings.TweetExperienceProperty.UrlResolveStrategy.OnPointed)
+                if (Setting.Instance.TweetExperienceProperty.UrlResolveMode == Configuration.Settings.UrlResolve.OnPointed)
                     url = ShortenManager.Extract(url);
                 ResolvedUrl = url;
                 ImageLinkUrl = UploaderManager.TryResolve(url);

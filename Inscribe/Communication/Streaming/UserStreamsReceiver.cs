@@ -55,24 +55,25 @@ namespace Inscribe.Communication.Streaming
             var usc = Interlocked.Exchange(ref this.usConnection, null);
             if (usc != null)
                 usc.Dispose();
-            lui.UserStreamsConnectionState = ConnectionState.Disconnected;
+            lui.ConnectionState = ConnectionState.Disconnected;
             if (lui.AccoutProperty.UseUserStreams)
             {
                 try
                 {
-                    lui.UserStreamsConnectionState = ConnectionState.WaitNetwork;
+                    lui.ConnectionState = ConnectionState.WaitNetwork;
                     new Robustness.NetworkTest().Test();
-                    lui.UserStreamsConnectionState = ConnectionState.WaitTwitter;
+                    lui.ConnectionState = ConnectionState.WaitTwitter;
                     new Robustness.TwitterTest().Test();
 
-                    lui.UserStreamsConnectionState = ConnectionState.TryConnection;
+                    lui.ConnectionState = ConnectionState.TryConnection;
                     // User Streams接続の開始
                     this.usConnection = UserStreamsConnection.Connect(lui, Queries);
-                    lui.UserStreamsConnectionState = ConnectionState.Connected;
+                    lui.ConnectionState = ConnectionState.Connected;
                 }
                 catch (Exception e)
                 {
                     ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "User Streams接続に失敗しました。");
+                    lui.ConnectionState = ConnectionState.Disconnected;
                 }
             }
         }

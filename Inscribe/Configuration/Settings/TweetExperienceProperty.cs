@@ -13,46 +13,46 @@ namespace Inscribe.Configuration.Settings
             ShowQuoteButton = false;
             P3StyleIcon = true;
             NameAreaWidth = 120;
-            UserNameMode = NameViewMode.ID;
-            UrlResolving = UrlResolveStrategy.OnPointed;
+            UserNameViewMode = NameView.ID;
+            UrlResolveMode = UrlResolve.OnPointed;
             UrlTooltipShowLength = 60 * 1000;
         }
 
         public bool ShowUnofficialRetweetButton { get; set; }
 
+        public bool ShowQuoteButton { get; set; }
+
         public bool P3StyleIcon { get; set; }
 
         public int NameAreaWidth { get; set; }
 
-        public enum NameViewMode
-        {
-            ID,
-            Name,
-            Both
-        }
+        public NameView UserNameViewMode { get; set; }
 
-        public NameViewMode UserNameMode { get; set; }
-
-        public enum UrlResolveStrategy
-        {
-            /// <summary>
-            /// URL短縮を解決しません
-            /// </summary>
-            Never,
-            /// <summary>
-            /// ツールチップ上で解決します
-            /// </summary>
-            OnPointed,
-            /// <summary>
-            /// テキスト表示で解決します
-            /// </summary>
-            OnReceived
-        }
-
-        public UrlResolveStrategy UrlResolving { get; set; }
+        public UrlResolve UrlResolveMode { get; set; }
 
         public int UrlTooltipShowLength { get; set; }
+    }
 
-        public bool ShowQuoteButton { get; set; }
+    public enum NameView
+    {
+        ID,
+        Name,
+        Both
+    }
+
+    public enum UrlResolve
+    {
+        /// <summary>
+        /// URL短縮を解決しません
+        /// </summary>
+        Never,
+        /// <summary>
+        /// ツールチップ上で解決します
+        /// </summary>
+        OnPointed,
+        /// <summary>
+        /// テキスト表示で解決します
+        /// </summary>
+        OnReceived
     }
 }

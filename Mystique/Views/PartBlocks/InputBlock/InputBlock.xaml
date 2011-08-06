@@ -100,7 +100,7 @@
                             <MenuItem Command="{Binding CreateNewTabCommand}" Header="新しいタブ(_T)..." />
                             <Separator />
                             <MenuItem Command="{Binding CollectTabsCommand}" Header="全てのカラムをまとめる(_C)" />
-                            <MenuItem Command="{Binding ClearClosedTabsStackCommand}" Header="クローズドタブスタックをクリア(_C)" />
+                            <MenuItem Command="{Binding ClearClosedTabsStackCommand}" Header="閉じたタブの履歴をクリア(_C)" />
                         </MenuItem>
                         <MenuItem Header="メンテナンス(_M)">
                             <MenuItem Command="{Binding ReconnectStreamsCommand}" Header="User Streamsを再接続(_U)" />
@@ -109,13 +109,13 @@
                             </MenuItem>
                         </MenuItem>
                         <Separator />
-                        <MenuItem Command="{Binding ShowConfigCommand}" Header="設定(_S)..." />
-                        <MenuItem Header="ヘルプ(_H)">
-                            <MenuItem Command="{Binding ShowAssignViewerCommand}" Header="キーアサイン ビューア(_K)..." />
-                            <MenuItem Header="フィードバック(_F)..." />
-                            <Separator />
-                            <MenuItem Command="{Binding ShowAboutCommand}" Header="バージョン情報(_A)..." />
-                        </MenuItem>
+                        <MenuItem Header="サイレントモード(_S)" IsCheckable="True" IsChecked="{Binding IsSilentMode}" />
+                        <MenuItem Command="{Binding ShowAssignViewerCommand}" Header="キーアサイン ビューア(_K)..." />
+                        <MenuItem Command="{Binding ShowConfigCommand}" Header="設定(_C)..." />
+                        <Separator />
+                        <MenuItem Command="{Binding FeedbackCommand}" Header="フィードバック(_F)..." />
+                        <MenuItem Command="{Binding ShowAboutCommand}" Header="バージョン情報(_A)..." />
+                        <Separator />
                         <MenuItem Command="{Binding ExitCommand}" Header="Krileを終了(_X)" />
                     </ContextMenu>
                 </com:DropDownButton.DropDownMenu>

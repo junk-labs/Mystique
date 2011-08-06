@@ -20,7 +20,12 @@ namespace Inscribe.Configuration.Settings
         /// </summary>
         public bool PowerUserMode { get; set; }
 
-
+        /// <summary>
+        /// 更新パッケージ種別
+        /// </summary>
+        /// <remarks>
+        /// PowerUserModeがオンなら0-3で選択可能
+        /// </remarks>
         public int UpdateKind { get; set; }
 
         #endregion

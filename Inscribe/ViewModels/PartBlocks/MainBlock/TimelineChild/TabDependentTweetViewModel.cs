@@ -454,7 +454,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
             IEnumerable<IFilter> filter = null;
             string description = String.Empty;
-            if (Setting.Instance.TimelineExperienceProperty.IsShowConversationTree)
+            if (Setting.Instance.TimelineExperienceProperty.IsShowConversationAsTree)
             {
                 filter = new[] { new FilterMentionTree(this.Tweet.Status.Id) };
                 description = "@#" + this.Tweet.Status.Id.ToString();

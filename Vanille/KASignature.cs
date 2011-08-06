@@ -13,7 +13,7 @@ namespace Vanille
     {
         public static void Signature(Stream input, Stream output, string privateKey)
         {
-            using (var sha = new SHA256Cng())
+            using (var sha = new SHA256CryptoServiceProvider())
             using (var rsa = new RSACryptoServiceProvider())
             {
                 // Compute hash
@@ -55,7 +55,7 @@ namespace Vanille
                 throw new Exception("File is corrupted.(KSIG: Invalid Signature)");
             var data = ReadAllBytes(input).ToArray();
 
-            using (var sha = new SHA256Cng())
+            using (var sha = new SHA256CryptoServiceProvider())
             using (var rsa = new RSACryptoServiceProvider())
             {
                 // Compute hash

@@ -19,6 +19,7 @@ using Inscribe.Configuration.KeyAssignment;
 using System.Windows;
 using Inscribe.Communication.Streaming;
 using Inscribe.Caching;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -245,6 +246,38 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
         #endregion
 
+        #region FeedbackCommand
+        DelegateCommand _FeedbackCommand;
+
+        public DelegateCommand FeedbackCommand
+        {
+            get
+            {
+                if (_FeedbackCommand == null)
+                    _FeedbackCommand = new DelegateCommand(Feedback);
+                return _FeedbackCommand;
+            }
+        }
+
+        private void Feedback()
+        {
+            this.SetOpenText(true, true);
+            this.SetText(" #krile");
+            this.SetInputCaretIndex(0);
+        }
+        #endregion
+
+        public bool IsSilentMode
+        {
+            get { return Setting.Instance.StateProperty.IsInSilentMode; }
+            set
+            {
+                Setting.Instance.StateProperty.IsInSilentMode = value;
+                RaisePropertyChanged(() => IsSilentMode);
+            }
+        }
+
+        
         #region ExitCommand
         DelegateCommand _ExitCommand;
 

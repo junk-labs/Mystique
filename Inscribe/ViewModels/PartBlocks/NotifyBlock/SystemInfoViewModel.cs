@@ -114,7 +114,7 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
         {
             get
             {
-                switch (this.Info.UserStreamsConnectionState)
+                switch (this.Info.ConnectionState)
                 {
                     case ConnectionState.Disconnected:
                         if (Setting.Instance.ExperienceProperty.PowerUserMode)

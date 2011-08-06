@@ -48,7 +48,16 @@ namespace Inscribe.Communication.Streaming
         {
             if (!receivers.ContainsKey(accountInfo))
                 throw new ArgumentException("アカウント @" + accountInfo.ScreenName + " は接続登録されていません。");
-            receivers[accountInfo].UpdateConnection();
+            var notif = NotifyStorage.NotifyManually("@" + accountInfo.ScreenName + ": Twitterへ接続しています...");
+            try
+            {
+                receivers[accountInfo].UpdateConnection();
+            }
+            finally
+            {
+                if(notif != null)
+                    notif.Dispose();
+            }
         }
 
         #region Streaming-Query Control
