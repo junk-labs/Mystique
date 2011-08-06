@@ -8,6 +8,8 @@ using Inscribe.Threading;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using System.Threading;
+using Inscribe.Text;
+using System.Text.RegularExpressions;
 
 namespace Inscribe.Storage
 {
@@ -117,20 +119,21 @@ namespace Inscribe.Storage
         /// 受信したツイートを登録します。<para />
         /// 諸々の処理を自動で行います。
         /// </summary>
-        public static void Register(TwitterStatusBase statusBase)
+        public static TweetViewModel Register(TwitterStatusBase statusBase)
         {
-            if (dictionary.ContainsKey(statusBase.Id)) return;
+            if (dictionary.ContainsKey(statusBase.Id))
+                return dictionary[statusBase.Id];
             var status = statusBase as TwitterStatus;
             if (status != null)
             {
-                RegisterStatus(status);
+                return RegisterStatus(status);
             }
             else
             {
                 var dmsg = statusBase as TwitterDirectMessage;
                 if (dmsg != null)
                 {
-                    RegisterDirectMessage(dmsg);
+                    return RegisterDirectMessage(dmsg);
                 }
                 else
                 {
@@ -142,16 +145,16 @@ namespace Inscribe.Storage
         /// <summary>
         /// ステータスの追加に際しての処理
         /// </summary>
-        private static void RegisterStatus(TwitterStatus status)
+        private static TweetViewModel RegisterStatus(TwitterStatus status)
         {
             if (status.RetweetedOriginal != null)
             {
                 // リツイートのオリジナルステータスを登録
-                Register(status.RetweetedOriginal);
+                var vm = Register(status.RetweetedOriginal);
 
                 // リツイートユーザーに登録
-                var vm = Get(status.RetweetedOriginal.Id, true);
                 var user = UserStorage.Get(status.User);
+                var tuser = UserStorage.Get(status.RetweetedOriginal.User);
                 if (vm.RegisterRetweeted(user))
                 {
                     if (!vm.IsStatusInfoContains)
@@ -168,46 +171,67 @@ namespace Inscribe.Storage
             {
                 Get(status.InReplyToStatusId, true).RegisterInReplyToThis(status.Id);
             }
+
             UserStorage.Register(status.User);
-            RegisterCore(status);
+            var registered = RegisterCore(status);
+
+            if (status.RetweetedOriginal == null)
+            { 
+                // リツイートステータス以外で、自分への返信を探す
+                var matches = RegularExpressions.AtRegex.Matches(status.Text);
+                if (matches.Count > 0 && matches.Cast<Match>().Select(m => m.Value)
+                        .Where(s => AccountStorage.Contains(s)).FirstOrDefault() != null)
+                    EventStorage.OnMention(registered);
+            }
+            return registered;
         }
 
         /// <summary>
         /// ダイレクトメッセージの追加に際しての処理
         /// </summary>
-        private static void RegisterDirectMessage(TwitterDirectMessage dmsg)
+        private static TweetViewModel RegisterDirectMessage(TwitterDirectMessage dmsg)
         {
             UserStorage.Register(dmsg.Sender);
             UserStorage.Register(dmsg.Recipient);
-            RegisterCore(dmsg);
+            return RegisterCore(dmsg);
         }
+
+        private static object __regCoreLock__ = new object();
 
         /// <summary>
         /// ステータスベースの登録処理
         /// </summary>
-        private static void RegisterCore(TwitterStatusBase statusBase)
+        private static TweetViewModel RegisterCore(TwitterStatusBase statusBase)
         {
-            operationDispatcher.Enqueue(() =>
+            TweetViewModel viewModel;
+            if (empties.ContainsKey(statusBase.Id))
             {
-                if (deleteReserveds.Contains(statusBase.Id) || dictionary.ContainsKey(statusBase.Id)) return;
-                if (empties.ContainsKey(statusBase.Id))
+                // 既にViewModelが生成済み
+                viewModel = empties[statusBase.Id];
+                if (!viewModel.IsStatusInfoContains)
+                    viewModel.SetStatus(statusBase);
+                empties.Remove(statusBase.Id);
+
+            }
+            else
+            {
+                // 全く初めて触れるステータス
+                viewModel = new TweetViewModel(statusBase);
+            }
+            lock (__regCoreLock__)
+            {
+                if (!deleteReserveds.Contains(statusBase.Id))
                 {
-                    // 既にViewModelが生成済み
-                    var vm = empties[statusBase.Id];
-                    if (!vm.IsStatusInfoContains)
-                        vm.SetStatus(statusBase);
-                    empties.Remove(statusBase.Id);
-                    dictionary.AddOrUpdate(statusBase.Id, vm);
-                    Task.Factory.StartNew(() => RaiseStatusAdded(vm));
+                    if (dictionary.ContainsKey(statusBase.Id))
+                        viewModel = dictionary[statusBase.Id];
+                    else
+                        dictionary.AddOrUpdate(statusBase.Id, viewModel);
                 }
-                else
-                {
-                    // 全く初めて触れるステータス
-                    var newViewModel = new TweetViewModel(statusBase);
-                    dictionary.AddOrUpdate(statusBase.Id, newViewModel);
-                    Task.Factory.StartNew(() => RaiseStatusAdded(newViewModel));
-                }
-            });
+            }
+
+            if (!deleteReserveds.Contains(statusBase.Id))
+                Task.Factory.StartNew(() => RaiseStatusAdded(viewModel));
+            return viewModel;
         }
 
         /// <summary>
@@ -216,11 +240,10 @@ namespace Inscribe.Storage
         /// <param name="id">削除するツイートID</param>
         public static void Remove(long id)
         {
-            // とりあえず削除候補に登録しておく
+            // 削除する
             deleteReserveds.Add(id);
-            operationDispatcher.Enqueue(() =>
+            lock (__regCoreLock__)
             {
-                // 削除する
                 empties.Remove(id);
                 if (dictionary.ContainsKey(id))
                 {
@@ -228,7 +251,7 @@ namespace Inscribe.Storage
                     dictionary.Remove(id);
                     Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
                 }
-            });
+            }
         }
 
         /// <summary>
@@ -248,7 +271,8 @@ namespace Inscribe.Storage
         {
             get
             {
-                if (_TweetStorageChangedEvent == null) _TweetStorageChangedEvent = new Notificator<TweetStorageChangedEventArgs>();
+                if (_TweetStorageChangedEvent == null)
+                    _TweetStorageChangedEvent = new Notificator<TweetStorageChangedEventArgs>();
                 return _TweetStorageChangedEvent;
             }
             set { _TweetStorageChangedEvent = value; }

@@ -42,13 +42,14 @@ namespace Inscribe.Communication.Streaming.Connection
                 return;
             }
 
+            info.ConnectionState = ConnectionState.Disconnected;
+
             // 再接続処理
             if (!expected)
             {
                 UserStreamsReceiverManager.RefreshReceiver(info);
             }
         }
-
 
         /// <summary>
         /// ツイートのポンピングスレッド
@@ -94,15 +95,15 @@ namespace Inscribe.Communication.Streaming.Connection
                     TweetStorage.Register(elem.Status);
                     break;
                 case ElementKind.Favorite:
-                    TweetStorage.Register(elem.Status);
-                    var avm = TweetStorage.Get(elem.Status.Id, true);
+                    var avm = TweetStorage.Register(elem.Status);
+                    if (avm == null) return;
                     var uavm = UserStorage.Get(elem.SourceUser);
                     if (avm.RegisterFavored(uavm))
                         EventStorage.OnFavored(avm, uavm);
                     break;
                 case ElementKind.Unfavorite:
-                    TweetStorage.Register(elem.Status);
-                    var rvm = TweetStorage.Get(elem.Status.Id, true);
+                    var rvm = TweetStorage.Register(elem.Status);
+                    if (rvm == null) return;
                     var urvm = UserStorage.Get(elem.SourceUser);
                     if (rvm.RemoveFavored(urvm))
                         EventStorage.OnUnfavored(rvm, urvm);

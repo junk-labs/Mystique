@@ -115,18 +115,25 @@ namespace Dulcet.Twitter.Streaming
         protected virtual void Dispose(bool disposing)
         {
             if (this.disposed) return;
-            this.disposed = true;
-            usedRequest.Abort();
-            var rs = this.receiveStream;
-            this.receiveStream = null;
-            if (rs != null)
+            try
             {
-                rs.Close();
-                rs.Dispose();
+                this.disposed = true;
+                usedRequest.Abort();
+                var rs = this.receiveStream;
+                this.receiveStream = null;
+                if (rs != null)
+                {
+                    rs.Close();
+                    rs.Dispose();
+                }
+                streamReceiver.Abort();
+                streamReceiver = null;
             }
-            streamReceiver.Abort();
-            streamReceiver = null;
-            this.parentCore.UnregisterConnection(this);
+            finally
+            {
+                this.parentCore.UnregisterConnection(this);
+                this.parentCore.RaiseOnDisconnected(this.Provider, true); 
+            }
         }
     }
 }
