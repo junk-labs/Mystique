@@ -33,6 +33,9 @@
         <l:InteractionMessageTrigger MessageKey="WindowAction" Messenger="{Binding Messenger}">
             <l:WindowInteractionMessageAction />
         </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="WindowActive" Messenger="{Binding Messenger}">
+            <mb:WindowActiveAction />
+        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Window.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

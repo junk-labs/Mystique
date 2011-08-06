@@ -235,6 +235,10 @@
       <Project>{8D33449B-0BD8-4873-B872-0E91FA7EBC4B}</Project>
       <Name>Dulcet</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nightmare\Nightmare.csproj">
+      <Project>{2E6A1FEF-EDC5-4588-99A0-A70EC237FB28}</Project>
+      <Name>Nightmare</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

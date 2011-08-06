@@ -15,6 +15,7 @@
         <BitmapImage x:Key="Favorite" UriSource="/Resources/star.png" />
         <BitmapImage x:Key="Unfavorite" UriSource="/Resources/grayed_star.png" />
         <BitmapImage x:Key="Follow" UriSource="/Resources/accept.png" />
+        <BitmapImage x:Key="Mention" UriSource="/Resources/comment.png" />
         <BitmapImage x:Key="Close" UriSource="/Resources/delete.png" />
         <LinearGradientBrush x:Key="GrayGradientBackground" StartPoint="0,0" EndPoint="0,1">
             <GradientStop Offset="0" Color="#FF8F8F8F" />
@@ -23,18 +24,6 @@
         <LinearGradientBrush x:Key="GrayHorzGradientBackground" StartPoint="0,0" EndPoint="1,0">
             <GradientStop Offset="0" Color="#FF8F8F8F" />
             <GradientStop Offset="1" Color="Black" />
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="FollowGradient" StartPoint="0.5,0" EndPoint="0.5,1">
-            <LinearGradientBrush.RelativeTransform>
-                <TransformGroup>
-                    <ScaleTransform CenterX="0.5" CenterY="0.5" />
-                    <SkewTransform CenterX="0.5" CenterY="0.5" />
-                    <RotateTransform Angle="180" CenterX="0.5" CenterY="0.5" />
-                    <TranslateTransform />
-                </TransformGroup>
-            </LinearGradientBrush.RelativeTransform>
-            <GradientStop Offset="0" Color="#FF64DCFF" />
-            <GradientStop Offset="1" Color="White" />
         </LinearGradientBrush>
     </UserControl.Resources>
     <Border x:Name="border"
@@ -408,10 +397,23 @@
                     </Grid>
                 </DockPanel>
                 <DockPanel x:Name="FollowedPanel"
-                           Background="{DynamicResource FollowGradient}"
                            Visibility="{Binding Kind,
                                                 ConverterParameter=Follow,
                                                 Converter={StaticResource StringEqualVisibleConverter}}">
+                	<DockPanel.Background>
+                		<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                			<LinearGradientBrush.RelativeTransform>
+                				<TransformGroup>
+                					<ScaleTransform CenterX="0.5" CenterY="0.5" />
+                					<SkewTransform CenterX="0.5" CenterY="0.5" />
+                					<RotateTransform Angle="180" CenterX="0.5" CenterY="0.5" />
+                					<TranslateTransform />
+                				</TransformGroup>
+                			</LinearGradientBrush.RelativeTransform>
+                			<GradientStop Offset="0" Color="#FF64DCFF" />
+                			<GradientStop Offset="1" Color="White" />
+                		</LinearGradientBrush>
+                	</DockPanel.Background>
                     <StackPanel Margin="0"
                                 HorizontalAlignment="Stretch"
                                 Orientation="Horizontal"
@@ -428,7 +430,7 @@
                     				</TransformGroup>
                     			</LinearGradientBrush.RelativeTransform>
                     			<GradientStop Offset="0" Color="#FF64DCFF" />
-                    			<GradientStop Color="#FFAFEDFF" Offset="1"/>
+                    			<GradientStop Color="#FFB1EDFF" Offset="1"/>
                     		</LinearGradientBrush>
                     	</StackPanel.Background>
                         <Image Width="16"
@@ -499,7 +501,130 @@
                                         </TransformGroup>
                                     </LinearGradientBrush.RelativeTransform>
                                     <GradientStop Offset="0" Color="#FF64DCFF" />
-                                    <GradientStop Color="#FFB6EEFF" Offset="1"/>
+                                    <GradientStop Color="#FFB1EDFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ed:RegularPolygon.Fill>
+                            <ed:RegularPolygon.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform Angle="90" />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </ed:RegularPolygon.LayoutTransform>
+                        </ed:RegularPolygon>
+                    </Grid>
+                </DockPanel>
+                <DockPanel x:Name="MentionPanel"
+                           Visibility="{Binding Kind,
+                                                ConverterParameter=Mention,
+                                                Converter={StaticResource StringEqualVisibleConverter}}">
+                    <StackPanel Margin="0"
+                                HorizontalAlignment="Stretch"
+                                Orientation="Horizontal"
+                                d:LayoutOverrides="Height">
+                        <StackPanel.Background>
+                            <LinearGradientBrush StartPoint="0.5,0"
+                                                 EndPoint="0.5,1">
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform CenterX="0.5"
+                                                        CenterY="0.5" />
+                                        <SkewTransform CenterX="0.5"
+                                                       CenterY="0.5" />
+                                        <RotateTransform Angle="180"
+                                                         CenterX="0.5"
+                                                         CenterY="0.5" />
+                                        <TranslateTransform />
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                                <GradientStop Offset="0"
+                                              Color="#FFFFB264" />
+                                <GradientStop Color="#FFFFD8B1" Offset="1"/>
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
+                        <Image Width="16"
+                               Height="16"
+                               Margin="4,0,0,0"
+                               Source="{StaticResource Mention}" />
+                        <TextBlock Margin="4,0,4,-1"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="NoWrap"
+                                   d:LayoutOverrides="Width, Height"><Run Language="ja-jp" Text="Mention"/></TextBlock>
+                    </StackPanel>
+                    <Grid Margin="0"
+                          HorizontalAlignment="Left">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0.5,0"
+                                                 EndPoint="0.5,1">
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform CenterX="0.5"
+                                                        CenterY="0.5" />
+                                        <SkewTransform CenterX="0.5"
+                                                       CenterY="0.5" />
+                                        <RotateTransform Angle="-90"
+                                                         CenterX="0.5"
+                                                         CenterY="0.5" />
+                                        <TranslateTransform />
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                                <GradientStop Offset="0"
+                                              Color="#FFAAAAAA" />
+                                <GradientStop Offset="1"
+                                              Color="White" />
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Rectangle Width="1"
+                                   Margin="0"
+                                   HorizontalAlignment="Left"
+                                   Fill="{DynamicResource GrayGradientBackground}"
+                                   Stroke="{x:Null}"
+                                   StrokeLineJoin="Round" />
+                        <ed:RegularPolygon Height="10"
+                                           Margin="1,0,0,0"
+                                           HorizontalAlignment="Left"
+                                           Fill="{DynamicResource GrayHorzGradientBackground}"
+                                           InnerRadius="1"
+                                           PointCount="3"
+                                           Stretch="Fill"
+                                           Stroke="{x:Null}"
+                                           StrokeLineJoin="Round">
+                            <ed:RegularPolygon.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform Angle="90" />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </ed:RegularPolygon.LayoutTransform>
+                        </ed:RegularPolygon>
+                        <ed:RegularPolygon Height="10"
+                                           Margin="-0.25,0,0,0"
+                                           HorizontalAlignment="Left"
+                                           InnerRadius="1"
+                                           PointCount="3"
+                                           Stretch="Fill"
+                                           Stroke="{x:Null}"
+                                           StrokeLineJoin="Round">
+                            <ed:RegularPolygon.Fill>
+                                <LinearGradientBrush StartPoint="0.5,0"
+                                                     EndPoint="0.5,1">
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform CenterX="0.5"
+                                                            CenterY="0.5" />
+                                            <SkewTransform CenterX="0.5"
+                                                           CenterY="0.5" />
+                                            <RotateTransform Angle="90"
+                                                             CenterX="0.5"
+                                                             CenterY="0.5" />
+                                            <TranslateTransform />
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                    <GradientStop Offset="0"
+                                                  Color="#FFFFB264" />
+                                    <GradientStop Color="#FFFFD8B1" Offset="1"/>
                                 </LinearGradientBrush>
                             </ed:RegularPolygon.Fill>
                             <ed:RegularPolygon.LayoutTransform>

@@ -45,12 +45,16 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
                     case EventKind.Unfavorite:
                         // Show tweet
                         var status = description.TargetTweet.Status as TwitterStatus;
-                        if(status != null && status.RetweetedOriginal != null)
+                        if (status == null)
+                            return "(Unreceived)";
+                        if (status != null && status.RetweetedOriginal != null)
                             return "@" + status.RetweetedOriginal.User.ScreenName + ": " 
-                                + status.RetweetedOriginal.Text.ToString();
+                                + status.RetweetedOriginal.Text;
                         else
                             return "@" + description.TargetTweet.Status.User.ScreenName + ": "
-                                + description.TargetTweet.Status.Text.ToString();
+                                + description.TargetTweet.Status.Text;
+                    case EventKind.Mention:
+                        return description.TargetTweet.Status.Text;
                     default:
                         // Show user
                         return "@" + description.TargetUser.TwitterUser.ScreenName;
