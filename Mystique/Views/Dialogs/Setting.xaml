@@ -34,10 +34,11 @@
             <ListBoxItem Content="アカウント" />
             <ListBoxItem Content="一般" />
             <ListBoxItem Content="タイムライン" />
-            <ListBoxItem Content="ローカルNG" />
             <ListBoxItem Content="ツイートの表示" />
             <ListBoxItem Content="ツイートの色" />
+            <ListBoxItem Content="通知" />
             <ListBoxItem Content="入力" />
+            <ListBoxItem Content="ローカルNG" />
             <ListBoxItem Content="キーアサイン" />
             <ListBoxItem Content="外部サービス連携" />
             <ListBoxItem Content="拡張機能" />

@@ -97,6 +97,7 @@
     <Compile Include="Views\Behaviors\Actions\SetListSelectionInteractionMessageAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TextBoxSetCaretAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TransitionInteractionMessageAction.cs" />
+    <Compile Include="Views\Behaviors\Actions\WindowActiveAction.cs" />
     <Compile Include="Views\Behaviors\DragDropBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\KeyBindingHandlerBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\MouseOverBindBehavior.cs" />

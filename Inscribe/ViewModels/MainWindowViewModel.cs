@@ -1,18 +1,21 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Core;
+using Inscribe.Model;
 using Inscribe.Storage;
+using Inscribe.ViewModels.PartBlocks.BlockCommon;
 using Inscribe.ViewModels.PartBlocks.InputBlock;
-using Inscribe.ViewModels.PartBlocks.NotifyBlock;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Inscribe.ViewModels.PartBlocks.ModalParts;
+using Inscribe.ViewModels.PartBlocks.NotifyBlock;
 using Livet;
 using Livet.Commands;
-using Inscribe.ViewModels.PartBlocks.BlockCommon;
-using Inscribe.ViewModels.PartBlocks.ModalParts;
-using System;
-using System.Collections.Generic;
-using Inscribe.Model;
+using Nightmare.Forms;
 
 namespace Inscribe.ViewModels
 {
@@ -41,6 +44,8 @@ namespace Inscribe.ViewModels
                 RaisePropertyChanged(() => IsVisibleUserSelection);
                 RaisePropertyChanged(() => IsActivateMain);
             };
+            this.notifyIcon = new NotifyIcon();
+            InitNotifyIcon();
         }
 
         public string Title
@@ -139,5 +144,30 @@ namespace Inscribe.ViewModels
             }, DispatcherPriority.ApplicationIdle);
         }
         #endregion
+
+        #region Task-tray Notification
+
+        private NotifyIcon notifyIcon;
+
+        private void InitNotifyIcon()
+        {
+            this.notifyIcon.Text = Define.ApplicationName;
+            this.notifyIcon.Icon = new WinFormsIcon(new BitmapImage("Resources/krile.png".ToPackUri()));
+            this.notifyIcon.IsVisible = true;
+            this.notifyIcon.Text = "クリックするとKrileをアクティブにします";
+            this.notifyIcon.MouseClick += new WinFormsMouseEventHandler(notifyIcon_MouseClick);
+        }
+
+        void notifyIcon_MouseClick(object sender, WinFormsMouseEventArgs e)
+        {
+            this.Messenger.Raise(new Livet.Messaging.InteractionMessage("WindowActive"));
+        }
+
+        #endregion
+
+        ~MainWindowViewModel()
+        {
+            this.notifyIcon.Dispose();
+        }
     }
 }

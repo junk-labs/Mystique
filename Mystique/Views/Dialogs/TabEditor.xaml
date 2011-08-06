@@ -89,6 +89,12 @@
                               Margin="4"
                               IsChecked="{Binding IsNotifyDisabled}">
                         <AccessText Text="このタブの新着を通知しない(_N)" />
+                        <CheckBox.ToolTip>
+                            <TextBlock>
+                                <Run Text="このタブの新着数が表示されなくなります。" /><LineBreak />
+                                <Run Text="ポップアップ通知対象にすべてのタブの新着を含んでいる場合にも、このタブの新着については通知が含まれなくなります。" />
+                            </TextBlock>
+                        </CheckBox.ToolTip>
                     </CheckBox>
                 </Grid>
             </TabItem>

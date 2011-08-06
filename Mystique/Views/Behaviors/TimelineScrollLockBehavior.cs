@@ -105,10 +105,9 @@ namespace Mystique.Views.Behaviors
         private void SetScrollSynchronized()
         {
             var sv = GetScrollViewer(this.AssociatedObject.List);
+            var move = sv.VerticalOffset + Interlocked.Exchange(ref scrollWaitCount, 0);
             if (sv != null)
             {
-                var move = sv.VerticalOffset +
-                    Interlocked.Exchange(ref scrollWaitCount, 0);
                 sv.ScrollToVerticalOffset(move);
                 System.Diagnostics.Debug.WriteLine("Scroll:" + move);
             }

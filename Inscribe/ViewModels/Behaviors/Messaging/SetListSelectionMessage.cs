@@ -51,7 +51,7 @@ namespace Inscribe.ViewModels.Behaviors.Messaging
         /// <returns>自身の新しいインスタンス</returns>
         protected override System.Windows.Freezable CreateInstanceCore()
         {
-            return new SetListSelectionMessage();
+            return new SetListSelectionMessage(this.MessageKey, this.ListSelectionKind);
         }
     }
 

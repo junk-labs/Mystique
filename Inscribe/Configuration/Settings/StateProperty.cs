@@ -33,7 +33,12 @@ namespace Inscribe.Configuration.Settings
                     new TabProperty(){
                         Name="Mentions",
                         TweetSources = new IFilter[]{
-                            new FilterMention("*")
+                            new FilterCluster(){
+                                Filters = new IFilter[]{
+                                    new FilterMention("*"),
+                                    new FilterRetweeted(){ Negate = true }
+                                }, ConcatenateAnd = true
+                            }
                         }
                     },
                     new TabProperty(){
