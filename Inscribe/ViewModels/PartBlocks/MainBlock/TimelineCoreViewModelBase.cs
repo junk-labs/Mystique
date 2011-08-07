@@ -5,6 +5,7 @@ using System.Text;
 using Livet;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {

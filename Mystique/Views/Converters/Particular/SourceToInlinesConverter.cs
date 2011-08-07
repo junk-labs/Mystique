@@ -28,6 +28,10 @@ namespace Mystique.Views.Converters.Particular
                     hlink.Foreground = Brushes.DodgerBlue;
                     return new[] { hlink };
                 }
+                else
+                {
+                    return new[] { new Run(status.Source) };
+                }
             }
             // ELSE
             return new Run[0];

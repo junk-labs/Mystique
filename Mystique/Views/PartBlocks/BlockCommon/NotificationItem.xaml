@@ -11,6 +11,7 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <cp:StringRemoveLineFeedConverter x:Key="StringRemoveLineConverter" />
+        <cp:UVMToUserNameConverter x:Key="UVMToUserNameConverter" />
         <BitmapImage x:Key="Retweet" UriSource="/Resources/rt.png" />
         <BitmapImage x:Key="Favorite" UriSource="/Resources/star.png" />
         <BitmapImage x:Key="Unfavorite" UriSource="/Resources/grayed_star.png" />
@@ -650,8 +651,8 @@
                     </TransformGroup>
                 </Grid.LayoutTransform>
                 <TextBlock Margin="4"
-                           Text="{Binding Source}"
-                           TextDecorations="Underline"
+                           Text="{Binding SourceUser, Converter={StaticResource UVMToUserNameConverter}, ConverterParameter=NotifyViewName}"
+                           TextDecorations="Underline" 
                            TextWrapping="NoWrap">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeftButtonDown">

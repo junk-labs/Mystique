@@ -1,29 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using Dulcet.Twitter;
+using Dulcet.Twitter.Rest;
 using Inscribe.Common;
+using Inscribe.Communication;
+using Inscribe.Communication.Posting;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
+using Inscribe.Filter;
+using Inscribe.Filter.Filters.Particular;
+using Inscribe.Filter.Filters.ScreenName;
 using Inscribe.Storage;
 using Inscribe.Threading;
 using Livet;
 using Livet.Commands;
-using Inscribe.Communication.Posting;
-using Dulcet.Twitter.Rest;
 using Livet.Messaging;
-using Inscribe.Communication;
-using Inscribe.Filter.Filters.Numeric;
-using Inscribe.Filter.Filters.Text;
-using Inscribe.Filter.Filters.Particular;
-using Inscribe.Filter;
-using System.Collections.Generic;
-using Inscribe.Filter.Filters.ScreenName;
-using System.Windows.Input;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {

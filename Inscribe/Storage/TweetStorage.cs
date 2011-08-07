@@ -10,6 +10,7 @@ using Livet;
 using System.Threading;
 using Inscribe.Text;
 using System.Text.RegularExpressions;
+using Inscribe.Notification;
 
 namespace Inscribe.Storage
 {
@@ -193,7 +194,9 @@ namespace Inscribe.Storage
         {
             UserStorage.Register(dmsg.Sender);
             UserStorage.Register(dmsg.Recipient);
-            return RegisterCore(dmsg);
+            var vm = RegisterCore(dmsg);
+            EventStorage.OnDirectMessage(vm);
+            return vm;
         }
 
         private static object __regCoreLock__ = new object();
@@ -289,7 +292,9 @@ namespace Inscribe.Storage
 
         static void RaiseStatusAdded(TweetViewModel added)
         {
+            NotificationCore.RegisterNotify(added);
             OnTweetStorageChanged(new TweetStorageChangedEventArgs(TweetActionKind.Added, added));
+            NotificationCore.DispatchNotify(added);
         }
 
         static void RaiseStatusRemoved(TweetViewModel removed)

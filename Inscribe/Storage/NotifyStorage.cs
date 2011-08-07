@@ -27,7 +27,6 @@ namespace Inscribe.Storage
             Message = Define.DefaultStatusMessage;
         }
 
-        
         #region NotifyTextChangedイベント
 
         public static event EventHandler<NotifyUpdatedEventArgs> NotifyTextChanged;
@@ -50,7 +49,6 @@ namespace Inscribe.Storage
         }
 
         #endregion
-      
       
         public static void Notify(string message, int? showLength = null)
         {

@@ -12,6 +12,7 @@ using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Inscribe.Threading;
+using Inscribe.Notification;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -98,6 +99,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                         this._tweetsSource.Add(new TabDependentTweetViewModel(e.Tweet, this.Parent));
                         OnNewTweetReceived();
                         this.Parent.NotifyNewTweetReceived(this);
+                        if (this.Parent.TabProperty.IsNotifyEnabled)
+                            NotificationCore.QueueNotify(e.Tweet);
                     }
                     break;
                 case TweetActionKind.Refresh:

@@ -12,6 +12,7 @@
         xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
         xmlns:my="clr-namespace:Mystique.Views.PartBlocks.ModalParts"
         xmlns:nb="clr-namespace:Mystique.Views.PartBlocks.NotifyBlock"
+        xmlns:this="clr-namespace:Mystique.Views"
         xmlns:vm="clr-namespace:Inscribe.ViewModels;assembly=core"
         Title="{Binding Title}"
         Width="800"
@@ -33,8 +34,8 @@
         <l:InteractionMessageTrigger MessageKey="WindowAction" Messenger="{Binding Messenger}">
             <l:WindowInteractionMessageAction />
         </l:InteractionMessageTrigger>
-        <l:InteractionMessageTrigger MessageKey="WindowActive" Messenger="{Binding Messenger}">
-            <mb:WindowActiveAction />
+        <l:InteractionMessageTrigger MessageKey="Notification" Messenger="{Binding Messenger}">
+            <l:TransitionInteractionMessageAction WindowType="{x:Type this:Notification}" />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Window.Background>

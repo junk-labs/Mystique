@@ -10,6 +10,8 @@ namespace Inscribe.Storage
 {
     public static class EventStorage
     {
+        static DateTime wakeupTime = DateTime.Now;
+
         private static SafeLinkedList<EventDescription> events = new SafeLinkedList<EventDescription>();
 
         public static IEnumerable<EventDescription> Events
@@ -78,18 +80,24 @@ namespace Inscribe.Storage
 
         public static void OnRetweeted(TweetViewModel tweet, UserViewModel retweeter)
         {
+            if (AccountStorage.Contains(retweeter.TwitterUser.ScreenName) || tweet.CreatedAt < wakeupTime)
+                return;
             Register(new EventDescription(EventKind.Retweet, retweeter,
                     UserStorage.Get(tweet.Status.User), tweet));
         }
 
         public static void OnFavored(TweetViewModel tweet, UserViewModel favorer)
         {
+            if (AccountStorage.Contains(favorer.TwitterUser.ScreenName))
+                return;
             Register(new EventDescription(EventKind.Favorite, favorer,
                  UserStorage.Get(tweet.Status.User), tweet));
         }
 
         public static void OnUnfavored(TweetViewModel tweet, UserViewModel favorer)
         {
+            if (AccountStorage.Contains(favorer.TwitterUser.ScreenName))
+                return;
             Register(new EventDescription(EventKind.Unfavorite,
                 favorer, UserStorage.Get(tweet.Status.User), tweet));
         }
@@ -108,9 +116,18 @@ namespace Inscribe.Storage
 
         public static void OnMention(TweetViewModel tweet)
         {
+            if (AccountStorage.Contains(tweet.Status.User.ScreenName) || tweet.CreatedAt < wakeupTime)
+                return;
             Register(new EventDescription(EventKind.Mention,
                 UserStorage.Get(tweet.Status.User), null, tweet));
-                
+        }
+
+        public static void OnDirectMessage(TweetViewModel tweet)
+        {
+            if (AccountStorage.Contains(tweet.Status.User.ScreenName) || tweet.CreatedAt < wakeupTime)
+                return;
+            Register(new EventDescription(EventKind.DirectMessage,
+                UserStorage.Get(tweet.Status.User), null, tweet));
         }
     }
 
@@ -143,7 +160,9 @@ namespace Inscribe.Storage
         Unfavorite,
         Follow,
         Unfollow,
-        Mention
+        Mention,
+        DirectMessage,
+        Undefined
     }
 
     public class EventDescriptionEventArgs : EventArgs

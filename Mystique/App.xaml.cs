@@ -34,7 +34,6 @@ namespace Mystique
         //集約エラーハンドラ
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            //TODO:ロギング処理など
             System.Diagnostics.Debug.WriteLine("ERROR THROWN:");
             System.Diagnostics.Debug.WriteLine(e.ExceptionObject);
             StringBuilder body = new StringBuilder();
@@ -46,8 +45,17 @@ namespace Mystique
             body.AppendLine("MEMORY USAGE:");
             var cp = System.Diagnostics.Process.GetCurrentProcess();
             body.AppendLine("paged:" + cp.PagedMemorySize64 + " / peak-virtual:" + cp.PeakVirtualMemorySize64);
-            System.IO.File.AppendAllText(Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), "unhandled.txt"), body.ToString());
-            // Environment.Exit(1);
+
+            var tpath = Path.GetTempFileName();
+            using (var sw = new StreamWriter(tpath))
+            {
+                sw.WriteLine(body.ToString());
+                sw.WriteLine(Define.GetFormattedVersion() + " @" + Define.GetExeFilePath());
+                sw.WriteLine(Environment.OSVersion.VersionString);
+            }
+            var apppath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+            System.Diagnostics.Process.Start(Path.Combine(apppath, Define.FeedbackAppName), tpath);
+            Environment.Exit(1);
         }
     }
 }

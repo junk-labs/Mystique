@@ -20,6 +20,8 @@ using System.Windows;
 using Inscribe.Communication.Streaming;
 using Inscribe.Caching;
 using Inscribe.Configuration;
+using Inscribe.Text;
+using System.Text.RegularExpressions;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -397,16 +399,30 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     {
                         this.OverrideTarget(new[] { AccountStorage.Get(((TwitterDirectMessage)tweet.Status).Recipient.ScreenName) });
                         this.CurrentInputDescription.InputText = "d @" + tweet.Status.User.ScreenName + " ";
+                        this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                     }
                     else
                     {
+                        var mentions = RegularExpressions.AtRegex.Matches(tweet.Text);
+                        var sns = new[] { "@" + tweet.Status.User.ScreenName }.Concat(mentions.Cast<Match>().Select(m => m.Value))
+                            .Distinct().ToArray();
+                        if (tweet.Status is TwitterStatus && AccountStorage.Contains(((TwitterStatus)tweet.Status).InReplyToUserScreenName))
+                            sns = sns.Except(new[] { "@" + ((TwitterStatus)tweet.Status).InReplyToUserScreenName }).ToArray();
+                        if (sns.Length > 1)
+                        {
+                            this.CurrentInputDescription.InputText = sns.JoinString(" ") + " ";
+                            this.SetInputCaretIndex(sns[0].Length + 1, sns.JoinString(" ").Length - sns[0].Length);
+                        }
+                        else 
+                        {
+                            this.CurrentInputDescription.InputText = "@" + tweet.Status.User.ScreenName + " ";
+                            this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
+                        }
                         if (tweet.Status is TwitterStatus && AccountStorage.Contains(((TwitterStatus)tweet.Status).InReplyToUserScreenName))
                         {
                             this.OverrideTarget(new[] { AccountStorage.Get(((TwitterStatus)tweet.Status).InReplyToUserScreenName) });
                         }
-                        this.CurrentInputDescription.InputText = "@" + tweet.Status.User.ScreenName + " ";
                     }
-                    this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                 }
             }
         }

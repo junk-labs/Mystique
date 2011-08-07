@@ -81,6 +81,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
+        public bool IsFullLineView
+        {
+            get { return Setting.Instance.TimelineExperienceProperty.FullLineView; }
+        }
+
         public TabViewModel(ColumnViewModel parent, TabProperty property = null)
         {
             this.Parent = parent;
@@ -92,6 +97,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 .ForEach(t => t.PendingColorChanged(true)));
 
             this.AddTopTimeline(null);
+            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (o, e) => UpdateSettingValue());
+        }
+
+        private void UpdateSettingValue()
+        {
+            RaisePropertyChanged(() => IsFullLineView);
         }
 
         public void SetTabOwner(ColumnViewModel newParent)

@@ -95,6 +95,8 @@ namespace Inscribe.Storage
         /// <returns>アカウント情報</returns>
         public static AccountInfo Get(string screenName)
         {
+            if (screenName != null && screenName.StartsWith("@"))
+                screenName = screenName.Substring(1);
             return accounts.FirstOrDefault(a => a.ScreenName.Equals(screenName, StringComparison.CurrentCultureIgnoreCase));
         }
 

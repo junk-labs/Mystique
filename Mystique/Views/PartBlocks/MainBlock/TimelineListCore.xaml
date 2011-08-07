@@ -26,12 +26,15 @@
         </DataTemplate>
         <Style x:Key="ContainerStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Padding" Value="0" />
-            <Setter Property="ContentTemplate" Value="{StaticResource NormalStatusTemplate}" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="ContentTemplate" Value="{StaticResource NormalStatusTemplate}" />
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="ContentTemplate" Value="{StaticResource SelectedStatusTemplate}" />
                 </Trigger>
+                <DataTrigger Binding="{Binding Path=Parent.IsFullLineView}" Value="True">
+                    <Setter Property="ContentTemplate" Value="{StaticResource SelectedStatusTemplate}" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>

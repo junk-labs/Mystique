@@ -469,7 +469,7 @@
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            SnapsToDevicePixels="True"
                            Source="{StaticResource Retweet}" />
-                    <TextBlock Margin="2,2,2,2"
+                    <TextBlock Margin="2,2,4,2"
                                VerticalAlignment="Center"
                                DockPanel.Dock="Left"
                                Foreground="SeaGreen"

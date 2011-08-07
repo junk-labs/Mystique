@@ -14,6 +14,7 @@ namespace Inscribe.Configuration.Settings
             P3StyleIcon = true;
             NameAreaWidth = 120;
             UserNameViewMode = NameView.ID;
+            NotificationNameViewMode = NameView.ID;
             UrlResolveMode = UrlResolve.OnPointed;
             UrlTooltipShowLength = 60 * 1000;
         }
@@ -27,6 +28,8 @@ namespace Inscribe.Configuration.Settings
         public int NameAreaWidth { get; set; }
 
         public NameView UserNameViewMode { get; set; }
+
+        public NameView NotificationNameViewMode { get; set; }
 
         public UrlResolve UrlResolveMode { get; set; }
 

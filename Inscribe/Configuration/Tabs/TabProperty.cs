@@ -24,7 +24,7 @@ namespace Inscribe.Configuration.Tabs
             if (Setting.IsInitialized)
                 this.LinkAccountInfos = AccountStorage.Accounts;
             this.Name = "Untitled";
-            this.IsNotifyDisabled = Setting.IsInitialized ? !Setting.Instance.NotificationProperty.TabNotifyEnabledAsDefault : false;
+            this.IsNotifyEnabled = Setting.IsInitialized ? Setting.Instance.NotificationProperty.TabNotifyEnabledAsDefault : false;
         }
 
         #region LinkAccountInfoChangedイベント
@@ -58,7 +58,7 @@ namespace Inscribe.Configuration.Tabs
         /// <summary>
         /// タブの通知が有効か
         /// </summary>
-        public bool IsNotifyDisabled { get; set; }
+        public bool IsNotifyEnabled { get; set; }
 
         /// <summary>
         /// タブ通知の際に利用する音

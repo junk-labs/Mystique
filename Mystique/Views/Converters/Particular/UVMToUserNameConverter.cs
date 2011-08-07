@@ -1,27 +1,14 @@
 ﻿using System;
 using System.Windows.Data;
-using Dulcet.Twitter;
-using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
-using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
 
 namespace Mystique.Views.Converters.Particular
 {
-    public enum UserNameViewKind
+    public class UVMToUserNameConverter : OneWayConverter<UserViewModel, string>
     {
-        ScreenName,
-        Name,
-        ViewName,
-        NotifyViewName,
-        RetweetedScreenName,
-        DirectMessageTarget
-    }
-
-    public class TVMToUserNameConverter : OneWayConverter<TweetViewModel, string>
-    {
-
-        public override string ToTarget(TweetViewModel input, object parameter)
+        public override string ToTarget(UserViewModel input, object parameter)
         {
             if (input == null) return String.Empty;
             UserNameViewKind kind;
@@ -35,7 +22,7 @@ namespace Mystique.Views.Converters.Particular
                     return ScreenName(input);
                 case UserNameViewKind.RetweetedScreenName:
                     if (input == null) return String.Empty;
-                    return input.Status.User.ScreenName;
+                    return input.TwitterUser.ScreenName;
                 case UserNameViewKind.ViewName:
                     switch (Setting.Instance.TweetExperienceProperty.UserNameViewMode)
                     {
@@ -58,25 +45,19 @@ namespace Mystique.Views.Converters.Particular
                         default:
                             return ScreenName(input) + " (" + UserName(input) + ")";
                     }
-                case UserNameViewKind.DirectMessageTarget:
-                    if (input == null || !(input.Status is TwitterDirectMessage)) return String.Empty;
-                    return ((TwitterDirectMessage)input.Status).Recipient.ScreenName ?? String.Empty;
-
                 default:
                     return String.Empty;
             }
         }
 
-        private string UserName(TweetViewModel status)
+        private string UserName(UserViewModel user)
         {
-            if (status == null) return String.Empty;
-            return TwitterHelper.GetSuggestedUser(status).UserName ?? String.Empty;
+            return user.TwitterUser.UserName;
         }
 
-        private string ScreenName(TweetViewModel status)
+        private string ScreenName(UserViewModel user)
         {
-            if (status == null) return String.Empty;
-            return TwitterHelper.GetSuggestedUser(status).ScreenName ?? String.Empty;
+            return user.TwitterUser.ScreenName;
         }
     }
 }

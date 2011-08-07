@@ -16,6 +16,8 @@ using Inscribe.ViewModels.PartBlocks.NotifyBlock;
 using Livet;
 using Livet.Commands;
 using Nightmare.Forms;
+using Livet.Messaging.Windows;
+using Livet.Messaging;
 
 namespace Inscribe.ViewModels
 {
@@ -44,8 +46,6 @@ namespace Inscribe.ViewModels
                 RaisePropertyChanged(() => IsVisibleUserSelection);
                 RaisePropertyChanged(() => IsActivateMain);
             };
-            this.notifyIcon = new NotifyIcon();
-            InitNotifyIcon();
         }
 
         public string Title
@@ -144,30 +144,5 @@ namespace Inscribe.ViewModels
             }, DispatcherPriority.ApplicationIdle);
         }
         #endregion
-
-        #region Task-tray Notification
-
-        private NotifyIcon notifyIcon;
-
-        private void InitNotifyIcon()
-        {
-            this.notifyIcon.Text = Define.ApplicationName;
-            this.notifyIcon.Icon = new WinFormsIcon(new BitmapImage("Resources/krile.png".ToPackUri()));
-            this.notifyIcon.IsVisible = true;
-            this.notifyIcon.Text = "クリックするとKrileをアクティブにします";
-            this.notifyIcon.MouseClick += new WinFormsMouseEventHandler(notifyIcon_MouseClick);
-        }
-
-        void notifyIcon_MouseClick(object sender, WinFormsMouseEventArgs e)
-        {
-            this.Messenger.Raise(new Livet.Messaging.InteractionMessage("WindowActive"));
-        }
-
-        #endregion
-
-        ~MainWindowViewModel()
-        {
-            this.notifyIcon.Dispose();
-        }
     }
 }

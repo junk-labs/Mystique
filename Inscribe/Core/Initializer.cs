@@ -5,6 +5,7 @@ using Inscribe.Common;
 using Inscribe.Communication.Streaming;
 using Inscribe.Configuration;
 using Inscribe.Configuration.KeyAssignment;
+using Inscribe.Notification;
 
 namespace Inscribe.Core
 {
@@ -61,6 +62,7 @@ namespace Inscribe.Core
             standby = true;
             Task.Factory.StartNew(() => Inscribe.Communication.CruiseControl.AutoCruiseSchedulerManager.Begin());
             Task.Factory.StartNew(() => UserStreamsReceiverManager.RefreshReceivers());
+            NotificationCore.Initialize();
         }
 
         static void AppExit(object sender, ExitEventArgs e)

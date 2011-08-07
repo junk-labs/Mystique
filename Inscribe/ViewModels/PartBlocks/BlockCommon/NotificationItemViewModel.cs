@@ -7,6 +7,7 @@ using Inscribe.Storage;
 using System.Threading;
 using Livet.Commands;
 using Dulcet.Twitter;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
 
 namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 {
@@ -29,9 +30,9 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
             get { return this.description.Kind; }
         }
 
-        public string Source
+        public UserViewModel SourceUser
         {
-            get { return "@" + this.description.SourceUser.TwitterUser.ScreenName; }
+            get { return this.description.SourceUser; }
         }
 
         public string Target
@@ -152,7 +153,6 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
         }
 
         #endregion
-      
     }
 
     public class NotifierViewModelEventArgs : EventArgs

@@ -55,6 +55,8 @@ namespace Inscribe
 
         public static readonly string KeyAssignDirectory = "assigns";
 
+        public static readonly string MediaDirectory = "media";
+
         public static readonly string PluginDirectory = "plugins";
 
         public static readonly string FeedbackAppName = "reporter.exe";
@@ -66,5 +68,14 @@ namespace Inscribe
         public static readonly string RemoteVersionXml = "http://krile.starwing.net/update/update.xml";
 
         public static readonly string PublicKeyFile = "kup.pub";
+
+        public static readonly string MentionWavFile = "mention.wav";
+
+        public static readonly string NewReceiveWavFile = "new.wav";
+
+        public static readonly string DirectMessageWavFile = "directmessage.wav";
+
+        public static readonly string EventWavFile = "event.wav";
+
     }
 }

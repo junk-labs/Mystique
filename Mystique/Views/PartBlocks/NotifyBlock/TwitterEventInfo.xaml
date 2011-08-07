@@ -22,20 +22,19 @@
                    Foreground="White"
                    Padding="4,2"
                    Text="Events" />
-        <ScrollViewer Grid.Row="1"
-                      MinHeight="10"
-                      MaxHeight="360"
-                      VerticalScrollBarVisibility="Auto"
-                      VirtualizingStackPanel.IsVirtualizing="True"
-                      VirtualizingStackPanel.VirtualizationMode="Recycling">
-            <ItemsControl ItemsSource="{Binding Events}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <my:NotificationItem DataContext="{Binding}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <ListBox Grid.Row="1"
+                 MinHeight="10"
+                 MaxHeight="360"
+                 ItemsSource="{Binding Events}"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 VirtualizingStackPanel.IsVirtualizing="True"
+                 VirtualizingStackPanel.VirtualizationMode="Recycling">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <my:NotificationItem DataContext="{Binding}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <TextBlock Grid.Row="2"
                    Background="Gainsboro"
                    Padding="4,3"

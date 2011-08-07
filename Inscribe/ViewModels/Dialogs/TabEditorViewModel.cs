@@ -69,13 +69,13 @@ namespace Inscribe.ViewModels.Dialogs
         }
         #endregion
 
-        public bool IsNotifyDisabled
+        public bool IsNotifyEnabled
         {
-            get { return this.property.IsNotifyDisabled; }
+            get { return this.property.IsNotifyEnabled; }
             set
             {
-                this.property.IsNotifyDisabled = value;
-                RaisePropertyChanged(() => IsNotifyDisabled);
+                this.property.IsNotifyEnabled = value;
+                RaisePropertyChanged(() => IsNotifyEnabled);
             }
         }
 

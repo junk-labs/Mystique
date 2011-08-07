@@ -97,7 +97,6 @@
     <Compile Include="Views\Behaviors\Actions\SetListSelectionInteractionMessageAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TextBoxSetCaretAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TransitionInteractionMessageAction.cs" />
-    <Compile Include="Views\Behaviors\Actions\WindowActiveAction.cs" />
     <Compile Include="Views\Behaviors\DragDropBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\KeyBindingHandlerBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\MouseOverBindBehavior.cs" />
@@ -128,6 +127,7 @@
     <Compile Include="Views\Converters\Particular\TweetStringToCountConverter.cs" />
     <Compile Include="Views\Converters\Particular\TVMToUserImageConverter.cs" />
     <Compile Include="Views\Converters\Particular\TwoOrMoreVisibleConverter.cs" />
+    <Compile Include="Views\Converters\Particular\UVMToUserNameConverter.cs" />
     <Compile Include="Views\Dialogs\Account\AccountPropertyConfig.xaml.cs">
       <DependentUpon>AccountPropertyConfig.xaml</DependentUpon>
     </Compile>
@@ -145,6 +145,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\TabEditor.xaml.cs">
       <DependentUpon>TabEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Notification.xaml.cs">
+      <DependentUpon>Notification.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PartBlocks\BlockCommon\NotificationItem.xaml.cs">
       <DependentUpon>NotificationItem.xaml</DependentUpon>
@@ -271,6 +274,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Notification.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PartBlocks\BlockCommon\NotificationItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -384,6 +391,18 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="media\new.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="media\event.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="media\mention.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="media\directmessage.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\copy.png" />
     <Resource Include="Resources\empty.png" />
     <Resource Include="Resources\painting.png" />

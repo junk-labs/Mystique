@@ -41,13 +41,13 @@ namespace Inscribe.ViewModels.Common.Filter
             else
                 this.RootFilters = 
                     this.RootFilters.Concat(new[]{ filterObject}).ToArray();
-            this.RaisePropertyChanged(()=>RootFilterViewModels);
+            this.RaisePropertyChanged(() => RootFilterViewModels);
         }
 
         public void RemoveChild(IFilter filterObject)
         {
             this.RootFilters = this.RootFilters.Except(new[]{filterObject}).ToArray();
-            this.RaisePropertyChanged(()=>RootFilterViewModels);
+            this.RaisePropertyChanged(() => RootFilterViewModels);
         }
 
         public void ReplaceChild(IFilter oldObject, IFilter newObject)
@@ -133,6 +133,7 @@ namespace Inscribe.ViewModels.Common.Filter
                 target.AddChild(data.FilterObject);
             else
                 troot.AddChild(data.FilterObject);
+            this.RaisePropertyChanged(() => RootFilterViewModels);
         }
 
         #endregion
