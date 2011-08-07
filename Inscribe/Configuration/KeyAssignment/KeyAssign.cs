@@ -134,13 +134,15 @@ namespace Inscribe.Configuration.KeyAssignment
 
         public static void HandleEvent(KeyEventArgs e, AssignRegion region)
         {
+            // テキストボックスでのイベントは捕捉しない:w
+            if (e.OriginalSource is TextBoxBase) return;
             if (HandleEventSink(CheckIme(e), region, false))
                 e.Handled = true;
         }
 
         private static Key CheckIme(KeyEventArgs e)
         {
-            if (e.Key == Key.ImeProcessed || e.OriginalSource is TextBoxBase)
+            if (e.Key == Key.ImeProcessed && e.OriginalSource is TextBoxBase)
             {
                 return Key.None;
             }
