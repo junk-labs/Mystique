@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Vanille
@@ -55,7 +53,7 @@ namespace Vanille
                 throw new Exception("File is corrupted.(KSIG: Invalid Signature)");
             var data = ReadAllBytes(input).ToArray();
 
-            using (var sha = new SHA256CryptoServiceProvider())
+            using (var sha = new SHA256Managed())
             using (var rsa = new RSACryptoServiceProvider())
             {
                 // Compute hash

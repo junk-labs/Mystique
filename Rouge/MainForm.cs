@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using Vanille;
 using System.IO;
 using System.IO.Compression;
 using System.Security;
 using System.Security.Cryptography;
+using System.Windows.Forms;
+using Vanille;
 
 namespace Rouge
 {
@@ -160,7 +155,7 @@ namespace Rouge
 
         private byte[] GetSignature(byte[] bytes, String privateKey)
         {
-            using (var sha = new SHA256CryptoServiceProvider())
+            using (var sha = new SHA256Managed())
             using (var rsa = new RSACryptoServiceProvider())
             {
                 // Compute hash
