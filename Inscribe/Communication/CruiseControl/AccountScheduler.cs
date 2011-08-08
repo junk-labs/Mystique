@@ -4,6 +4,7 @@ using Dulcet.Twitter.Rest;
 using Inscribe.Commnuication.CruiseControl.Core;
 using Inscribe.Communication.CruiseControl.DefaultTasks;
 using Inscribe.Model;
+using Inscribe.Storage;
 using Inscribe.Threading;
 
 namespace Inscribe.Communication.CruiseControl
@@ -49,7 +50,15 @@ namespace Inscribe.Communication.CruiseControl
 
         protected override void OnWakeup()
         {
-            this.TargetMu = this._accountInfo.AccoutProperty.AutoCruiseDefaultMu;
+            try
+            {
+                this.TargetMu = this._accountInfo.AccoutProperty.AutoCruiseDefaultMu;
+            }
+            catch (Exception e)
+            {
+                ExceptionStorage.Register(e, ExceptionCategory.ConfigurationError, "設定が破損しています。");
+                this.TargetMu = 0.5;
+            }
         }
 
         protected override int MinWindowTime
