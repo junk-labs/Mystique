@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Dulcet.Twitter;
+using Inscribe.Caching;
+using Inscribe.Communication.Streaming;
+using Inscribe.Configuration;
+using Inscribe.Configuration.KeyAssignment;
 using Inscribe.Model;
 using Inscribe.Storage;
+using Inscribe.Text;
 using Inscribe.ViewModels.Common;
 using Inscribe.ViewModels.Dialogs;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 using Mystique.Views.Behaviors.Messages;
-using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
-using Inscribe.Configuration.KeyAssignment;
-using System.Windows;
-using Inscribe.Communication.Streaming;
-using Inscribe.Caching;
-using Inscribe.Configuration;
-using Inscribe.Text;
-using System.Text.RegularExpressions;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {

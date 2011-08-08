@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Livet;
-using Inscribe.Storage;
 using System.Threading;
-using Livet.Commands;
 using Dulcet.Twitter;
+using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Livet;
+using Livet.Commands;
 
 namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 {
@@ -55,10 +52,19 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
                             return "@" + description.TargetTweet.Status.User.ScreenName + ": "
                                 + description.TargetTweet.Status.Text;
                     case EventKind.Mention:
+                    case EventKind.DirectMessage:
                         return description.TargetTweet.Status.Text;
                     default:
-                        // Show user
-                        return "@" + description.TargetUser.TwitterUser.ScreenName;
+                        try
+                        {
+                            // Show user
+                            return "@" + description.TargetUser.TwitterUser.ScreenName;
+                        }
+                        catch(Exception e)
+                        {
+                            ExceptionStorage.Register(e, ExceptionCategory.InternalError, "通知処理が正しく行われませんでした。");
+                            return "(Undefined)";
+                        }
                 }
             }
         }

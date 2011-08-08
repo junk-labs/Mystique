@@ -1,12 +1,9 @@
-﻿using Inscribe.Storage;
+﻿using System;
+using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging.Windows;
-using System;
-using System.Media;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Inscribe.ViewModels
 {

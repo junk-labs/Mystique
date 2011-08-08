@@ -1,17 +1,15 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Inscribe;
-using Inscribe.Configuration;
-using Inscribe.Storage;
 using System.Security;
 using System.Security.Cryptography;
-using System.Diagnostics;
+using System.Threading;
 using System.Windows;
+using System.Xml.Linq;
+using Inscribe.Configuration;
+using Inscribe.Storage;
 
 namespace Inscribe.Common
 {
