@@ -100,7 +100,7 @@
                             <MenuItem Command="{Binding CreateNewTabCommand}" Header="新しいタブ(_T)..." />
                             <Separator />
                             <MenuItem Command="{Binding CollectTabsCommand}" Header="全てのカラムをまとめる(_C)" />
-                            <MenuItem Command="{Binding ClearClosedTabsStackCommand}" Header="閉じたタブの履歴をクリア(_C)" />
+                            <MenuItem Command="{Binding ClearClosedTabStackCommand}" Header="閉じたタブの履歴をクリア(_C)" />
                         </MenuItem>
                         <MenuItem Header="メンテナンス(_M)">
                             <MenuItem Command="{Binding ReconnectStreamsCommand}" Header="User Streamsを再接続(_U)" />
