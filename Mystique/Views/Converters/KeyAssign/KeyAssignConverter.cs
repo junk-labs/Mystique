@@ -1,4 +1,5 @@
 ﻿using System.Windows.Data;
+using Inscribe.Subsystems;
 
 namespace Mystique.Views.Converters.KeyAssign
 {
@@ -7,7 +8,7 @@ namespace Mystique.Views.Converters.KeyAssign
         public override string ToTarget(object input, object parameter)
         {
             var id = parameter as string;
-            return Inscribe.Configuration.KeyAssignment.KeyAssign.LookupKeyFromId(id);
+            return KeyAssignCore.LookupKeyFromId(id);
         }
     }
 }

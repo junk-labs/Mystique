@@ -23,6 +23,7 @@
 			<Assign Action="MoveTop" Key="0" />
 			<!-- Action -->
 			<Assign Action="Mention" Key="R" />
+			<Assign Action="MentionMulti" Key="Shift+R" />
 			<Assign Action="Mention" Key="Space" Preview="True" />
 			<Assign Action="MentionMulti" Key="Shift+R" />
 			<Assign Action="Favorite" Key="F" />

@@ -4,8 +4,7 @@ using System.Windows;
 using Inscribe.Common;
 using Inscribe.Communication.Streaming;
 using Inscribe.Configuration;
-using Inscribe.Configuration.KeyAssignment;
-using Inscribe.Notification;
+using Inscribe.Subsystems;
 
 namespace Inscribe.Core
 {
@@ -24,7 +23,7 @@ namespace Inscribe.Core
             Dulcet.Network.Http.Expect100Continue = false;
             Dulcet.Network.Http.MaxConnectionLimit = Int32.MaxValue;
             Setting.Initialize();
-            KeyAssign.ReloadAssign();
+            KeyAssignCore.ReloadAssign();
 
             var apppath = System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
             // アップデータの存在を確認

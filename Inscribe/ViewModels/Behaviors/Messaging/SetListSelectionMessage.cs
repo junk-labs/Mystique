@@ -21,7 +21,7 @@ namespace Inscribe.ViewModels.Behaviors.Messaging
         }
 
         //ViewModelからMessenger経由での発信目的でメッセージインスタンスを生成するためのコンストラクタ
-        public SetListSelectionMessage(string messageKey, ListSelectionKind kind = ListSelectionKind.Deselect)
+        public SetListSelectionMessage(string messageKey, ListSelectionKind kind)
             : base(messageKey)
         {
             this.ListSelectionKind = kind;

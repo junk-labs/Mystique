@@ -10,7 +10,7 @@ using Livet;
 using System.Threading;
 using Inscribe.Text;
 using System.Text.RegularExpressions;
-using Inscribe.Notification;
+using Inscribe.Subsystems;
 
 namespace Inscribe.Storage
 {

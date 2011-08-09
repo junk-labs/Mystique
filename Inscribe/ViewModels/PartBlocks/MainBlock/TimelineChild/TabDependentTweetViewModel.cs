@@ -403,11 +403,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void ShowUserDetail()
         {
-            var tweet = this.Tweet.Status as TwitterStatus;
-            if (tweet != null && tweet.RetweetedOriginal != null)
-                this.Parent.AddTopUser(tweet.RetweetedOriginal.User.ScreenName);
-            else
-                this.Parent.AddTopUser(this.Tweet.Status.User.ScreenName);
+            this.Parent.AddTopUser(TwitterHelper.GetSuggestedUser(this.Tweet).ScreenName);
         }
         #endregion
 
@@ -427,6 +423,25 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         private void RetweetedUserDetail()
         {
             this.Parent.AddTopUser(this.Tweet.Status.User.ScreenName);
+        }
+        #endregion
+
+        #region DirectMessageReceipientDetailCommand
+        DelegateCommand _DirectMessageReceipientDetailCommand;
+
+        public DelegateCommand DirectMessageReceipientDetailCommand
+        {
+            get
+            {
+                if (_DirectMessageReceipientDetailCommand == null)
+                    _DirectMessageReceipientDetailCommand = new DelegateCommand(DirectMessageReceipientDetail);
+                return _DirectMessageReceipientDetailCommand;
+            }
+        }
+
+        private void DirectMessageReceipientDetail()
+        {
+            this.Parent.AddTopUser(((TwitterDirectMessage)this.Tweet.Status).Recipient.ScreenName);
         }
         #endregion
       
@@ -498,8 +513,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void OpenDMConversation()
         {
-            var filter = new[] { new FilterConversation(this.Tweet.Status.User.ScreenName, ((TwitterStatus)this.Tweet.Status).InReplyToUserScreenName) };
-            var description = "DM:@" + this.Tweet.Status.User.ScreenName + "&@" + ((TwitterStatus)this.Tweet.Status).InReplyToUserScreenName;
+            var filter = new[] { new FilterConversation(this.Tweet.Status.User.ScreenName, ((TwitterDirectMessage)this.Tweet.Status).Recipient.ScreenName) };
+            var description = "DM:@" + this.Tweet.Status.User.ScreenName + "&@" + ((TwitterDirectMessage)this.Tweet.Status).Recipient.ScreenName;
             switch (Setting.Instance.TimelineExperienceProperty.ConversationTransition)
             {
                 case TransitionMethod.ViewStack:
@@ -649,7 +664,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             var status = this.Tweet.Status;
             if(status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
                 status = ((TwitterStatus)status).RetweetedOriginal;
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" RT @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Text);
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" RT @" + status.User.ScreenName + ": " + status.Text);
             this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInputCaretIndex(0);
         }
         #endregion
@@ -675,7 +690,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             var status = this.Tweet.Status;
             if (status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
                 status = ((TwitterStatus)status).RetweetedOriginal;
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" QT @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Text);
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" QT @" + status.User.ScreenName + ": " + status.Text);
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInputCaretIndex(0);
 
         }
         #endregion
@@ -771,18 +787,20 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void CreateUserTab()
         {
-            var filter = new[] { new FilterUser(this.Tweet.Status.User.ScreenName) };
+            var user = TwitterHelper.GetSuggestedUser(this.Tweet);
+            var filter = new[] { new FilterUser(user.ScreenName) };
+            var desc = "@" + user.ScreenName;
             switch (Setting.Instance.TimelineExperienceProperty.UserExtractTransition)
             {
                 case TransitionMethod.ViewStack:
                     this.Parent.AddTopTimeline(filter);
                     break;
                 case TransitionMethod.AddTab:
-                    this.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty() { Name = "@" + this.Tweet.Status.User.ScreenName, TweetSources = filter });
+                    this.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
                     break;
                 case TransitionMethod.AddColumn:
                     var column = this.Parent.Parent.Parent.CreateColumn();
-                    column.AddTab(new Configuration.Tabs.TabProperty() { Name = "@" + this.Tweet.Status.User.ScreenName, TweetSources = filter });
+                    column.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
                     break;
             }
         }

@@ -10,7 +10,6 @@ using Dulcet.Twitter;
 using Inscribe.Caching;
 using Inscribe.Communication.Streaming;
 using Inscribe.Configuration;
-using Inscribe.Configuration.KeyAssignment;
 using Inscribe.Model;
 using Inscribe.Storage;
 using Inscribe.Text;
@@ -22,6 +21,7 @@ using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 using Mystique.Views.Behaviors.Messages;
+using Inscribe.Subsystems;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -662,8 +662,9 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         private void Update()
         {
+            if (!this.CanUpdate()) return;
             if (this.overrideTargets != null)
-                this.CurrentInputDescription.ReadyUpdate(this,this.overrideTargets.ToArray()).ForEach(AddUpdateWorker);
+                this.CurrentInputDescription.ReadyUpdate(this, this.overrideTargets.ToArray()).ForEach(AddUpdateWorker);
             else
                 this.CurrentInputDescription.ReadyUpdate(this, this.UserSelectorViewModel.LinkElements.ToArray()).ForEach(AddUpdateWorker);
             ResetInputDescription();
@@ -701,23 +702,24 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public void RegisterKeyAssign()
         {
-            KeyAssign.RegisterOperation("OpenInput", () => this.OpenInput());
-            KeyAssign.RegisterOperation("CloseInput", () => 
+            KeyAssignCore.RegisterOperation("OpenInput", () => this.OpenInput());
+            KeyAssignCore.RegisterOperation("CloseInput", () => 
             {
                 this.CloseInput();
                 this.Parent.ColumnOwnerViewModel.SetFocus();
             });
-            KeyAssign.RegisterOperation("RemoveInReplyTo", () => this.RemoveInReplyTo());
-            KeyAssign.RegisterOperation("AttachImage", () => this.AttachImage());
-            KeyAssign.RegisterOperation("Post", () => this.Update());
-            KeyAssign.RegisterOperation("PostAndClose", () =>
+            KeyAssignCore.RegisterOperation("RemoveInReplyTo", () => this.RemoveInReplyTo());
+            KeyAssignCore.RegisterOperation("AttachImage", () => this.AttachImage());
+            KeyAssignCore.RegisterOperation("Post", () => this.Update());
+            KeyAssignCore.RegisterOperation("PostAndClose", () =>
             {
+                if (!this.CanUpdate()) return;
                 this.Update();
                 this.CloseInput();
                 this.Parent.ColumnOwnerViewModel.SetFocus();
             });
-            KeyAssign.RegisterOperation("ShowConfig", () => this.ShowConfig());
-            KeyAssign.RegisterOperation("ShowAbout", () => this.ShowAbout());
+            KeyAssignCore.RegisterOperation("ShowConfig", () => this.ShowConfig());
+            KeyAssignCore.RegisterOperation("ShowAbout", () => this.ShowAbout());
         }
 
         #endregion

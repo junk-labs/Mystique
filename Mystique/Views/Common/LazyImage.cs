@@ -51,18 +51,18 @@ namespace Mystique.Views.Common
                 {
                     if (uri.Scheme == "pack")
                     {
-                        img.Dispatcher.BeginInvoke(() => SetImage(img, new BitmapImage(uri), uri));
+                        Application.Current.Dispatcher.BeginInvoke(() => SetImage(img, new BitmapImage(uri), uri));
                     }
                     else
                     {
                         var cache = ImageCacheStorage.GetImageCache(uri);
                         if (cache != null)
                         {
-                            img.Dispatcher.BeginInvoke(() => SetImage(img, cache, uri));
+                            Application.Current.Dispatcher.BeginInvoke(() => SetImage(img, cache, uri));
                         }
                         else
                         {
-                            img.Dispatcher.BeginInvoke(() =>
+                            Application.Current.Dispatcher.BeginInvoke(() =>
                             {
                                 try
                                 {
@@ -75,7 +75,7 @@ namespace Mystique.Views.Common
                                 try
                                 {
                                     var bi = ImageCacheStorage.DownloadImage(uri);
-                                    img.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri), DispatcherPriority.ContextIdle);
+                                    Application.Current.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri), DispatcherPriority.ContextIdle);
                                 }
                                 catch { }
                             });

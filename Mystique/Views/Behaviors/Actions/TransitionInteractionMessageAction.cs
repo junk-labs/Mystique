@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Livet.Messaging;
 using System.Windows;
-using System.Windows.Interactivity;
 using Livet.Behaviors.Messaging;
+using Livet.Messaging;
 
 namespace Mystique.Views.Behaviors.Actions
 {

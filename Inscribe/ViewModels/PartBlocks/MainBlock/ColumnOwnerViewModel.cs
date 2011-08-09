@@ -3,10 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Inscribe.Configuration;
-using Inscribe.Configuration.KeyAssignment;
+using Inscribe.Filter;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
+using Inscribe.Subsystems;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -149,45 +150,50 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.CurrentFocusColumn.SetFocus();
         }
 
-        #region KeyAssign
+        #region KeyAssignCore
 
         public void RegisterKeyAssign()
         {
             // Moving focus
-            KeyAssign.RegisterOperation("FocusToTimeline", this.SetFocus);
-            KeyAssign.RegisterOperation("MoveLeft", () => MoveHorizontal(false, false));
-            KeyAssign.RegisterOperation("MoveLeftColumn", () => MoveHorizontal(false, true));
-            KeyAssign.RegisterOperation("MoveRight", () => MoveHorizontal(true, false));
-            KeyAssign.RegisterOperation("MoveRightColumn", () => MoveHorizontal(true, true));
-            KeyAssign.RegisterOperation("MoveDown", () => MoveVertical(ListSelectionKind.SelectBelow));
-            KeyAssign.RegisterOperation("MoveUp", () => MoveVertical(ListSelectionKind.SelectAbove));
-            KeyAssign.RegisterOperation("MoveTop", () => MoveVertical(ListSelectionKind.SelectFirst));
-            KeyAssign.RegisterOperation("MoveBottom", () => MoveVertical(ListSelectionKind.SelectLast));
-            KeyAssign.RegisterOperation("Deselect", () => MoveVertical(ListSelectionKind.Deselect));
+            KeyAssignCore.RegisterOperation("FocusToTimeline", this.SetFocus);
+            KeyAssignCore.RegisterOperation("MoveLeft", () => MoveHorizontal(false, false));
+            KeyAssignCore.RegisterOperation("MoveLeftColumn", () => MoveHorizontal(false, true));
+            KeyAssignCore.RegisterOperation("MoveRight", () => MoveHorizontal(true, false));
+            KeyAssignCore.RegisterOperation("MoveRightColumn", () => MoveHorizontal(true, true));
+            KeyAssignCore.RegisterOperation("MoveDown", () => MoveVertical(ListSelectionKind.SelectBelow));
+            KeyAssignCore.RegisterOperation("MoveUp", () => MoveVertical(ListSelectionKind.SelectAbove));
+            KeyAssignCore.RegisterOperation("MoveTop", () => MoveVertical(ListSelectionKind.SelectFirst));
+            KeyAssignCore.RegisterOperation("MoveBottom", () => MoveVertical(ListSelectionKind.SelectLast));
+            KeyAssignCore.RegisterOperation("Deselect", () => MoveVertical(ListSelectionKind.Deselect));
 
             // Timeline action
-            KeyAssign.RegisterOperation("Mention", () => ExecTVMAction(vm => vm.MentionCommand.Execute()));
-            KeyAssign.RegisterOperation("SendDirectMessage", () => ExecTVMAction(vm => vm.DirectMessageCommand.Execute()));
-            KeyAssign.RegisterOperation("Favorite", ()=>ExecTVMAction(vm => vm.FavoriteCommand.Execute()));
-            KeyAssign.RegisterOperation("FavoriteMulti", ()=>ExecTVMAction(vm => vm.FavoriteMultiUserCommand.Execute()));
-            KeyAssign.RegisterOperation("Retweet", ()=>ExecTVMAction(vm => vm.RetweetCommand.Execute()));
-            KeyAssign.RegisterOperation("RetweetMulti", ()=>ExecTVMAction(vm => vm.RetweetMultiUserCommand.Execute()));
-            KeyAssign.RegisterOperation("UnofficialRetweet", () => ExecTVMAction(vm => vm.UnofficialRetweetCommand.Execute()));
-            KeyAssign.RegisterOperation("QuoteTweet", () => ExecTVMAction(vm => vm.QuoteCommand.Execute()));
-            KeyAssign.RegisterOperation("Delete", () => ExecTVMAction(vm => vm.DeleteCommand.Execute()));
-            KeyAssign.RegisterOperation("Mute", () => ExecTVMAction(vm => vm.MuteCommand.Execute()));
-            KeyAssign.RegisterOperation("ReportForSpam", () => ExecTVMAction(vm => vm.ReportForSpamCommand.Execute()));
-            KeyAssign.RegisterOperation("ShowConversation", () => ExecTVMAction(vm => vm.OpenConversationCommand.Execute()));
-            KeyAssign.RegisterOperation("CreateSelectedUserTab", () => ExecTVMAction(vm => vm.CreateUserTabCommand.Execute()));
-            KeyAssign.RegisterOperation("OpenTweetWeb", () => ExecTVMAction(vm => vm.Tweet.ShowTweetCommand.Execute()));
-            KeyAssign.RegisterOperation("ShowUserDetail", () => ExecTVMAction(vm => vm.ShowUserDetailCommand.Execute()));
+            KeyAssignCore.RegisterOperation("Mention", () => ExecTVMAction(vm => vm.MentionCommand.Execute()));
+            KeyAssignCore.RegisterOperation("MentionMulti", () => ExecTVMAction(vm =>
+            {
+                vm.MentionCommand.Execute();
+                this.SetFocus();
+            }));
+            KeyAssignCore.RegisterOperation("SendDirectMessage", () => ExecTVMAction(vm => vm.DirectMessageCommand.Execute()));
+            KeyAssignCore.RegisterOperation("Favorite", ()=>ExecTVMAction(vm => vm.FavoriteCommand.Execute()));
+            KeyAssignCore.RegisterOperation("FavoriteMulti", ()=>ExecTVMAction(vm => vm.FavoriteMultiUserCommand.Execute()));
+            KeyAssignCore.RegisterOperation("Retweet", ()=>ExecTVMAction(vm => vm.RetweetCommand.Execute()));
+            KeyAssignCore.RegisterOperation("RetweetMulti", ()=>ExecTVMAction(vm => vm.RetweetMultiUserCommand.Execute()));
+            KeyAssignCore.RegisterOperation("UnofficialRetweet", () => ExecTVMAction(vm => vm.UnofficialRetweetCommand.Execute()));
+            KeyAssignCore.RegisterOperation("QuoteTweet", () => ExecTVMAction(vm => vm.QuoteCommand.Execute()));
+            KeyAssignCore.RegisterOperation("Delete", () => ExecTVMAction(vm => vm.DeleteCommand.Execute()));
+            KeyAssignCore.RegisterOperation("Mute", () => ExecTVMAction(vm => vm.MuteCommand.Execute()));
+            KeyAssignCore.RegisterOperation("ReportForSpam", () => ExecTVMAction(vm => vm.ReportForSpamCommand.Execute()));
+            KeyAssignCore.RegisterOperation("ShowConversation", () => ExecTVMAction(vm => vm.OpenConversationCommand.Execute()));
+            KeyAssignCore.RegisterOperation("CreateSelectedUserTab", () => ExecTVMAction(vm => vm.CreateUserTabCommand.Execute()));
+            KeyAssignCore.RegisterOperation("OpenTweetWeb", () => ExecTVMAction(vm => vm.Tweet.ShowTweetCommand.Execute()));
+            KeyAssignCore.RegisterOperation("ShowUserDetail", () => ExecTVMAction(vm => vm.ShowUserDetailCommand.Execute()));
 
             // Tab Action
-            KeyAssign.RegisterOperation("Search", () => ExecTabAction(vm => vm.AddTopTimeline(null)));
-            KeyAssign.RegisterOperation("RemoveViewStackTop", () => ExecTabAction(vm => vm.RemoveTopTimeline(false)));
-            KeyAssign.RegisterOperation("RemoveViewStackAll", () => ExecTabAction(vm => vm.RemoveTopTimeline(true)));
-            KeyAssign.RegisterOperation("CreateTab", () => ExecTabAction(vm => vm.Parent.AddNewTabCommand.Execute()));
-            KeyAssign.RegisterOperation("CloseTab", () => ExecTabAction(vm => vm.Parent.CloseTab(vm)));
+            KeyAssignCore.RegisterOperation("Search", () => ExecTabAction(vm => vm.AddTopTimeline(new [] { new FilterCluster() })));
+            KeyAssignCore.RegisterOperation("RemoveViewStackTop", () => ExecTabAction(vm => vm.RemoveTopTimeline(false)));
+            KeyAssignCore.RegisterOperation("RemoveViewStackAll", () => ExecTabAction(vm => vm.RemoveTopTimeline(true)));
+            KeyAssignCore.RegisterOperation("CreateTab", () => ExecTabAction(vm => vm.Parent.AddNewTabCommand.Execute()));
+            KeyAssignCore.RegisterOperation("CloseTab", () => ExecTabAction(vm => vm.Parent.CloseTab(vm)));
         }
 
         private void MoveHorizontal(bool directionRight, bool moveInColumn)

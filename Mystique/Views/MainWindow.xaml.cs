@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using Inscribe.Configuration;
-using Inscribe.Configuration.KeyAssignment;
-using System.Windows.Input;
+using Inscribe.Subsystems;
+using Inscribe.Subsystems.KeyAssign;
 
 namespace Mystique.Views
 {
@@ -42,12 +42,12 @@ namespace Mystique.Views
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            KeyAssign.HandleEvent(e, AssignRegion.General);
+            KeyAssignCore.HandleEvent(e, AssignRegion.General);
         }
 
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            KeyAssign.HandlePreviewEvent(e, AssignRegion.General);
+            KeyAssignCore.HandlePreviewEvent(e, AssignRegion.General);
         }
     }
 }

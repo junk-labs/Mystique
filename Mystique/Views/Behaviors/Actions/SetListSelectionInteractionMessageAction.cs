@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
-using Livet;
-using Livet.Behaviors.Messaging;
+﻿using System.Windows.Controls;
 using Inscribe.ViewModels.Behaviors.Messaging;
-using Inscribe.Configuration;
+using Livet.Behaviors.Messaging;
 
 
 namespace Mystique.Views.Behaviors.Actions

@@ -1,7 +1,7 @@
 ﻿Inscribe Library
 
-Krile2 Mystiqueのデータを管理する部分です。
+Krile2 Mystiqueのコアシステムです。
 Windows Presentation Foundationと密結合し、
-データキャッシュサービスやTwitter ViewModelデータの統合的な管理を行います。
+データキャッシュサービスやViewModelデータの統合的な管理を行います。
 
 from ave;new 2nd concept album "Inscribe"

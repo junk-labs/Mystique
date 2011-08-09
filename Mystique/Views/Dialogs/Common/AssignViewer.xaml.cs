@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Inscribe.ViewModels.Dialogs.Common;
-using Inscribe.Configuration.KeyAssignment;
+using Inscribe.Subsystems;
 
 namespace Mystique.Views.Dialogs.Common
 {
@@ -30,7 +19,7 @@ namespace Mystique.Views.Dialogs.Common
         {
             var dc = this.DataContext as AssignViewerViewModel;
             if (dc != null)
-                dc.InputKey = KeyAssign.KeyToString(Keyboard.Modifiers, e.Key);
+                dc.InputKey = KeyAssignCore.KeyToString(Keyboard.Modifiers, e.Key);
         }
     }
 }

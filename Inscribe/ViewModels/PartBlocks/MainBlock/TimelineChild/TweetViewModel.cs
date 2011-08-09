@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using Dulcet.Twitter;
 using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Data;
 using Inscribe.Storage;
 using Livet;
-using System.Linq;
 using Livet.Commands;
-using Inscribe.Configuration.KeyAssignment;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {

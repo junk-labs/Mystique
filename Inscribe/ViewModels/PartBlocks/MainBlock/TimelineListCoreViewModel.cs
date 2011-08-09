@@ -12,7 +12,7 @@ using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Inscribe.Threading;
-using Inscribe.Notification;
+using Inscribe.Subsystems;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -100,7 +100,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                         OnNewTweetReceived();
                         this.Parent.NotifyNewTweetReceived(this);
                         if (this.Parent.TabProperty.IsNotifyEnabled)
-                            NotificationCore.QueueNotify(e.Tweet);
+                        {
+                            if (String.IsNullOrEmpty(this.Parent.TabProperty.NotifySoundPath))
+                                NotificationCore.QueueNotify(e.Tweet);
+                            else
+                                NotificationCore.QueueNotify(e.Tweet, this.Parent.TabProperty.NotifySoundPath);
+                        }
                     }
                     break;
                 case TweetActionKind.Refresh:

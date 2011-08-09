@@ -1,6 +1,6 @@
 ﻿using System;
-using Inscribe.Configuration.KeyAssignment;
 using Livet;
+using Inscribe.Subsystems;
 
 namespace Inscribe.ViewModels.Dialogs.Common
 {
@@ -8,7 +8,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
     {
         public string KeyAssignMaps
         {
-            get { return KeyAssign.GetKeyAssignMaps(); }
+            get { return KeyAssignCore.GetKeyAssignMaps(); }
         }
 
         private string _inputKey = String.Empty;

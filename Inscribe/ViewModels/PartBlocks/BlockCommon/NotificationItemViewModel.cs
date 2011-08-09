@@ -5,6 +5,7 @@ using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
 using Livet.Commands;
+using Inscribe.Common;
 
 namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 {
@@ -43,14 +44,19 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
                     case EventKind.Unfavorite:
                         // Show tweet
                         var status = description.TargetTweet.Status as TwitterStatus;
-                        if (status == null)
-                            return "(Unreceived)";
                         if (status != null && status.RetweetedOriginal != null)
+                        {
                             return "@" + status.RetweetedOriginal.User.ScreenName + ": " 
                                 + status.RetweetedOriginal.Text;
+                        }
                         else
-                            return "@" + description.TargetTweet.Status.User.ScreenName + ": "
-                                + description.TargetTweet.Status.Text;
+                        {
+                            if (description.TargetTweet.Status == null)
+                                return "(no reference)";
+                            else
+                                return "@" + description.TargetTweet.Status.User.ScreenName + ": "
+                                    + description.TargetTweet.Status.Text;
+                        }
                     case EventKind.Mention:
                     case EventKind.DirectMessage:
                         return description.TargetTweet.Status.Text;

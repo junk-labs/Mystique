@@ -8,7 +8,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:key="clr-namespace:Inscribe.Configuration.KeyAssignment;assembly=core"
+             xmlns:key="clr-namespace:Inscribe.Subsystems.KeyAssign;assembly=core"
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:my="clr-namespace:Mystique.Views.CustomPanels"
@@ -225,7 +225,7 @@
                                                    Converter={StaticResource TweetUserImageConverter},
                                                    ConverterParameter=DirectMessageRecipient}">
                     <com:LazyImage.InputBindings>
-                        <MouseBinding Command="{Binding Path=OpenDMConversationCommand}" MouseAction="LeftClick" />
+                        <MouseBinding Command="{Binding Path=DirectMessageReceipientDetailCommand}" MouseAction="LeftClick" />
                     </com:LazyImage.InputBindings>
                 </com:LazyImage>
                 <Image Width="16"
