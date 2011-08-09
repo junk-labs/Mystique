@@ -14,7 +14,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Inscribe.Notification
+namespace Inscribe.Subsystems
 {
     /// <summary>
     /// ポップアップ通知制御サブシステム

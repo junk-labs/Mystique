@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using System.IO;
 using System.Windows.Input;
 
-namespace Inscribe.Configuration.KeyAssignment
+namespace Inscribe.Subsystems.KeyAssign
 {
     public static class AssignLoader
     {
@@ -113,7 +113,7 @@ namespace Inscribe.Configuration.KeyAssignment
             else if (modStr.Equals("Shift", StringComparison.CurrentCultureIgnoreCase) ||
                 modStr.Equals("S", StringComparison.CurrentCultureIgnoreCase))
             {
-                return ModifierKeys.Alt;
+                return ModifierKeys.Shift;
             }
             else if (modStr.Equals("Win", StringComparison.CurrentCultureIgnoreCase) ||
                 modStr.Equals("Windows", StringComparison.CurrentCultureIgnoreCase) ||

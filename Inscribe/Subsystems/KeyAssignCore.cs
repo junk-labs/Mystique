@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
 using Inscribe.Storage;
+using Inscribe.Subsystems.KeyAssign;
 using Livet;
-using System.Windows.Controls.Primitives;
 
-namespace Inscribe.Configuration.KeyAssignment
+namespace Inscribe.Subsystems
 {
     /// <summary>
     /// キーアサインの管理を行います。
     /// </summary>
-    public static class KeyAssign
+    public static class KeyAssignCore
     {
         private static Dictionary<string, Action> callbacks;
 
@@ -44,7 +45,7 @@ namespace Inscribe.Configuration.KeyAssignment
 
         #endregion
 
-        static KeyAssign()
+        static KeyAssignCore()
         {
             callbacks = new Dictionary<string, Action>();
         }
