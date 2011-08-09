@@ -14,6 +14,19 @@ namespace Inscribe.ViewModels.Common.Filter
     {
         public bool Success { get; private set; }
 
+        private bool _isNegate = false;
+        public bool IsNegate
+        {
+            get { return _isNegate; }
+            set
+            {
+                this._isNegate = value;
+                RaisePropertyChanged(() => IsNegate);
+                if (this._cofiguredFilterBase != null)
+                    this._cofiguredFilterBase.Negate = value;
+            }
+        }
+
         public FilterElementEditorViewModel(FilterBase filter = null)
         {
             if (filter != null)
@@ -21,6 +34,7 @@ namespace Inscribe.ViewModels.Common.Filter
                 this._currentSelectedItem = filter.Identifier + ": " + filter.Description;
                 this._prevDescString = this._currentSelectedItem;
                 ConfiguredFilterBase = QueryCompiler.ToFilter(filter.ToQuery()).Filters.First() as FilterBase;
+                this.IsNegate = filter.Negate;
             }
             else
             {
@@ -107,6 +121,7 @@ namespace Inscribe.ViewModels.Common.Filter
                 RaisePropertyChanged(() => ConfiguredFilterBase);
                 if (value != null)
                 {
+                    _cofiguredFilterBase.Negate = this.IsNegate;
                     this._currentHostedArgumentVMs =
                         from p in value.GetType().GetProperties()
                         where p.CanRead && p.CanWrite

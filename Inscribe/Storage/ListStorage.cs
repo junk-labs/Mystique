@@ -7,6 +7,7 @@ using Dulcet.Twitter.Rest;
 using Inscribe.Communication;
 using Inscribe.Data;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Inscribe.Configuration;
 namespace Inscribe.Storage
 {
     /// <summary>
@@ -68,6 +69,7 @@ namespace Inscribe.Storage
         {
             try
             {
+                if (!Setting.IsInitialized) return null;
                 var acInfo = AccountStorage.GetRandom(a => a.IsFollowingList(screenName, listName), true);
                 if (acInfo == null) return null;
                 var list = ApiHelper.ExecApi(() => acInfo.GetList(screenName, listName));

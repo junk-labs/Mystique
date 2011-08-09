@@ -11,37 +11,39 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
-        WindowStyle="ToolWindow"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow">
     <Window.Resources>
         <DataTemplate DataType="{x:Type fvm:FilterTextArgumentViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="90" Width="Auto" />
+                    <ColumnDefinition Width="Auto" MinWidth="90" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="4"
                            VerticalAlignment="Center"
                            Text="{Binding Description}" />
-                <TextBox Margin="2" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Column="1"
+                         Margin="2"
+                         Text="{Binding Value,
+                                        UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type fvm:FilterBooleanArgumentViewModel}">
             <CheckBox Margin="4" IsChecked="{Binding Value}">
-                <TextBlock Margin="2"
-                           Text="{Binding Description}" />
+                <TextBlock Margin="2" Text="{Binding Description}" />
             </CheckBox>
         </DataTemplate>
         <DataTemplate DataType="{x:Type fvm:FilterNumericArgumentViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="90" Width="Auto" />
+                    <ColumnDefinition Width="Auto" MinWidth="90" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="4"
                            VerticalAlignment="Center"
                            Text="{Binding Description}" />
-                <TextBox Margin="2" Grid.Column="1">
+                <TextBox Grid.Column="1" Margin="2">
                     <TextBox.Text>
                         <Binding Converter="{StaticResource LongStringConverter}"
                                  Path="Value"
@@ -66,16 +68,15 @@
         <DataTemplate DataType="{x:Type fvm:FilterLongRangeArgumentViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="90" Width="Auto" />
+                    <ColumnDefinition Width="Auto" MinWidth="90" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="4"
                            VerticalAlignment="Center"
                            Text="{Binding Description}" />
-                <TextBox Margin="2" Grid.Column="1">
+                <TextBox Grid.Column="1" Margin="2">
                     <TextBox.Text>
-                        <Binding Converter="{StaticResource LongRangeStringConverter}"
-                                 Path="Value">
+                        <Binding Converter="{StaticResource LongRangeStringConverter}" Path="Value">
                             <Binding.ValidationRules>
                                 <conv:LongRangeStringValidator />
                             </Binding.ValidationRules>
@@ -128,13 +129,21 @@
                           SelectedValue="{Binding CurrentSelectedItem}" />
             </Grid>
         </Border>
-        <ItemsControl ItemsSource="{Binding ArgumentViewModels}" Grid.Row="1" />
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding ArgumentViewModels}" />
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <CheckBox Margin="4"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding IsNegate}">
+                <AccessText Text="否定条件にする(_N)" />
+                <CheckBox.ToolTip>
+                    <TextBlock Text="このフィルタにマッチしたツイートを含めないようにします。" />
+                </CheckBox.ToolTip>
+            </CheckBox>
             <Button Grid.Column="1"
                     Width="100"
                     Margin="0,4"
@@ -147,6 +156,7 @@
                     Command="{Binding CancelCommand}"
                     Content="キャンセル"
                     Padding="4,2" />
+
         </Grid>
     </Grid>
 </Window>

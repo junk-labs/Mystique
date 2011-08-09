@@ -13,6 +13,7 @@ using Inscribe.Storage;
 using Inscribe.Threading;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
+using Dulcet.Twitter;
 
 namespace Inscribe.Communication.Posting
 {
@@ -298,6 +299,13 @@ namespace Inscribe.Communication.Posting
 
         private static void FavTweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
+            if (((TwitterStatus)status.Status).RetweetedOriginal != null)
+                status = TweetStorage.Get(((TwitterStatus)status.Status).RetweetedOriginal.Id, true);
+            if (status == null)
+            {
+                NotifyStorage.Notify("Fav 対象ステータスが見つかりません。");
+                return;
+            }
             bool success = true;
             Parallel.ForEach(infos,
                 (d) =>
@@ -325,6 +333,13 @@ namespace Inscribe.Communication.Posting
 
         private static void RetweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
+            if (((TwitterStatus)status.Status).RetweetedOriginal != null)
+                status = TweetStorage.Get(((TwitterStatus)status.Status).RetweetedOriginal.Id);
+            if (status == null)
+            {
+                NotifyStorage.Notify("Retweet オリジナルデータが見つかりません。");
+                return;
+            }
             bool success = true;
             Parallel.ForEach(infos,
                 (d) =>

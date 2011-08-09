@@ -101,13 +101,6 @@
             </ItemsControl>
         </ScrollViewer>
         <DockPanel Grid.Row="2" Background="Gainsboro">
-            <Button DockPanel.Dock="Right"
-                    Style="{StaticResource FlatButtonStyle}"
-                    ToolTip="設定画面を開く">
-                <Image Width="16"
-                       Height="16"
-                       Source="{StaticResource Config}" />
-            </Button>
             <TextBlock Margin="4"
                        VerticalAlignment="Center"
                        Text="{Binding Accounts,

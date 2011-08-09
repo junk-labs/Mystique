@@ -20,6 +20,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
     {
         public ColumnViewModel Parent { get; private set; }
 
+        /// <summary>
+        /// このタブがまだ生存しているか
+        /// </summary>
+        public bool IsAlive { get; set; }
+
         private TabProperty _tabProperty;
         public TabProperty TabProperty
         {
@@ -90,6 +95,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             this.Parent = parent;
 
+            this.IsAlive = true;
             this._tabProperty = property ?? new TabProperty();
             ViewModelHelper.BindNotification(this._tabProperty.LinkAccountInfoChangedEvent, this, (o, e) =>
                 this.StackingTimelines.OfType<TimelineListViewModel>()

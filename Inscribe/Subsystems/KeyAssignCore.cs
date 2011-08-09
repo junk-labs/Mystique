@@ -135,8 +135,14 @@ namespace Inscribe.Subsystems
 
         public static void HandleEvent(KeyEventArgs e, AssignRegion region)
         {
-            // テキストボックスでのイベントは捕捉しない:w
-            if (e.OriginalSource is TextBoxBase) return;
+            // テキストボックスでのイベントは捕捉しない
+            if (e.OriginalSource is TextBoxBase)
+            {
+                // Windows XPだとフォーカス管理がおかしいので、何故かテキストボックスから飛んでくる
+                // -> やっぱり捕捉する
+                if (Environment.OSVersion.Version.Major >= 6)
+                    return;
+            }
             if (HandleEventSink(CheckIme(e), region, false))
                 e.Handled = true;
         }

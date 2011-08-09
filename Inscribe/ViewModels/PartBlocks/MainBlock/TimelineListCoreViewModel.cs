@@ -98,13 +98,16 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     {
                         this._tweetsSource.Add(new TabDependentTweetViewModel(e.Tweet, this.Parent));
                         OnNewTweetReceived();
-                        this.Parent.NotifyNewTweetReceived(this);
-                        if (this.Parent.TabProperty.IsNotifyEnabled)
+                        if (!AccountStorage.Contains(e.Tweet.Status.User.ScreenName) && this.Parent.IsAlive)
                         {
-                            if (String.IsNullOrEmpty(this.Parent.TabProperty.NotifySoundPath))
-                                NotificationCore.QueueNotify(e.Tweet);
-                            else
-                                NotificationCore.QueueNotify(e.Tweet, this.Parent.TabProperty.NotifySoundPath);
+                            this.Parent.NotifyNewTweetReceived(this);
+                            if (this.Parent.TabProperty.IsNotifyEnabled)
+                            {
+                                if (String.IsNullOrEmpty(this.Parent.TabProperty.NotifySoundPath))
+                                    NotificationCore.QueueNotify(e.Tweet);
+                                else
+                                    NotificationCore.QueueNotify(e.Tweet, this.Parent.TabProperty.NotifySoundPath);
+                            }
                         }
                     }
                     break;

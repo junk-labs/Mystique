@@ -45,17 +45,31 @@ namespace Mystique
             body.AppendLine("MEMORY USAGE:");
             var cp = System.Diagnostics.Process.GetCurrentProcess();
             body.AppendLine("paged:" + cp.PagedMemorySize64 + " / peak-virtual:" + cp.PeakVirtualMemorySize64);
-
-            var tpath = Path.GetTempFileName();
-            using (var sw = new StreamWriter(tpath))
+            body.AppendLine(Environment.OSVersion.VersionString + " (is64?" + (IntPtr.Size == 8).ToString() + ")");
+            body.AppendLine(Define.GetFormattedVersion() + " @" + Define.GetExeFilePath());
+            if (Environment.OSVersion.Version.Major < 6)
             {
-                sw.WriteLine(body.ToString());
-                sw.WriteLine(Define.GetFormattedVersion() + " @" + Define.GetExeFilePath());
-                sw.WriteLine(Environment.OSVersion.VersionString);
+                var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "krile_trace_" + Path.GetRandomFileName() + ".txt");
+                using (var sw = new StreamWriter(path))
+                {
+                    sw.WriteLine(body.ToString());
+                }
+                MessageBox.Show("エラーが発生し、Krileの動作を継続不可能になりました。" + Environment.NewLine +
+                        "ご利用のオペレーティングシステムは自動フィードバックシステムをご利用できません。" + Environment.NewLine +
+                        "お手数ですが、デスクトップに生成されるエラートレースを@karnoまでお知らせください。",
+                        "サポート対象外のOS", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            var apppath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-            System.Diagnostics.Process.Start(Path.Combine(apppath, Define.FeedbackAppName), tpath);
-            Environment.Exit(1);
+            else
+            {
+                var tpath = Path.GetTempFileName();
+                using (var sw = new StreamWriter(tpath))
+                {
+                    sw.WriteLine(body.ToString());
+                }
+                var apppath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+                System.Diagnostics.Process.Start(Path.Combine(apppath, Define.FeedbackAppName), tpath);
+                Environment.Exit(1);
+            }
         }
     }
 }

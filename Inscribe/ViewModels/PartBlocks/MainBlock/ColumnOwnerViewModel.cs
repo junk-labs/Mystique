@@ -8,6 +8,7 @@ using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Inscribe.Subsystems;
+using System.Collections.Generic;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -15,30 +16,46 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
     {
         #region Closed tab stack control
 
-        private ConcurrentStack<TabViewModel> _closedTabStacks = new ConcurrentStack<TabViewModel>();
+        private object _ctsLock = new object();
+
+        private Stack<TabViewModel> _closedTabStacks = new Stack<TabViewModel>();
 
         public void PushClosedTabStack(TabViewModel viewmodel)
         {
-            this._closedTabStacks.Push(viewmodel);
+            viewmodel.IsAlive = false;
+            lock (this._ctsLock)
+            {
+                this._closedTabStacks.Push(viewmodel);
+            }
             this._columns.ForEach(c => c.RebirthTabCommand.RaiseCanExecuteChanged());
         }
 
         public TabViewModel PopClosedTab()
         {
             TabViewModel ret;
-            this._closedTabStacks.TryPop(out ret);
+            lock (this._ctsLock)
+            {
+                ret = this._closedTabStacks.Pop();
+            }
             this._columns.ForEach(c => c.RebirthTabCommand.RaiseCanExecuteChanged());
+            ret.IsAlive = true;
             return ret;
         }
 
         public bool IsExistedClosedTab()
         {
-            return this._closedTabStacks.Count > 0;
+            lock (this._ctsLock)
+            {
+                return this._closedTabStacks.Count > 0;
+            }
         }
 
         public void ClearClosedTab()
         {
-            this._closedTabStacks.Clear();
+            lock (this._ctsLock)
+            {
+                this._closedTabStacks.Clear();
+            }
             this._columns.ForEach(c => c.RebirthTabCommand.RaiseCanExecuteChanged());
         }
 
