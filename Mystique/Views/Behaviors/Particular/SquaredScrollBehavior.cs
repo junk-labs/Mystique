@@ -48,10 +48,9 @@ namespace Mystique.Views.Behaviors.Particular
         private ScrollViewer GetScrollViewer(DependencyObject o)
         {
             // Return the DependencyObject if it is a ScrollViewer
-            if (o is ScrollViewer)
-            {
-                return o as ScrollViewer;
-            }
+            var sv = o as ScrollViewer;
+            if (sv != null)
+                return sv;
 
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(o); i++)
             {

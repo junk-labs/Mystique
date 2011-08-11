@@ -20,6 +20,10 @@
                     <ColumnDefinition Width="Auto" MinWidth="90" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <TextBlock Margin="4"
                            VerticalAlignment="Center"
                            Text="{Binding Description}" />
@@ -27,12 +31,31 @@
                          Margin="2"
                          Text="{Binding Value,
                                         UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Margin="4,2"
+                           Foreground="DimGray"
+                           Text="{Binding Hint}"
+                           Visibility="{Binding IsHintVisible,
+                                                Converter={StaticResource BoolVisibleConverter}}" />
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type fvm:FilterBooleanArgumentViewModel}">
-            <CheckBox Margin="4" IsChecked="{Binding Value}">
-                <TextBlock Margin="2" Text="{Binding Description}" />
-            </CheckBox>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <CheckBox Margin="4" IsChecked="{Binding Value}">
+                    <TextBlock Margin="2" Text="{Binding Description}" />
+                </CheckBox>
+                <TextBlock Grid.Row="1"
+                           Margin="4,2"
+                           Foreground="DimGray"
+                           Text="{Binding Hint}"
+                           Visibility="{Binding IsHintVisible,
+                                                Converter={StaticResource BoolVisibleConverter}}" />
+            </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type fvm:FilterNumericArgumentViewModel}">
             <Grid>
@@ -40,6 +63,10 @@
                     <ColumnDefinition Width="Auto" MinWidth="90" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <TextBlock Margin="4"
                            VerticalAlignment="Center"
                            Text="{Binding Description}" />
@@ -63,6 +90,13 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Margin="4,2"
+                           Foreground="DimGray"
+                           Text="{Binding Hint}"
+                           Visibility="{Binding IsHintVisible,
+                                                Converter={StaticResource BoolVisibleConverter}}" />
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type fvm:FilterLongRangeArgumentViewModel}">
@@ -71,6 +105,10 @@
                     <ColumnDefinition Width="Auto" MinWidth="90" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <TextBlock Margin="4"
                            VerticalAlignment="Center"
                            Text="{Binding Description}" />
@@ -92,6 +130,13 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Margin="4,2"
+                           Foreground="DimGray"
+                           Text="{Binding Hint}"
+                           Visibility="{Binding IsHintVisible,
+                                                Converter={StaticResource BoolVisibleConverter}}" />
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type fvm:FilterUneditableArgumentViewModel}">

@@ -43,7 +43,7 @@ namespace Mystique.Views.Behaviors.Particular
             set { this.SetValue(IsMouseOverProperty, value); }
         }
 
-        public static DependencyProperty IsMouseOverProperty =
+        public static readonly DependencyProperty IsMouseOverProperty =
             DependencyProperty.Register("IsMouseOver", typeof(bool), typeof(MouseOverBindBehavior), new FrameworkPropertyMetadata(false));
     }
 }

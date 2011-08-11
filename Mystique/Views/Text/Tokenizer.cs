@@ -20,30 +20,6 @@ namespace Mystique.Views.Text
             return escaped.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
         }
 
-        /// <summary>
-        /// 文字トークン
-        /// </summary>
-        public class Token
-        {
-            public enum TokenKind
-            {
-                Text,
-                URL,
-                Hashtag,
-                AtLink,
-                ImageInsertionLink
-            }
-
-            public Token(TokenKind tknd, string tkstr)
-            {
-                Kind = tknd;
-                Text = tkstr;
-            }
-
-            public TokenKind Kind { get; set; }
-
-            public string Text { get; set; }
-        }
 
         /// <summary>
         /// 文字列をトークン化します。
@@ -83,13 +59,13 @@ namespace Mystique.Views.Text
                     {
                         case 'U':
                             // &sharp; => #
-                            yield return new Token(Token.TokenKind.URL, body.Replace("&sharp;", "#"));
+                            yield return new Token(TokenKind.Url, body.Replace("&sharp;", "#"));
                             break;
                         case 'A':
-                            yield return new Token(Token.TokenKind.AtLink, body);
+                            yield return new Token(TokenKind.AtLink, body);
                             break;
                         case 'H':
-                            yield return new Token(Token.TokenKind.Hashtag, body);
+                            yield return new Token(TokenKind.Hashtag, body);
                             break;
                         default:
                             throw new InvalidOperationException("無効な分類です:" + kind.ToString());
@@ -97,9 +73,39 @@ namespace Mystique.Views.Text
                 }
                 else
                 {
-                    yield return new Token(Token.TokenKind.Text, Unescape(s));
+                    yield return new Token(TokenKind.Text, Unescape(s));
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 文字トークン
+    /// </summary>
+    public class Token
+    {
+
+
+        public Token(TokenKind tknd, string tkstr)
+        {
+            Kind = tknd;
+            Text = tkstr;
+        }
+
+        public TokenKind Kind { get; set; }
+
+        public string Text { get; set; }
+    }
+
+    /// <summary>
+    /// トークン種別
+    /// </summary>
+    public enum TokenKind
+    {
+        Text,
+        Url,
+        Hashtag,
+        AtLink,
+        ImageInsertionLink
     }
 }

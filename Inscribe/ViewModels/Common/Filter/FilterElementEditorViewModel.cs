@@ -127,22 +127,22 @@ namespace Inscribe.ViewModels.Common.Filter
                         where p.CanRead && p.CanWrite
                         let attr = Attribute.GetCustomAttributes(p, typeof(GuiVisibleAttribute)).OfType<GuiVisibleAttribute>().FirstOrDefault()
                         where attr != null
-                        select GenerateViewModel(p.GetGetMethod().ReturnType, attr.Description, p.GetValue(value, null), o => p.SetValue(value, o, null));
+                        select GenerateViewModel(p.GetGetMethod().ReturnType, attr.Description, attr.Hint, p.GetValue(value, null), o => p.SetValue(value, o, null));
                     RaisePropertyChanged(() => ArgumentViewModels);
                 }
             }
         }
 
-        private ViewModel GenerateViewModel(Type t, string desc, object value, Action<object> setValueHandler)
+        private ViewModel GenerateViewModel(Type t, string desc, string hint, object value, Action<object> setValueHandler)
         {
             if (t.Equals(typeof(String)))
-                return new FilterTextArgumentViewModel(desc, (string)value, setValueHandler);
+                return new FilterTextArgumentViewModel(desc, hint, (string)value, setValueHandler);
             else if (t.Equals(typeof(Boolean)))
-                return new FilterBooleanArgumentViewModel(desc, (bool)value, setValueHandler);
+                return new FilterBooleanArgumentViewModel(desc, hint, (bool)value, setValueHandler);
             else if (t.Equals(typeof(LongRange)))
-                return new FilterLongRangeArgumentViewModel(desc, (LongRange)value, setValueHandler);
+                return new FilterLongRangeArgumentViewModel(desc, hint, (LongRange)value, setValueHandler);
             else if (t.Equals(typeof(long)))
-                return new FilterNumericArgumentViewModel(desc, (long)value, setValueHandler);
+                return new FilterNumericArgumentViewModel(desc, hint, (long)value, setValueHandler);
             else
                 return new FilterUneditableArgumentViewModel(desc, t);
         }
@@ -195,18 +195,15 @@ namespace Inscribe.ViewModels.Common.Filter
 
     public class FilterTextArgumentViewModel : ViewModel
     {
-        public FilterTextArgumentViewModel(string desc, string value, Action<string> setValueHandler)
+        public FilterTextArgumentViewModel(string desc, string hint, string value, Action<string> setValueHandler)
         {
+            this._value = value;
             this.Description = desc;
-            this.Value = value;
+            this.Hint = hint;
             this.handler = setValueHandler;
         }
 
         private String _value;
-
-        private Action<string> handler;
-
-        public String Description { get; private set; }
 
         public String Value
         {
@@ -219,14 +216,27 @@ namespace Inscribe.ViewModels.Common.Filter
                     handler(value);
             }
         }
+
+        private Action<string> handler;
+
+        public String Description { get; private set; }
+
+        public bool IsHintVisible
+        {
+            get { return !String.IsNullOrEmpty(Hint); }
+        }
+
+        public String Hint { get; private set; }
+
     }
 
     public class FilterBooleanArgumentViewModel : ViewModel
     {
-        public FilterBooleanArgumentViewModel(string desc, bool value, Action<object> setValueHandler)
+        public FilterBooleanArgumentViewModel(string desc, string hint, bool value, Action<object> setValueHandler)
         {
-            this.Description = desc;
             this._value = value;
+            this.Description = desc;
+            this.Hint = hint;
             this.handler = setValueHandler;
         }
 
@@ -248,23 +258,26 @@ namespace Inscribe.ViewModels.Common.Filter
 
         public string Description { get; private set; }
 
+        public bool IsHintVisible
+        {
+            get { return !String.IsNullOrEmpty(Hint); }
+        }
+
+        public String Hint { get; private set; }
     }
 
     public class FilterNumericArgumentViewModel : ViewModel
     {
 
-        public FilterNumericArgumentViewModel(string desc, long value, Action<object> setValueHandler)
+        public FilterNumericArgumentViewModel(string desc, string hint, long value, Action<object> setValueHandler)
         {
-            this.Description = desc;
             this._value = value;
+            this.Description = desc;
+            this.Hint = hint;
             this.handler = setValueHandler;
         }
 
         private long _value;
-
-        private Action<object> handler;
-
-        public string Description { get; private set; }
 
         public long Value
         {
@@ -277,14 +290,26 @@ namespace Inscribe.ViewModels.Common.Filter
                     handler(value);
             }
         }
+
+        private Action<object> handler;
+
+        public string Description { get; private set; }
+
+        public bool IsHintVisible
+        {
+            get { return !String.IsNullOrEmpty(Hint); }
+        }
+
+        public String Hint { get; private set; }
     }
 
     public class FilterLongRangeArgumentViewModel : ViewModel
     {
-        public FilterLongRangeArgumentViewModel(string desc, LongRange value, Action<LongRange> setValueHandler)
+        public FilterLongRangeArgumentViewModel(string desc, string hint, LongRange value, Action<LongRange> setValueHandler)
         {
-            this.Description = desc;
             this._value = value;
+            this.Description = desc;
+            this.Hint = hint;
             this.handler = setValueHandler;
         }
 
@@ -304,6 +329,13 @@ namespace Inscribe.ViewModels.Common.Filter
         }
 
         public string Description { get; private set; }
+
+        public bool IsHintVisible
+        {
+            get { return !String.IsNullOrEmpty(Hint); }
+        }
+
+        public String Hint { get; private set; }
     }
 
     public class FilterUneditableArgumentViewModel : ViewModel
@@ -315,7 +347,6 @@ namespace Inscribe.ViewModels.Common.Filter
         }
 
         public string Type { get; private set; }
-
 
         public string Description { get; private set; }
     }

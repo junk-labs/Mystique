@@ -69,6 +69,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public TimelineListCoreViewModel(TabViewModel parent, IEnumerable<IFilter> sources)
         {
+            if (parent == null)
+                throw new ArgumentNullException("parent");
             this.Parent = parent;
             this.sources = sources;
             UpdateReacceptionChain(sources, true);

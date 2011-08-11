@@ -442,13 +442,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                                 user = UserStorage.Get(ApiHelper.ExecApi(() => cred.GetUserByScreenName(screenName)));
                             }
                         }
-                        if (user != null)
-                            User = user;
-                        else
-                            this.Messenger.Raise(new Livet.Messaging.InformationMessage(
-                                        "ユーザー @" + screenName + "の情報を取得できません。",
-                                        "ユーザー情報取得エラー", System.Windows.MessageBoxImage.Warning,
-                                        "InformationMessage"));
+                        if (user == null)
+                            throw new Exception("ユーザー情報がありません。");
+                        User = user;
+                    }
+                    catch(Exception e)
+                    {
+                        ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "ユーザー @" + screenName + " の情報を取得できませんでした。");
+                        this.Messenger.Raise(new Livet.Messaging.InformationMessage(
+                                    "ユーザー @" + screenName + "の情報を取得できません。",
+                                    "ユーザー情報取得エラー", System.Windows.MessageBoxImage.Warning,
+                                    "InformationMessage"));
                     }
                     finally
                     {

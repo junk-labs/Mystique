@@ -46,7 +46,24 @@ namespace Mystique
             var cp = System.Diagnostics.Process.GetCurrentProcess();
             body.AppendLine("paged:" + cp.PagedMemorySize64 + " / peak-virtual:" + cp.PeakVirtualMemorySize64);
             body.AppendLine(Environment.OSVersion.VersionString + " (is64?" + (IntPtr.Size == 8).ToString() + ")");
-            body.AppendLine(Define.GetFormattedVersion() + " @" + Define.GetExeFilePath());
+            body.AppendLine(Define.GetFormattedVersion() + " @" + Define.ExeFilePath);
+
+            #region Freezable Bug 対策
+
+            var argexcp = e.ExceptionObject as ArgumentException;
+            if (argexcp != null && argexcp.Message.Contains("Freezable") && argexcp.ParamName == "context")
+            {
+                try
+                {
+                    body.AppendLine("FREEZABLE***************************************************");
+                    body.AppendLine("Source:" + argexcp.Source);
+                    body.AppendLine("FREEZABLE END************************************************");
+                }
+                catch { }
+            }
+
+            #endregion
+
             if (Environment.OSVersion.Version.Major < 6)
             {
                 var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "krile_trace_" + Path.GetRandomFileName() + ".txt");

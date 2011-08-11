@@ -7,12 +7,14 @@ using System.Windows.Input;
 using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
-using Inscribe.Plugin;
-using Mystique.Views.Text;
-using Inscribe.Caching;
-using Mystique.Views.Common;
 using Inscribe.Core;
 using Inscribe.Filter.Filters.Text;
+using Inscribe.Plugin;
+using Inscribe.Storage;
+using Mystique.Views.Common;
+using Mystique.Views.Text;
+using System.Windows.Threading;
+using System.Windows;
 
 namespace Mystique.Views.Converters.Particular
 {
@@ -50,12 +52,20 @@ namespace Mystique.Views.Converters.Particular
         /// </summary>
         public static IEnumerable<Inline> Generate(this string text)
         {
+            if (!Application.Current.Dispatcher.CheckAccess())
+                return Application.Current.Dispatcher.Invoke((Func<string, IEnumerable<Inline>>)GenerateSink, text) as IEnumerable<Inline>;
+            else
+                return GenerateSink(text);
+        }
+
+        private static IEnumerable<Inline> GenerateSink(string text)
+        {
             foreach (var tok in Tokenizer.Tokenize(text))
             {
                 var ctt = tok.Text;
                 switch (tok.Kind)
                 {
-                    case Tokenizer.Token.TokenKind.AtLink:
+                    case TokenKind.AtLink:
                         var atlink = new Hyperlink(new Run(ctt));
                         atlink.PreviewMouseLeftButtonDown += (o, e) =>
                         {
@@ -64,7 +74,7 @@ namespace Mystique.Views.Converters.Particular
                         };
                         yield return atlink;
                         break;
-                    case Tokenizer.Token.TokenKind.Hashtag:
+                    case TokenKind.Hashtag:
                         var hashlink = new Hyperlink(new Run(ctt));
                         hashlink.PreviewMouseLeftButtonDown += (o, e) =>
                         {
@@ -73,7 +83,7 @@ namespace Mystique.Views.Converters.Particular
                         };
                         yield return hashlink;
                         break;
-                    case Tokenizer.Token.TokenKind.URL:
+                    case TokenKind.Url:
                         var urllink = new Hyperlink();
                         switch (Setting.Instance.TweetExperienceProperty.UrlResolveMode)
                         {
@@ -118,7 +128,7 @@ namespace Mystique.Views.Converters.Particular
                         };
                         yield return urllink;
                         break;
-                    case Tokenizer.Token.TokenKind.Text:
+                    case TokenKind.Text:
                     default:
                         yield return new Run(ctt);
                         break;
@@ -136,22 +146,22 @@ namespace Mystique.Views.Converters.Particular
             {
                 switch (tok.Kind)
                 {
-                    case Tokenizer.Token.TokenKind.AtLink:
+                    case TokenKind.AtLink:
                         var atlink = new Hyperlink(new Run(tok.Text));
                         atlink.MouseLeftButtonDown += (o, e) => InternalLinkClicked(InternalLinkKind.User, tok.Text);
                         yield return atlink;
                         break;
-                    case Tokenizer.Token.TokenKind.Hashtag:
+                    case TokenKind.Hashtag:
                         var hashlink = new Hyperlink(new Run(tok.Text));
                         hashlink.MouseLeftButtonDown += (o, e) => InternalLinkClicked(InternalLinkKind.Hash, tok.Text);
                         yield return hashlink;
                         break;
-                    case Tokenizer.Token.TokenKind.URL:
+                    case TokenKind.Url:
                         var urllink = new Hyperlink(new Run(tok.Text));
                         urllink.MouseLeftButtonDown += (o, e) => OuterLinkClicked(tok.Text);
                         yield return urllink;
                         break;
-                    case Tokenizer.Token.TokenKind.Text:
+                    case TokenKind.Text:
                     default:
                         yield return new Run(tok.Text);
                         break;
@@ -166,19 +176,19 @@ namespace Mystique.Views.Converters.Particular
                 var ctt = tok.Text;
                 switch (tok.Kind)
                 {
-                    case Tokenizer.Token.TokenKind.AtLink:
+                    case TokenKind.AtLink:
                         yield return new Action(() =>
                         {
                             InternalLinkClicked(InternalLinkKind.User, ctt);
                         });
                         break;
-                    case Tokenizer.Token.TokenKind.Hashtag:
+                    case TokenKind.Hashtag:
                         yield return new Action(() =>
                         {
                             InternalLinkClicked(InternalLinkKind.Hash, ctt);
                         });
                         break;
-                    case Tokenizer.Token.TokenKind.URL:
+                    case TokenKind.Url:
                         yield return new Action(() =>
                         {
                             OuterLinkClicked(ctt);
@@ -229,22 +239,9 @@ namespace Mystique.Views.Converters.Particular
             Browser.Start(navigate);
         }
 
-        static void ImageLinkClicked(string navigate)
-        {
-            Uri uri;
-            if (Uri.TryCreate(navigate, UriKind.Absolute, out uri))
-            {
-                Browser.Start(navigate);
-            }
-            else
-            {
-                InvalidLinkClicked(navigate);
-            }
-        }
-
         static void InvalidLinkClicked(string show)
         {
-            // TODO: Notify error
+            ExceptionStorage.Register(new Exception("Invalid Link."), ExceptionCategory.InternalError, show);
         }
     }
 }

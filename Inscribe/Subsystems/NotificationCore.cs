@@ -74,7 +74,8 @@ namespace Inscribe.Subsystems
         {
             lock (waitingsLocker)
             {
-                waitings.Add(tweet, null);
+                if (!waitings.ContainsKey(tweet))
+                    waitings.Add(tweet, null);
             }
         }
 
@@ -145,7 +146,7 @@ namespace Inscribe.Subsystems
         private static bool isPlaying = false;
         private static void PlaySound(EventKind eventKind, string overrideSoundPath)
         {
-            string path = Path.GetDirectoryName(Define.GetExeFilePath());
+            string path = Path.GetDirectoryName(Define.ExeFilePath);
             path = Path.Combine(path, Define.MediaDirectory);
             switch (eventKind)
             {

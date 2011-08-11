@@ -9,8 +9,11 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 {
     public class NotifierViewModel : ViewModel
     {
-        public NotifierViewModel()
+        public MainWindowViewModel Parent { get; private set; }
+
+        public NotifierViewModel(MainWindowViewModel parent)
         {
+            this.Parent = parent;
             ViewModelHelper.BindNotification(EventStorage.EventRegisteredEvent, this, OnEventRegistered);
         }
 

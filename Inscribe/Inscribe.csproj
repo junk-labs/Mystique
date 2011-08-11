@@ -57,8 +57,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Caching\ImageCacheStorage.cs" />
-    <Compile Include="Caching\UrlResolveCacheStorage.cs" />
+    <Compile Include="Storage\ImageCacheStorage.cs" />
+    <Compile Include="Storage\UrlResolveCacheStorage.cs" />
     <Compile Include="Common\EnumerableEx.cs" />
     <Compile Include="Common\Browser.cs" />
     <Compile Include="Common\Geometry.cs" />
@@ -69,8 +69,8 @@
     <Compile Include="Communication\APIHelper.cs" />
     <Compile Include="Communication\CruiseControl\AccountScheduler.cs" />
     <Compile Include="Communication\CruiseControl\AutoCruiseSchedulerManager.cs" />
-    <Compile Include="Communication\CruiseControl\Base\ScheduledTask.cs" />
-    <Compile Include="Communication\CruiseControl\Base\SupervisorScheduler.cs" />
+    <Compile Include="Communication\CruiseControl\Core\ScheduledTask.cs" />
+    <Compile Include="Communication\CruiseControl\Core\SupervisorScheduler.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\DirectMessageReceiveTask.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\FavoritesReceiveTask.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\HomeReceiveTask.cs" />

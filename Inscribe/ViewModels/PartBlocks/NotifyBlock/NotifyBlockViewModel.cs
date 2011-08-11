@@ -5,7 +5,7 @@ using System.Text;
 using Livet;
 using Inscribe.Core;
 using Inscribe.Storage;
-using Inscribe.Caching;
+using Inscribe.Storage;
 using Livet.Commands;
 using Inscribe.Communication.Posting;
 

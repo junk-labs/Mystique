@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Dulcet.Twitter;
-using Inscribe.Caching;
+using Inscribe.Storage;
 using Inscribe.Communication.Streaming;
 using Inscribe.Configuration;
 using Inscribe.Model;

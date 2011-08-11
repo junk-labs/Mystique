@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using Inscribe.Caching;
+using Inscribe.Storage;
 using Inscribe.Threading;
 
 namespace Mystique.Views.Common

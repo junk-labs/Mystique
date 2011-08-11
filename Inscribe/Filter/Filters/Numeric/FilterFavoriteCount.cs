@@ -50,7 +50,7 @@ namespace Inscribe.Filter.Filters.Numeric
 
         public override string FilterStateString
         {
-            get { return "被Fav数が " + this.range.ToString() + " であるもの"; }
+            get { return "被Fav数が " + this.Range.ToString() + " であるもの"; }
         }
     }
 }

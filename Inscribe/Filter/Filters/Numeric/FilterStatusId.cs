@@ -51,7 +51,7 @@ namespace Inscribe.Filter.Filters.Numeric
 
         public override string FilterStateString
         {
-            get { return "ツイートID:" + this.range.ToString(); }
+            get { return "ツイートID:" + this.Range.ToString(); }
         }
     }
 }

@@ -33,12 +33,8 @@ namespace Mystique.Views.Common
             var pb = o as PopupButton;
             var popobj = e.NewValue as UIElement;
             if (pb == null || popobj == null) return;
-            Popup popup;
-            if (popobj is Popup)
-            {
-                popup = popobj as Popup;
-            }
-            else
+            Popup popup = popobj as Popup;
+            if(popup == null)
             {
                 popup = new Popup();
                 popup.Child = popobj;

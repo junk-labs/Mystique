@@ -6,6 +6,7 @@ using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
 using Livet.Commands;
 using Inscribe.Common;
+using Inscribe.Filter.Filters.Numeric;
 
 namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 {
@@ -140,30 +141,10 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 
         private void ShowUser()
         {
-
+            Core.KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn.SelectedTabViewModel
+                .AddTopUser(this.SourceUser.TwitterUser.ScreenName);
         }
         
-        #endregion
-        
-        #region ShowTargetCommand
-        
-        DelegateCommand _ShowTargetCommand;
-
-        public DelegateCommand ShowTargetCommand
-        {
-            get
-            {
-                if (_ShowTargetCommand == null)
-                    _ShowTargetCommand = new DelegateCommand(ShowTarget);
-                return _ShowTargetCommand;
-            }
-        }
-
-        private void ShowTarget()
-        {
-
-        }
-
         #endregion
     }
 

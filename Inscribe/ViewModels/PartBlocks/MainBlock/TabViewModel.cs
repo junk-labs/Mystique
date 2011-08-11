@@ -332,6 +332,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         /// <param name="removeAllStackings">スタックされているすべてのタイムラインを削除します。</param>
         public void RemoveTopTimeline(bool removeAllStackings)
         {
+            if (this._stackings.Count == 1) return;
             do
             {
                 this._stackings.RemoveAt(this._stackings.Count - 1);

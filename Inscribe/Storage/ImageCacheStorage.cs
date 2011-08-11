@@ -9,7 +9,7 @@ using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Storage;
 
-namespace Inscribe.Caching
+namespace Inscribe.Storage
 {
     public static class ImageCacheStorage
     {

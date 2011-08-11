@@ -7,7 +7,7 @@ namespace Inscribe.Filter.Filters.Text
 {
     public abstract class TextFilterBase : FilterBase
     {
-        [GuiVisible("検索テキスト")]
+        [GuiVisible("検索テキスト", "^:先頭一致 $:後方一致 /:正規表現")]
         public string Needle
         {
             get { return this.needle; }

@@ -94,8 +94,8 @@ namespace Mystique.Views.Behaviors
 
         private void SetScroll(int distance)
         {
-            int nv = Interlocked.Increment(ref scrollWaitCount);
-            if (nv == 1)
+            int nv = Interlocked.Add(ref scrollWaitCount, distance);
+            if (nv == distance)
             {
                 // キューされている操作はなし
                 Dispatcher.BeginInvoke(SetScrollSynchronized, DispatcherPriority.DataBind);
@@ -121,10 +121,9 @@ namespace Mystique.Views.Behaviors
         private ScrollViewer GetScrollViewer(DependencyObject o)
         {
             // Return the DependencyObject if it is a ScrollViewer
-            if (o is ScrollViewer)
-            {
-                return o as ScrollViewer;
-            }
+            var sv = o as ScrollViewer;
+            if (sv != null)
+                return sv;
 
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(o); i++)
             {

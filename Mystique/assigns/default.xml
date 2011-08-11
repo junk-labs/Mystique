@@ -25,7 +25,7 @@
 			<Assign Action="Mention" Key="R" />
 			<Assign Action="MentionMulti" Key="Shift+R" />
 			<Assign Action="Mention" Key="Space" Preview="True" />
-			<Assign Action="MentionMulti" Key="Shift+R" />
+			<Assign Action="MentionMulti" Key="Shift+Space" Preview="True" />
 			<Assign Action="Favorite" Key="F" />
 			<Assign Action="Favorite" Key="Oem1" /> <!-- SEMICOLON -->
 			<Assign Action="FavoriteMulti" Key="Shift+F" />

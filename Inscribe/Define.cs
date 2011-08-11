@@ -5,14 +5,17 @@ namespace Inscribe
 {
     public static class Define
     {
-        public static string GetExeFilePath()
+        public static string ExeFilePath
         {
-            return Process.GetCurrentProcess().MainModule.FileName;
+            get
+            {
+                return Process.GetCurrentProcess().MainModule.FileName;
+            }
         }
 
         public static FileVersionInfo GetVersion()
         {
-            return FileVersionInfo.GetVersionInfo(GetExeFilePath());
+            return FileVersionInfo.GetVersionInfo(ExeFilePath);
         }
 
         public static string GetFormattedVersion()

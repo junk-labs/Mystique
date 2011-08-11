@@ -34,7 +34,7 @@ namespace Inscribe.ViewModels
         {
             KernelService.MainWindowViewModel = this;
             this._columnOwnerViewModel = new ColumnOwnerViewModel(this);
-            this._notifierViewModel = new NotifierViewModel();
+            this._notifierViewModel = new NotifierViewModel(this);
             this._notifyBlockViewModel = new NotifyBlockViewModel(this);
             // Input block dependents ColumnOwnerViewModel
             this._inputBlockViewModel = new InputBlockViewModel(this);

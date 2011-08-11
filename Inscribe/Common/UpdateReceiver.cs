@@ -79,12 +79,12 @@ namespace Inscribe.Common
             {
                 var binarray = binstream.ToArray();
                 var sigarray = sigstream.ToArray();
-                var pubkey = Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), Define.PublicKeyFile);
+                var pubkey = Path.Combine(Path.GetDirectoryName(Define.ExeFilePath), Define.PublicKeyFile);
                 if (!File.Exists(pubkey))
                     throw new FileNotFoundException("パブリックキーが見つかりません。Krileを再インストールしてください。");
                 if (VerifySignature(binarray, sigarray, File.ReadAllText(pubkey)))
                 {
-                    File.WriteAllBytes(Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), Define.UpdateFileName), binarray);
+                    File.WriteAllBytes(Path.Combine(Path.GetDirectoryName(Define.ExeFilePath), Define.UpdateFileName), binarray);
                 }
                 else
                 {
@@ -152,7 +152,7 @@ namespace Inscribe.Common
 
         public static void StartUpdateArchive()
         {
-            var path = Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), Define.UpdateFileName);
+            var path = Path.Combine(Path.GetDirectoryName(Define.ExeFilePath), Define.UpdateFileName);
             if (File.Exists(path))
             {
                 // .completeファイルを作成する

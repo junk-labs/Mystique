@@ -165,13 +165,6 @@ namespace Mystique.Views.Chrome
                 }
             }
         }
-        internal int EffectiveValuesInitialSize
-        {
-            get
-            {
-                return 9;
-            }
-        }
 
         private void DrawDropShadows(DrawingContext dc, ref Rect bounds)
         {

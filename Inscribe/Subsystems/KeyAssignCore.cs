@@ -67,7 +67,7 @@ namespace Inscribe.Subsystems
 
         public static String GetPath(string fileName)
         {
-            return Path.Combine(Path.GetDirectoryName(Define.GetExeFilePath()), Define.KeyAssignDirectory, fileName);
+            return Path.Combine(Path.GetDirectoryName(Define.ExeFilePath), Define.KeyAssignDirectory, fileName);
         }
 
         public static String LookupKeyFromId(string id)

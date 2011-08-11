@@ -729,6 +729,7 @@
                            Text="{Binding SourceUser,
                                           Converter={StaticResource UVMToUserNameConverter},
                                           ConverterParameter=NotifyViewName}"
+                           Foreground="Black"
                            TextDecorations="Underline"
                            TextWrapping="NoWrap">
                     <i:Interaction.Triggers>
@@ -854,14 +855,8 @@
                 <TextBlock Margin="4"
                            Text="{Binding Target,
                                           Converter={StaticResource StringRemoveLineConverter}}"
-                           TextDecorations="Underline"
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="NoWrap">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding ShowTargetCommand}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                 </TextBlock>
                 <TextBlock Grid.Column="1"
                            Margin="4,0"

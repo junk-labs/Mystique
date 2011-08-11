@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Inscribe.Caching
+namespace Inscribe.Storage
 {
     public static class UrlResolveCacheStorage
     {
