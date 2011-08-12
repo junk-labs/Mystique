@@ -11,6 +11,6 @@ namespace Voices
 
         public static string BinName = "krile.exe";
 
-        public static string Version = "0.5";
+        public static string Version = "0.6";
     }
 }

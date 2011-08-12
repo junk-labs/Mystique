@@ -31,19 +31,17 @@
             this.subDescLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.errorInfoGroup = new System.Windows.Forms.GroupBox();
-            this.errorInfoSendState = new System.Windows.Forms.Label();
-            this.sendInformation = new System.Windows.Forms.Button();
-            this.errorInfoLabel = new System.Windows.Forms.LinkLabel();
-            this.errorInfoText = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.headLabel = new System.Windows.Forms.Label();
             this.EndKrile = new System.Windows.Forms.Button();
             this.RestartKrile = new System.Windows.Forms.Button();
             this.aboutApp = new System.Windows.Forms.Button();
+            this.errorInfoLabel = new System.Windows.Forms.LinkLabel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.sendState = new System.Windows.Forms.Label();
+            this.sendProgress = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
-            this.errorInfoGroup.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // subDescLabel
@@ -52,9 +50,9 @@
             this.subDescLabel.Location = new System.Drawing.Point(68, 42);
             this.subDescLabel.Margin = new System.Windows.Forms.Padding(3);
             this.subDescLabel.Name = "subDescLabel";
-            this.subDescLabel.Size = new System.Drawing.Size(352, 24);
+            this.subDescLabel.Size = new System.Drawing.Size(453, 24);
             this.subDescLabel.TabIndex = 1;
-            this.subDescLabel.Text = "{0}は、動作の過程で回復不可能なエラーに遭遇し、強制終了されました。\r\n{0}の改良のために、エラー情報の送信にご協力ください。";
+            this.subDescLabel.Text = "{0}は、動作中に内部エラーを検知し、強制終了しました。お手数をおかけし申し訳ございません。\r\n{0}の改良のために、エラー情報の送信にご協力ください。";
             // 
             // pictureBox1
             // 
@@ -68,81 +66,19 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.errorInfoGroup);
+            this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.headLabel);
+            this.panel1.Controls.Add(this.errorInfoLabel);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.subDescLabel);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(616, 307);
+            this.panel1.Size = new System.Drawing.Size(545, 186);
             this.panel1.TabIndex = 0;
-            // 
-            // errorInfoGroup
-            // 
-            this.errorInfoGroup.Controls.Add(this.errorInfoSendState);
-            this.errorInfoGroup.Controls.Add(this.sendInformation);
-            this.errorInfoGroup.Controls.Add(this.errorInfoLabel);
-            this.errorInfoGroup.Controls.Add(this.errorInfoText);
-            this.errorInfoGroup.Controls.Add(this.label3);
-            this.errorInfoGroup.Location = new System.Drawing.Point(62, 79);
-            this.errorInfoGroup.Margin = new System.Windows.Forms.Padding(5, 10, 5, 15);
-            this.errorInfoGroup.Name = "errorInfoGroup";
-            this.errorInfoGroup.Size = new System.Drawing.Size(539, 216);
-            this.errorInfoGroup.TabIndex = 2;
-            this.errorInfoGroup.TabStop = false;
-            this.errorInfoGroup.Text = "エラー情報の送信";
-            // 
-            // errorInfoSendState
-            // 
-            this.errorInfoSendState.AutoSize = true;
-            this.errorInfoSendState.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.errorInfoSendState.Location = new System.Drawing.Point(159, 189);
-            this.errorInfoSendState.Name = "errorInfoSendState";
-            this.errorInfoSendState.Size = new System.Drawing.Size(146, 12);
-            this.errorInfoSendState.TabIndex = 4;
-            this.errorInfoSendState.Text = "送信はまだ行われていません。";
-            // 
-            // sendInformation
-            // 
-            this.sendInformation.Location = new System.Drawing.Point(6, 181);
-            this.sendInformation.Name = "sendInformation";
-            this.sendInformation.Size = new System.Drawing.Size(147, 29);
-            this.sendInformation.TabIndex = 3;
-            this.sendInformation.Text = "情報の送信(&S)";
-            this.sendInformation.UseVisualStyleBackColor = true;
-            this.sendInformation.Click += new System.EventHandler(this.sendInformation_Click);
-            // 
-            // errorInfoLabel
-            // 
-            this.errorInfoLabel.AutoSize = true;
-            this.errorInfoLabel.Location = new System.Drawing.Point(6, 155);
-            this.errorInfoLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.errorInfoLabel.Name = "errorInfoLabel";
-            this.errorInfoLabel.Size = new System.Drawing.Size(299, 12);
-            this.errorInfoLabel.TabIndex = 2;
-            this.errorInfoLabel.TabStop = true;
-            this.errorInfoLabel.Text = "その他の送信される情報は、こちらをクリックすると確認できます...";
-            this.errorInfoLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.errorInfoLabel_LinkClicked);
-            // 
-            // errorInfoText
-            // 
-            this.errorInfoText.Location = new System.Drawing.Point(8, 42);
-            this.errorInfoText.Multiline = true;
-            this.errorInfoText.Name = "errorInfoText";
-            this.errorInfoText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.errorInfoText.Size = new System.Drawing.Size(516, 107);
-            this.errorInfoText.TabIndex = 1;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 27);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(425, 12);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "以下に、エラー発生時の状況や、その他気付いた点などをご自由にお書きください。（任意）";
             // 
             // headLabel
             // 
@@ -152,14 +88,14 @@
             this.headLabel.Location = new System.Drawing.Point(66, 12);
             this.headLabel.Margin = new System.Windows.Forms.Padding(3);
             this.headLabel.Name = "headLabel";
-            this.headLabel.Size = new System.Drawing.Size(332, 24);
+            this.headLabel.Size = new System.Drawing.Size(222, 24);
             this.headLabel.TabIndex = 0;
-            this.headLabel.Text = "{0} twitter clientは強制終了されました。";
+            this.headLabel.Text = "{0} は強制終了されました。";
             // 
             // EndKrile
             // 
             this.EndKrile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.EndKrile.Location = new System.Drawing.Point(473, 319);
+            this.EndKrile.Location = new System.Drawing.Point(401, 192);
             this.EndKrile.Name = "EndKrile";
             this.EndKrile.Size = new System.Drawing.Size(131, 29);
             this.EndKrile.TabIndex = 2;
@@ -170,7 +106,7 @@
             // RestartKrile
             // 
             this.RestartKrile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.RestartKrile.Location = new System.Drawing.Point(336, 319);
+            this.RestartKrile.Location = new System.Drawing.Point(264, 192);
             this.RestartKrile.Name = "RestartKrile";
             this.RestartKrile.Size = new System.Drawing.Size(131, 29);
             this.RestartKrile.TabIndex = 1;
@@ -181,7 +117,7 @@
             // aboutApp
             // 
             this.aboutApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.aboutApp.Location = new System.Drawing.Point(12, 319);
+            this.aboutApp.Location = new System.Drawing.Point(12, 192);
             this.aboutApp.Name = "aboutApp";
             this.aboutApp.Size = new System.Drawing.Size(131, 29);
             this.aboutApp.TabIndex = 3;
@@ -189,11 +125,52 @@
             this.aboutApp.UseVisualStyleBackColor = true;
             this.aboutApp.Click += new System.EventHandler(this.aboutApp_Click);
             // 
+            // errorInfoLabel
+            // 
+            this.errorInfoLabel.AutoSize = true;
+            this.errorInfoLabel.Location = new System.Drawing.Point(68, 72);
+            this.errorInfoLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.errorInfoLabel.Name = "errorInfoLabel";
+            this.errorInfoLabel.Size = new System.Drawing.Size(258, 12);
+            this.errorInfoLabel.TabIndex = 2;
+            this.errorInfoLabel.TabStop = true;
+            this.errorInfoLabel.Text = "送信される情報は、こちらをクリックすると確認できます...";
+            this.errorInfoLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.errorInfoLabel_LinkClicked);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.sendProgress);
+            this.groupBox1.Controls.Add(this.sendState);
+            this.groupBox1.Location = new System.Drawing.Point(70, 100);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(462, 68);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "エラー情報の送信状態";
+            // 
+            // sendState
+            // 
+            this.sendState.AutoSize = true;
+            this.sendState.Location = new System.Drawing.Point(4, 25);
+            this.sendState.Name = "sendState";
+            this.sendState.Size = new System.Drawing.Size(71, 12);
+            this.sendState.TabIndex = 0;
+            this.sendState.Text = "送信準備中...";
+            // 
+            // sendProgress
+            // 
+            this.sendProgress.Location = new System.Drawing.Point(6, 40);
+            this.sendProgress.Name = "sendProgress";
+            this.sendProgress.Size = new System.Drawing.Size(450, 13);
+            this.sendProgress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.sendProgress.TabIndex = 1;
+            this.sendProgress.Value = 100;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(616, 360);
+            this.ClientSize = new System.Drawing.Size(544, 233);
             this.Controls.Add(this.aboutApp);
             this.Controls.Add(this.RestartKrile);
             this.Controls.Add(this.EndKrile);
@@ -201,13 +178,14 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "{0} twitter clientは強制終了されました。";
+            this.Text = "{0} Error Reporter";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.errorInfoGroup.ResumeLayout(false);
-            this.errorInfoGroup.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -221,12 +199,10 @@
         private System.Windows.Forms.Button EndKrile;
         private System.Windows.Forms.Button RestartKrile;
         private System.Windows.Forms.Button aboutApp;
-        private System.Windows.Forms.GroupBox errorInfoGroup;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox errorInfoText;
         private System.Windows.Forms.LinkLabel errorInfoLabel;
-        private System.Windows.Forms.Button sendInformation;
-        private System.Windows.Forms.Label errorInfoSendState;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ProgressBar sendProgress;
+        private System.Windows.Forms.Label sendState;
     }
 }
 

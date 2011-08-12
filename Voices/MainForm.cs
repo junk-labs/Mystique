@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Voices
 {
@@ -56,30 +57,41 @@ namespace Voices
             }
         }
 
-        private void sendInformation_Click(object sender, EventArgs e)
+        private void MainForm_Shown(object sender, EventArgs e)
         {
-            errorInfoGroup.Enabled = false;
-            errorInfoSendState.Text = "送信準備中...";
             this.Refresh();
             StringBuilder sb = new StringBuilder();
             sb.Append(ErrorLogData);
-            if (!String.IsNullOrWhiteSpace(errorInfoText.Text))
-            {
-                sb.Append("--- MESSAGE --- ");
-                sb.Append(errorInfoText.Text);
-            }
-            errorInfoSendState.Text = "送信中...";
+            sendState.Text = "送信中...";
             this.Refresh();
             string err;
-            if (!PostString(new Uri("http://krile.starwing.net/report.php"), sb.ToString(), out err))
+            Task.Factory.StartNew(() =>
             {
-                if (String.IsNullOrEmpty(err))
-                    err = "何か不思議な力で失敗しました。もう一度試してみてください。";
-                MessageBox.Show("アップロードエラー:" + err);
-                errorInfoGroup.Enabled = true;
-            }
-            errorInfoSendState.Text = "送信完了しました。";
-            this.Refresh();
+                try
+                {
+                    if (!PostString(new Uri("http://krile.starwing.net/report.php"), sb.ToString(), out err))
+                    {
+                        if (String.IsNullOrEmpty(err))
+                            err = "何か不思議な力で失敗しました。もう一度試してみてください。";
+                        throw new Exception(err);
+                    }
+                    this.Invoke(new Action(() =>
+                    {
+                        sendState.Text = "送信完了しました。";
+                        sendProgress.Style = ProgressBarStyle.Continuous;
+                        this.Refresh();
+                    }));
+                }
+                catch (Exception ex)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("アップロードエラー:" + ex.Message);
+                        sendState.Text = "送信に失敗しました。";
+                        sendProgress.Style = ProgressBarStyle.Continuous;
+                    }));
+                }
+            });
         }
 
         private bool PostString(Uri target, string data, out string err)
@@ -158,6 +170,8 @@ namespace Voices
         {
             MessageBox.Show(ErrorLogData, "送信される情報詳細", MessageBoxButtons.OK);
         }
+
+
 
     }
 }

@@ -12,8 +12,8 @@ using Inscribe.Communication.Posting;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
 using Inscribe.Filter;
+using Inscribe.Filter.Filters.Numeric;
 using Inscribe.Filter.Filters.Particular;
-using Inscribe.Filter.Filters.ScreenName;
 using Inscribe.Storage;
 using Inscribe.Threading;
 using Livet;
@@ -444,7 +444,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             this.Parent.AddTopUser(((TwitterDirectMessage)this.Tweet.Status).Recipient.ScreenName);
         }
         #endregion
-      
 
         #region OpenConversationCommand
         DelegateCommand _OpenConversationCommand;
@@ -788,7 +787,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         private void CreateUserTab()
         {
             var user = TwitterHelper.GetSuggestedUser(this.Tweet);
-            var filter = new[] { new FilterUser(user.ScreenName) };
+            var filter = new[] { new FilterUserId(user.NumericId) };
             var desc = "@" + user.ScreenName;
             switch (Setting.Instance.TimelineExperienceProperty.UserExtractTransition)
             {
@@ -862,25 +861,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void OpenUser(UserViewModel parameter)
         {
-            var filter = new[] { new FilterUser("^" + parameter.TwitterUser.ScreenName + "$") };
-            var desc = "@" + parameter.TwitterUser.ScreenName;
-            switch (Setting.Instance.TimelineExperienceProperty.UserOpenTransition)
-            {
-                case TransitionMethod.ViewStack:
-                    this.Parent.AddTopTimeline(filter);
-                    break;
-                case TransitionMethod.AddTab:
-                    this.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
-                    break;
-                case TransitionMethod.AddColumn:
-                    var column = this.Parent.Parent.Parent.CreateColumn();
-                    column.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
-                    break;
-            }
+            this.Parent.AddTopUser(parameter.TwitterUser.ScreenName);
         }
 
         #endregion
-      
 
         #endregion
     }

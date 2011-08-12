@@ -2,16 +2,16 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using Inscribe.Communication.CruiseControl.Lists;
+using Inscribe.Communication.Streaming;
 using Inscribe.Configuration.Tabs;
+using Inscribe.Filter.Filters.Numeric;
+using Inscribe.Storage;
 using Inscribe.ViewModels.Dialogs;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
-using Inscribe.Filter.Filters.ScreenName;
-using Inscribe.Communication.Streaming;
-using Inscribe.Communication.CruiseControl.Lists;
-using Inscribe.Storage;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -218,12 +218,16 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 var tvm = odo != null ? odo.DataContext as TabViewModel : null;
                 if (tvm != null)
                 {
-                    tvm.TabProperty.TweetSources = tvm.TabProperty.TweetSources.Concat(new[] { new FilterUser("^" + td.Status.User.ScreenName + "$") }).ToArray();
+                    tvm.TabProperty.TweetSources = tvm.TabProperty.TweetSources.Concat(new[] { new FilterUserId(td.Status.User.NumericId) }).ToArray();
                     tvm.InvalidateCache();
                 }
                 else
                 {
-                    this.AddTab(new TabProperty() { Name = "@" + td.Status.User.ScreenName, TweetSources = new[] { new FilterUser(td.Status.User.ScreenName) } });
+                    this.AddTab(new TabProperty()
+                    {
+                        Name = "@" + td.Status.User.ScreenName,
+                        TweetSources = new[] { new FilterUserId(td.Status.User.NumericId) }
+                    });
                 }
                 return;
             }

@@ -5,8 +5,6 @@ using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
 using Livet.Commands;
-using Inscribe.Common;
-using Inscribe.Filter.Filters.Numeric;
 
 namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 {
