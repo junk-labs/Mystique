@@ -17,6 +17,7 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <BitmapImage x:Key="Search" UriSource="/Resources/find.png" />
+        <BitmapImage x:Key="AddTab" UriSource="/Resources/tab_add.png" />
         <BitmapImage x:Key="Close" UriSource="/Resources/cross.png" />
         <BitmapImage x:Key="QueryInvalid" UriSource="/Resources/exclamation.png" />
     </UserControl.Resources>
@@ -52,6 +53,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Image Width="16"
@@ -108,6 +110,14 @@
                     </Grid>
                 </Border>
                 <Button Grid.Column="2"
+                        Command="{Binding CreateTabFromTopTimelineCommand}"
+                        Style="{StaticResource FlatButtonStyle}">
+                    <Image Width="12"
+                           Height="12"
+                           Margin="2"
+                           Source="{StaticResource AddTab}" />
+                </Button>
+                <Button Grid.Column="3"
                         Command="{Binding RemoveTopTimelineCommand}"
                         Style="{StaticResource FlatButtonStyle}">
                     <Image Width="12"

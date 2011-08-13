@@ -449,10 +449,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     catch(Exception e)
                     {
                         ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "ユーザー @" + screenName + " の情報を取得できませんでした。");
-                        this.Messenger.Raise(new Livet.Messaging.InformationMessage(
+                        DispatcherHelper.BeginInvoke(() => this.Messenger.Raise(new Livet.Messaging.InformationMessage(
                                     "ユーザー @" + screenName + "の情報を取得できません。",
                                     "ユーザー情報取得エラー", System.Windows.MessageBoxImage.Warning,
-                                    "InformationMessage"));
+                                    "InformationMessage")));
                     }
                     finally
                     {

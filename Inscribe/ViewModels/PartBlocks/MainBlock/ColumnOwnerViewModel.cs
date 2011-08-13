@@ -9,6 +9,7 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Inscribe.Subsystems;
 using System.Collections.Generic;
+using Inscribe.Filter.Filters.Numeric;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -191,22 +192,23 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 this.SetFocus();
             }));
             KeyAssignCore.RegisterOperation("SendDirectMessage", () => ExecTVMAction(vm => vm.DirectMessageCommand.Execute()));
-            KeyAssignCore.RegisterOperation("Favorite", ()=>ExecTVMAction(vm => vm.FavoriteCommand.Execute()));
-            KeyAssignCore.RegisterOperation("FavoriteMulti", ()=>ExecTVMAction(vm => vm.FavoriteMultiUserCommand.Execute()));
-            KeyAssignCore.RegisterOperation("Retweet", ()=>ExecTVMAction(vm => vm.RetweetCommand.Execute()));
-            KeyAssignCore.RegisterOperation("RetweetMulti", ()=>ExecTVMAction(vm => vm.RetweetMultiUserCommand.Execute()));
+            KeyAssignCore.RegisterOperation("Favorite", () => ExecTVMAction(vm => vm.FavoriteCommand.Execute()));
+            KeyAssignCore.RegisterOperation("FavoriteMulti", () => ExecTVMAction(vm => vm.FavoriteMultiUserCommand.Execute()));
+            KeyAssignCore.RegisterOperation("Retweet", () => ExecTVMAction(vm => vm.RetweetCommand.Execute()));
+            KeyAssignCore.RegisterOperation("RetweetMulti", () => ExecTVMAction(vm => vm.RetweetMultiUserCommand.Execute()));
             KeyAssignCore.RegisterOperation("UnofficialRetweet", () => ExecTVMAction(vm => vm.UnofficialRetweetCommand.Execute()));
             KeyAssignCore.RegisterOperation("QuoteTweet", () => ExecTVMAction(vm => vm.QuoteCommand.Execute()));
             KeyAssignCore.RegisterOperation("Delete", () => ExecTVMAction(vm => vm.DeleteCommand.Execute()));
             KeyAssignCore.RegisterOperation("Mute", () => ExecTVMAction(vm => vm.MuteCommand.Execute()));
             KeyAssignCore.RegisterOperation("ReportForSpam", () => ExecTVMAction(vm => vm.ReportForSpamCommand.Execute()));
             KeyAssignCore.RegisterOperation("ShowConversation", () => ExecTVMAction(vm => vm.OpenConversationCommand.Execute()));
-            KeyAssignCore.RegisterOperation("CreateSelectedUserTab", () => ExecTVMAction(vm => vm.CreateUserTabCommand.Execute()));
+            KeyAssignCore.RegisterOperation("CreateSelectedUserTab", () => ExecTVMAction(vm => CreateUserTab(vm, false)));
+            KeyAssignCore.RegisterOperation("CreateSelectedUserColumn", () => ExecTVMAction(vm => CreateUserTab(vm, true)));
             KeyAssignCore.RegisterOperation("OpenTweetWeb", () => ExecTVMAction(vm => vm.Tweet.ShowTweetCommand.Execute()));
             KeyAssignCore.RegisterOperation("ShowUserDetail", () => ExecTVMAction(vm => vm.ShowUserDetailCommand.Execute()));
 
             // Tab Action
-            KeyAssignCore.RegisterOperation("Search", () => ExecTabAction(vm => vm.AddTopTimeline(new [] { new FilterCluster() })));
+            KeyAssignCore.RegisterOperation("Search", () => ExecTabAction(vm => vm.AddTopTimeline(new[] { new FilterCluster() })));
             KeyAssignCore.RegisterOperation("RemoveViewStackTop", () => ExecTabAction(vm => vm.RemoveTopTimeline(false)));
             KeyAssignCore.RegisterOperation("RemoveViewStackAll", () => ExecTabAction(vm => vm.RemoveTopTimeline(true)));
             KeyAssignCore.RegisterOperation("CreateTab", () => ExecTabAction(vm => vm.Parent.AddNewTabCommand.Execute()));
@@ -279,6 +281,21 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             var vm = cc.SelectedTweetViewModel;
             if (vm == null) return;
             action(vm);
+        }
+
+        private void CreateUserTab(TabDependentTweetViewModel tvm, bool newColumn)
+        {
+            var filter = new[] { new FilterUserId(tvm.Tweet.Status.User.NumericId) };
+            var desc = "@" + tvm.Tweet.Status.User.ScreenName;
+            if (newColumn)
+            {
+                var column = tvm.Parent.Parent.Parent.CreateColumn();
+                column.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
+            }
+            else
+            {
+                tvm.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
+            }
         }
 
         #endregion

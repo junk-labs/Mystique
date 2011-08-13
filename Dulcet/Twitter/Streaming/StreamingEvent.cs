@@ -246,7 +246,7 @@ namespace Dulcet.Twitter.Streaming
         private void ParseDelete(XElement node)
         {
             Kind = ElementKind.Delete;
-            DeletedStatusId = node.Element("id").ParseLong();
+            DeletedStatusId = node.Element("delete").Element("status").Element("id").ParseLong();
         }
 
         private void ParseStatus(XElement node)

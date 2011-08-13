@@ -128,7 +128,7 @@ namespace Inscribe.Configuration.Tabs
             set { this._followingLists = value; }
         }
 
-        private IEnumerable<FilterCluster> GenerateFilters(IEnumerable<string> queries)
+        private IEnumerable<IFilter> GenerateFilters(IEnumerable<string> queries)
         {
             foreach (var s in queries)
             {
@@ -142,7 +142,19 @@ namespace Inscribe.Configuration.Tabs
                     ExceptionStorage.Register(e, ExceptionCategory.ConfigurationError, "フィルタ クエリを読み取れません: " + s);
                 }
                 if (cluster != null)
-                    yield return cluster;
+                {
+                    if (cluster.Filters.Count() == 1)
+                    {
+                        var filter = cluster.Filters.First();
+                        if (cluster.Negate)
+                            filter.Negate = !filter.Negate;
+                        yield return filter;
+                    }
+                    else
+                    {
+                        yield return cluster;
+                    }
+                }
             }
         }
 

@@ -27,7 +27,7 @@ namespace Inscribe.Configuration.Settings
             this.IsShowMultiple = true;
             this.NotifyInMainWindowDisplay = false;
             this.NotifyLocation = Settings.NotifyLocation.RightBottom;
-            this.NotifyWindowShowLength = 3000;
+            this.NotifyWindowShowLength = 4500;
 
             this.WindowNotificationStrategy = NotificationStrategy.OnlyInactive;
             this.SoundNotificationStrategy = NotificationStrategy.Always;

@@ -62,12 +62,14 @@
                         Width="90"
                         Command="{Binding OkCommand}"
                         Content="OK"
-                        Padding="4,2" />
+                        Padding="4,2"
+                        IsDefault="True" />
                 <Button Grid.Column="2"
                         Width="90"
                         Command="{Binding CancelCommand}"
                         Content="キャンセル"
-                        Padding="4,2" />
+                        Padding="4,2"
+                        IsCancel="True" />
             </Grid>
         </Grid>
     </Border>

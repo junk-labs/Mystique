@@ -35,14 +35,14 @@
 			<Assign Action="QuoteTweet" Key="Ctrl+Q" />
 			<Assign Action="Delete" Key="Delete" />
 			<Assign Action="Search" Key="F3" Preview="True" />
-      <Assign Action="RemoveViewStackTop" Key="F4" Preview="True" />
+      <Assign Action="RemoveViewStackTop" Key="F4" Preview="True" InTextBox="True" />
       <Assign Action="CloseTab" Key="Ctrl+F4" Preview="True" />
       <Assign Action="CreateTab" Key="Ctrl+N" Preview="True" />
 		</AssignGroup>
 		<AssignGroup Region="Input">
-			<Assign Action="Post" Key="Ctrl+Enter" Preview="True" />
-			<Assign Action="PostAndClose" Key="Ctrl+Shift+Enter" Preview="True" />
-			<Assign Action="CloseInput" Key="Escape" Preview="True" />
+			<Assign Action="Post" Key="Ctrl+Enter" Preview="True" InTextBox="True" />
+			<Assign Action="PostAndClose" Key="Ctrl+Shift+Enter" Preview="True" InTextBox="True" />
+			<Assign Action="CloseInput" Key="Escape" Preview="True" InTextBox="True" />
 		</AssignGroup>
 	</AssignGroups>
 </KeyAssign>

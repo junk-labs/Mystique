@@ -7,11 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Dulcet.Twitter;
-using Inscribe.Storage;
 using Inscribe.Communication.Streaming;
 using Inscribe.Configuration;
 using Inscribe.Model;
 using Inscribe.Storage;
+using Inscribe.Subsystems;
 using Inscribe.Text;
 using Inscribe.ViewModels.Common;
 using Inscribe.ViewModels.Dialogs;
@@ -21,7 +21,6 @@ using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 using Mystique.Views.Behaviors.Messages;
-using Inscribe.Subsystems;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {

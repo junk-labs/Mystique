@@ -97,10 +97,14 @@
     <Compile Include="Views\Behaviors\Actions\SetListSelectionInteractionMessageAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TextBoxSetCaretAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TransitionInteractionMessageAction.cs" />
+    <Compile Include="Views\Behaviors\Attached\TextBoxExtension.cs" />
     <Compile Include="Views\Behaviors\DragDropBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\MouseOverBindBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\SquaredScrollBehavior.cs" />
     <Compile Include="Views\Behaviors\TimelineScrollLockBehavior.cs" />
+    <Compile Include="Views\Common\ColorPickButton.xaml.cs">
+      <DependentUpon>ColorPickButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Common\DropDownButton.cs" />
     <Compile Include="Views\Common\Filter\FilterEditor.xaml.cs">
       <DependentUpon>FilterEditor.xaml</DependentUpon>
@@ -141,6 +145,21 @@
     </Compile>
     <Compile Include="Views\Dialogs\Common\FollowManager.xaml.cs">
       <DependentUpon>FollowManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Mute.xaml.cs">
+      <DependentUpon>Mute.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\ColoringConfig.xaml.cs">
+      <DependentUpon>ColoringConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\GeneralConfig.xaml.cs">
+      <DependentUpon>GeneralConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\TimelineConfig.xaml.cs">
+      <DependentUpon>TimelineConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\TweetViewConfig.xaml.cs">
+      <DependentUpon>TweetViewConfig.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\TabEditor.xaml.cs">
       <DependentUpon>TabEditor.xaml</DependentUpon>
@@ -229,6 +248,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Common\ColorPickButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Common\Filter\FilterEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -266,6 +289,26 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\Common\FollowManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\Mute.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\ColoringConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\GeneralConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\TimelineConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\TweetViewConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

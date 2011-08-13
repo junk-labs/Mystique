@@ -1,78 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using System.IO;
 using System.Windows.Input;
 
 namespace Inscribe.Subsystems.KeyAssign
 {
-    public static class AssignLoader
-    {
-        public static AssignDescription LoadAssign(string path)
-        {
-            try
-            {
-                if (!File.Exists(path))
-                    throw new FileNotFoundException("ファイル " + path + " が見つかりません。");
-                return LoadAssign(XElement.Load(path));
-            }
-            catch (Exception e)
-            {
-                throw new Exception("キーアサインの読み込みに失敗しました。", e);
-            }
-        }
-
-        private static AssignDescription LoadAssign(XElement root)
-        {
-            var name = root.Attribute("Name").Value;
-            var assigns = root.Element("AssignGroups").Descendants("AssignGroup");
-            return new AssignDescription()
-            {
-                Name = name,
-                AssignDatas = assigns.Select(a => new Tuple<AssignRegion, IEnumerable<AssignItem>>(
-                    ConvertToRegion(a.Attribute("Region").Value), a.Elements("Assign").Select(ae => ConvertToAssignItem(ae))))
-            };
-        }
-
-        private static AssignRegion ConvertToRegion(string region)
-        {
-            return (AssignRegion)Enum.Parse(typeof(AssignRegion), region);
-        }
-
-        private static AssignItem ConvertToAssignItem(XElement region)
-        {
-            var kstr = region.Attribute("Key").Value;
-            var action = region.Attribute("Action").Value;
-            if (String.IsNullOrWhiteSpace(kstr) || String.IsNullOrWhiteSpace(action))
-                throw new Exception("キーとアクションが無い要素があります。");
-            var preview = region.Attribute("Preview");
-            if (preview != null)
-                return new AssignItem(kstr, action, bool.Parse(preview.Value));
-            else
-                return new AssignItem(kstr, action);
-        }
-    }
-
-    public class AssignDescription
-    {
-        public string Name { get; set; }
-
-        public IEnumerable<Tuple<AssignRegion, IEnumerable<AssignItem>>> AssignDatas { get; set; }
-    }
-
     public class AssignItem
     {
-        public AssignItem(Key key, ModifierKeys modifiers, string action, bool preview = false)
+        public AssignItem(Key key, ModifierKeys modifiers, string action, bool preview, bool handleInTextBox)
         {
             this.Key = key;
             this.Modifiers = modifiers;
             this.ActionId = action;
             this.LookInPreview = preview;
+            this.HandleInTextBox = handleInTextBox;
         }
 
-        public AssignItem(string key, string method, bool allowInText = false)
+        public AssignItem(string key, string method, bool preview, bool handleInTextBox)
         {
             try
             {
@@ -87,7 +30,8 @@ namespace Inscribe.Subsystems.KeyAssign
                 }
                 this.Key = (Key)(new KeyConverter().ConvertFromString(kexs.Last()));
                 this.ActionId = method;
-                this.LookInPreview = allowInText;
+                this.LookInPreview = preview;
+                this.HandleInTextBox = handleInTextBox;
             }
             catch (Exception e)
             {
@@ -134,5 +78,7 @@ namespace Inscribe.Subsystems.KeyAssign
         public string ActionId { get; private set; }
 
         public bool LookInPreview { get; private set; }
+
+        public bool HandleInTextBox { get; private set; }
     }
 }

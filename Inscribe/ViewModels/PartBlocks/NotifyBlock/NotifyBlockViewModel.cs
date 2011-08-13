@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Livet;
+﻿using System.Linq;
+using Inscribe.Communication.Posting;
 using Inscribe.Core;
 using Inscribe.Storage;
-using Inscribe.Storage;
+using Livet;
 using Livet.Commands;
-using Inscribe.Communication.Posting;
 
 namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 {

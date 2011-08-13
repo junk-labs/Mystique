@@ -237,7 +237,8 @@
             <Button Width="120"
                     Margin="4"
                     HorizontalAlignment="Right"
-                    Command="{Binding CloseCommand}">
+                    Command="{Binding CloseCommand}"
+                    IsDefault="True">
                 <TextBlock Text="OK" />
             </Button>
         </Grid>

@@ -13,7 +13,11 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
         public UserSelectionViewModel()
         {
             this._userSelectorViewModel = new UserSelectorViewModel();
-            this._userSelectorViewModel.LinkChanged += () => RaisePropertyChanged(() => SelectedUsers);
+            this._userSelectorViewModel.LinkChanged += () =>
+            {
+                RaisePropertyChanged(() => SelectedUsers);
+                OkCommand.RaiseCanExecuteChanged();
+            };
         }
 
         public event Action Finished;
@@ -35,12 +39,15 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
             _userSelectorViewModel.LinkElements = defaultSelect;
             RaisePropertyChanged(() => IsFavorite);
             RaisePropertyChanged(() => IsRetweet);
+            RaisePropertyChanged(() => SelectedUsers);
+            OkCommand.RaiseCanExecuteChanged();
         }
 
         public bool IsFavorite
         {
             get { return this._kind == SelectionKind.Favorite; }
         }
+
         public bool IsRetweet
         {
             get { return this._kind == SelectionKind.Retweet; }
@@ -68,9 +75,14 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
             get
             {
                 if (_OkCommand == null)
-                    _OkCommand = new DelegateCommand(Ok);
+                    _OkCommand = new DelegateCommand(Ok, CanOk);
                 return _OkCommand;
             }
+        }
+
+        private bool CanOk()
+        {
+            return this._userSelectorViewModel.LinkElements.Count() > 0;
         }
 
         private void Ok()
@@ -100,7 +112,6 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
             OnFinished();
         }
         #endregion
-
     }
 
     public enum SelectionKind

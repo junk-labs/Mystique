@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -13,8 +14,6 @@ using Inscribe.Plugin;
 using Inscribe.Storage;
 using Mystique.Views.Common;
 using Mystique.Views.Text;
-using System.Windows.Threading;
-using System.Windows;
 
 namespace Mystique.Views.Converters.Particular
 {
@@ -36,7 +35,6 @@ namespace Mystique.Views.Converters.Particular
             {
                 case FlowDocumentConversion.Full:
                     return TextToFlowConversionStatic.Generate(input);
-
                 case FlowDocumentConversion.Digest:
                     return TextToFlowConversionStatic.GenerateDigest(input);
                 default:
@@ -203,6 +201,7 @@ namespace Mystique.Views.Converters.Particular
             User,
             Hash
         }
+
         static void InternalLinkClicked(InternalLinkKind kind, string source)
         {
             switch (kind)

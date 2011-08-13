@@ -13,7 +13,8 @@ namespace Inscribe.Configuration.Settings
     {
         public TimelineFilterlingProperty()
         {
-            this.MuteFilterCluster = new FilterCluster() { Negate = true, ConcatenateAnd = false };
+            // FilterCluster is Empty.
+            this.MuteFilterCluster = new FilterCluster();
             this.ShareBlocking = false;
         }
 

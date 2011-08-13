@@ -145,7 +145,8 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Command="{Binding ValidatePinCommand}"
-                        Content="OK" />
+                        Content="OK"
+                        IsDefault="True" />
                 <TextBlock Margin="6,0,0,6"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Bottom"
@@ -165,7 +166,8 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
                         Command="{Binding CancelCommand}"
-                        Content="キャンセル" />
+                        Content="キャンセル"
+                        IsCancel="True" />
             </Grid>
         </DockPanel>
         <Grid Background="#99FFFFFF" Visibility="{Binding Path=IsStandby, Converter={StaticResource BoolInvisibleConverter}, FallbackValue=Collapsed}">

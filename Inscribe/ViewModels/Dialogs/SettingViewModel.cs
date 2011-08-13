@@ -2,6 +2,7 @@
 using Livet.Commands;
 using Livet.Messaging.Windows;
 using Inscribe.ViewModels.Dialogs.SettingSub;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.Dialogs
 {
@@ -10,10 +11,33 @@ namespace Inscribe.ViewModels.Dialogs
         public SettingViewModel() { }
 
         private AccountConfigViewModel _accountConfigViewModel = new AccountConfigViewModel();
-
         public AccountConfigViewModel AccountConfigViewModel
         {
             get { return this._accountConfigViewModel; }
+        }
+
+        private GeneralConfigViewModel _generalConfigViewModel = new GeneralConfigViewModel();
+        public GeneralConfigViewModel GeneralConfigViewModel
+        {
+            get { return _generalConfigViewModel; }
+        }
+
+        private TimelineConfigViewModel _timelineConfigViewModel = new TimelineConfigViewModel();
+        public TimelineConfigViewModel TimelineConfigViewModel
+        {
+            get { return _timelineConfigViewModel; }
+        }
+
+        private TweetViewConfigViewModel _tweetViewConfigViewModel = new TweetViewConfigViewModel();
+        public TweetViewConfigViewModel TweetViewConfigViewModel
+        {
+            get { return _tweetViewConfigViewModel; }
+        }
+
+        private ColoringConfigViewModel _coloringConfigViewModel = new ColoringConfigViewModel();
+        public ColoringConfigViewModel ColoringConfigViewModel
+        {
+            get { return _coloringConfigViewModel; }
         }
 
         #region ApplyCommand
@@ -31,7 +55,14 @@ namespace Inscribe.ViewModels.Dialogs
 
         private void Apply()
         {
-            this.AccountConfigViewModel.WriteBack();
+            // Apply
+            this.AccountConfigViewModel.Apply();
+            this.GeneralConfigViewModel.Apply();
+            this.TimelineConfigViewModel.Apply();
+            this.TweetViewConfigViewModel.Apply();
+            this.ColoringConfigViewModel.Apply();
+
+            Setting.RaiseSettingValueChanged();
             Close();
         }
         #endregion

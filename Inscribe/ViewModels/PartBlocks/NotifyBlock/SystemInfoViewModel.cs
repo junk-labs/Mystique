@@ -133,12 +133,12 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
                             return "リアルタイム接続を試行しています...";
                     case ConnectionState.TryConnection:
                         if (Setting.Instance.ExperienceProperty.PowerUserMode)
-                            return "User Streams 接続を開始しています...";
+                            return "User Streams: 接続を開始しています...";
                         else
                             return "リアルタイム接続を開始しています...";
                     case ConnectionState.Connected:
                         if (Setting.Instance.ExperienceProperty.PowerUserMode)
-                            return "User Streams 接続しています";
+                            return "User Streams接続しています";
                         else
                             return "リアルタイム接続しています";
                     default:

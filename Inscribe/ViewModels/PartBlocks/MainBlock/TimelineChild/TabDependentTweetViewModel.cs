@@ -19,6 +19,7 @@ using Inscribe.Threading;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using Inscribe.ViewModels.Dialogs;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -771,36 +772,48 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
         #endregion
 
-        #region CreateUserTabCommand
-        DelegateCommand _CreateUserTabCommand;
+        #region ClickUserIconCommand
+        DelegateCommand _ClickUserIconCommand;
 
-        public DelegateCommand CreateUserTabCommand
+        public DelegateCommand ClickUserIconCommand
         {
             get
             {
-                if (_CreateUserTabCommand == null)
-                    _CreateUserTabCommand = new DelegateCommand(CreateUserTab);
-                return _CreateUserTabCommand;
+                if (_ClickUserIconCommand == null)
+                    _ClickUserIconCommand = new DelegateCommand(ClickUserIcon);
+                return _ClickUserIconCommand;
             }
         }
 
-        private void CreateUserTab()
+        private void ClickUserIcon()
         {
             var user = TwitterHelper.GetSuggestedUser(this.Tweet);
-            var filter = new[] { new FilterUserId(user.NumericId) };
-            var desc = "@" + user.ScreenName;
-            switch (Setting.Instance.TimelineExperienceProperty.UserExtractTransition)
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
             {
-                case TransitionMethod.ViewStack:
-                    this.Parent.AddTopTimeline(filter);
-                    break;
-                case TransitionMethod.AddTab:
-                    this.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
-                    break;
-                case TransitionMethod.AddColumn:
-                    var column = this.Parent.Parent.Parent.CreateColumn();
-                    column.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
-                    break;
+                var cluster = new FilterCluster(){
+                    ConcatenateAnd = false,
+                    Negate = false,
+                    Filters = this.Parent.TabProperty.TweetSources.ToArray()};
+                this.Parent.TabProperty.TweetSources = new[]{ cluster.Restrict(new FilterCluster(){ ConcatenateAnd = false, Negate = true, Filters = new[]{ new FilterUserId(user.NumericId) }}).Optimize()}.ToArray();
+                this.Parent.BaseTimeline.CoreViewModel.InvalidateCache(true);
+            }
+            else
+            {
+                var filter = new[] { new FilterUserId(user.NumericId) };
+                var desc = "@" + user.ScreenName;
+                switch (Setting.Instance.TimelineExperienceProperty.UserExtractTransition)
+                {
+                    case TransitionMethod.ViewStack:
+                        this.Parent.AddTopTimeline(filter);
+                        break;
+                    case TransitionMethod.AddTab:
+                        this.Parent.Parent.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
+                        break;
+                    case TransitionMethod.AddColumn:
+                        var column = this.Parent.Parent.Parent.CreateColumn();
+                        column.AddTab(new Configuration.Tabs.TabProperty() { Name = desc, TweetSources = filter });
+                        break;
+                }
             }
         }
         #endregion
@@ -842,7 +855,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Mute()
         {
-            // TODO: Implementation
+            var mvm = new MuteViewModel(this.Tweet);
+            this.Messenger.Raise(new TransitionMessage(mvm, "Mute"));
         }
         #endregion
 

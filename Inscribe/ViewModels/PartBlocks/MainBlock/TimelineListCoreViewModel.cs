@@ -8,11 +8,11 @@ using Inscribe.Configuration;
 using Inscribe.Data;
 using Inscribe.Filter;
 using Inscribe.Storage;
+using Inscribe.Threading;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
-using Inscribe.Threading;
-using Inscribe.Subsystems;
+using System.Threading;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -91,6 +91,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this._tweetsSource.Commit(reinvalidate);
         }
 
+        private object duplLock = new object();
+
         private void TweetStorageChanged(object o, TweetStorageChangedEventArgs e)
         {
             switch (e.ActionKind)
@@ -98,33 +100,29 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 case TweetActionKind.Added:
                     if (CheckFilters(e.Tweet))
                     {
-                        this._tweetsSource.Add(new TabDependentTweetViewModel(e.Tweet, this.Parent));
-                        OnNewTweetReceived();
-                        if (!AccountStorage.Contains(e.Tweet.Status.User.ScreenName) && this.Parent.IsAlive)
+                        var atdtvm = new TabDependentTweetViewModel(e.Tweet, this.Parent);
+                        lock (duplLock)
                         {
-                            this.Parent.NotifyNewTweetReceived(this);
-                            if (this.Parent.TabProperty.IsNotifyEnabled)
-                            {
-                                if (String.IsNullOrEmpty(this.Parent.TabProperty.NotifySoundPath))
-                                    NotificationCore.QueueNotify(e.Tweet);
-                                else
-                                    NotificationCore.QueueNotify(e.Tweet, this.Parent.TabProperty.NotifySoundPath);
-                            }
+                            if (this._tweetsSource.Contains(atdtvm))
+                                return;
+                            this._tweetsSource.Add(atdtvm);
                         }
+                        OnNewTweetReceived();
+                        this.Parent.NotifyNewTweetReceived(this, e.Tweet);
                     }
                     break;
                 case TweetActionKind.Refresh:
                     Task.Factory.StartNew(() => InvalidateCache(true));
                     break;
                 case TweetActionKind.Changed:
-                    var tdtvm = new TabDependentTweetViewModel(e.Tweet, this.Parent);
-                    var contains = this._tweetsSource.Contains(tdtvm);
+                    var ctdtvm = new TabDependentTweetViewModel(e.Tweet, this.Parent);
+                    var contains = this._tweetsSource.Contains(ctdtvm);
                     if (CheckFilters(e.Tweet) != contains)
                     {
                         if (contains)
-                            this._tweetsSource.Remove(tdtvm);
+                            this._tweetsSource.Remove(ctdtvm);
                         else
-                            this._tweetsSource.Add(tdtvm);
+                            this._tweetsSource.Add(ctdtvm);
                     }
                     break;
                 case TweetActionKind.Removed:
@@ -163,10 +161,16 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public void InvalidateCache(bool commit)
         {
             this._tweetsSource.Clear();
-            TweetStorage.GetAll(vm => CheckFilters(vm))
-                .Select(tvm => new TabDependentTweetViewModel(tvm, this.Parent))
-                .Where(tvm => !this._tweetsSource.Contains(tvm))
-                .ForEach(this._tweetsSource.Add);
+            var collection = TweetStorage.GetAll(vm => CheckFilters(vm))
+                .Select(tvm => new TabDependentTweetViewModel(tvm, this.Parent)).ToArray();
+            lock (duplLock)
+            {
+                foreach (var tvm in collection)
+                {
+                    if (!this._tweetsSource.Contains(tvm))
+                        this._tweetsSource.Add(tvm);
+                }
+            }
             if (commit)
                 this.Commit(true);
         }

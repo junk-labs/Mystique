@@ -12,7 +12,7 @@ using Inscribe.ViewModels.Common;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
-    public class AccountConfigViewModel : ViewModel
+    public class AccountConfigViewModel : ViewModel, IApplyable
     {
         public AccountConfigViewModel()
         {
@@ -35,10 +35,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public IEnumerable<AccountInfoViewModel> Accounts
         {
             get { return AccountStorage.Accounts.Select(a => new AccountInfoViewModel(a)).ToArray(); }
-        }
-
-        public void WriteBack()
-        {
         }
 
         #region ShowAccountConfigCommand
@@ -96,6 +92,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         }
         #endregion
 
+        public void Apply() { }
     }
 
     public class AccountInfoViewModel : ViewModel

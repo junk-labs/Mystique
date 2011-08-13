@@ -196,10 +196,10 @@
                                            Converter={StaticResource BoolVisibleConverter}}">
             <TextBlock Margin="4" TextWrapping="Wrap">
                 <Bold>
-                    <Run FontSize="16" Text="The MIT/X11 License" />
+                    <Run FontSize="16" Text="Krile License Agreement (The MIT/X11 License)" />
                 </Bold>
                 <LineBreak />
-                <Run Text="Copyright© 2011 Karno" />
+                <Run Text="Krile : Copyright© 2011 Karno" />
                 <LineBreak />
                 <LineBreak />
                 <Run Text="Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:" />
@@ -213,6 +213,10 @@
                 <LineBreak />
                 <Hyperlink Command="{Binding HideLicenseCommand}">
                     <Run Text="Close" />
+                </Hyperlink>
+                <Run Text=" " />
+                <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://www.opensource.org/licenses/mit-license.php">
+                    <Run Text="Original text is here.(OSI)" />
                 </Hyperlink>
             </TextBlock>
         </ScrollViewer>

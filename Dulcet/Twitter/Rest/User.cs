@@ -147,7 +147,7 @@ namespace Dulcet.Twitter.Rest
 
         public static IEnumerable<long> GetBlockingIds(this CredentialProvider provider)
         {
-            return provider.GetUserIdsAll("followers/ids.xml", null, null);
+            return provider.GetUserIdsAll("blocks/blocking/ids.xml", null, null);
         }
     }
 }

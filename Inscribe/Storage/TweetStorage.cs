@@ -11,6 +11,7 @@ using System.Threading;
 using Inscribe.Text;
 using System.Text.RegularExpressions;
 using Inscribe.Subsystems;
+using Inscribe.Configuration;
 
 namespace Inscribe.Storage
 {
@@ -214,26 +215,32 @@ namespace Inscribe.Storage
                 if (!viewModel.IsStatusInfoContains)
                     viewModel.SetStatus(statusBase);
                 empties.Remove(statusBase.Id);
-
             }
             else
             {
                 // 全く初めて触れるステータス
                 viewModel = new TweetViewModel(statusBase);
             }
-            lock (__regCoreLock__)
+            if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster == null ||
+                !Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(statusBase))
             {
-                if (!deleteReserveds.Contains(statusBase.Id))
+                lock (__regCoreLock__)
                 {
-                    if (dictionary.ContainsKey(statusBase.Id))
-                        viewModel = dictionary[statusBase.Id];
-                    else
-                        dictionary.AddOrUpdate(statusBase.Id, viewModel);
+                    if (!deleteReserveds.Contains(statusBase.Id))
+                    {
+                        if (dictionary.ContainsKey(statusBase.Id))
+                            viewModel = dictionary[statusBase.Id];
+                        else
+                            dictionary.AddOrUpdate(statusBase.Id, viewModel);
+                    }
                 }
+                if (!deleteReserveds.Contains(statusBase.Id))
+                    Task.Factory.StartNew(() => RaiseStatusAdded(viewModel));
             }
-
-            if (!deleteReserveds.Contains(statusBase.Id))
-                Task.Factory.StartNew(() => RaiseStatusAdded(viewModel));
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("*** trash: " + statusBase.ToString());
+            }
             return viewModel;
         }
 
@@ -310,6 +317,17 @@ namespace Inscribe.Storage
         static void RaiseRefreshTweets()
         {
             OnTweetStorageChanged(new TweetStorageChangedEventArgs(TweetActionKind.Refresh));
+        }
+
+        internal static void UpdateMute()
+        {
+            if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster == null) return;
+            var ng = GetAll(t => Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(t.Status));
+            foreach (var t in ng)
+            {
+                if (!AccountStorage.Contains(t.Status.User.ScreenName))
+                    Remove(t.bindingId);
+            }
         }
     }
     

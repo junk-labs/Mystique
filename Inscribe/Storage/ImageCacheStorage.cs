@@ -62,7 +62,6 @@ namespace Inscribe.Storage
             {
                 if (DateTime.Now.Subtract(cdata.Value).TotalMilliseconds <= Setting.Instance.KernelProperty.ImageLifetime)
                     return cdata.Key;
-                System.Diagnostics.Debug.WriteLine("cache misshit:" + DateTime.Now.Subtract(cdata.Value).TotalMilliseconds.ToString());
             }
             return null;
         }

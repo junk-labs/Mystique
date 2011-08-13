@@ -8,6 +8,7 @@ using Inscribe.Data;
 using Livet;
 using System.Threading.Tasks;
 using System.Threading;
+using Inscribe.Storage;
 
 namespace Inscribe.Data
 {
@@ -103,7 +104,14 @@ namespace Inscribe.Data
         {
             var handler = this.CollectionChanged;
             if (handler != null)
-                DispatcherHelper.BeginInvoke(() => handler(this, e));
+                DispatcherHelper.BeginInvoke(() =>
+                    {
+                        try
+                        {
+                            handler(this, e);
+                        }
+                        catch { }
+                    });
         }
 
         bool ICollection<T>.IsReadOnly

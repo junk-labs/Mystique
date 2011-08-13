@@ -8,11 +8,13 @@ using Inscribe.Configuration;
 using Inscribe.Configuration.Tabs;
 using Inscribe.Filter;
 using Inscribe.Filter.Core;
+using Inscribe.Filter.Filters.ScreenName;
 using Inscribe.Filter.Filters.Text;
+using Inscribe.Storage;
+using Inscribe.Subsystems;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.Filter.Filters.ScreenName;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -268,6 +270,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     break;
             }
             this.IsQueryValid = true;
+            CreateTabFromTopTimelineCommand.RaiseCanExecuteChanged();
             cf.TimelineListCoreViewModel.Sources = filter;
             Task.Factory.StartNew(() => cf.TimelineListCoreViewModel.InvalidateCache(true));
         }
@@ -409,6 +412,36 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
 
+        #region CreateTabFromTopTimelineCommand
+        DelegateCommand _CreateTabFromTopTimelineCommand;
+
+        public DelegateCommand CreateTabFromTopTimelineCommand
+        {
+            get
+            {
+                if (_CreateTabFromTopTimelineCommand == null)
+                    _CreateTabFromTopTimelineCommand = new DelegateCommand(CreateTabFromTopTimeline, CanCreateTabFromTopTimeline);
+                return _CreateTabFromTopTimelineCommand;
+            }
+        }
+
+        private bool CanCreateTabFromTopTimeline()
+        {
+            return IsQueryValid;
+        }
+
+        private void CreateTabFromTopTimeline()
+        {
+            this.Parent.AddTab(
+                new TabProperty()
+                {
+                    Name = this.QueryText,
+                    TweetSources = this.CurrentForegroundTimeline.CoreViewModel.Sources
+                });
+            this.RemoveTopTimeline(false);
+        }
+        #endregion
+
         #region RemoveTopTimelineCommand
         DelegateCommand _RemoveTopTimelineCommand;
 
@@ -428,17 +461,23 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
 
-        internal void NotifyNewTweetReceived(TimelineListCoreViewModel timelineListCoreViewModel)
+        internal void NotifyNewTweetReceived(TimelineListCoreViewModel timelineListCoreViewModel, TimelineChild.TweetViewModel tweetViewModel)
         {
-            if (Setting.Instance.NotificationProperty.TabNotifyStackTopTimeline)
+            if (AccountStorage.Contains(tweetViewModel.Status.User.ScreenName) || !this.IsAlive)
+                return;
+
+            if (Setting.Instance.NotificationProperty.TabNotifyStackTopTimeline ?
+                this.CurrentForegroundTimeline.CoreViewModel == timelineListCoreViewModel :
+                this.BaseTimeline.CoreViewModel == timelineListCoreViewModel)
             {
-                if (this.CurrentForegroundTimeline.CoreViewModel == timelineListCoreViewModel)
-                    this.NewTweetsCount++;
-            }
-            else
-            {
-                if (this.BaseTimeline.CoreViewModel == timelineListCoreViewModel)
-                    this.NewTweetsCount++;
+                this.NewTweetsCount++;
+                if (this.TabProperty.IsNotifyEnabled)
+                {
+                    if (String.IsNullOrEmpty(this.TabProperty.NotifySoundPath))
+                        NotificationCore.QueueNotify(tweetViewModel);
+                    else
+                        NotificationCore.QueueNotify(tweetViewModel, this.TabProperty.NotifySoundPath);
+                }
             }
         }
     }

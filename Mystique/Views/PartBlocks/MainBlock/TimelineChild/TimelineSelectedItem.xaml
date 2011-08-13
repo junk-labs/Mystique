@@ -6,6 +6,7 @@
              xmlns:com="clr-namespace:Mystique.Views.Common"
              xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dlg="clr-namespace:Mystique.Views.Dialogs"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:key="clr-namespace:Inscribe.Subsystems.KeyAssign;assembly=core"
@@ -142,6 +143,9 @@
         <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
             <l:ConfirmationDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="Mute" Messenger="{Binding Messenger}">
+            <ba:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type dlg:Mute}" />
+        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid Name="OwnerPanel"
           Background="{Binding BackBrush}"
@@ -170,12 +174,14 @@
                                                    ConverterParameter=Suggested}">
                     <i:Interaction.Behaviors>
                         <b:DragDropBehavior DragDropData="{Binding Path=Tweet}"
-                                            OnClickCommand="{Binding CreateUserTabCommand}"
+                                            OnClickCommand="{Binding ClickUserIconCommand}"
                                             OverrideClickEvent="True" />
                     </i:Interaction.Behaviors>
                     <com:LazyImage.ToolTip>
                         <TextBlock>
                             <Run Text="クリックするとこのユーザーのタブを新しく作ります。" />
+                            <LineBreak />
+                            <Run Text="Altキーを押しながらクリックするとこのユーザーをこのタブから除外します。" />
                             <LineBreak />
                             <Run Text="また、タブにドラッグ&amp;ドロップすることで、そのタブにこのユーザーのツイートを含めることができます。" />
                         </TextBlock>

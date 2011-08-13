@@ -129,22 +129,19 @@ namespace Inscribe.Subsystems
 
         public static void HandlePreviewEvent(KeyEventArgs e, AssignRegion region)
         {
-            if (HandleEventSink(CheckIme(e), region, true))
+            if (HandleEventSink(CheckIme(e), region, true, IsSourceFromTextBox(e)))
                 e.Handled = true;
         }
 
         public static void HandleEvent(KeyEventArgs e, AssignRegion region)
         {
-            // テキストボックスでのイベントは捕捉しない
-            if (e.OriginalSource is TextBoxBase)
-            {
-                // Windows XPだとフォーカス管理がおかしいので、何故かテキストボックスから飛んでくる
-                // -> やっぱり捕捉する
-                if (Environment.OSVersion.Version.Major >= 6)
-                    return;
-            }
-            if (HandleEventSink(CheckIme(e), region, false))
+            if (HandleEventSink(CheckIme(e), region, false, IsSourceFromTextBox(e)))
                 e.Handled = true;
+        }
+
+        private static bool IsSourceFromTextBox(KeyEventArgs e)
+        {
+            return e.OriginalSource is TextBoxBase;
         }
 
         private static Key CheckIme(KeyEventArgs e)
@@ -164,7 +161,7 @@ namespace Inscribe.Subsystems
             }
         }
 
-        private static bool HandleEventSink(Key key, AssignRegion region, bool preview)
+        private static bool HandleEventSink(Key key, AssignRegion region, bool preview, bool isSourceFromTextBox)
         {
             var modifier = Keyboard.Modifiers;
             System.Diagnostics.Debug.WriteLine(modifier.ToString() + " " + key.ToString() + " / " + region.ToString() + " ? " + preview.ToString());
@@ -174,7 +171,8 @@ namespace Inscribe.Subsystems
                 return assignDescription.AssignDatas
                     .First(a => a.Item1 == region)
                     .Item2
-                    .Where(a => a.Key == key && a.Modifiers == modifier && (a.LookInPreview || !preview))
+                    .Where(a => a.Key == key && a.Modifiers == modifier &&
+                        (!preview || a.LookInPreview) && (!isSourceFromTextBox || a.HandleInTextBox))
                     .Select(a => a.ActionId)
                     .Dispatch();
             }

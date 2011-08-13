@@ -103,10 +103,13 @@ namespace Inscribe.Filter
         {
             if (_filters == null || _filters.Count() == 0)
             {
+                // When Filters = ∅
+                // AND -> ALL TRUE -> TRUE
+                // OR -> ANY TRUE -> FALSE
                 if (this.ConcatenateAnd)
-                    return this.Negate ? "()" : "!()";
-                else
                     return this.Negate ? "!()" : "()";
+                else
+                    return this.Negate ? "()" : "!()";
             }
             else
             {
