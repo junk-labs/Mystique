@@ -40,6 +40,43 @@ namespace Inscribe.ViewModels.Dialogs
             get { return _coloringConfigViewModel; }
         }
 
+        private NotifyConfigViewModel _notifyConfigViewModel = new NotifyConfigViewModel();
+        public NotifyConfigViewModel NotifyConfigViewModel
+        {
+            get { return _notifyConfigViewModel; }
+        }
+
+        private NotifyKindConfigViewModel _notifyKindConfigViewModel = new NotifyKindConfigViewModel();
+        public NotifyKindConfigViewModel NotifyKindConfigViewModel
+        {
+            get { return _notifyKindConfigViewModel; }
+        }
+
+        private InputConfigViewModel _inputConfigViewModel = new InputConfigViewModel();
+        internal InputConfigViewModel InputConfigViewModel
+        {
+            get { return _inputConfigViewModel; }
+        }
+
+        private MuteConfigViewModel _muteConfigViewModel = new MuteConfigViewModel();
+        public MuteConfigViewModel MuteConfigViewModel
+        {
+            get { return _muteConfigViewModel; }
+        }
+
+        private KeyAssignConfigViewModel _keyAssignConfigViewModel = new KeyAssignConfigViewModel();
+        public KeyAssignConfigViewModel KeyAssignConfigViewModel
+        {
+            get { return _keyAssignConfigViewModel; }
+        }
+
+        private ExtServiceConfigViewModel _extServiceConfigViewModel = new ExtServiceConfigViewModel();
+        public ExtServiceConfigViewModel ExtServiceConfigViewModel
+        {
+            get { return _extServiceConfigViewModel; }
+        }
+
+
         #region ApplyCommand
         DelegateCommand _ApplyCommand;
 
@@ -61,6 +98,12 @@ namespace Inscribe.ViewModels.Dialogs
             this.TimelineConfigViewModel.Apply();
             this.TweetViewConfigViewModel.Apply();
             this.ColoringConfigViewModel.Apply();
+            this.NotifyConfigViewModel.Apply();
+            this.NotifyKindConfigViewModel.Apply();
+            this.InputConfigViewModel.Apply();
+            this.MuteConfigViewModel.Apply();
+            this.KeyAssignConfigViewModel.Apply();
+            this.ExtServiceConfigViewModel.Apply();
 
             Setting.RaiseSettingValueChanged();
             Close();

@@ -79,8 +79,20 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, SettingValueChanged);
             // Initialize binding timeline
             this._tweetsSource = new CachedConcurrentObservableCollection<TabDependentTweetViewModel>();
-            this._tweetCollectionView = new CollectionViewSource();
-            this._tweetCollectionView.Source = this._tweetsSource;
+            if (DispatcherHelper.UIDispatcher.CheckAccess())
+            {
+                this._tweetCollectionView = new CollectionViewSource();
+                this._tweetCollectionView.Source = this._tweetsSource;
+            }
+            else
+            {
+                this._tweetCollectionView = null;
+                DispatcherHelper.BeginInvoke(() =>
+                {
+                    this._tweetCollectionView = new CollectionViewSource();
+                    this._tweetCollectionView.Source = this._tweetsSource;
+                });
+            }
             // Generate timeline
             Task.Factory.StartNew(() => InvalidateCache(false))
                 .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => UpdateSortDescription()));

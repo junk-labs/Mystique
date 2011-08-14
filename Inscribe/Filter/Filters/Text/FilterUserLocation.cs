@@ -21,12 +21,12 @@ namespace Inscribe.Filter.Filters.Text
 
         public override string Identifier
         {
-            get { throw new NotImplementedException(); }
+            get { return "loc"; }
         }
 
         public override string Description
         {
-            get { throw new NotImplementedException(); }
+            get { return "ユーザーのLocationからフィルタ"; }
         }
     }
 }

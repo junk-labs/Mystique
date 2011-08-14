@@ -345,6 +345,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             RaisePropertyChanged(() => IsContainsSingle);
             RaisePropertyChanged(() => IsStackTopUserPage);
             WritebackQuery();
+            this.IsQueryValid = true;
         }
 
         /// <summary>

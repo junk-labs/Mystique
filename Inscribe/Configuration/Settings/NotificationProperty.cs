@@ -17,12 +17,14 @@ namespace Inscribe.Configuration.Settings
             this.NotifyDmEvent = true;
             this.NotifyRetweetEvent = true;
             this.NotifyFavoriteEvent = true;
+            this.NotifyFollowEvent = true;
 
             this.NotifyMention = true;
             this.NotifyDm = true;
             this.NotifyRetweet = true;
             this.NotifyFavorite = true;
             this.NotifyReceives = true;
+            this.NotifyFollow = true;
 
             this.IsShowMultiple = true;
             this.NotifyInMainWindowDisplay = false;
@@ -47,6 +49,8 @@ namespace Inscribe.Configuration.Settings
 
         public bool NotifyFavoriteEvent { get; set; }
 
+        public bool NotifyFollowEvent { get; set; }
+
         public bool NotifyMention { get; set; }
 
         public bool NotifyDm { get; set; }
@@ -54,6 +58,8 @@ namespace Inscribe.Configuration.Settings
         public bool NotifyRetweet { get; set; }
 
         public bool NotifyFavorite { get; set; }
+
+        public bool NotifyFollow { get; set; }
 
         public bool NotifyReceives { get; set; }
 
@@ -68,6 +74,7 @@ namespace Inscribe.Configuration.Settings
         public NotificationStrategy WindowNotificationStrategy { get; set; }
 
         public NotificationStrategy SoundNotificationStrategy { get; set; }
+
     }
 
     public enum NotifyLocation

@@ -152,8 +152,26 @@
     <Compile Include="Views\Dialogs\SettingSub\ColoringConfig.xaml.cs">
       <DependentUpon>ColoringConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\ExtServiceConfig.xaml.cs">
+      <DependentUpon>ExtServiceConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\SettingSub\GeneralConfig.xaml.cs">
       <DependentUpon>GeneralConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\InputConfig.xaml.cs">
+      <DependentUpon>InputConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\KeyAssignConfig.xaml.cs">
+      <DependentUpon>KeyAssignConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\MuteConfig.xaml.cs">
+      <DependentUpon>MuteConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\NotifyConfig.xaml.cs">
+      <DependentUpon>NotifyConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\NotifyKindConfig.xaml.cs">
+      <DependentUpon>NotifyKindConfig.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\SettingSub\TimelineConfig.xaml.cs">
       <DependentUpon>TimelineConfig.xaml</DependentUpon>
@@ -300,7 +318,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\SettingSub\ExtServiceConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\SettingSub\GeneralConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\InputConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\KeyAssignConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\MuteConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\NotifyConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\NotifyKindConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

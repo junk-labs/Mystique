@@ -2,16 +2,16 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Dulcet.Twitter;
+using Inscribe.Configuration;
+using Inscribe.Subsystems;
+using Inscribe.Text;
 using Inscribe.Threading;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
-using System.Threading;
-using Inscribe.Text;
-using System.Text.RegularExpressions;
-using Inscribe.Subsystems;
-using Inscribe.Configuration;
 
 namespace Inscribe.Storage
 {
@@ -224,6 +224,12 @@ namespace Inscribe.Storage
             if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster == null ||
                 !Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(statusBase))
             {
+                if (Setting.Instance.TimelineFilteringProperty.ShareBlocking)
+                {
+                    // 何か一つのBlockにでも引っかかったらダメ
+                    if (AccountStorage.Accounts.Any(a => a.IsBlocking(statusBase.User.NumericId)))
+                        return viewModel;
+                }
                 lock (__regCoreLock__)
                 {
                     if (!deleteReserveds.Contains(statusBase.Id))

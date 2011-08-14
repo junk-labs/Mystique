@@ -7,7 +7,6 @@ using Acuerdo.External.Uploader;
 using Acuerdo.Plugin;
 using Inscribe.Filter;
 using Inscribe.Filter.Core;
-using Inscribe.Plugin;
 using Inscribe.Storage;
 
 namespace Inscribe.Plugin

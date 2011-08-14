@@ -278,23 +278,6 @@ namespace Dulcet.Twitter.Rest
         /// Report spam and block someone
         /// </summary>
         /// <param name="provider">credential provider</param>
-        /// <param name="user">target user id or screen name</param>
-        public static TwitterUser ReportSpam(this CredentialProvider provider, string user)
-        {
-            List<KeyValuePair<string, string>> arg = new List<KeyValuePair<string, string>>();
-            if (!String.IsNullOrEmpty(user))
-                arg.Add(new KeyValuePair<string, string>("id", user));
-            var ret = provider.RequestAPIv1("report_spam.xml", CredentialProvider.RequestMethod.POST, arg);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Report spam and block someone
-        /// </summary>
-        /// <param name="provider">credential provider</param>
         /// <param name="userId">block user id</param>
         /// <param name="screenName">block user screen name</param>
         /// <remarks>
@@ -309,7 +292,7 @@ namespace Dulcet.Twitter.Rest
                 arg.Add(new KeyValuePair<string, string>("user_id", userId.ToString()));
             if (!String.IsNullOrEmpty(screenName))
                 arg.Add(new KeyValuePair<string, string>("screen_name", screenName));
-            var ret = provider.RequestAPIv1("blocks/create.xml", CredentialProvider.RequestMethod.POST, arg);
+            var ret = provider.RequestAPIv1("report_spam.xml", CredentialProvider.RequestMethod.POST, arg);
             if (ret != null && ret.Element("user") != null)
                 return TwitterUser.FromNode(ret.Element("user"));
             else

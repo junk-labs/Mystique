@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Media;
 using System.Threading.Tasks;
@@ -7,12 +8,9 @@ using Inscribe.Configuration;
 using Inscribe.Storage;
 using Inscribe.ViewModels;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Messaging;
-using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace Inscribe.Subsystems
 {
@@ -31,37 +29,42 @@ namespace Inscribe.Subsystems
             switch (e.EventDescription.Kind)
             {
                 case EventKind.Favorite:
-                    IssueNotification(
-                        e.EventDescription.SourceUser,
-                        e.EventDescription.TargetUser,
-                        e.EventDescription.TargetTweet.Text, EventKind.Favorite);
+                    if (Setting.Instance.NotificationProperty.NotifyFavorite)
+                        IssueNotification(
+                            e.EventDescription.SourceUser,
+                            e.EventDescription.TargetUser,
+                            e.EventDescription.TargetTweet.Text, EventKind.Favorite);
                     break;
                 case EventKind.Follow:
-                    IssueNotification(
-                        e.EventDescription.SourceUser,
-                        e.EventDescription.TargetUser,
-                        e.EventDescription.SourceUser.TwitterUser.Bio,
-                        EventKind.Follow);
+                    if (Setting.Instance.NotificationProperty.NotifyFollow)
+                        IssueNotification(
+                            e.EventDescription.SourceUser,
+                            e.EventDescription.TargetUser,
+                            e.EventDescription.SourceUser.TwitterUser.Bio,
+                            EventKind.Follow);
                     break;
                 case EventKind.Mention:
-                    IssueNotification(
-                        e.EventDescription.SourceUser,
-                        e.EventDescription.TargetUser,
-                        e.EventDescription.TargetTweet.Text,
-                        EventKind.Mention);
+                    if (Setting.Instance.NotificationProperty.NotifyMention)
+                        IssueNotification(
+                            e.EventDescription.SourceUser,
+                            e.EventDescription.TargetUser,
+                            e.EventDescription.TargetTweet.Text,
+                            EventKind.Mention);
                     break;
                 case EventKind.Retweet:
-                    IssueNotification(
-                        e.EventDescription.SourceUser,
-                        e.EventDescription.TargetUser,
-                        e.EventDescription.TargetTweet.Text,
-                        EventKind.Retweet);
+                    if (Setting.Instance.NotificationProperty.NotifyRetweet)
+                        IssueNotification(
+                            e.EventDescription.SourceUser,
+                            e.EventDescription.TargetUser,
+                            e.EventDescription.TargetTweet.Text,
+                            EventKind.Retweet);
                     break;
                 case EventKind.Unfavorite:
-                    IssueNotification(
-                        e.EventDescription.SourceUser,
-                        e.EventDescription.TargetUser,
-                        e.EventDescription.TargetTweet.Text, EventKind.Unfavorite);
+                    if (Setting.Instance.NotificationProperty.NotifyFavorite)
+                        IssueNotification(
+                            e.EventDescription.SourceUser,
+                            e.EventDescription.TargetUser,
+                            e.EventDescription.TargetTweet.Text, EventKind.Unfavorite);
                     break;
             }
         }
@@ -72,6 +75,9 @@ namespace Inscribe.Subsystems
 
         public static void RegisterNotify(TweetViewModel tweet)
         {
+            if (!Setting.Instance.NotificationProperty.NotifyReceives ||
+                tweet.CreatedAt < DateTime.Now.Subtract(TimeSpan.FromMinutes(10)))
+                return;
             lock (waitingsLocker)
             {
                 if (!waitings.ContainsKey(tweet))
@@ -81,8 +87,6 @@ namespace Inscribe.Subsystems
 
         public static void QueueNotify(TweetViewModel tweet, string soundSource = null)
         {
-            if (tweet.CreatedAt < DateTime.Now.Subtract(TimeSpan.FromMinutes(10)))
-                return;
             if (soundSource == null)
                 soundSource = String.Empty;
             lock (waitingsLocker)
@@ -94,8 +98,6 @@ namespace Inscribe.Subsystems
 
         public static void DispatchNotify(TweetViewModel tweet)
         {
-            if (tweet.CreatedAt < DateTime.Now.Subtract(TimeSpan.FromMinutes(10)))
-                return;
             lock (waitingsLocker)
             {
                 if (waitings.ContainsKey(tweet))

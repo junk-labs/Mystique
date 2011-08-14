@@ -4,6 +4,7 @@ using System.Windows;
 using Inscribe.Common;
 using Inscribe.Communication.Streaming;
 using Inscribe.Configuration;
+using Inscribe.Plugin;
 using Inscribe.Subsystems;
 
 namespace Inscribe.Core
@@ -44,6 +45,9 @@ namespace Inscribe.Core
                     return;
                 }
             }
+
+            // プラグインのロード
+            PluginLoader.Load();
 
             UpdateReceiver.StartSchedule();
             Application.Current.Exit += new ExitEventHandler(AppExit);

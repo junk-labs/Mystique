@@ -51,6 +51,4 @@ namespace Inscribe.Subsystems.KeyAssign
             return new AssignItem(kstr, action, preview, handleInText);
         }
     }
-
-
 }
