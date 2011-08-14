@@ -17,6 +17,7 @@ namespace Inscribe.Configuration.Settings
             NotificationNameViewMode = NameView.ID;
             UrlResolveMode = UrlResolve.OnPointed;
             UrlTooltipShowLength = 60 * 1000;
+            this.FullLineView = false;
         }
 
         public bool ShowUnofficialRetweetButton { get; set; }
@@ -34,6 +35,8 @@ namespace Inscribe.Configuration.Settings
         public UrlResolve UrlResolveMode { get; set; }
 
         public int UrlTooltipShowLength { get; set; }
+
+        public bool FullLineView { get; set; }
     }
 
     public enum NameView

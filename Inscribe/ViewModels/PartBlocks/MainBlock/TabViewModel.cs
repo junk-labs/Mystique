@@ -90,7 +90,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public bool IsFullLineView
         {
-            get { return Setting.Instance.TimelineExperienceProperty.FullLineView; }
+            get { return Setting.Instance.TweetExperienceProperty.FullLineView; }
         }
 
         public TabViewModel(ColumnViewModel parent, TabProperty property = null)

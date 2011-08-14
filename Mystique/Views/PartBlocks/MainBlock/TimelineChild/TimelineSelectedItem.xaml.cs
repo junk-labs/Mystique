@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Inscribe.Common;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using System.Windows.Media;
+using Inscribe.Configuration;
 
 namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
 {
@@ -50,6 +52,14 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
         {
             if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).DistanceDouble(ip) <= 4)
             {
+                if (Setting.Instance.TweetExperienceProperty.FullLineView )
+                {
+                    var lbi = GetListBoxItem();
+                    if (lbi != null &&
+                        !lbi.IsSelected)
+                        // Select
+                        return;
+                }
                 if (captured)
                 {
                     e.Handled = true;
@@ -59,6 +69,18 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
                 }
                 captured = false;
             }
+        }
+
+        private ListBoxItem GetListBoxItem()
+        {
+            DependencyObject cdo = this;
+            while (cdo != null)
+            {
+                var lb = cdo as ListBoxItem;
+                if (lb != null) return lb;
+                cdo = VisualTreeHelper.GetParent(cdo);
+            }
+            return null;
         }
 
         private void cCopy_Click(object sender, RoutedEventArgs e)

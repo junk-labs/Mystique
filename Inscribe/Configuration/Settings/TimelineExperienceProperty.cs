@@ -19,7 +19,6 @@ namespace Inscribe.Configuration.Settings
             UserOpenTransition = TransitionMethod.AddTab;
             IsShowConversationAsTree = true;
             MoveAboveTopToDeselect = true;
-            FullLineView = false;
         }
 
         public bool FastScrolling { get; set; }
@@ -49,11 +48,6 @@ namespace Inscribe.Configuration.Settings
         /// タイムラインの一番上の要素を選択している時にさらに上に移動しようとした時、選択を外す
         /// </summary>
         public bool MoveAboveTopToDeselect { get; set; }
-
-        /// <summary>
-        /// すべて展開状態として表示する
-        /// </summary>
-        public bool FullLineView { get; set; }
     }
 
     /// <summary>

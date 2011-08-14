@@ -511,7 +511,12 @@
             </Border>
         </StackPanel>
         <DockPanel Grid.Row="2" Grid.Column="1">
-            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+            <StackPanel DockPanel.Dock="Right"
+                        Orientation="Horizontal"
+                        Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                            AncestorType={x:Type ListBoxItem}},
+                                             Path=IsSelected,
+                                             Converter={StaticResource BoolVisibleConverter}}">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />

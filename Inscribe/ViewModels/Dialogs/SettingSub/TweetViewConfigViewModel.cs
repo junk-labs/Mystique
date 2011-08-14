@@ -25,6 +25,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._p3StyleIcon = Setting.Instance.TweetExperienceProperty.P3StyleIcon;
             this._showUnofficialRTButton = Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton;
             this._showQuoteTweetButton = Setting.Instance.TweetExperienceProperty.ShowQuoteButton;
+            this._fullLineView = Setting.Instance.TweetExperienceProperty.FullLineView;
         }
 
         private int _resolveStrategyIndex;
@@ -121,6 +122,17 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+        private bool _fullLineView;
+        public bool FullLineView
+        {
+            get { return _fullLineView; }
+            set
+            {
+                _fullLineView = value;
+                RaisePropertyChanged(() => FullLineView);
+            }
+        }
+
         public void Apply()
         {
             Setting.Instance.TweetExperienceProperty.UrlResolveMode= (UrlResolve)this._resolveStrategyIndex;
@@ -131,6 +143,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.TweetExperienceProperty.P3StyleIcon = this._p3StyleIcon;
             Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton = this._showUnofficialRTButton;
             Setting.Instance.TweetExperienceProperty.ShowQuoteButton = this._showQuoteTweetButton;
+            Setting.Instance.TweetExperienceProperty.FullLineView = this._fullLineView;
         }
     }
 }

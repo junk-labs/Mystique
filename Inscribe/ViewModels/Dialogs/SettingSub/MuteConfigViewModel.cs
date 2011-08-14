@@ -3,6 +3,7 @@ using Inscribe.Configuration;
 using Inscribe.Filter;
 using Inscribe.ViewModels.Common.Filter;
 using Livet;
+using Inscribe.Storage;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
@@ -40,10 +41,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public void Apply()
         {
             Setting.Instance.TimelineFilteringProperty.MuteFilterCluster =
-                new FilterCluster()
-                {
-                    Filters = this._filterEditorViewModel.RootFilters
-                };
+                new FilterCluster() { Filters = this._filterEditorViewModel.RootFilters };
+            TweetStorage.UpdateMute();
             Setting.Instance.TimelineFilteringProperty.ShareBlocking = this._shareBlocking;
         }
     }
