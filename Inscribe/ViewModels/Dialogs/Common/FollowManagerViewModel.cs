@@ -89,6 +89,24 @@ namespace Inscribe.ViewModels.Dialogs.Common
 
         public event Action CloseRequired = () => { };
 
+        #region R4SAllCommand
+        DelegateCommand _R4SAllCommand;
+
+        public DelegateCommand R4SAllCommand
+        {
+            get
+            {
+                if (_R4SAllCommand == null)
+                    _R4SAllCommand = new DelegateCommand(R4SAll);
+                return _R4SAllCommand;
+            }
+        }
+
+        private void R4SAll()
+        {
+            this.Relations.ForEach(r => r.State = Relation.FollowState.ReportForSpam);
+        }
+        #endregion
 
         #region CommitCommand
         DelegateCommand _CommitCommand;
@@ -260,7 +278,6 @@ namespace Inscribe.ViewModels.Dialogs.Common
             }
         }
 
-
         #region FollowCommand
         DelegateCommand _FollowCommand;
 
@@ -279,7 +296,6 @@ namespace Inscribe.ViewModels.Dialogs.Common
             State = FollowState.Following;
         }
         #endregion
-
 
         #region RemoveCommand
         DelegateCommand _RemoveCommand;
@@ -300,7 +316,6 @@ namespace Inscribe.ViewModels.Dialogs.Common
         }
         #endregion
 
-
         #region BlockCommand
         DelegateCommand _BlockCommand;
 
@@ -319,7 +334,6 @@ namespace Inscribe.ViewModels.Dialogs.Common
             State = FollowState.Blocking;
         }
         #endregion
-
 
         #region UnblockCommand
         DelegateCommand _UnblockCommand;
@@ -340,7 +354,6 @@ namespace Inscribe.ViewModels.Dialogs.Common
         }
         #endregion
 
-
         #region ReportForSpamCommand
         DelegateCommand _ReportForSpamCommand;
 
@@ -359,7 +372,6 @@ namespace Inscribe.ViewModels.Dialogs.Common
             State = FollowState.ReportForSpam;
         }
         #endregion
-
 
         #region RefreshInfoCommand
         DelegateCommand _RefreshInfoCommand;

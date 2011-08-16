@@ -183,6 +183,9 @@
     <Compile Include="ViewModels\Behaviors\Messaging\SetListSelectionMessage.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\TextBoxSetCaretMessage.cs" />
     <Compile Include="ViewModels\Common\ColorPickButtonViewModel.cs" />
+    <Compile Include="ViewModels\Common\IntelliSenseTextBoxViewModel.cs" />
+    <Compile Include="ViewModels\Common\TagBinding\AutoBindConfigViewModel.cs" />
+    <Compile Include="ViewModels\Common\TagBinding\AutoBindElementEditorViewModel.cs" />
     <Compile Include="ViewModels\Common\UrlTooltipViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\Common\AssignViewerViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\Common\FollowManagerViewModel.cs" />

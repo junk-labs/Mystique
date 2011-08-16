@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
@@ -8,7 +9,7 @@ namespace Inscribe.Storage
 {
     public static class UserStorage
     {
-        public static ConcurrentDictionary<string, UserViewModel> dictionary = new ConcurrentDictionary<string, UserViewModel>();
+        private static ConcurrentDictionary<string, UserViewModel> dictionary = new ConcurrentDictionary<string, UserViewModel>();
 
         /// <summary>
         /// キャッシュにユーザー情報が存在していたら、すぐに返します。<para />
@@ -89,6 +90,15 @@ namespace Inscribe.Storage
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// ストレージに格納されているすべてのユーザーを取得します。
+        /// </summary>
+        /// <returns></returns>
+        public static UserViewModel[] GetAll()
+        {
+            return dictionary.Values.ToArray();
         }
     }
 }

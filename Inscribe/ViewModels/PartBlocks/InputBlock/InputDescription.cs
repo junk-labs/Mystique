@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Inscribe.Model;
 using Inscribe.Storage;
+using Inscribe.ViewModels.Common;
 using Livet;
-using System.Linq;
+using Inscribe.Text;
+using System.Text.RegularExpressions;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -45,12 +48,28 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             get { return this._inputText; }
             set
             {
+                if (this._inputText == value) return;
                 this._inputText = value;
+                this.isTextBoxVM.TextBoxText = value;
                 RaisePropertyChanged(() => InputText);
             }
         }
 
         private string _attachedImage = null;
+
+        private IntelliSenseTextBoxViewModel isTextBoxVM;
+
+        public InputDescription(IntelliSenseTextBoxViewModel intelliSenseTextBoxViewModel)
+        {
+            this.isTextBoxVM = intelliSenseTextBoxViewModel;
+            ViewModelHelper.BindNotification(intelliSenseTextBoxViewModel.TextChangedEvent, this, (o, e) =>
+            {
+                this.InputText = this.isTextBoxVM.TextBoxText;
+            });
+            // Initialize
+            this.isTextBoxVM.TextBoxText = String.Empty;
+        }
+
         public string AttachedImage
         {
             get { return this._attachedImage; }
@@ -67,9 +86,15 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             get { return this._attachedImage != null; }
         }
 
-        public IEnumerable<TweetWorker> ReadyUpdate(InputBlockViewModel ibvm, IEnumerable<AccountInfo> infos)
+        public IEnumerable<TweetWorker> ReadyUpdate(InputBlockViewModel ibvm, IEnumerable<string> bindTags, IEnumerable<AccountInfo> infos)
         {
-            return infos.Select(i => new TweetWorker(ibvm, i, InputText, InReplyToId, AttachedImage, null));
+            var containsTags = RegularExpressions.HashRegex.Matches(InputText)
+                .Cast<Match>().Select(m => m.Value).ToArray();
+            var tagstr = bindTags.Except(containsTags).JoinString(" ");
+            var cstr = InputText;
+            if (!String.IsNullOrWhiteSpace(tagstr))
+                cstr += " " + tagstr;
+            return infos.Select(i => new TweetWorker(ibvm, i, cstr, InReplyToId, AttachedImage, null));
         }
 
     }

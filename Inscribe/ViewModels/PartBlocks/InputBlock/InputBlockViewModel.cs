@@ -20,7 +20,6 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Mystique.Views.Behaviors.Messages;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -33,6 +32,9 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             this._ImageStackingViewViewModel = new ImageStackingViewViewModel();
             this._UserSelectorViewModel = new UserSelectorViewModel();
             this._UserSelectorViewModel.LinkChanged += () => this.LinkUserChanged(this.UserSelectorViewModel.LinkElements);
+            this._intelliSenseTextBoxViewModel = new IntelliSenseTextBoxViewModel();
+            this._intelliSenseTextBoxViewModel.TextChanged += (o, e) => invalidateTagBindState();
+            this._intelliSenseTextBoxViewModel.ItemsOpening += (o, e) => _intelliSenseTextBoxViewModel_OnItemsOpening();
 
             // Listen changing tab
             this.Parent.ColumnOwnerViewModel.CurrentTabChanged += new Action<TabViewModel>(CurrentTabChanged);
@@ -311,11 +313,27 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 if (this._currentInputDescription == null)
                 {
                     System.Diagnostics.Debug.WriteLine("input description initialized");
-                    this._currentInputDescription = new InputDescription();
+                    this._currentInputDescription = new InputDescription(this._intelliSenseTextBoxViewModel);
                     this._currentInputDescription.PropertyChanged += (o, e) => UpdateCommand.RaiseCanExecuteChanged();
                 }
                 return this._currentInputDescription;
             }
+        }
+
+        private IntelliSenseTextBoxViewModel _intelliSenseTextBoxViewModel;
+        public IntelliSenseTextBoxViewModel IntelliSenseTextBoxViewModel
+        {
+            get { return _intelliSenseTextBoxViewModel; }
+        }
+
+        void _intelliSenseTextBoxViewModel_OnItemsOpening()
+        {
+            this._intelliSenseTextBoxViewModel.Items =
+                UserStorage.GetAll()
+                .Select(u => new IntelliSenseItemViewModel("@" + u.TwitterUser.ScreenName, u.TwitterUser.ProfileImage))
+                .Concat(HashtagStorage.GetHashtags()
+                    .Select(s => new IntelliSenseItemViewModel("#" + s, null)))
+                .OrderBy(s => s.ItemText).ToArray();
         }
 
         private void ResetInputDescription()
@@ -464,7 +482,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public void SetInputCaretIndex(int selectionStart, int selectionLength = 0)
         {
-            this.Messenger.Raise(new TextBoxSetCaretMessage("SetCaret", selectionStart, selectionLength));
+            this._intelliSenseTextBoxViewModel.SetCaret(selectionStart, selectionLength);
         }
 
         IEnumerable<AccountInfo> overrideTargets = null;
@@ -504,6 +522,152 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         #endregion
 
+        #region Hashtag Binding
+
+        private ObservableCollection<string> automaticBoundTags = new ObservableCollection<string>();
+        public ObservableCollection<string> AutomaticBoundTags
+        {
+            get { return automaticBoundTags; }
+        }
+
+        private ObservableCollection<string> bindingTags = new ObservableCollection<string>();
+        public ObservableCollection<string> BindingTags
+        {
+            get { return bindingTags; }
+        }
+
+        private ObservableCollection<string> bindCandidateTags = new ObservableCollection<string>();
+        public ObservableCollection<string> BindCandidateTags
+        {
+            get { return bindCandidateTags; }
+        }
+
+        private bool _isEnabledAutoBind = true;
+        public bool IsEnabledAutoBind
+        {
+            get { return this._isEnabledAutoBind; }
+            set
+            {
+                this._isEnabledAutoBind = value;
+                RaisePropertyChanged(() => IsEnabledAutoBind);
+                this.invalidateTagBindState();
+            }
+        }
+
+        private void invalidateTagBindState()
+        {
+            // 自動バインドの処理
+            if (this._isEnabledAutoBind)
+            {
+                var autobinds = Setting.Instance.InputExperienceProperty.HashtagAutoBindDescriptions
+                    .Where(d => d.CheckCondition(_intelliSenseTextBoxViewModel.TextBoxText))
+                    .Select(d => "#" + d.TagText)
+                    .Except(bindingTags).ToArray();
+                automaticBoundTags.Except(autobinds).ToArray().ForEach(i => automaticBoundTags.Remove(i));
+                autobinds.Except(automaticBoundTags).ForEach(i => automaticBoundTags.Add(i));
+            }
+            else
+            {
+                this.automaticBoundTags.Clear();
+            }
+
+            // バインドヘルパーの処理
+            var unbounds = RegularExpressions.HashRegex.Matches(_intelliSenseTextBoxViewModel.TextBoxText)
+                .Cast<Match>().Select(m => m.Value)
+                .Except(bindingTags);
+            bindCandidateTags.Except(unbounds).ToArray().ForEach(s => bindCandidateTags.Remove(s));
+            unbounds.Except(bindCandidateTags).ForEach(s => bindCandidateTags.Add(s));
+        }
+
+        #region ClearBindCommand
+        DelegateCommand _ClearBindCommand;
+
+        public DelegateCommand ClearBindCommand
+        {
+            get
+            {
+                if (_ClearBindCommand == null)
+                    _ClearBindCommand = new DelegateCommand(ClearBind);
+                return _ClearBindCommand;
+            }
+        }
+
+        private void ClearBind()
+        {
+            bindingTags.Clear();
+            bindCandidateTags.Clear();
+        }
+        #endregion
+
+        #region AddBindCommand
+        DelegateCommand<string> _AddBindCommand;
+
+        public DelegateCommand<string> AddBindCommand
+        {
+            get
+            {
+                if (_AddBindCommand == null)
+                    _AddBindCommand = new DelegateCommand<string>(AddBind);
+                return _AddBindCommand;
+            }
+        }
+
+        private void AddBind(string parameter)
+        {
+            this.bindCandidateTags.Remove(parameter);
+            this.bindingTags.Add(parameter);
+            invalidateTagBindState();
+        }
+        #endregion
+
+        #region RemoveBindCommand
+        DelegateCommand<string> _RemoveBindCommand;
+
+        public DelegateCommand<string> RemoveBindCommand
+        {
+            get
+            {
+                if (_RemoveBindCommand == null)
+                    _RemoveBindCommand = new DelegateCommand<string>(RemoveBind);
+                return _RemoveBindCommand;
+            }
+        }
+
+        private void RemoveBind(string parameter)
+        {
+            this.bindingTags.Remove(parameter);
+            // バインド更新
+            this.invalidateTagBindState();
+        }
+        #endregion
+
+        #region EditAutoBindCommand
+        DelegateCommand _EditAutoBindCommand;
+
+        public DelegateCommand EditAutoBindCommand
+        {
+            get
+            {
+                if (_EditAutoBindCommand == null)
+                    _EditAutoBindCommand = new DelegateCommand(EditAutoBind);
+                return _EditAutoBindCommand;
+            }
+        }
+
+        private void EditAutoBind()
+        {
+            this.Messenger.Raise(new TransitionMessage("EditAutoBind"));
+        }
+        #endregion
+      
+
+        private void ClearCandidates()
+        {
+            this.BindCandidateTags.Clear();
+        }
+
+        #endregion
+
         #region State control
 
         private bool _isOpenInput =false;
@@ -525,7 +689,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 ResetInputDescription();
             }
             if (setFocus && isOpen)
-                this.Messenger.Raise(new InteractionMessage("FocusToText"));
+                this._intelliSenseTextBoxViewModel.SetFocus();
         }
 
 
@@ -662,10 +826,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         private void Update()
         {
             if (!this.CanUpdate()) return;
+            var boundTags = this.automaticBoundTags.Concat(this.bindingTags).Distinct().ToArray();
             if (this.overrideTargets != null)
-                this.CurrentInputDescription.ReadyUpdate(this, this.overrideTargets.ToArray()).ForEach(AddUpdateWorker);
+                this.CurrentInputDescription.ReadyUpdate(this, boundTags, this.overrideTargets.ToArray()).ForEach(AddUpdateWorker);
             else
-                this.CurrentInputDescription.ReadyUpdate(this, this.UserSelectorViewModel.LinkElements.ToArray()).ForEach(AddUpdateWorker);
+                this.CurrentInputDescription.ReadyUpdate(this, boundTags, this.UserSelectorViewModel.LinkElements.ToArray()).ForEach(AddUpdateWorker);
             ResetInputDescription();
         }
 

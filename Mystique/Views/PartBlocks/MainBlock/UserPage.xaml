@@ -1,15 +1,16 @@
 ﻿<UserControl x:Class="Mystique.Views.PartBlocks.MainBlock.UserPage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ba="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:comdlg="clr-namespace:Mystique.Views.Dialogs.Common"
              xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:mb="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:my="clr-namespace:Mystique.Views.Common"
-             xmlns:my1="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
              xmlns:tchild="clr-namespace:Mystique.Views.PartBlocks.MainBlock.TimelineChild"
              d:DesignHeight="746"
              d:DesignWidth="579"
@@ -26,12 +27,11 @@
         <cp:TextToFlowDocumentConverter x:Key="TextToInlinesConverter" />
     </UserControl.Resources>
     <i:Interaction.Triggers>
-        <l:InteractionMessageTrigger MessageKey="InformationMessage"
-                                     Messenger="{Binding Messenger}">
+        <l:InteractionMessageTrigger MessageKey="InformationMessage" Messenger="{Binding Messenger}">
             <l:InformationDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>
-            <l:InteractionMessageTrigger MessageKey="ShowFollowManager" Messenger="{Binding Messenger}">
-            <l:TransitionInteractionMessageAction WindowType="{x:Type comdlg:FollowManager}" />
+        <l:InteractionMessageTrigger MessageKey="ShowFollowManager" Messenger="{Binding Messenger}">
+            <ba:TransitionInteractionMessageAction WindowType="{x:Type comdlg:FollowManager}" />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid>
@@ -50,8 +50,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid Margin="4"
-                      VerticalAlignment="Top">
+                <Grid Margin="4" VerticalAlignment="Top">
                     <my:LazyImage Width="50"
                                   Height="50"
                                   UriSource="{Binding UserProfileImageUrl}" />
@@ -63,7 +62,7 @@
                                RenderOptions.BitmapScalingMode="NearestNeighbor"
                                Source="{StaticResource Lock}"
                                Visibility="{Binding IsProtected,
-                                                Converter={StaticResource BoolVisibleConverter}}">
+                                                    Converter={StaticResource BoolVisibleConverter}}">
                             <Image.ToolTip>このユーザーのツイートは非公開です</Image.ToolTip>
                         </Image>
                         <Image Width="16"
@@ -71,7 +70,7 @@
                                RenderOptions.BitmapScalingMode="NearestNeighbor"
                                Source="{StaticResource Verified}"
                                Visibility="{Binding IsVerified,
-                                                Converter={StaticResource BoolVisibleConverter}}">
+                                                    Converter={StaticResource BoolVisibleConverter}}">
                             <Image.ToolTip>このユーザーは公式認証されています</Image.ToolTip>
                         </Image>
                     </StackPanel>
@@ -96,8 +95,7 @@
                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                                    Source="{StaticResource Find}" />
                         </Button>
-                        <TextBox x:Name="UserScreenNameText"
-                                 Text="{Binding EditScreenName, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox x:Name="UserScreenNameText" Text="{Binding EditScreenName, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.InputBindings>
                                 <KeyBinding Command="{Binding EditFinishCommand}"
                                             CommandParameter="True"
@@ -109,40 +107,35 @@
                         </TextBox>
                     </DockPanel>
                     <DockPanel Visibility="{Binding Path=InputMode, Converter={StaticResource BoolInvisibleConverter}}">
-                        <Button Command="{Binding EditUserCommand}"
-                                DockPanel.Dock="Right">
+                        <Button Command="{Binding EditUserCommand}" DockPanel.Dock="Right">
                             <Image Width="16"
                                    Height="16"
                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                                    Source="{StaticResource UserEdit}" />
                         </Button>
-                        <TextBlock TextTrimming="CharacterEllipsis"
-                                   TextWrapping="Wrap">
-                        <Bold>
-                            <Hyperlink Command="{Binding OpenLinkCommand}">
-                                <Run FontSize="14"
-                                     Text="{Binding ScreenName, StringFormat=@{0}, Mode=OneWay}" />
-                            </Hyperlink>
-                        </Bold>
-                        <Run Foreground="Gray"
-                             Text="" />
-                        <Run Foreground="Gray"
-                             Text="{Binding Name, Mode=OneWay}" /></TextBlock>
+                        <TextBlock TextTrimming="CharacterEllipsis" TextWrapping="Wrap">
+                            <Bold>
+                                <Hyperlink Command="{Binding OpenLinkCommand}">
+                                    <Run FontSize="14" Text="{Binding ScreenName, StringFormat=@{0}, Mode=OneWay}" />
+                                </Hyperlink>
+                            </Bold>
+                            <Run Foreground="Gray" Text="" />
+                            <Run Foreground="Gray" Text="{Binding Name, Mode=OneWay}" />
+                        </TextBlock>
                     </DockPanel>
-                    <TextBlock Foreground="Gray"
-                               TextWrapping="Wrap">
-                    <Run Text="Loc:" />
-                    <Run Text="{Binding Location, Mode=OneWay}" /></TextBlock>
-                    <TextBlock Foreground="Gray"
-                               TextTrimming="CharacterEllipsis">
-                    <Run Text="Web:" />
-                    <Hyperlink Command="{Binding OpenUserWebCommand}">
-                        <Hyperlink.ToolTip>
-                            <TextBlock Text="{Binding ProfileUrl}" />
-                        </Hyperlink.ToolTip>
-                        <Run Text="{Binding ProfileUrl, Mode=OneWay}" />
-                    </Hyperlink>
-                </TextBlock>
+                    <TextBlock Foreground="Gray" TextWrapping="Wrap">
+                        <Run Text="Loc:" />
+                        <Run Text="{Binding Location, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock Foreground="Gray" TextTrimming="CharacterEllipsis">
+                        <Run Text="Web:" />
+                        <Hyperlink Command="{Binding OpenUserWebCommand}">
+                            <Hyperlink.ToolTip>
+                                <TextBlock Text="{Binding ProfileUrl}" />
+                            </Hyperlink.ToolTip>
+                            <Run Text="{Binding ProfileUrl, Mode=OneWay}" />
+                        </Hyperlink>
+                    </TextBlock>
                 </StackPanel>
                 <Border Grid.Row="1"
                         Grid.ColumnSpan="2"
@@ -154,14 +147,13 @@
                                                Background="Transparent"
                                                BorderThickness="0"
                                                DynamicInline="{Binding Path=Bio,
-                                                                   Converter={StaticResource TextToInlinesConverter}}"
+                                                                       Converter={StaticResource TextToInlinesConverter}}"
                                                IsDocumentEnabled="True"
                                                IsReadOnly="True"
                                                Padding="0" />
                 </Border>
             </Grid>
-            <Grid Grid.Row="1"
-                  Background="WhiteSmoke">
+            <Grid Grid.Row="1" Background="WhiteSmoke">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="4" />
                     <RowDefinition Height="Auto" />
@@ -175,42 +167,34 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="6" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="1"
-                           Grid.Column="1">
-                <Hyperlink Command="{Binding OpenLinkCommand}"
-                           CommandParameter="favorites">
-                    <Run Text="{Binding Favorites, Mode=OneWay}" />
-                    <LineBreak />
-                    <Run FontSize="10"
-                         Text="favorites" />
-                </Hyperlink></TextBlock>
-                <TextBlock Grid.Row="1"
-                           Grid.Column="2">
-                <Hyperlink Command="{Binding OpenLinkCommand}"
-                           CommandParameter="following">
-                    <Run Text="{Binding Following, Mode=OneWay}" />
-                    <LineBreak />
-                    <Run FontSize="10"
-                         Text="following" />
-                </Hyperlink></TextBlock>
-                <TextBlock Grid.Row="1"
-                           Grid.Column="3">
-                <Hyperlink Command="{Binding OpenLinkCommand}"
-                           CommandParameter="followers">
-                    <Run Text="{Binding Followers, Mode=OneWay}" />
-                    <LineBreak />
-                    <Run FontSize="10"
-                         Text="followers" />
-                </Hyperlink></TextBlock>
-                <TextBlock Grid.Row="1"
-                           Grid.Column="4">
-                <Hyperlink Command="{Binding OpenLinkCommand}"
-                           CommandParameter="lists/memberships">
-                    <Run Text="{Binding Listed, Mode=OneWay}" />
-                    <LineBreak />
-                    <Run FontSize="10"
-                         Text="listed" />
-                </Hyperlink></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="1">
+                    <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="favorites">
+                        <Run Text="{Binding Favorites, Mode=OneWay}" />
+                        <LineBreak />
+                        <Run FontSize="10" Text="favorites" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="2">
+                    <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="following">
+                        <Run Text="{Binding Following, Mode=OneWay}" />
+                        <LineBreak />
+                        <Run FontSize="10" Text="following" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="3">
+                    <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="followers">
+                        <Run Text="{Binding Followers, Mode=OneWay}" />
+                        <LineBreak />
+                        <Run FontSize="10" Text="followers" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="4">
+                    <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="lists/memberships">
+                        <Run Text="{Binding Listed, Mode=OneWay}" />
+                        <LineBreak />
+                        <Run FontSize="10" Text="listed" />
+                    </Hyperlink>
+                </TextBlock>
                 <Border Grid.Row="2"
                         Grid.ColumnSpan="6"
                         BorderBrush="DimGray"
@@ -221,8 +205,7 @@
                                 Command="{Binding ManageFollowCommand}"
                                 DockPanel.Dock="Right"
                                 Style="{DynamicResource FlatButtonStyle}">
-                            <StackPanel Margin="5,1"
-                                        Orientation="Horizontal">
+                            <StackPanel Margin="5,1" Orientation="Horizontal">
                                 <Image Width="16"
                                        Height="16"
                                        RenderOptions.BitmapScalingMode="NearestNeighbor"
@@ -256,13 +239,12 @@
                                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                                            Source="{StaticResource ReceiveRecent}" />
                                 </Button>
-                                <TextBlock Margin="4,2"
-                                           VerticalAlignment="Center">
-                                <Hyperlink Command="{Binding OpenLinkCommand}">
-                                    <Run Text="{Binding Tweets, Mode=OneWay}" />
-                                    <Run FontSize="10"
-                                         Text="tweets" />
-                                </Hyperlink></TextBlock>
+                                <TextBlock Margin="4,2" VerticalAlignment="Center">
+                                    <Hyperlink Command="{Binding OpenLinkCommand}">
+                                        <Run Text="{Binding Tweets, Mode=OneWay}" />
+                                        <Run FontSize="10" Text="tweets" />
+                                    </Hyperlink>
+                                </TextBlock>
                             </DockPanel>
                         </Border>
                     </DockPanel>
@@ -271,10 +253,10 @@
             <Border Grid.Row="4"
                     BorderBrush="DimGray"
                     BorderThickness="1,0,1,1">
-                <my1:TimelineListCore DataContext="{Binding TimelineListCoreViewModel}" />
+                <mb:TimelineListCore DataContext="{Binding TimelineListCoreViewModel}" />
             </Border>
         </Grid>
-        <Grid Visibility="{Binding IsStandby, Converter={StaticResource BoolInvisibleConverter}}" Background="#A0FFFFFF">
+        <Grid Background="#A0FFFFFF" Visibility="{Binding IsStandby, Converter={StaticResource BoolInvisibleConverter}}">
             <my:Intermediate />
         </Grid>
     </Grid>

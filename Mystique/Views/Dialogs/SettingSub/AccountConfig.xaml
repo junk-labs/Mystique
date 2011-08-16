@@ -27,34 +27,40 @@
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Button HorizontalAlignment="Right"
-                    Command="{Binding AddAccountCommand}"
-                    DockPanel.Dock="Right">
-                <StackPanel Margin="4,2" Orientation="Horizontal">
-                    <Image Width="16"
-                           VerticalAlignment="Center"
-                           Source="{StaticResource Add}" />
-                    <TextBlock Margin="0"
-                               VerticalAlignment="Center"
-                               Text="アカウントを追加..." />
-                </StackPanel>
-            </Button>
-            <TextBlock Margin="4"
-                       HorizontalAlignment="Left"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Button HorizontalAlignment="Right"
+                Command="{Binding AddAccountCommand}"
+                DockPanel.Dock="Right"
+                Style="{StaticResource FlatButtonStyle}">
+            <StackPanel Margin="4,2" Orientation="Horizontal">
+                <Image Width="16"
                        VerticalAlignment="Center"
-                       Text="認証済みアカウント一覧" />
-            <Border Grid.Row="1"
-                    BorderBrush="Gray"
-                    BorderThickness="1">
-                <ScrollViewer HorizontalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding Accounts}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       Source="{StaticResource Add}" />
+                <TextBlock Margin="0"
+                           VerticalAlignment="Center"
+                           Text="アカウントを追加..." />
+            </StackPanel>
+        </Button>
+        <TextBlock Margin="4"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Text="登録アカウント一覧" />
+        <Border Grid.Row="1"
+                BorderBrush="Gray"
+                BorderThickness="1">
+            <ScrollViewer HorizontalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Accounts}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox HorizontalAlignment="Stretch"
+                                      HorizontalContentAlignment="Stretch"
+                                      IsChecked="{Binding IsSelectedDefault}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -70,6 +76,7 @@
                                                   Width="32"
                                                   Height="32"
                                                   DefaultImage="{StaticResource Painting}"
+                                                  RenderOptions.BitmapScalingMode="NearestNeighbor"
                                                   UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
                                     <TextBlock Grid.RowSpan="2"
                                                Grid.Column="1"
@@ -83,8 +90,12 @@
                                             <Run Text="{Binding ScreenName, Mode=OneWay, StringFormat=@{0}}" />
                                         </Hyperlink>
                                     </TextBlock>
-                                    <Button Grid.Column="2" Command="{Binding MoveUpCommand}">
-                                        <Image Height="6" Source="{StaticResource Chevron}">
+                                    <Button Grid.Column="2"
+                                            Command="{Binding MoveUpCommand}"
+                                            Style="{StaticResource FlatButtonStyle}">
+                                        <Image Height="6"
+                                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                               Source="{StaticResource Chevron}">
                                             <Image.LayoutTransform>
                                                 <RotateTransform Angle="180" />
                                             </Image.LayoutTransform>
@@ -92,11 +103,15 @@
                                     </Button>
                                     <Button Grid.Row="1"
                                             Grid.Column="2"
-                                            Command="{Binding MoveDownCommand}">
-                                        <Image Height="6" Source="{StaticResource Chevron}" />
+                                            Command="{Binding MoveDownCommand}"
+                                            Style="{StaticResource FlatButtonStyle}">
+                                        <Image Height="6"
+                                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                               Source="{StaticResource Chevron}" />
                                     </Button>
                                     <Button Grid.RowSpan="2"
                                             Grid.Column="3"
+                                            Style="{StaticResource FlatButtonStyle}"
                                             ToolTip="このアカウントを削除します">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="Click">
@@ -111,14 +126,30 @@
                                                 </l:ConfirmationDialogInteractionMessageAction>
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
-                                        <Image Width="16" Source="{StaticResource Delete}" />
+                                        <Image Width="16"
+                                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                               Source="{StaticResource Delete}" />
                                     </Button>
                                 </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </Border>
-        </Grid>
+                            </CheckBox>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+        <TextBlock Grid.Row="2"
+                   Margin="4"
+                   Foreground="Gray"
+                   Text="チェックを付けたアカウントは、新しく作るタブで選択状態になります。" />
+        <Border Grid.Row="3"
+                Background="Pink"
+                BorderBrush="Red"
+                BorderThickness="1">
+            <TextBlock Grid.Row="3"
+                       Foreground="Red"
+                       Padding="4"
+                       Text="アカウント設定は即座に反映されます。キャンセルはできません。" />
+
+        </Border>
     </Grid>
 </UserControl>

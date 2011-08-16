@@ -12,7 +12,6 @@ using Inscribe.Threading;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
-using System.Threading;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -83,6 +82,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             {
                 this._tweetCollectionView = new CollectionViewSource();
                 this._tweetCollectionView.Source = this._tweetsSource;
+                Task.Factory.StartNew(() => InvalidateCache(false))
+                    .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => UpdateSortDescription()));
             }
             else
             {
@@ -91,11 +92,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 {
                     this._tweetCollectionView = new CollectionViewSource();
                     this._tweetCollectionView.Source = this._tweetsSource;
+                    Task.Factory.StartNew(() => InvalidateCache(false))
+                        .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => UpdateSortDescription()));
                 });
             }
             // Generate timeline
-            Task.Factory.StartNew(() => InvalidateCache(false))
-                .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => UpdateSortDescription()));
         }
 
         public void Commit(bool reinvalidate)
@@ -150,6 +151,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void UpdateSortDescription()
         {
+            if (this._tweetCollectionView == null) return;
             using (var disp = this._tweetCollectionView.DeferRefresh())
             {
                 this._tweetsSource.Commit();

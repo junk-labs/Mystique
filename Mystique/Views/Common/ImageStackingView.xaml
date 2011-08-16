@@ -21,8 +21,8 @@
                 <DataTemplate>
                     <my:LazyImage Width="40"
                                   Height="40"
-                                  DefaultImage="{StaticResource Painting}"
                                   Margin="{Binding Margin}"
+                                  DefaultImage="{StaticResource Painting}"
                                   UriSource="{Binding ImageSource}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

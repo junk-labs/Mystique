@@ -51,17 +51,20 @@
                     BorderThickness="1"
                     Padding="0"
                     Style="{StaticResource SelectorStyle}">
-                <Border.ContextMenu>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <ba:InvokePassThruCommandAction Command="{Binding TabMouseDownCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                    <Border.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding Path=Parent.EditTabCommand}"
-                                  CommandParameter="{Binding}"
+                        <MenuItem Command="{Binding Path=EditTabCommand}"
                                   Header="このタブを編集(_E)..." />
                         <Separator />
                         <MenuItem Command="{Binding Path=Parent.AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
                         <MenuItem Command="{Binding Path=Parent.RebirthTabCommand}" Header="最後に閉じたタブを元に戻す(_R)" />
                         <Separator />
-                        <MenuItem Command="{Binding Path=Parent.CloseCommand}"
-                                  CommandParameter="{Binding}"
+                        <MenuItem Command="{Binding Path=CloseCommand}"
                                   Header="タブを閉じる(_C)" />
                     </ContextMenu>
                 </Border.ContextMenu>

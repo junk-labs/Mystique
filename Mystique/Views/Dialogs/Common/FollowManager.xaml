@@ -245,20 +245,27 @@
                     </ItemsControl>
                 </ScrollViewer>
             </Border>
-            <StackPanel Grid.Row="2"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
+            <DockPanel Grid.Row="2" LastChildFill="False">
                 <Button Width="100"
                         Height="25"
-                        Command="{Binding CommitCommand}"
-                        Content="OK"
-                        IsDefault="True" />
+                        Command="{Binding R4SAllCommand}"
+                        Content="すべてR4S(_S)"
+                        DockPanel.Dock="Left"
+                        Foreground="Red"
+                        ToolTip="すべてのアカウントでスパム報告します。スパムアカウントに対してご利用ください。" />
                 <Button Width="100"
                         Height="25"
                         Command="{Binding CancelCommand}"
                         Content="キャンセル"
+                        DockPanel.Dock="Right"
                         IsCancel="True" />
-            </StackPanel>
+                <Button Width="100"
+                        Height="25"
+                        Command="{Binding CommitCommand}"
+                        Content="OK"
+                        DockPanel.Dock="Right"
+                        IsDefault="True" />
+            </DockPanel>
         </Grid>
         <Grid Background="#99FFFFFF" Visibility="{Binding IsCommunicating, Converter={StaticResource BoolVisibleConverter}}">
             <StackPanel HorizontalAlignment="Center"

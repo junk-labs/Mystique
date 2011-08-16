@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Inscribe.Configuration;
 using Inscribe.Filter;
+using Inscribe.Filter.Filters.Numeric;
+using Inscribe.Subsystems;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
-using Inscribe.Subsystems;
-using System.Collections.Generic;
-using Inscribe.Filter.Filters.Numeric;
+using Livet.Messaging;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -208,7 +208,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("ShowUserDetail", () => ExecTVMAction(vm => vm.ShowUserDetailCommand.Execute()));
 
             // Tab Action
-            KeyAssignCore.RegisterOperation("Search", () => ExecTabAction(vm => vm.AddTopTimeline(new[] { new FilterCluster() })));
+            KeyAssignCore.RegisterOperation("Search", () => ExecTabAction(vm =>
+            {
+                vm.AddTopTimeline(new[] { new FilterCluster() });
+                vm.Messenger.Raise(new InteractionMessage("FocusToSearch"));
+            }));
             KeyAssignCore.RegisterOperation("RemoveViewStackTop", () => ExecTabAction(vm => vm.RemoveTopTimeline(false)));
             KeyAssignCore.RegisterOperation("RemoveViewStackAll", () => ExecTabAction(vm => vm.RemoveTopTimeline(true)));
             KeyAssignCore.RegisterOperation("CreateTab", () => ExecTabAction(vm => vm.Parent.AddNewTabCommand.Execute()));

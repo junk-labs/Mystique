@@ -164,11 +164,13 @@ namespace Inscribe.Communication.Posting
             var times = TweetStorage.GetAll(
                 t => t.Status.User.ScreenName == info.ScreenName)
                 .Select(t => t.Status.CreatedAt)
+                .OrderByDescending(t => t) // 新着順に並べる
                 .ToArray();
 
             bool initPointFound = false;
             // 規制がスタートされたポイントは、[i+127-1]が3h以内のとき
             int i = 0;
+            // 二倍遡って、規制開始ポイントを正確に把握する
             for (i = 0; i + TwitterDefine.UnderControlCount < times.Length && i < TwitterDefine.UnderControlCount; i++)
             {
                 if (times[i] - times[i + TwitterDefine.UnderControlCount - 1] < TwitterDefine.UnderControlTimespan)

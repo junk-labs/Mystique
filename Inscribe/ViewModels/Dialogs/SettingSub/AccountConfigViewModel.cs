@@ -109,6 +109,12 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             get { return this.info.ScreenName; }
         }
 
+        public bool IsSelectedDefault
+        {
+            get { return this.info.AccoutProperty.IsSelectedDefault; }
+            set { this.info.AccoutProperty.IsSelectedDefault = value; }
+        }
+
         private ProfileImageProvider _profileImageProvider;
 
         public ProfileImageProvider ProfileImageProvider

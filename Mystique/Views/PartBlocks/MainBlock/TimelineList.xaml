@@ -111,7 +111,9 @@
                 </Border>
                 <Button Grid.Column="2"
                         Command="{Binding CreateTabFromTopTimelineCommand}"
-                        Style="{StaticResource FlatButtonStyle}">
+                        Style="{StaticResource FlatButtonStyle}"
+                        Visibility="{Binding IsStackTopUserPage,
+                                             Converter={StaticResource BoolInvisibleConverter}}">
                     <Image Width="12"
                            Height="12"
                            Margin="2"

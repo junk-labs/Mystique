@@ -12,6 +12,7 @@ namespace Inscribe.Configuration.Elements
     {
         public AccountProperty()
         {
+            this.IsSelectedDefault = false;
             this.UserStreamsRepliesAll = false;
             this.UseUserStreams = true;
             this.AutoCruiseDefaultMu = 0.5;
@@ -19,6 +20,8 @@ namespace Inscribe.Configuration.Elements
             this.FooterString = null;
             this.AccountDependentQuery = null;
         }
+
+        public bool IsSelectedDefault { get; set; }
 
         public bool UserStreamsRepliesAll { get; set; }
 
@@ -31,5 +34,6 @@ namespace Inscribe.Configuration.Elements
         public string FooterString { get; set; }
 
         public string[] AccountDependentQuery { get; set; }
+
     }
 }

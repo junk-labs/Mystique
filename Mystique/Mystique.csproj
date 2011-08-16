@@ -115,6 +115,9 @@
     <Compile Include="Views\Common\Filter\FilterQueryEditor.xaml.cs">
       <DependentUpon>FilterQueryEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\IntelliSenseTextBox.xaml.cs">
+      <DependentUpon>IntelliSenseTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Common\UrlTooltip.xaml.cs">
       <DependentUpon>UrlTooltip.xaml</DependentUpon>
     </Compile>
@@ -145,6 +148,12 @@
     </Compile>
     <Compile Include="Views\Dialogs\Common\FollowManager.xaml.cs">
       <DependentUpon>FollowManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Common\TagBinding\AutoBindConfig.xaml.cs">
+      <DependentUpon>AutoBindConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Common\TagBinding\AutoBindElementEditor.xaml.cs">
+      <DependentUpon>AutoBindElementEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\Mute.xaml.cs">
       <DependentUpon>Mute.xaml</DependentUpon>
@@ -282,6 +291,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Common\IntelliSenseTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Common\UrlTooltip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -307,6 +320,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\Common\FollowManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\Common\TagBinding\AutoBindConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\Common\TagBinding\AutoBindElementEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

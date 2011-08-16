@@ -15,6 +15,7 @@ using Inscribe.Subsystems;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using System.Windows.Input;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -461,6 +462,68 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.RemoveTopTimeline(false);
         }
         #endregion
+
+        #region EditTabCommand
+        DelegateCommand _EditTabCommand;
+
+        public DelegateCommand EditTabCommand
+        {
+            get
+            {
+                if (_EditTabCommand == null)
+                    _EditTabCommand = new DelegateCommand(EditTab);
+                return _EditTabCommand;
+            }
+        }
+
+        private void EditTab()
+        {
+            Parent.EditTab(this);
+        }
+        #endregion
+
+        #region CloseCommand
+        DelegateCommand _CloseCommand;
+
+        public DelegateCommand CloseCommand
+        {
+            get
+            {
+                if (_CloseCommand == null)
+                    _CloseCommand = new DelegateCommand(Close);
+                return _CloseCommand;
+            }
+        }
+
+        private void Close()
+        {
+            Parent.CloseTab(this);
+        }
+        #endregion
+        
+        #region TabMouseDownCommand
+        DelegateCommand<MouseEventArgs> _TabMouseDownCommand;
+
+        public DelegateCommand<MouseEventArgs> TabMouseDownCommand
+        {
+            get
+            {
+                if (_TabMouseDownCommand == null)
+                    _TabMouseDownCommand = new DelegateCommand<MouseEventArgs>(TabMouseDown);
+                return _TabMouseDownCommand;
+            }
+        }
+
+        private void TabMouseDown(MouseEventArgs e)
+        {
+            if (e.MiddleButton == MouseButtonState.Pressed)
+            {
+                e.Handled = true;
+                this.Close();
+            }
+        }
+        #endregion
+      
 
         internal void NotifyNewTweetReceived(TimelineListCoreViewModel timelineListCoreViewModel, TimelineChild.TweetViewModel tweetViewModel)
         {

@@ -322,25 +322,13 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
 
-        #region EditTabCommand
-        DelegateCommand<TabViewModel> _EditTabCommand;
+        #region Children control
 
-        public DelegateCommand<TabViewModel> EditTabCommand
+        public void EditTab(TabViewModel vm)
         {
-            get
-            {
-                if (_EditTabCommand == null)
-                    _EditTabCommand = new DelegateCommand<TabViewModel>(EditTab);
-                return _EditTabCommand;
-            }
+            vm.TabProperty = ShowTabEditor(vm.TabProperty);
+            vm.InvalidateCache();
         }
-
-        private void EditTab(TabViewModel parameter)
-        {
-            parameter.TabProperty = ShowTabEditor(parameter.TabProperty);
-            parameter.InvalidateCache();
-        }
-        #endregion
 
         #region AddNewTabCommand
         DelegateCommand _AddNewTabCommand;
@@ -403,26 +391,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
         #endregion
-      
-
-        #region CloseCommand
-        DelegateCommand<TabViewModel> _CloseCommand;
-
-        public DelegateCommand<TabViewModel> CloseCommand
-        {
-            get
-            {
-                if (_CloseCommand == null)
-                    _CloseCommand = new DelegateCommand<TabViewModel>(Close);
-                return _CloseCommand;
-            }
-        }
-
-        private void Close(TabViewModel parameter)
-        {
-            this.CloseTab(parameter);
-        }
-        #endregion
 
         private TabProperty ShowTabEditor(TabProperty property = null)
         {
@@ -438,5 +406,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             this.Messenger.Raise(new InteractionMessage("SetFocus"));
         }
+
+        #endregion
     }
 }

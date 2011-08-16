@@ -111,6 +111,16 @@ namespace Inscribe.Data
             CopyTo(array, index);
         }
 
+        /// <summary>
+        /// コレクションを配列として返します。<para />
+        /// スレッドセーフに操作されます。
+        /// </summary>
+        public T[] ToArray()
+        {
+            using (ReaderLock())
+                return internalList.ToArray();
+        }
+
         bool ICollection.IsSynchronized
         {
             get { return false; }

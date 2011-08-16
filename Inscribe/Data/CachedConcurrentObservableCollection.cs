@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using Inscribe.Data;
-using Livet;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Threading;
-using Inscribe.Storage;
+using System.Threading.Tasks;
+using Livet;
 
 namespace Inscribe.Data
 {

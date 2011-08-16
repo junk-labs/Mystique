@@ -6,6 +6,7 @@ using Inscribe.Communication.Streaming;
 using Inscribe.Configuration;
 using Inscribe.Plugin;
 using Inscribe.Subsystems;
+using Inscribe.Storage;
 
 namespace Inscribe.Core
 {
@@ -21,9 +22,17 @@ namespace Inscribe.Core
             if (initialized)
                 throw new InvalidOperationException("アプリケーションは既に初期化されています。");
             initialized = true;
+
+            // ネットワーク初期化
             Dulcet.Network.Http.Expect100Continue = false;
             Dulcet.Network.Http.MaxConnectionLimit = Int32.MaxValue;
+
+            // 設定のロード
             Setting.Initialize();
+
+            // サブシステムの初期化
+            NotificationCore.Initialize();
+            HashtagStorage.Initialize();
             KeyAssignCore.ReloadAssign();
 
             var apppath = System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
@@ -49,6 +58,7 @@ namespace Inscribe.Core
             // プラグインのロード
             PluginLoader.Load();
 
+
             UpdateReceiver.StartSchedule();
             Application.Current.Exit += new ExitEventHandler(AppExit);
         }
@@ -65,7 +75,6 @@ namespace Inscribe.Core
             standby = true;
             Task.Factory.StartNew(() => Inscribe.Communication.CruiseControl.AutoCruiseSchedulerManager.Begin());
             Task.Factory.StartNew(() => UserStreamsReceiverManager.RefreshReceivers());
-            NotificationCore.Initialize();
         }
 
         static void AppExit(object sender, ExitEventArgs e)
