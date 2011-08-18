@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Tabs;
 using Inscribe.Filter;
@@ -15,7 +16,7 @@ using Inscribe.Subsystems;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using System.Windows.Input;
+using Inscribe.Threading;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -94,6 +95,15 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return Setting.Instance.TweetExperienceProperty.FullLineView; }
         }
 
+        private static QueueTaskDispatcher cacheInvalidator;
+
+        static TabViewModel()
+        {
+            cacheInvalidator = new QueueTaskDispatcher(1);
+            ThreadHelper.Halt += () => cacheInvalidator.Dispose();
+        }
+
+
         public TabViewModel(ColumnViewModel parent, TabProperty property = null)
         {
             this.Parent = parent;
@@ -119,9 +129,16 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.Parent = newParent;
         }
 
+
         public void InvalidateCache()
         {
-            this.StackingTimelines.ForEach(f => f.InvalidateCache());
+            cacheInvalidator.Enqueue(() =>
+            {
+                using (var n = NotifyStorage.NotifyManually(this.TabProperty.Name + " - タイムラインを構築しています..."))
+                {
+                    this.StackingTimelines.ForEach(f => f.InvalidateCache());
+                }
+            });
         }
 
         public bool IsCurrentFocused

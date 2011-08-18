@@ -11,7 +11,6 @@
     <UserControl.Resources>
         <cp:CollectionToCountConverter x:Key="CollectionToCountConverter" />
         <cp:CollectionExistToVisibleConverter x:Key="CollectionExistToVisibleConverter" />
-        <BitmapImage x:Key="Config" UriSource="/Resources/wrench.png" />
         <BitmapImage x:Key="Retry" UriSource="/Resources/retry.png" />
         <BitmapImage x:Key="Copy" UriSource="/Resources/copy.png" />
         <BitmapImage x:Key="Delete" UriSource="/Resources/delete.png" />

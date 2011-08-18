@@ -106,7 +106,7 @@ namespace Inscribe.Storage
             if (predicate == null)
                 return dictionary.Values.ToArray();
             else
-                return dictionary.Values.AsParallel().Where(predicate).ToArray();
+                return dictionary.Values.Where(predicate).ToArray();
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace Inscribe.Storage
                     if (!deleteReserveds.Contains(statusBase.Id))
                     {
                         if (dictionary.ContainsKey(statusBase.Id))
-                            viewModel = dictionary[statusBase.Id];
+                            return viewModel; // すでにKrile内に存在する
                         else
                             dictionary.AddOrUpdate(statusBase.Id, viewModel);
                     }

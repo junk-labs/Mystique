@@ -82,8 +82,8 @@ namespace Inscribe.Filter.Filters.Particular
                         var status = ApiHelper.ExecApi(() => AccountStorage.GetRandom().GetStatus(id));
                         if (status != null)
                         {
-                            TweetStorage.Register(status);
-                            Task.Factory.StartNew(() => RecursiveCheckId(id));
+                            var vm = TweetStorage.Register(status);
+                            Task.Factory.StartNew(() => RecursiveCheckId(status.Id));
                         }
                         else
                         {
@@ -93,6 +93,7 @@ namespace Inscribe.Filter.Filters.Particular
                     catch (Exception e)
                     {
                         ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "ツイート " + id + " の受信に失敗しました。", receive);
+                        RaiseRequireReaccept();
                     }
                 };
                 Task.Factory.StartNew(() => receive());

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dulcet.Twitter.Rest;
 using Inscribe.Communication.CruiseControl.Lists;
-using Inscribe.Communication.Streaming;
+using Inscribe.Communication.UserStreams;
 using Inscribe.Configuration.Tabs;
 using Inscribe.Filter.Filters.Particular;
 using Inscribe.Filter.Filters.Text;
@@ -126,7 +126,7 @@ namespace Inscribe.ViewModels.Dialogs
         private void AddQuery()
         {
             this.property.StreamingQueries = this.property.StreamingQueries.Concat(new[] { AddQueryCandidate }).Distinct().ToArray();
-            if (!UserStreamsReceiverManager.AddQuery(AddQueryCandidate))
+            if (!ConnectionManager.AddQuery(AddQueryCandidate))
             {
                 this.Messenger.Raise(new InformationMessage(
                     "ストリーミング クエリーの追加ができませんでした。" + Environment.NewLine +
@@ -156,7 +156,7 @@ namespace Inscribe.ViewModels.Dialogs
         {
             this.property.StreamingQueries =
                 this.property.StreamingQueries.Except(new[] { parameter }).ToArray();
-            UserStreamsReceiverManager.RemoveQuery(parameter);
+            ConnectionManager.RemoveQuery(parameter);
             this.FilterEditorViewModel.RootFilters.OfType<FilterText>()
                 .Where(f => f.Needle == parameter).ForEach(f => this.FilterEditorViewModel.RemoveChild(f));
             RaisePropertyChanged(() => StreamingQueries);

@@ -52,6 +52,7 @@ namespace Inscribe
         public static readonly int MinWindowTime = 5 * 1000;
         public static readonly int IntervalLookPrevious = 10;
         public static readonly double MinDensity = 0.1;
+        public static readonly int UserStreamsTimeout = 90;
 
         #endregion
     }

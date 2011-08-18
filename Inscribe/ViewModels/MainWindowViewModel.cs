@@ -18,6 +18,7 @@ using Livet.Commands;
 using Nightmare.Forms;
 using Livet.Messaging.Windows;
 using Livet.Messaging;
+using System.Threading.Tasks;
 
 namespace Inscribe.ViewModels
 {
@@ -50,7 +51,10 @@ namespace Inscribe.ViewModels
 
         public string Title
         {
-            get { return Define.ApplicationName + " " + Define.GetFormattedVersion(); }
+            get
+            {
+                return Define.ApplicationName + " " + Define.GetFormattedVersion();
+            }
         }
 
         private InputBlockViewModel _inputBlockViewModel;
@@ -126,6 +130,7 @@ namespace Inscribe.ViewModels
             {
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine("Creating...");
                     if (Setting.Instance.StateProperty.TabInformations != null)
                     {
                         Setting.Instance.StateProperty.TabInformations.ForEach(c =>
@@ -135,6 +140,7 @@ namespace Inscribe.ViewModels
                         });
                         this.ColumnOwnerViewModel.GCColumn();
                     }
+                    System.Diagnostics.Debug.WriteLine("Create finish!");
                 }
                 finally
                 {

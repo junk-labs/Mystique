@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Xml.Serialization;
+using Inscribe.Communication.CruiseControl.Lists;
+using Inscribe.Communication.UserStreams;
 using Inscribe.Filter;
 using Inscribe.Filter.Core;
 using Inscribe.Model;
 using Inscribe.Storage;
 using Livet;
-using System.Threading;
-using System.ComponentModel;
-using Inscribe.Communication.Streaming;
-using Inscribe.Communication.CruiseControl.Lists;
 
 namespace Inscribe.Configuration.Tabs
 {
@@ -99,7 +99,7 @@ namespace Inscribe.Configuration.Tabs
             set
             {
                 this.StreamingQueries = value;
-                value.ForEach(q => UserStreamsReceiverManager.AddQuery(q));
+                value.ForEach(q => ConnectionManager.AddQuery(q));
             }
         }
         [XmlIgnore()]

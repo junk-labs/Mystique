@@ -18,6 +18,7 @@
         <BitmapImage x:Key="StateOk" UriSource="/Resources/tick.png" />
         <BitmapImage x:Key="StateInfo" UriSource="/Resources/information.png" />
         <BitmapImage x:Key="StateError" UriSource="/Resources/exclamation.png" />
+        <BitmapImage x:Key="StateWarning" UriSource="/Resources/warning.png" />
         <BitmapImage x:Key="Tweets" UriSource="/Resources/tweets.png" />
         <BitmapImage x:Key="Walk" UriSource="/Resources/walk.png" />
         <BitmapImage x:Key="Bicycle" UriSource="/Resources/kettamachine.png" />
@@ -79,6 +80,16 @@
                                                 ConverterParameter=Error}">
                         <Image.ToolTip>
                             <TextBlock Text="エラーが発生しているようです。クリックすると、現在の状態を表示します。" />
+                        </Image.ToolTip>
+                    </Image>
+                    <Image Width="16"
+                           Height="16"
+                           Source="{StaticResource StateWarning}"
+                           Visibility="{Binding State,
+                                                Converter={StaticResource StringEqualVisibleConverter},
+                                                ConverterParameter=Warning}">
+                        <Image.ToolTip>
+                            <TextBlock Text="接続に問題が発生しています。クリックすると、現在の状態を表示します。" />
                         </Image.ToolTip>
                     </Image>
                     <Image Canvas.Left="13"

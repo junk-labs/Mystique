@@ -10,7 +10,11 @@ namespace Inscribe.Threading
     {
         private static object syncRoot = new object();
 
-        private static bool OnHalt = false;
+        private static bool onHalt = false;
+        public static bool IsHalted
+        {
+            get { return onHalt; }
+        }
 
         public static event Action Halt = () => { };
 
@@ -21,8 +25,8 @@ namespace Inscribe.Threading
         {
             lock (syncRoot)
             {
-                if (OnHalt) return;
-                OnHalt = true;
+                if (onHalt) return;
+                onHalt = true;
                 Halt();
             }
         }

@@ -169,7 +169,7 @@ namespace Vanille.UpdateCore
             return
                 node.Elements("patch")
                     .Where(e => int.Parse(e.Attribute("kind").Value) <= downloadSwitch &&
-                        double.Parse(e.Attribute("ver").Value) >= origver)
+                        double.Parse(e.Attribute("ver").Value) > origver)
                     .OrderBy(e => double.Parse(e.Attribute("ver").Value))
                     .Select(e => e.Value);
         }

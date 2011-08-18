@@ -75,39 +75,40 @@ namespace Inscribe.Model
             get { return Storage.UserStorage.Get(this.ScreenName); }
         }
 
-        #region UserStreamsConnectionChangedイベント
+        #region ConnectionStateChangedイベント
 
-        public event EventHandler<EventArgs> UserStreamsConnectionChanged;
-        private Notificator<EventArgs> _UserStreamsConnectionChangedEvent;
-        public Notificator<EventArgs> UserStreamsConnectionChangedEvent
+        public event EventHandler<EventArgs> ConnectionStateChanged;
+        private Notificator<EventArgs> _ConnectionStateChangedEvent;
+        public Notificator<EventArgs> ConnectionStateChangedEvent
         {
             get
             {
-                if (_UserStreamsConnectionChangedEvent == null) _UserStreamsConnectionChangedEvent = new Notificator<EventArgs>();
-                return _UserStreamsConnectionChangedEvent;
+                if (_ConnectionStateChangedEvent == null)
+                    _ConnectionStateChangedEvent = new Notificator<EventArgs>();
+                return _ConnectionStateChangedEvent;
             }
-            set { _UserStreamsConnectionChangedEvent = value; }
+            set { _ConnectionStateChangedEvent = value; }
         }
 
-        protected void OnUserStreamsConnectionChanged(EventArgs e)
+        protected void OnConnectionStateChanged(EventArgs e)
         {
-            var threadSafeHandler = Interlocked.CompareExchange(ref UserStreamsConnectionChanged, null, null);
+            var threadSafeHandler = Interlocked.CompareExchange(ref ConnectionStateChanged, null, null);
             if (threadSafeHandler != null) threadSafeHandler(this, e);
-            UserStreamsConnectionChangedEvent.Raise(e);
+            ConnectionStateChangedEvent.Raise(e);
         }
 
         #endregion
 
 
-        private ConnectionState _userStreamsConnectionState = ConnectionState.Disconnected;
+        private ConnectionState _connectionState = ConnectionState.Disconnected;
         public ConnectionState ConnectionState
         {
-            get { return this._userStreamsConnectionState; }
+            get { return this._connectionState; }
             set
             {
-                if (this._userStreamsConnectionState == value) return;
-                this._userStreamsConnectionState = value;
-                OnUserStreamsConnectionChanged(EventArgs.Empty);
+                if (this._connectionState == value) return;
+                this._connectionState = value;
+                OnConnectionStateChanged(EventArgs.Empty);
             }
         }
 

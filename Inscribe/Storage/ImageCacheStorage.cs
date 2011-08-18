@@ -8,6 +8,7 @@ using Dulcet.Network;
 using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Storage;
+using System.Threading.Tasks;
 
 namespace Inscribe.Storage
 {
@@ -40,10 +41,10 @@ namespace Inscribe.Storage
 
         private static void GC(object o)
         {
-            imageDataDictionary
+            Parallel.ForEach(imageDataDictionary
                 .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds > Setting.Instance.KernelProperty.ImageLifetime)
-                .Select(d => d.Key)
-                .ToArray().AsParallel().ForAll(d => imageDataDictionary.Remove(d));
+                .Select(d => d.Key).ToArray(),
+                d => imageDataDictionary.Remove(d));
         }
 
         public static void ClearAllCache()

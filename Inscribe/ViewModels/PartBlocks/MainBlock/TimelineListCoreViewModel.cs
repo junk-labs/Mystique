@@ -174,6 +174,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public void InvalidateCache(bool commit)
         {
+            if (DispatcherHelper.UIDispatcher.CheckAccess())
+            {
+                // ディスパッチャ スレッドではInvalidateCacheを行わない
+                throw new InvalidOperationException("Can't invalidate cache on Dispatcher thread.");
+            }
+
             this._tweetsSource.Clear();
             var collection = TweetStorage.GetAll(vm => CheckFilters(vm))
                 .Select(tvm => new TabDependentTweetViewModel(tvm, this.Parent)).ToArray();
@@ -185,6 +191,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                         this._tweetsSource.Add(tvm);
                 }
             }
+
             if (commit)
                 this.Commit(true);
         }

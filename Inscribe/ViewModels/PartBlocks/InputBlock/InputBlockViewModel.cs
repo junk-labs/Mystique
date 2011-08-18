@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Dulcet.Twitter;
-using Inscribe.Communication.Streaming;
+using Inscribe.Communication.UserStreams;
 using Inscribe.Configuration;
 using Inscribe.Model;
 using Inscribe.Storage;
@@ -207,7 +207,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         private void ReconnectStreams()
         {
-            Task.Factory.StartNew(() => UserStreamsReceiverManager.RefreshReceivers());
+            Task.Factory.StartNew(() => ConnectionManager.RefreshReceivers());
         }
         #endregion
 

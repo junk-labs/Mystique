@@ -87,7 +87,8 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             this.Info = info;
             this._profileImageProvider = new Common.ProfileImageProvider(info);
             UpdatePostChunk();
-            ViewModelHelper.BindNotification(info.UserStreamsConnectionChangedEvent, this, (o, e) => RaisePropertyChanged(() => ConnectState));
+            ViewModelHelper.BindNotification(info.ConnectionStateChangedEvent, this,
+                (o, e) => RaisePropertyChanged(() => ConnectState));
             ViewModelHelper.BindNotification(TimeTickCall, this, (o, e) =>
             {
                 RaisePropertyChanged(() => ApiRemain);

@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using System.Windows;
 using Inscribe.Common;
-using Inscribe.Communication.Streaming;
 using Inscribe.Configuration;
 using Inscribe.Plugin;
 using Inscribe.Subsystems;
 using Inscribe.Storage;
+using Inscribe.Communication.UserStreams;
 
 namespace Inscribe.Core
 {
@@ -74,7 +74,7 @@ namespace Inscribe.Core
                 throw new InvalidOperationException("既にアプリケーションはスタンバイ状態を経ました。");
             standby = true;
             Task.Factory.StartNew(() => Inscribe.Communication.CruiseControl.AutoCruiseSchedulerManager.Begin());
-            Task.Factory.StartNew(() => UserStreamsReceiverManager.RefreshReceivers());
+            Task.Factory.StartNew(() => ConnectionManager.RefreshReceivers());
         }
 
         static void AppExit(object sender, ExitEventArgs e)

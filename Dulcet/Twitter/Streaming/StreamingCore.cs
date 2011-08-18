@@ -81,7 +81,7 @@ namespace Dulcet.Twitter.Streaming
         /// 接続が切断されました。<br />
         /// パラメータがfalseの時、予期しない切断であることを示します。
         /// </summary>
-        public event Action<CredentialProvider, bool> OnDisconnected = (cp, expected) => { };
+        public event Action<StreamingConnection> OnDisconnected = _ => { };
 
         /// <summary>
         /// Constructor
@@ -89,7 +89,7 @@ namespace Dulcet.Twitter.Streaming
         public StreamingCore()
         {
             jsonParseWaiter = new ManualResetEvent(false);
-            waiterQueue = new Queue<Tuple<CredentialProvider,string>>();
+            waiterQueue = new Queue<Tuple<CredentialProvider, string>>();
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Dulcet.Twitter.Streaming
                 BuildArguments(desc), out request);
             if (streaming == null)
                 throw new InvalidOperationException("接続に失敗しました。");
-            var con = new StreamingConnection(this, provider, request, streaming);
+            var con = new StreamingConnection(this, provider, request, streaming, desc.Timeout);
             if (con == null)
                 throw new InvalidOperationException("受信開始に失敗しました。");
             lock (conLock)
@@ -117,7 +117,7 @@ namespace Dulcet.Twitter.Streaming
         }
 
         #region Connection builder
-        
+
         const string SapiV1 = "http://stream.twitter.com/1/statuses/{0}.json";
         private string GetStreamingUri(StreamingType type)
         {
@@ -201,9 +201,9 @@ namespace Dulcet.Twitter.Streaming
             this.OnExceptionThrown(exception);
         }
 
-        internal void RaiseOnDisconnected(CredentialProvider provider, bool expected)
+        internal void RaiseOnDisconnected(StreamingConnection connection)
         {
-            OnDisconnected(provider, expected);
+            OnDisconnected(connection);
         }
 
         #endregion
@@ -243,7 +243,7 @@ namespace Dulcet.Twitter.Streaming
             while (true)
             {
                 jsonParseWaiter.WaitOne();
-                while(waiterQueue.Count > 0)
+                while (waiterQueue.Count > 0)
                 {
                     jsonParseWaiter.Reset();
                     Tuple<CredentialProvider, string> item = null;
@@ -278,6 +278,7 @@ namespace Dulcet.Twitter.Streaming
         }
 
         bool disposed = false;
+
         /// <summary>
         /// Disposed this core
         /// </summary>
@@ -285,6 +286,7 @@ namespace Dulcet.Twitter.Streaming
         {
             get { return this.disposed; }
         }
+
         /// <summary>
         /// disposing this
         /// </summary>
@@ -341,12 +343,15 @@ namespace Dulcet.Twitter.Streaming
         /// With parameter
         /// </summary>
         public string With { get; private set; }
+        public int Timeout { get; private set; }
+
 
         private StreamingDescription(
-            StreamingType type, int? count = null, int? delimited = null, string follow = null,
+            StreamingType type, int timeout, int? count = null, int? delimited = null, string follow = null,
             string track = null, string locations = null, bool? repliesAll = null, string with = null)
         {
             this.Type = type;
+            this.Timeout = timeout;
             this.Delimited = delimited;
             this.Count = count;
             this.Follow = follow;
@@ -359,11 +364,11 @@ namespace Dulcet.Twitter.Streaming
         /// <summary>
         /// Parameters for firehose.
         /// </summary>
-        public static StreamingDescription ForFirehose(
+        public static StreamingDescription ForFirehose(int timeout,
             int? count = null, int? delimited = null, string follow = null,
             string locations = null, string track = null)
         {
-            return new StreamingDescription(StreamingType.firehose,
+            return new StreamingDescription(StreamingType.firehose, timeout,
                 count: count, delimited: delimited, follow: follow,
                 locations: locations, track: track);
         }
@@ -371,11 +376,11 @@ namespace Dulcet.Twitter.Streaming
         /// <summary>
         /// Parameters for filter.
         /// </summary>
-        public static StreamingDescription ForFilter(
+        public static StreamingDescription ForFilter(int timeout,
             int? count = null, int? delimited = null, string follow = null,
             string locations = null, string track = null)
         {
-            return new StreamingDescription(StreamingType.filter,
+            return new StreamingDescription(StreamingType.filter, timeout,
                 count: count, delimited: delimited, follow: follow,
                 locations: locations, track: track);
         }
@@ -383,40 +388,41 @@ namespace Dulcet.Twitter.Streaming
         /// <summary>
         /// Parameters for links.
         /// </summary>
-        public static StreamingDescription ForLinks(
+        public static StreamingDescription ForLinks(int timeout,
             int? count = null, int? delimited = null)
         {
-            return new StreamingDescription(StreamingType.links,
+            return new StreamingDescription(StreamingType.links, timeout,
                 count: count, delimited: delimited);
         }
 
         /// <summary>
         /// Parameters for retweets.
         /// </summary>
-        public static StreamingDescription ForRetweet(
+        public static StreamingDescription ForRetweet(int timeout,
             int? delimited = null)
         {
-            return new StreamingDescription(StreamingType.retweet, delimited: delimited);
+            return new StreamingDescription(StreamingType.retweet, timeout,
+                delimited: delimited);
         }
 
         /// <summary>
         /// Parameters for sample.
         /// </summary>
-        public static StreamingDescription ForSample(
+        public static StreamingDescription ForSample(int timeout,
             int? count = null, int? delimited = null)
         {
-            return new StreamingDescription(StreamingType.sample,
+            return new StreamingDescription(StreamingType.sample, timeout,
                 count: count, delimited: delimited);
         }
 
         /// <summary>
         /// Parameters for User Streams.
         /// </summary>
-        public static StreamingDescription ForUserStreams(
+        public static StreamingDescription ForUserStreams(int timeout,
             int? count = null, int? delimited = null, bool? repliesAll = null,
             string track = null, string with = null)
         {
-            return new StreamingDescription(StreamingType.user,
+            return new StreamingDescription(StreamingType.user, timeout,
                 count: count, delimited: delimited, track: track, with: with, repliesAll: repliesAll);
         }
     }

@@ -27,10 +27,14 @@ namespace Dulcet.Twitter.Streaming
 
         private Stream receiveStream;
         private Thread streamReceiver;
+        private Timer timeoutTimer;
+        private int timeoutCount = 0;
+        private int timeoutValue;
+        private bool isTimeout = false;
 
         private readonly HttpWebRequest usedRequest;
 
-        internal StreamingConnection(StreamingCore core, CredentialProvider provider, HttpWebRequest usedRequest, Stream strm)
+        internal StreamingConnection(StreamingCore core, CredentialProvider provider, HttpWebRequest usedRequest, Stream strm, int timeoutSec)
         {
             if (core == null)
                 throw new ArgumentNullException("core");
@@ -40,12 +44,26 @@ namespace Dulcet.Twitter.Streaming
                 throw new ArgumentException("usedRequest");
             if (strm == null)
                 throw new ArgumentNullException("strm");
+            this.timeoutValue = timeoutSec;
             this.parentCore = core;
             this.Provider = provider;
             this.receiveStream = strm;
             this.usedRequest = usedRequest;
             this.streamReceiver = new Thread(StreamingThread);
             this.streamReceiver.Start();
+            // タイムアウト用タイマー
+            timeoutTimer = new Timer(TimeoutCountUp, null, 1000, 1000);
+        }
+
+        private void TimeoutCountUp(object o)
+        {
+            timeoutCount++;
+            if (timeoutCount >= timeoutValue && !isTimeout)
+            {
+                isTimeout = true;
+                parentCore.RaiseOnExceptionThrown(new Exception("User Streams接続がタイムアウトしました。"));
+                this.Dispose();
+            }
         }
 
         private void StreamingThread()
@@ -54,8 +72,9 @@ namespace Dulcet.Twitter.Streaming
             {
                 using (var sr = new StreamReader(this.receiveStream))
                 {
-                    while (!sr.EndOfStream && !parentCore.IsDisposed && !disposed)
+                    while (!sr.EndOfStream && !parentCore.IsDisposed && !disposed && !isTimeout)
                     {
+                        timeoutCount = 0;
                         this.parentCore.EnqueueReceivedObject(this.Provider, sr.ReadLine());
                     }
                 }
@@ -85,7 +104,7 @@ namespace Dulcet.Twitter.Streaming
                 finally
                 {
                     this.parentCore.UnregisterConnection(this);
-                    this.parentCore.RaiseOnDisconnected(this.Provider, disposed);
+                    this.parentCore.RaiseOnDisconnected(this);
                 }
             }
         }
@@ -132,7 +151,7 @@ namespace Dulcet.Twitter.Streaming
             finally
             {
                 this.parentCore.UnregisterConnection(this);
-                this.parentCore.RaiseOnDisconnected(this.Provider, true); 
+                this.parentCore.RaiseOnDisconnected(this);
             }
         }
     }

@@ -23,7 +23,9 @@
         KeyDown="Window_KeyDown"
         Loaded="Window_Loaded"
         PreviewKeyDown="Window_PreviewKeyDown"
-        ResizeMode="CanResizeWithGrip">
+        ResizeMode="CanResizeWithGrip"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using Inscribe.Communication.CruiseControl.Lists;
-using Inscribe.Communication.Streaming;
+using Inscribe.Communication.UserStreams;
 using Inscribe.Configuration.Tabs;
 using Inscribe.Filter.Filters.Numeric;
 using Inscribe.Storage;
@@ -131,7 +132,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             // cleanup additional receiver
             foreach (var query in tabViewModel.TabProperty.StreamingQueries)
             {
-                UserStreamsReceiverManager.RemoveQuery(query);
+                ConnectionManager.RemoveQuery(query);
             }
 
             foreach (var list in tabViewModel.TabProperty.FollowingLists)
@@ -374,7 +375,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.AddTab(tabViewModel);
             foreach (var query in tabViewModel.TabProperty.StreamingQueries.ToArray())
             {
-                if (!UserStreamsReceiverManager.AddQuery(query))
+                if (!ConnectionManager.AddQuery(query))
                 {
                     ExceptionStorage.Register(new Exception("クエリリッスンに失敗"),
                          ExceptionCategory.InternalError,

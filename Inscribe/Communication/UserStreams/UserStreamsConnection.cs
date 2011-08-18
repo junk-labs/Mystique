@@ -1,64 +1,70 @@
 ﻿using System;
-using System.Net;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Dulcet.Twitter.Streaming;
-using Inscribe.Configuration;
-using Inscribe.Model;
-using Inscribe.Storage;
-using Inscribe.Threading;
+using System.Threading;
 using Dulcet.Twitter.Credential;
+using Inscribe.Threading;
+using Inscribe.Storage;
+using Inscribe.Model;
+using System.Net;
+using Inscribe.Configuration;
+using Dulcet.Twitter.Rest;
+using System.Net.NetworkInformation;
 
-namespace Inscribe.Communication.Streaming.Connection
+namespace Inscribe.Communication.UserStreams
 {
     public class UserStreamsConnection : IDisposable
     {
+        #region Global thread
 
-        #region Static Variables and Methods 
+        static StreamingCore streamingCore;
 
-        static StreamingCore streamCore;
-        static Thread streamPump;
+        static Thread pumpThread;
+        private AccountInfo i;
         static UserStreamsConnection()
         {
-            streamCore = new StreamingCore();
-            streamCore.OnExceptionThrown += new Action<Exception>(streamCore_OnExceptionThrown);
-            streamCore.OnDisconnected += new Action<Dulcet.Twitter.Credential.CredentialProvider, bool>(streamCore_OnDisconnected);
-            ThreadHelper.Halt += () => streamPump.Abort();
-            ThreadHelper.Halt += () => streamCore.Dispose();
-            streamPump = new Thread(PumpTweets);
-            streamPump.Start();
-        }
-
-        static void streamCore_OnExceptionThrown(Exception obj)
-        {
-            ExceptionStorage.Register(obj, ExceptionCategory.TwitterError, "User Streams接続でエラーが発生しました。");
-        }
-
-        static void streamCore_OnDisconnected(CredentialProvider provider, bool expected)
-        {
-            var info = provider as AccountInfo;
-            if (info == null)
+            streamingCore = new StreamingCore();
+            streamingCore.OnExceptionThrown += new Action<Exception>(streamingCore_OnExceptionThrown);
+            streamingCore.OnDisconnected += new Action<StreamingConnection>(streamingCore_OnDisconnected);
+            ThreadHelper.Halt += () =>
             {
-                ExceptionStorage.Register(new Exception(), ExceptionCategory.InternalError, "プロバイダがアカウント情報を保持していません。");
-                return;
-            }
-
-            info.ConnectionState = ConnectionState.Disconnected;
-
-            // 再接続処理
-            if (!expected)
-            {
-                UserStreamsReceiverManager.RefreshReceiver(info);
-            }
+                try
+                {
+                    streamingCore.Dispose();
+                }
+                catch { }
+                try
+                {
+                    pumpThread.Abort();
+                }
+                catch { }
+            };
+            pumpThread = new Thread(PumpTweets);
+            pumpThread.Start();
         }
 
-        /// <summary>
-        /// ツイートのポンピングスレッド
-        /// </summary>
+        #region Handlers
+
+        static void streamingCore_OnDisconnected(StreamingConnection con)
+        {
+            ConnectionManager.NotifyDisconnected(con.Provider as AccountInfo, con);
+        }
+
+        private static void streamingCore_OnExceptionThrown(Exception ex)
+        {
+            ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
+                "User Streams接続にエラーが発生しました。");
+        }
+
+        #endregion
+
         private static void PumpTweets()
         {
             try
             {
-                foreach (var s in streamCore.EnumerateStreamingElements())
+                foreach (var s in streamingCore.EnumerateStreamingElements())
                 {
                     try
                     {
@@ -68,16 +74,18 @@ namespace Inscribe.Communication.Streaming.Connection
                     {
                         break;
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        streamCore_OnExceptionThrown(e);
+                        ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
+                            "User Streamsのツイート処理中にエラーが発生しました");
                     }
                 }
             }
             catch (ThreadAbortException) { }
             catch (Exception e)
             {
-                ExceptionStorage.Register(e, ExceptionCategory.InternalError, "メッセージポンピングシステムにエラーが発生しました。");
+                ExceptionStorage.Register(e, ExceptionCategory.InternalError, 
+                    "メッセージポンピングシステムにエラーが発生しました。");
             }
         }
 
@@ -158,35 +166,39 @@ namespace Inscribe.Communication.Streaming.Connection
             }
         }
 
-        public static UserStreamsConnection Connect(AccountInfo account, string[] queries)
+        #endregion
+
+        internal AccountInfo AccountInfo;
+
+        internal UserStreamsConnection(AccountInfo info)
         {
-            if (streamCore == null)
-                throw new InvalidOperationException("Stream core is not initialized.");
-            return new UserStreamsConnection(account, queries);
+            this.AccountInfo = info;
         }
 
-        #endregion // Static Variables and Methods
-
-        private StreamingConnection connection = null;
-
-        private UserStreamsConnection(AccountInfo account, string[] queries)
+        /// <summary>
+        /// 追加受信クエリを設定して、User Streams受信を開始します。<para />
+        /// 接続に失敗したらあっさり例外吐きます。
+        /// </summary>
+        internal void Connect(String[] queries)
         {
             string track = null;
             if (queries != null && queries.Length > 0)
             {
-                track = String.Join(",", queries);
+                track = queries.JoinString(",");
             }
 
             try
             {
-                Connect(account, track);
+                this.ConnectCore(AccountInfo, track);
             }
             catch (ThreadAbortException) { }
-            catch (Exception e)
+            catch
             {
-                throw new Exception("@" + account.ScreenName + ": 接続できませんでした。", e);
+                throw;
             }
         }
+
+        private StreamingConnection connection = null;
 
         /// <summary>
         /// ストリーミングAPIへ接続します。<para />
@@ -194,7 +206,7 @@ namespace Inscribe.Communication.Streaming.Connection
         /// それでも失敗する場合はfalseを返します。この場合、再接続を試みてはいけません。
         /// </summary>
         /// <param name="track">トラック対象キーワード</param>
-        private void Connect(AccountInfo info, string track)
+        private void ConnectCore(AccountInfo info, string track)
         {
             try
             {
@@ -204,10 +216,40 @@ namespace Inscribe.Communication.Streaming.Connection
                     // 接続
                     try
                     {
-                        System.Diagnostics.Debug.WriteLine("Start connection User Streams with track:" + track);
-                        connection = streamCore.ConnectNew(
-                            info, StreamingDescription.ForUserStreams(
-                            track: track, repliesAll: info.AccoutProperty.UserStreamsRepliesAll));
+                        using (var n = NotifyStorage.NotifyManually("@" + info.ScreenName + ": インターネットへの接続を確認しています..."))
+                        {
+                            while (!NetworkInterface.GetIsNetworkAvailable())
+                            {
+                                info.ConnectionState = ConnectionState.WaitNetwork;
+                                ConnectionManager.OnConnectionStateChanged(EventArgs.Empty);
+                                // ネットワークが利用可能になるまでポーリング
+                                Thread.Sleep(10000);
+                            }
+                        }
+
+                        using (var n = NotifyStorage.NotifyManually("@" + info.ScreenName + ": 接続のテストをしています..."))
+                        {
+                            info.ConnectionState = ConnectionState.WaitTwitter;
+                            ConnectionManager.OnConnectionStateChanged(EventArgs.Empty);
+                            try
+                            {
+                                if (!ApiHelper.ExecApi(() => info.Test()))
+                                    throw new Exception();
+                            }
+                            catch
+                            {
+                                throw new WebException("Twitterが応答を停止しています。");
+                            }
+                        }
+
+                        using (var n = NotifyStorage.NotifyManually("@" + info.ScreenName + ": 接続しています..."))
+                        {
+                            info.ConnectionState = ConnectionState.TryConnection;
+                            ConnectionManager.OnConnectionStateChanged(EventArgs.Empty);
+                            connection = streamingCore.ConnectNew(
+                                info, StreamingDescription.ForUserStreams(TwitterDefine.UserStreamsTimeout,
+                                track: track, repliesAll: info.AccoutProperty.UserStreamsRepliesAll));
+                        }
                     }
                     catch (WebException we)
                     {
@@ -235,10 +277,16 @@ namespace Inscribe.Communication.Streaming.Connection
                             throw new WebException("接続に失敗しました。(" + descText + ")");
                         }
                     }
+                    catch
+                    {
+                        throw;
+                    }
 
                     if (connection != null)
                     {
-                        // Connection succeed
+                        // Connection successful
+                        info.ConnectionState = ConnectionState.Connected;
+                        ConnectionManager.OnConnectionStateChanged(EventArgs.Empty);
                         return;
                     }
 
@@ -285,6 +333,14 @@ namespace Inscribe.Communication.Streaming.Connection
             }
         }
 
+        /// <summary>
+        /// 内包しているStreamingConnectionが渡されたインスタンスと同一であるか確認します。
+        /// </summary>
+        internal bool CheckUsingConnection(StreamingConnection con)
+        {
+            return this.connection == con;
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -301,7 +357,7 @@ namespace Inscribe.Communication.Streaming.Connection
         {
             if (this.disposed) return;
             this.disposed = true;
-            if(this.connection != null)
+            if (this.connection != null)
                 this.connection.Dispose();
         }
     }

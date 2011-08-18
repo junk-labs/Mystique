@@ -4,6 +4,7 @@ using Inscribe.Core;
 using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
+using Inscribe.Communication.UserStreams;
 
 namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 {
@@ -32,6 +33,7 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             });
             ViewModelHelper.BindNotification(PostOffice.OnUnderControlChangedEvent, this, (o, e) => RaisePropertyChanged(() => State));
             ViewModelHelper.BindNotification(TweetStorage.TweetStorageChangedEvent, this, (o, e) => RaisePropertyChanged(() => Tweets));
+            ViewModelHelper.BindNotification(ConnectionManager.ConnectionStateChangedEvent, this, (o, e) => RaisePropertyChanged(() => State));
             ImageCacheStorage.DownloadingChanged += () => RaisePropertyChanged(() => ImageDownloading);
         }
 
@@ -39,7 +41,8 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
         {
             Ok,
             Info,
-            Error
+            Warning,
+            Error,
         }
 
         public StateImages State
@@ -50,6 +53,8 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
                     return StateImages.Error;
                 else if (PostOffice.IsExistsUnderControlledAccount())
                     return StateImages.Info;
+                else if (AccountStorage.Accounts.Where(a => a.AccoutProperty.UseUserStreams && a.ConnectionState != Model.ConnectionState.Connected).Count() > 0)
+                    return StateImages.Warning;
                 else
                     return StateImages.Ok;
             }
