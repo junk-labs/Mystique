@@ -210,7 +210,7 @@ namespace Inscribe.Communication.UserStreams
         {
             try
             {
-                int failureCount = 0;
+                int failureWaitSec = 0;
                 while (true)
                 {
                     // 接続
@@ -290,18 +290,18 @@ namespace Inscribe.Communication.UserStreams
                         return;
                     }
 
-                    if (failureCount > 0)
+                    if (failureWaitSec > 0)
                     {
-                        if (failureCount > Setting.Instance.ConnectionProperty.UserStreamsConnectionFailedMaxWaitSec)
+                        if (failureWaitSec > Setting.Instance.ConnectionProperty.UserStreamsConnectionFailedMaxWaitSec)
                         {
                             throw new WebException("User Streamsへの接続に失敗しました。");
                         }
                         else
                         {
-                            NotifyStorage.Notify("@" + info.ScreenName + ": User Streamsへの接続に失敗。再試行まで" + (failureCount / 1000).ToString() + "秒待機...", failureCount / 1000);
+                            NotifyStorage.Notify("@" + info.ScreenName + ": User Streamsへの接続に失敗。再試行まで" + failureWaitSec.ToString() + "秒待機...", failureWaitSec / 1000);
 
                             // ウェイトカウント
-                            Thread.Sleep(failureCount);
+                            Thread.Sleep(failureWaitSec * 1000);
                             NotifyStorage.Notify("@" + info.ScreenName + ": User Streamsへの接続を再試行します...");
                         }
                     }
@@ -313,13 +313,13 @@ namespace Inscribe.Communication.UserStreams
                     // 最初に失敗したらすぐに再接続
                     // ２回目以降はその倍に増やしていく
                     // 300を超えたら接続失敗で戻る
-                    if (failureCount == 0)
+                    if (failureWaitSec == 0)
                     {
-                        failureCount = Setting.Instance.ConnectionProperty.UserStreamsConnectionFailedInitialWaitSec;
+                        failureWaitSec = Setting.Instance.ConnectionProperty.UserStreamsConnectionFailedInitialWaitSec;
                     }
                     else
                     {
-                        failureCount *= 2;
+                        failureWaitSec *= 2;
                     }
                 }
             }
@@ -329,6 +329,8 @@ namespace Inscribe.Communication.UserStreams
             }
             catch (Exception e)
             {
+                this.AccountInfo.ConnectionState = ConnectionState.Disconnected;
+                ConnectionManager.OnConnectionStateChanged(EventArgs.Empty);
                 throw new WebException("User Streamsへの接続に失敗しました。", e);
             }
         }

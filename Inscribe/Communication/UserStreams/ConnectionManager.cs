@@ -91,7 +91,8 @@ namespace Inscribe.Communication.UserStreams
                 var pcon = connections[info];
                 // 以前の接続がある
                 connections[info] = ncon;
-                pcon.Dispose();
+                if (pcon != null)
+                    pcon.Dispose();
             }
             else
             {
