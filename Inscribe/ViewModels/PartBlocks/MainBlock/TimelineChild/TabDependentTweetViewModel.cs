@@ -461,7 +461,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void OpenConversation()
         {
-
+            var s = this.Tweet.Status as TwitterStatus;
+            if (s == null || s.InReplyToStatusId == 0) return;
             IEnumerable<IFilter> filter = null;
             string description = String.Empty;
             if (Setting.Instance.TimelineExperienceProperty.IsShowConversationAsTree)
@@ -795,7 +796,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     Negate = false,
                     Filters = this.Parent.TabProperty.TweetSources.ToArray()};
                 this.Parent.TabProperty.TweetSources = new[]{ cluster.Restrict(new FilterCluster(){ ConcatenateAnd = false, Negate = true, Filters = new[]{ new FilterUserId(user.NumericId) }}).Optimize()}.ToArray();
-                this.Parent.BaseTimeline.CoreViewModel.InvalidateCache(true);
+                Task.Factory.StartNew(() => this.Parent.BaseTimeline.CoreViewModel.InvalidateCache(true));
             }
             else
             {
