@@ -98,10 +98,13 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public bool RegisterRetweeted(UserViewModel user)
         {
-            if (user == null || this._retweeteds.Select(s => s.TwitterUser.ScreenName)
-                .FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
-                return false;
-            this._retweeteds.Add(user);
+            lock (_retweeteds)
+            {
+                if (user == null || this._retweeteds.Select(s => s.TwitterUser.ScreenName)
+                    .FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
+                    return false;
+                this._retweeteds.Add(user);
+            }
             TweetStorage.NotifyTweetStateChanged(this);
             RaisePropertyChanged(() => RetweetedUsers);
             return true;
@@ -109,9 +112,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public bool RemoveRetweeted(UserViewModel user)
         {
-            if (user == null || this._retweeteds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) == null)
-                return false;
-            this._retweeteds.Remove(user);
+            lock (_retweeteds)
+            {
+                if (user == null || this._retweeteds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) == null)
+                    return false;
+                this._retweeteds.Remove(user);
+            }
             TweetStorage.NotifyTweetStateChanged(this);
             RaisePropertyChanged(() => RetweetedUsers);
             return true;
@@ -130,10 +136,13 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public bool RegisterFavored(UserViewModel user)
         {
-            if (user == null || this._favoreds.Select(s => s.TwitterUser.ScreenName)
-                .FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
-                return false;
-            this._favoreds.Add(user);
+            lock (_favoreds)
+            {
+                if (user == null || this._favoreds.Select(s => s.TwitterUser.ScreenName)
+                    .FirstOrDefault(s => s == user.TwitterUser.ScreenName) != null)
+                    return false;
+                this._favoreds.Add(user);
+            }
             TweetStorage.NotifyTweetStateChanged(this);
             RaisePropertyChanged(() => FavoredUsers);
             return true;
@@ -141,9 +150,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public bool RemoveFavored(UserViewModel user)
         {
-            if (user == null || this._favoreds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) == null)
-                return false;
-            this._favoreds.Remove(user);
+            lock (_favoreds)
+            {
+                if (user == null || this._favoreds.Select(s => s.TwitterUser.ScreenName).FirstOrDefault(s => s == user.TwitterUser.ScreenName) == null)
+                    return false;
+                this._favoreds.Remove(user);
+            }
             TweetStorage.NotifyTweetStateChanged(this);
             RaisePropertyChanged(() => FavoredUsers);
             return true;

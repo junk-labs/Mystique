@@ -19,16 +19,13 @@ namespace Dulcet.Twitter.Rest
                 return null;
             List<TwitterStatus> statuses = new List<TwitterStatus>();
             HashSet<string> hashes = new HashSet<string>();
-            return from n in doc.Descendants("direct_message")
-                   let dm = TwitterDirectMessage.FromNode(n)
-                   where dm != null
-                   select dm;
+            return doc.Root.Elements().Select(n => TwitterDirectMessage.FromNode(n)).Where(d => d != null);
         }
 
         /// <summary>
         /// Get direct messages with full params
         /// </summary>
-        private static IEnumerable<TwitterDirectMessage> GetDirectMessages(this CredentialProvider provider, string partialUri = null, long? sinceId = null, long? maxId = null, long? count = null, long? page = null)
+        private static IEnumerable<TwitterDirectMessage> GetDirectMessages(this CredentialProvider provider, string partialUri, long? sinceId, long? maxId, long? count, long? page)
         {
             List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
             if (sinceId != null && sinceId.HasValue)
@@ -48,6 +45,8 @@ namespace Dulcet.Twitter.Rest
                 para.Add(new KeyValuePair<string, string>("page", page.Value.ToString()));
             }
 
+            para.Add(new KeyValuePair<string, string>("include_entities", "true"));
+
             return provider.GetDirectMessages(partialUri, para);
         }
 
@@ -57,15 +56,15 @@ namespace Dulcet.Twitter.Rest
         /// <param name="provider">credential provider</param>
         public static IEnumerable<TwitterDirectMessage> GetDirectMessages(this CredentialProvider provider)
         {
-            return provider.GetDirectMessages("direct_messages.xml", null);
+            return provider.GetDirectMessages("direct_messages.json", null);
         }
 
         /// <summary>
         /// Get direct messages with full params
         /// </summary>
-        public static IEnumerable<TwitterDirectMessage> GetDirectMessages(this CredentialProvider provider, long? sinceId = null, long? maxId = null, long? count = null, long? page = null)
+        public static IEnumerable<TwitterDirectMessage> GetDirectMessages(this CredentialProvider provider, long? sinceId = null, long? maxId = null, long? count = null, long? page = null, bool? includeEntities = null)
         {
-            return provider.GetDirectMessages("direct_messages.xml", sinceId, maxId, count, page);
+            return provider.GetDirectMessages("direct_messages.json", sinceId, maxId, count, page);
         }
 
         /// <summary>
@@ -74,15 +73,15 @@ namespace Dulcet.Twitter.Rest
         /// <param name="provider">credential provider</param>
         public static IEnumerable<TwitterDirectMessage> GetSentDirectMessages(this CredentialProvider provider)
         {
-            return provider.GetDirectMessages("direct_messages/sent.xml", null);
+            return provider.GetDirectMessages("direct_messages/sent.json", null);
         }
 
         /// <summary>
         /// Get direct messages you sent with full params
         /// </summary>
-        public static IEnumerable<TwitterDirectMessage> GetSentDirectMessages(this CredentialProvider provider, long? sinceId = null, long? maxId = null, long? count = null, long? page = null)
+        public static IEnumerable<TwitterDirectMessage> GetSentDirectMessages(this CredentialProvider provider, long? sinceId = null, long? maxId = null, long? count = null, long? page = null, bool? includeEntities = null)
         {
-            return provider.GetDirectMessages("direct_messages/sent.xml", sinceId, maxId, count, page);
+            return provider.GetDirectMessages("direct_messages/sent.json", sinceId, maxId, count, page);
         }
 
         /// <summary>
@@ -97,7 +96,7 @@ namespace Dulcet.Twitter.Rest
             para.Add(new KeyValuePair<string, string>("text", HttpUtility.UrlEncodeStrict(text, Encoding.UTF8, true)));
             para.Add(new KeyValuePair<string, string>("user", user));
 
-            var xmlDoc = provider.RequestAPIv1("direct_messages/new.xml", CredentialProvider.RequestMethod.POST, para);
+            var xmlDoc = provider.RequestAPIv1("direct_messages/new.json", CredentialProvider.RequestMethod.POST, para);
             if (xmlDoc == null)
                 return null;
 
@@ -111,7 +110,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="id">destroy id</param>
         public static TwitterDirectMessage DestroyDirectMessage(this CredentialProvider provider, string id)
         {
-            string partialUri = string.Format("direct_messages/destroy/{0}.xml", id);
+            string partialUri = string.Format("direct_messages/destroy/{0}.json", id);
             var xmlDoc = provider.RequestAPIv1(partialUri, CredentialProvider.RequestMethod.POST, null);
             if (xmlDoc == null)
                 return null;

@@ -35,5 +35,6 @@ namespace Inscribe.Configuration.Elements
 
         public string[] AccountDependentQuery { get; set; }
 
+        public string FallbackAccount { get; set; }
     }
 }

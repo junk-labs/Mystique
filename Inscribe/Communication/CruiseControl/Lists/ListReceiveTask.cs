@@ -38,7 +38,7 @@ namespace Inscribe.Communication.CruiseControl.Lists
 
         protected override IEnumerable<Dulcet.Twitter.TwitterStatusBase> GetTweets()
         {
-            return ApiHelper.ExecApi(() => this.AccountInfo.GetListStatuses(this.ListUserScreenName, this.ListName, perPage: TwitterDefine.ListReceiveCount));
+            return ApiHelper.ExecApi(() => this.AccountInfo.GetListStatuses(this.ListUserScreenName, this.ListName, perPage: TwitterDefine.ListReceiveCount, includeRts: true));
         }
 
         public void EndReceive()

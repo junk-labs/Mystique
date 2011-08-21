@@ -230,6 +230,8 @@ namespace Inscribe.Storage
                     if (AccountStorage.Accounts.Any(a => a.IsBlocking(statusBase.User.NumericId)))
                         return viewModel;
                 }
+                // プリプロセッシング
+                PreProcess(statusBase);
                 lock (__regCoreLock__)
                 {
                     if (!deleteReserveds.Contains(statusBase.Id))
@@ -248,6 +250,42 @@ namespace Inscribe.Storage
                 System.Diagnostics.Debug.WriteLine("*** trash: " + statusBase.ToString());
             }
             return viewModel;
+        }
+
+        /// <summary>
+        /// ステータスのプリプロセッシング
+        /// </summary>
+        private static void PreProcess(TwitterStatusBase status)
+        {
+            try
+            {
+                if (status.Entities != null)
+                {
+                    // extracting t.co
+                    var urls = status.Entities.GetChildNode("urls");
+                    if (urls != null)
+                    {
+                        urls.GetChildNodes("item")
+                            .OrderByDescending(i => i.GetChildNode("indices").GetChildValues("item").Select(s => s.Value).First())
+                            .ForEach(i =>
+                        {
+                            var expand = i.GetChildValue("expanded_url").Value;
+                            if (String.IsNullOrWhiteSpace(expand))
+                                expand = i.GetChildValue("url").Value;
+                            if (!String.IsNullOrWhiteSpace(expand))
+                            {
+                                var indices = i.GetChildNode("indices").GetChildValues("item").Select(v => int.Parse(v.Value)).ToArray();
+                                if (indices.Length == 2)
+                                {
+                                    status.Text = status.Text.Substring(0, indices[0]) +
+                                        expand + status.Text.Substring(indices[1]);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+            catch { }
         }
 
         /// <summary>

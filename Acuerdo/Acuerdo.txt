@@ -1,4 +1,5 @@
 ﻿Acuerdo Library
 
-Krile2の基本データクラスを提供します。
-プラグインシステムの一部も保持します。
+Krile Mystiqueのプラグインシステムの一部を保持します。
+
+from acuerdo ave;new 3rd maxi single

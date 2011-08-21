@@ -60,6 +60,7 @@
     <Compile Include="Twitter\Streaming\StreamingCore.cs" />
     <Compile Include="Twitter\Streaming\StreamingEvent.cs" />
     <Compile Include="Twitter\TwitterDirectMessage.cs" />
+    <Compile Include="Twitter\TwitterEntity.cs" />
     <Compile Include="Twitter\TwitterList.cs" />
     <Compile Include="Twitter\TwitterStatus.cs" />
     <Compile Include="Twitter\TwitterStatusBase.cs" />

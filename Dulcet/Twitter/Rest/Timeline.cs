@@ -19,12 +19,9 @@ namespace Dulcet.Twitter.Rest
             var doc = provider.RequestAPIv1(partialUri, CredentialProvider.RequestMethod.GET, param);
             if (doc == null)
                 return null;
-            List<TwitterStatus> statuses = new List<TwitterStatus>();
-            HashSet<string> hashes = new HashSet<string>();
-            return from n in doc.Descendants("status")
-                   let s = TwitterStatus.FromNode(n)
-                   where s != null
-                   select s;
+            return doc.Root.Elements()
+                .Select(n => TwitterStatus.FromNode(n))
+                .Where(s => s != null);
         }
 
         /// <summary>
@@ -48,8 +45,7 @@ namespace Dulcet.Twitter.Rest
             if (userId != null)
                 para.Add(new KeyValuePair<string, string>("user_id", userId.ToString()));
 
-            if (!String.IsNullOrEmpty(screenName))
-                para.Add(new KeyValuePair<string, string>("screen_name", screenName));
+            para.Add(new KeyValuePair<string, string>("include_entities", "true"));
 
             return provider.GetTimeline(partialUri, para);
         }
@@ -61,16 +57,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="provider">credential provider</param>
         public static IEnumerable<TwitterStatus> GetPublicTimeline(this CredentialProvider provider)
         {
-            return provider.GetTimeline("statuses/public_timeline.xml", null);
-        }
-
-        /// <summary>
-        /// Get home timeline (it contains following users' tweets)
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        public static IEnumerable<TwitterStatus> GetHomeTimeline(this CredentialProvider provider)
-        {
-            return provider.GetTimeline("statuses/home_timeline.xml", null);
+            return provider.GetTimeline("statuses/public_timeline.json", null, null, null, null, null, null);
         }
 
         /// <summary>
@@ -78,16 +65,7 @@ namespace Dulcet.Twitter.Rest
         /// </summary>
         public static IEnumerable<TwitterStatus> GetHomeTimeline(this CredentialProvider provider, long? sinceId = null, long? maxId = null, long? count = null, long? page = null)
         {
-            return provider.GetTimeline("statuses/home_timeline.xml", sinceId, maxId, count, page, null, null);
-        }
-
-        /// <summary>
-        /// Get friends timeline
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        public static IEnumerable<TwitterStatus> GetFriendsTimeline(this CredentialProvider provider)
-        {
-            return provider.GetTimeline("statuses/friends_timeline.xml", null);
+            return provider.GetTimeline("statuses/home_timeline.json", sinceId, maxId, count, page, null, null);
         }
 
         /// <summary>
@@ -111,22 +89,15 @@ namespace Dulcet.Twitter.Rest
             if (!String.IsNullOrEmpty(id))
                 para.Add(new KeyValuePair<string, string>("id", id.ToString()));
 
-            return provider.GetTimeline("statuses/friends_timeline.xml", para);
-        }
+            para.Add(new KeyValuePair<string, string>("include_entities", "true"));
 
-        /// <summary>
-        /// Get user timeline
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        public static IEnumerable<TwitterStatus> GetUserTimeline(this CredentialProvider provider)
-        {
-            return provider.GetTimeline("statuses/user_timeline.xml", null);
+            return provider.GetTimeline("statuses/friends_timeline.json", para);
         }
 
         /// <summary>
         /// Get user timeline with full params
         /// </summary>
-        public static IEnumerable<TwitterStatus> GetUserTimeline(this CredentialProvider provider, string id = null, long? userId = null, string screenName = null, long? sinceId = null, long? maxId = null, long? count = null, long? page = null, bool? trim_user = null, bool? include_rts = null, bool? include_entities = null)
+        public static IEnumerable<TwitterStatus> GetUserTimeline(this CredentialProvider provider, string id = null, long? userId = null, string screenName = null, long? sinceId = null, long? maxId = null, long? count = null, long? page = null, bool? trimUser = null, bool? includeRts = null)
         {
             List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
             if (sinceId != null && sinceId.HasValue)
@@ -150,25 +121,15 @@ namespace Dulcet.Twitter.Rest
             if (!String.IsNullOrEmpty(screenName))
                 para.Add(new KeyValuePair<string, string>("screen_name", screenName.ToString()));
 
-            if (trim_user != null)
+            if (trimUser != null)
                 para.Add(new KeyValuePair<string, string>("trim_user", "true"));
 
-            if (include_rts != null)
+            if (includeRts != null)
                 para.Add(new KeyValuePair<string, string>("include_rts", "true"));
 
-            if (include_entities != null)
-                para.Add(new KeyValuePair<string, string>("include_entities", "true"));
+            para.Add(new KeyValuePair<string, string>("include_entities", "true"));
 
-            return provider.GetTimeline("statuses/user_timeline.xml", para);
-        }
-
-        /// <summary>
-        /// Get mentions
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        public static IEnumerable<TwitterStatus> GetMentions(this CredentialProvider provider)
-        {
-            return provider.GetTimeline("statuses/mentions.xml", null);
+            return provider.GetTimeline("statuses/user_timeline.json", para);
         }
 
         /// <summary>
@@ -176,16 +137,7 @@ namespace Dulcet.Twitter.Rest
         /// </summary>
         public static IEnumerable<TwitterStatus> GetMentions(this CredentialProvider provider, long? sinceId = null, long? maxId = null, long? count = null, long? page = null)
         {
-            return provider.GetTimeline("statuses/mentions.xml", sinceId, maxId, count, page, null, null);
-        }
-
-        /// <summary>
-        /// Get favorite timeline
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        public static IEnumerable<TwitterStatus> GetFavorites(this CredentialProvider provider)
-        {
-            return provider.GetTimeline("favorites.xml", null, null, null, null, null, null);
+            return provider.GetTimeline("statuses/mentions.json", sinceId, maxId, count, page, null, null);
         }
 
         /// <summary>
@@ -194,9 +146,9 @@ namespace Dulcet.Twitter.Rest
         public static IEnumerable<TwitterStatus> GetFavorites(this CredentialProvider provider, string id = null, long? page = null)
         {
             if (id == null)
-                return provider.GetTimeline("favorites.xml", null, null, null, page, null, null);
+                return provider.GetTimeline("favorites.json", null, null, null, page, null, null);
             else
-                return provider.GetTimeline("favorites/" + id + ".xml", null, null, null, page, null, null);
+                return provider.GetTimeline("favorites/" + id + ".json", null, null, null, page, null, null);
         }
     }
 }

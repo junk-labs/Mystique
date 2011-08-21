@@ -1,0 +1,6 @@
+﻿Casket Default Plugin
+
+Krile Mystique 向けの一般的なプラグイン実装です。
+URL短縮や画像アップローダーの実装が含まれます。
+
+from casket ave;new rare track collection vol.1

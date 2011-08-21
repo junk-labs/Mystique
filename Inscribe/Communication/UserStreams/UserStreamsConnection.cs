@@ -22,7 +22,6 @@ namespace Inscribe.Communication.UserStreams
         static StreamingCore streamingCore;
 
         static Thread pumpThread;
-        private AccountInfo i;
         static UserStreamsConnection()
         {
             streamingCore = new StreamingCore();
@@ -266,6 +265,10 @@ namespace Inscribe.Communication.UserStreams
                         else
                         {
                             string descText = we.Status.ToString();
+                            if (we.Status == WebExceptionStatus.UnknownError)
+                            {
+                                descText = we.Message;
+                            }
                             if (we.Status == WebExceptionStatus.ProtocolError)
                             {
                                 var hwr = we.Response as HttpWebResponse;
@@ -361,6 +364,11 @@ namespace Inscribe.Communication.UserStreams
             this.disposed = true;
             if (this.connection != null)
                 this.connection.Dispose();
+        }
+
+        public bool IsAlive
+        {
+            get { return !this.disposed; }
         }
     }
 }

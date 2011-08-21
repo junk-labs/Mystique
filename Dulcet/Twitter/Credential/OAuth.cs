@@ -363,7 +363,7 @@ namespace Dulcet.Twitter.Credential
 
         #endregion
 
-        #region Inherit property
+        #region Abstracted property
 
         /// <summary>
         /// Consumer key

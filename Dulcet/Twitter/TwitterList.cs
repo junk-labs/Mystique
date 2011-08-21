@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using Dulcet.Util;
 
 namespace Dulcet.Twitter
@@ -9,6 +10,8 @@ namespace Dulcet.Twitter
 
         public static TwitterList FromNode(XElement node)
         {
+            if (node == null)
+                throw new ArgumentNullException("node");
             return new TwitterList()
             {
                 Id = node.Element("id").ParseLong(),

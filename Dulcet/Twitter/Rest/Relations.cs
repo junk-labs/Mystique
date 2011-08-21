@@ -16,9 +16,9 @@ namespace Dulcet.Twitter.Rest
         [Obsolete("Please use other overload.")]
         public static TwitterUser CreateFriendship(this CredentialProvider provider, string user)
         {
-            var ret = provider.RequestAPIv1("friendships/create/" + user + ".xml", CredentialProvider.RequestMethod.POST, null);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("friendships/create/" + user + ".json", CredentialProvider.RequestMethod.POST, null);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -44,9 +44,9 @@ namespace Dulcet.Twitter.Rest
                 arg.Add(new KeyValuePair<string, string>("screen_name", screenName));
             if (follow)
                 arg.Add(new KeyValuePair<string, string>("follow", "true"));
-            var ret = provider.RequestAPIv1("friendships/create.xml", CredentialProvider.RequestMethod.POST, arg);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("friendships/create.json", CredentialProvider.RequestMethod.POST, arg);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -59,9 +59,9 @@ namespace Dulcet.Twitter.Rest
         [Obsolete("Please use other overload.")]
         public static TwitterUser DestroyFriendship(this CredentialProvider provider, string user)
         {
-            var ret = provider.RequestAPIv1("friendships/destroy/" + user + ".xml", CredentialProvider.RequestMethod.POST, null);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("friendships/destroy/" + user + ".json", CredentialProvider.RequestMethod.POST, null);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -84,9 +84,9 @@ namespace Dulcet.Twitter.Rest
                 arg.Add(new KeyValuePair<string, string>("user_id", userId.ToString()));
             if (!String.IsNullOrEmpty(screenName))
                 arg.Add(new KeyValuePair<string, string>("screen_name", screenName));
-            var ret = provider.RequestAPIv1("friendships/destroy.xml", CredentialProvider.RequestMethod.POST, arg);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("friendships/destroy.json", CredentialProvider.RequestMethod.POST, arg);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -103,7 +103,7 @@ namespace Dulcet.Twitter.Rest
             List<KeyValuePair<string, string>> arg = new List<KeyValuePair<string, string>>();
             arg.Add(new KeyValuePair<string, string>("user_a", userA));
             arg.Add(new KeyValuePair<string, string>("user_b", userB));
-            var ret = provider.RequestAPIv1("friendship/exists.xml", CredentialProvider.RequestMethod.GET, arg);
+            var ret = provider.RequestAPIv1("friendship/exists.json", CredentialProvider.RequestMethod.GET, arg);
             if (ret.Element("friends") != null)
                 return ret.Element("friends").ParseBool();
             else
@@ -117,9 +117,9 @@ namespace Dulcet.Twitter.Rest
         /// <param name="user">target user id or screen name</param>
         public static TwitterUser CreateBlockUser(this CredentialProvider provider, string user)
         {
-            var ret = provider.RequestAPIv1("blocks/create/" + user + ".xml", CredentialProvider.RequestMethod.POST, null);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("blocks/create/" + user + ".json", CredentialProvider.RequestMethod.POST, null);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -142,9 +142,9 @@ namespace Dulcet.Twitter.Rest
                 arg.Add(new KeyValuePair<string, string>("user_id", userId.ToString()));
             if (!String.IsNullOrEmpty(screenName))
                 arg.Add(new KeyValuePair<string, string>("screen_name", screenName));
-            var ret = provider.RequestAPIv1("blocks/create.xml", CredentialProvider.RequestMethod.POST, arg);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("blocks/create.json", CredentialProvider.RequestMethod.POST, arg);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -156,9 +156,9 @@ namespace Dulcet.Twitter.Rest
         /// <param name="user">target user id or screen name</param>
         public static TwitterUser DestroyBlockUser(this CredentialProvider provider, string user)
         {
-            var ret = provider.RequestAPIv1("blocks/destroy/" + user + ".xml", CredentialProvider.RequestMethod.POST, null);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("blocks/destroy/" + user + ".json", CredentialProvider.RequestMethod.POST, null);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -181,9 +181,9 @@ namespace Dulcet.Twitter.Rest
                 arg.Add(new KeyValuePair<string, string>("user_id", userId.ToString()));
             if (!String.IsNullOrEmpty(screenName))
                 arg.Add(new KeyValuePair<string, string>("screen_name", screenName));
-            var ret = provider.RequestAPIv1("blocks/destroy.xml", CredentialProvider.RequestMethod.POST, arg);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("blocks/destroy.json", CredentialProvider.RequestMethod.POST, arg);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -195,9 +195,9 @@ namespace Dulcet.Twitter.Rest
         /// <param name="user">target user id or screen name</param>
         public static TwitterUser ExistsBlockUser(this CredentialProvider provider, string user)
         {
-            var ret = provider.RequestAPIv1("blocks/exists/" + user + ".xml", CredentialProvider.RequestMethod.POST, null);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("blocks/exists/" + user + ".json", CredentialProvider.RequestMethod.POST, null);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -220,9 +220,9 @@ namespace Dulcet.Twitter.Rest
                 arg.Add(new KeyValuePair<string, string>("user_id", userId.ToString()));
             if (!String.IsNullOrEmpty(screenName))
                 arg.Add(new KeyValuePair<string, string>("screen_name", screenName));
-            var ret = provider.RequestAPIv1("blocks/exists.xml", CredentialProvider.RequestMethod.POST, arg);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("blocks/exists.json", CredentialProvider.RequestMethod.POST, arg);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }
@@ -240,7 +240,7 @@ namespace Dulcet.Twitter.Rest
                 arg = new List<KeyValuePair<string, string>>();
                 arg.Add(new KeyValuePair<string, string>("page", page.Value.ToString()));
             }
-            var ret = provider.RequestAPIv1("blocks/blocking.xml", CredentialProvider.RequestMethod.GET, arg);
+            var ret = provider.RequestAPIv1("blocks/blocking.json", CredentialProvider.RequestMethod.GET, arg);
             if (ret != null)
                 return from n in ret.Descendants("user")
                        let usr = TwitterUser.FromNode(n)
@@ -292,9 +292,9 @@ namespace Dulcet.Twitter.Rest
                 arg.Add(new KeyValuePair<string, string>("user_id", userId.ToString()));
             if (!String.IsNullOrEmpty(screenName))
                 arg.Add(new KeyValuePair<string, string>("screen_name", screenName));
-            var ret = provider.RequestAPIv1("report_spam.xml", CredentialProvider.RequestMethod.POST, arg);
-            if (ret != null && ret.Element("user") != null)
-                return TwitterUser.FromNode(ret.Element("user"));
+            var ret = provider.RequestAPIv1("report_spam.json", CredentialProvider.RequestMethod.POST, arg);
+            if (ret != null && ret.Root != null)
+                return TwitterUser.FromNode(ret.Root);
             else
                 return null;
         }

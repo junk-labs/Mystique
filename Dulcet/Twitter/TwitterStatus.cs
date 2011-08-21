@@ -1,5 +1,6 @@
 ﻿using System.Xml.Linq;
 using Dulcet.Util;
+using System;
 
 namespace Dulcet.Twitter
 {
@@ -9,6 +10,8 @@ namespace Dulcet.Twitter
 
         public static TwitterStatus FromNode(XElement node)
         {
+            if (node == null)
+                throw new ArgumentNullException("node");
             return new TwitterStatus()
             {
                 Id = node.Element("id").ParseLong(),
@@ -20,6 +23,7 @@ namespace Dulcet.Twitter
                 InReplyToUserScreenName = node.Element("in_reply_to_screen_name").ParseString(),
                 RetweetedOriginal = node.Element("retweeted_status") == null ? null : TwitterStatus.FromNode(node.Element("retweeted_status")),
                 User = TwitterUser.FromNode(node.Element("user")),
+                Entities = TwitterEntity.Parse(node.Element("entities")),
             };
         }
 

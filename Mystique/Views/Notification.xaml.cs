@@ -8,6 +8,7 @@ using System.Windows.Interop;
 using System.Windows.Threading;
 using Inscribe.Configuration;
 using Nightmare.Forms;
+using Inscribe.Storage;
 
 namespace Mystique.Views
 {
@@ -58,36 +59,43 @@ namespace Mystique.Views
             {
                 if (Setting.Instance.NotificationProperty.IsShowMultiple)
                 {
-                    // ウィンドウ最大表示数を数える
-                    // Height = (48 + 10) * x
-                    // Margin:10px
-                    offsetIndex = Enumerable.Range(0, (int)(screen.WorkingArea.Height / 58)).Concat(new[] { -1 })
-                        .First(i => i == -1 ||
-                            i == notifications.Count ||
-                            notifications[i] == null);
-                    if (offsetIndex == -1)
+                    try
                     {
-                        offsetIndex = Enumerable.Range(0, (int)(screen.WorkingArea.Height / 58))
-                            .OrderBy(i => notifications[i].CreateDateTime).First();
-                        notifications[offsetIndex].Close();
+                        // ウィンドウ最大表示数を数える
+                        // Height = (48 + 10) * x
+                        // Margin:10px
+                        offsetIndex = Enumerable.Range(0, (int)(screen.WorkingArea.Height / 58)).Concat(new[] { -1 })
+                            .First(i => i == -1 ||
+                                i == notifications.Count ||
+                                notifications[i] == null);
+
+                        if (offsetIndex == -1)
+                        {
+                            // overflow
+                            offsetIndex = Enumerable.Range(0, notifications.Count)
+                                .OrderBy(i => notifications[i].CreateDateTime).First();
+                            notifications[offsetIndex].Close();
+                        }
+
+                        if (offsetIndex == notifications.Count)
+                        {
+                            notifications.Add(this);
+                        }
+                        else
+                        {
+                            notifications[offsetIndex] = this;
+                        }
                     }
-                    if (offsetIndex == notifications.Count)
+                    catch (Exception ex)
                     {
-                        notifications.Add(this);
+                        throw new ArgumentOutOfRangeException("Debug?::NI::" + offsetIndex.ToString() + "/" + notifications.Count.ToString(), ex);
                     }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("Overwrite " + offsetIndex + ".");
-                        notifications[offsetIndex] = this;
-                    }
-                    System.Diagnostics.Debug.WriteLine(this.Identifier + " is successfully added to " + offsetIndex + ".");
                 }
                 else
                 {
-                    if (notifications[0] != null)
+                    if (notifications.Count > 0 && notifications[0] != null)
                         notifications[0].Close();
                 }
-
             }
 
             if (Setting.Instance.NotificationProperty.NotifyLocation == Inscribe.Configuration.Settings.NotifyLocation.LeftTop ||
@@ -118,7 +126,7 @@ namespace Mystique.Views
         {
             lock (notifyLock)
             {
-                var idx = Enumerable.Range(0, notifications.Count - 1).Concat(new[] { -1 })
+                var idx = Enumerable.Range(0, notifications.Count).Concat(new[] { -1 })
                     .Where(i => i < 0 || (notifications[i] != null && notifications[i].Identifier == this.Identifier)).First();
                 if (idx != -1)
                 {

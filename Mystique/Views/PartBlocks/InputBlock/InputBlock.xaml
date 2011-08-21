@@ -48,6 +48,7 @@
         <BitmapImage x:Key="TagHandBind" UriSource="/Resources/tag_edit.png" />
         <BitmapImage x:Key="TagAddHandBind" UriSource="/Resources/tag_add.png" />
         <BitmapImage x:Key="Failed" UriSource="/Resources/exclamation.png" />
+        <BitmapImage x:Key="Warning" UriSource="/Resources/warning.png" />
         <cp:TweetStringToCountConverter x:Key="StringCountConverter" />
     </UserControl.Resources>
     <StackPanel Orientation="Vertical">
@@ -464,11 +465,23 @@
                                        Source="{StaticResource Checked}"
                                        Visibility="{Binding IsInUpdated,
                                                             Converter={StaticResource BoolVisibleConverter}}" />
+                                <Image Width="16"
+                                       Height="16"
+                                       VerticalAlignment="Center"
+                                       Source="{StaticResource Warning}"
+                                       Visibility="{Binding IsInAnnotated,
+                                                            Converter={StaticResource BoolVisibleConverter}}" />
                                 <TextBlock Margin="2"
                                            VerticalAlignment="Center"
                                            Foreground="ForestGreen"
                                            Text="Tweeted!"
                                            Visibility="{Binding IsInUpdated,
+                                                                Converter={StaticResource BoolVisibleConverter}}" />
+                                <TextBlock Margin="2"
+                                           VerticalAlignment="Center"
+                                           Foreground="OrangeRed"
+                                           Text="{Binding ErrorTitle}"
+                                           Visibility="{Binding IsInAnnotated,
                                                                 Converter={StaticResource BoolVisibleConverter}}" />
                                 <com:PopupButton Visibility="{Binding IsInformationAvailable, Converter={StaticResource BoolVisibleConverter}}">
                                     <StackPanel Orientation="Horizontal">
@@ -481,12 +494,6 @@
                                                    Foreground="Red"
                                                    Text="Failed..."
                                                    Visibility="{Binding IsInFailed,
-                                                                        Converter={StaticResource BoolVisibleConverter}}" />
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Foreground="DarkOrange"
-                                                   Text="Annotated..."
-                                                   TextWrapping="Wrap"
-                                                   Visibility="{Binding IsInAnnotated,
                                                                         Converter={StaticResource BoolVisibleConverter}}" />
                                     </StackPanel>
                                     <com:PopupButton.DropDownPopup>

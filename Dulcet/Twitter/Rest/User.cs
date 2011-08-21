@@ -25,7 +25,7 @@ namespace Dulcet.Twitter.Rest
             var doc = provider.RequestAPIv1(partialUri, method, para);
             if (doc == null)
                 return null;
-            return TwitterUser.FromNode(doc.Element("user"));
+            return TwitterUser.FromNode(doc.Root);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="userId">target user id</param>
         public static TwitterUser GetUser(this CredentialProvider provider, long userId)
         {
-            return provider.GetUser("users/show.xml", CredentialProvider.RequestMethod.GET, userId, null);
+            return provider.GetUser("users/show.json", CredentialProvider.RequestMethod.GET, userId, null);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="screenName">target user screen name</param>
         public static TwitterUser GetUserByScreenName(this CredentialProvider provider, string screenName)
         {
-            return provider.GetUser("users/show.xml", CredentialProvider.RequestMethod.GET, null, screenName);
+            return provider.GetUser("users/show.json", CredentialProvider.RequestMethod.GET, null, screenName);
         }
 
         /// <summary>
@@ -56,7 +56,8 @@ namespace Dulcet.Twitter.Rest
             var doc = provider.RequestAPIv1(partialUri, CredentialProvider.RequestMethod.GET, para);
             if (doc == null)
                 return null; // request returns error ?
-            return doc.Descendants("user").Select(u => TwitterUser.FromNode(u)).Where(u => u != null);
+            System.Diagnostics.Debug.WriteLine("GetUsers ::: " + Environment.NewLine + doc);
+            return doc.Root.Element("users").Elements().Select(u => TwitterUser.FromNode(u)).Where(u => u != null);
         }
 
         /// <summary>
@@ -67,9 +68,9 @@ namespace Dulcet.Twitter.Rest
             if (screenNames == null && ids == null)
                 throw new ArgumentNullException("screenNameとid,両方をnullに設定することはできません。");
             if (screenNames != null)
-                return provider.GetUsers("users/lookup.xml", new[] { new KeyValuePair<string, string>("screen_name", String.Join(",", screenNames)) });
+                return provider.GetUsers("users/lookup.json", new[] { new KeyValuePair<string, string>("screen_name", String.Join(",", screenNames)) });
             else
-                return provider.GetUsers("users/lookup.xml", new[] { new KeyValuePair<string, string>("user_id", String.Join(",", ids.Select(l => l.ToString()))) });
+                return provider.GetUsers("users/lookup.json", new[] { new KeyValuePair<string, string>("user_id", String.Join(",", ids.Select(l => l.ToString()))) });
         }
 
         /// <summary>
@@ -83,17 +84,16 @@ namespace Dulcet.Twitter.Rest
             if (doc == null)
                 return null; // request returns error ?
             List<TwitterUser> users = new List<TwitterUser>();
-            var ul = doc.Element("id_list");
-            if (ul != null)
-            {
-                var nc = ul.Element("next_cursor");
-                if (nc != null)
-                    nextCursor = (long)nc.ParseLong();
-                var pc = ul.Element("previous_cursor");
-                if (pc != null)
-                    prevCursor = (long)pc.ParseLong();
-            }
-            return doc.Descendants("id").Select(n => n.ParseLong()).Where(n => n != 0);
+            var nc = doc.Root.Element("next_cursor");
+            if (nc != null)
+                nextCursor = (long)nc.ParseLong();
+            var pc = doc.Root.Element("previous_cursor");
+            if (pc != null)
+                prevCursor = (long)pc.ParseLong();
+            if (doc.Root.Element("ids") != null)
+                return doc.Root.Element("ids").Elements().Select(n => n.ParseLong()).Where(n => n != 0);
+            else
+                return doc.Root.Elements().Select(n => n.ParseLong()).Where(n => n != 0);
         }
 
         /// <summary>
@@ -137,17 +137,17 @@ namespace Dulcet.Twitter.Rest
 
         public static IEnumerable<long> GetFriendIds(this CredentialProvider provider, long? userId = null, string screenName = null)
         {
-            return provider.GetUserIdsAll("friends/ids.xml", userId, screenName);
+            return provider.GetUserIdsAll("friends/ids.json", userId, screenName);
         }
 
         public static IEnumerable<long> GetFollowerIds(this CredentialProvider provider, long? userId = null, string screenName = null)
         {
-            return provider.GetUserIdsAll("followers/ids.xml", userId, screenName);
+            return provider.GetUserIdsAll("followers/ids.json", userId, screenName);
         }
 
         public static IEnumerable<long> GetBlockingIds(this CredentialProvider provider)
         {
-            return provider.GetUserIdsAll("blocks/blocking/ids.xml", null, null);
+            return provider.GetUserIdsAll("blocks/blocking/ids.json", null, null);
         }
     }
 }

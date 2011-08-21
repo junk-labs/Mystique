@@ -2,6 +2,7 @@
 using System.Linq;
 using Dulcet.Twitter.Credential;
 using Dulcet.Util;
+using System;
 
 namespace Dulcet.Twitter.Rest
 {
@@ -18,20 +19,14 @@ namespace Dulcet.Twitter.Rest
             if (doc == null)
                 return null; // request returns error ?
             List<TwitterUser> users = new List<TwitterUser>();
-            var ul = doc.Element("users_list");
-            if (ul != null)
-            {
-                var nc = ul.Element("next_cursor");
-                if (nc != null)
-                    nextCursor = (long)nc.ParseLong();
-                var pc = ul.Element("previous_cursor");
-                if (pc != null)
-                    prevCursor = (long)pc.ParseLong();
-            }
-            return from n in doc.Descendants("user")
-                   let usr = TwitterUser.FromNode(n)
-                   where usr != null
-                   select usr;
+            var nc = doc.Root.Element("next_cursor");
+            if (nc != null)
+                nextCursor = (long)nc.ParseLong();
+            var pc = doc.Root.Element("previous_cursor");
+            if (pc != null)
+                prevCursor = (long)pc.ParseLong();
+            System.Diagnostics.Debug.WriteLine("GetUser:::" + Environment.NewLine + doc.ToString());
+            return doc.Root.Element("users").Elements().Select(n => TwitterUser.FromNode(n)).Where(s => s != null);
         }
 
         /// <summary>

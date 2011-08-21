@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
 using Inscribe.Configuration;
 using Inscribe.Model;
@@ -13,7 +14,8 @@ using Inscribe.Storage;
 using Inscribe.Threading;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
-using Dulcet.Twitter;
+using System.Runtime.Serialization.Json;
+using System.Text;
 
 namespace Inscribe.Communication.Posting
 {
@@ -70,7 +72,7 @@ namespace Inscribe.Communication.Posting
 
             try
             {
-                var recvs = ApiHelper.ExecApi(() => info.GetUserTimeline(count: 150, include_rts: true));
+                var recvs = ApiHelper.ExecApi(() => info.GetUserTimeline(count: 150, includeRts: true));
                 if (recvs != null)
                     recvs.ForEach(i => TweetStorage.Register(i));
 
@@ -176,7 +178,7 @@ namespace Inscribe.Communication.Posting
                 if (times[i] - times[i + TwitterDefine.UnderControlCount - 1] < TwitterDefine.UnderControlTimespan)
                 {
                     // i - 1 が規制ポイント
-                    i--;
+                    // i < 0だと厄介なのでiで代用
                     initPointFound = true;
                     break;
                 }
@@ -243,26 +245,31 @@ namespace Inscribe.Communication.Posting
                             // 規制？
                             using (var strm = hrw.GetResponseStream())
                             {
-                                var xdoc = XDocument.Load(strm);
-                                var eel = xdoc.Root.Element("error");
-                                if (eel != null)
+                                using (var json = JsonReaderWriterFactory.CreateJsonReader(strm,
+                                    System.Xml.XmlDictionaryReaderQuotas.Max))
                                 {
-                                    if (eel.Value.IndexOf("update limit", StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                    var xdoc = XDocument.Load(json);
+                                    System.Diagnostics.Debug.WriteLine(xdoc);
+                                    var eel = xdoc.Root.Element("error");
+                                    if (eel != null)
                                     {
-                                        // User is over daily status update limit.
-                                        // POST規制
-                                        AddUnderControlled(info);
-                                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.Controlled);
-                                    }
-                                    else if (eel.Value.IndexOf("duplicate", StringComparison.CurrentCultureIgnoreCase) >= 0)
-                                    {
-                                        // 同じツイートをしようとした
-                                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.Duplicated);
-                                    }
-                                    else
-                                    {
-                                        // 何かよくわからない
-                                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, eel.Value);
+                                        if (eel.Value.IndexOf("update limit", StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                        {
+                                            // User is over daily status update limit.
+                                            // POST規制
+                                            AddUnderControlled(info);
+                                            throw new TweetFailedException(TweetFailedException.TweetErrorKind.Controlled);
+                                        }
+                                        else if (eel.Value.IndexOf("duplicate", StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                        {
+                                            // 同じツイートをしようとした
+                                            throw new TweetFailedException(TweetFailedException.TweetErrorKind.Duplicated);
+                                        }
+                                        else
+                                        {
+                                            // 何かよくわからない
+                                            throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, eel.Value);
+                                        }
                                     }
                                 }
                             }

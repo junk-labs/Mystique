@@ -11,6 +11,7 @@ using Inscribe.Plugin;
 using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
+using Inscribe.Text;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -44,6 +45,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public event Action RemoveRequired;
 
+        public event Action<TweetWorker> WorkerAddRequired;
+
         public Task<bool> DoWork()
         {
             return Task.Factory.StartNew(() => WorkCore());
@@ -53,65 +56,111 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         {
             try
             {
-                // build text
-
-                // attach image
-                if (!String.IsNullOrEmpty(this.attachImagePath))
+                try
                 {
-                    if (File.Exists(this.attachImagePath))
+                    // build text
+
+                    // attach image
+                    if (!String.IsNullOrEmpty(this.attachImagePath))
                     {
-                        try
+                        if (File.Exists(this.attachImagePath))
                         {
-                            var upl = UploaderManager.GetSuggestedUploader();
-                            if (upl == null)
-                                throw new InvalidOperationException("画像のアップローダ―が指定されていません。");
-                            body += " " + upl.UploadImage(this.accountInfo, this.attachImagePath, this.body);
+                            try
+                            {
+                                var upl = UploaderManager.GetSuggestedUploader();
+                                if (upl == null)
+                                    throw new InvalidOperationException("画像のアップローダ―が指定されていません。");
+                                body += " " + upl.UploadImage(this.accountInfo, this.attachImagePath, this.body);
+                            }
+                            catch (Exception e)
+                            {
+                                throw new WebException("画像のアップロードに失敗しました。", e);
+                            }
                         }
-                        catch (Exception e)
+                        else
                         {
-                            throw new WebException("画像のアップロードに失敗しました。", e);
+                            throw new FileNotFoundException("添付ファイルが見つかりません。");
                         }
+                    }
+
+                    if (TweetTextCounter.Count(body) > TwitterDefine.TweetMaxLength)
+                        throw new Exception("ツイートが140文字を超えました。");
+
+                    // is Unoffocial RT
+                    bool isQuoting = false;
+                    string quoteBody = String.Empty;
+                    // split "unofficial RT"
+                    var quoteindex = -1;
+
+                    var rtidx = body.IndexOf("RT @");
+                    if (rtidx >= 0)
+                        quoteindex = rtidx;
+
+                    var qtidx = body.IndexOf("QT @");
+                    if (qtidx >= 0 && (quoteindex == -1 || qtidx < quoteindex))
+                        quoteindex = qtidx;
+
+                    if (quoteindex >= 0)
+                    {
+                        isQuoting = true;
+                        quoteBody = body.Substring(quoteindex);
+                        body = body.Substring(0, quoteindex);
+                    }
+
+                    // add footer (when is in not "unofficial RT")
+                    if (!isQuoting &&
+                        !String.IsNullOrEmpty(accountInfo.AccoutProperty.FooterString) &&
+                        TweetTextCounter.Count(body) + TweetTextCounter.Count(accountInfo.AccoutProperty.FooterString) + 1 <= TwitterDefine.TweetMaxLength)
+                        body += " " + accountInfo.AccoutProperty.FooterString;
+
+
+                    // bind tag
+                    if (tags != null)
+                    {
+                        foreach (var tag in tags.Select(t => t.StartsWith("#") ? t : "#" + t))
+                        {
+                            if (TweetTextCounter.Count(body) + TweetTextCounter.Count(quoteBody) +  tag.Length + 1 <= TwitterDefine.TweetMaxLength)
+                                body += " " + tag;
+                        }
+                        if (isQuoting)
+                            body += " ";
+                    }
+
+                    // join quote
+                    body += quoteBody;
+
+                    // ready
+
+                    if (this.inReplyToId != 0)
+                        this.RecentPostCount = PostOffice.UpdateTweet(this.accountInfo, body, this.inReplyToId);
+                    else
+                        this.RecentPostCount = PostOffice.UpdateTweet(this.accountInfo, body);
+
+                    this.WorkingState = InputBlock.WorkingState.Updated;
+
+                    return true;
+                }
+                catch (TweetFailedException tfex)
+                {
+                    var acc = AccountStorage.Get(this.accountInfo.AccoutProperty.FallbackAccount);
+                    if (tfex.ErrorKind != TweetFailedException.TweetErrorKind.Controlled ||
+                        acc == null)
+                    {
+                        throw;
                     }
                     else
                     {
-                        throw new FileNotFoundException("添付ファイルが見つかりません。");
+                        // fallbacking
+                        WorkerAddRequired(new TweetWorker(this.parent, acc, this.body, this.inReplyToId, this.attachImagePath, this.tags));
+                        throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.Fallbacked);
                     }
                 }
-
-                if (body.Length > TwitterDefine.TweetMaxLength)
-                    throw new Exception("ツイートが140文字を超えました。");
-
-                // add footer
-                if (!String.IsNullOrEmpty(accountInfo.AccoutProperty.FooterString) &&
-                    !(body.Contains("RT @") || body.Contains("QT @")) &&
-                    body.Length + accountInfo.AccoutProperty.FooterString.Length + 1 <= TwitterDefine.TweetMaxLength)
-                    body += " " + accountInfo.AccoutProperty.FooterString;
-
-                if (tags != null)
-                {
-                    foreach (var tag in tags.Select(t => t.StartsWith("#") ? t : "#" + t))
-                    {
-                        if (body.Length + tag.Length + 1 <= TwitterDefine.TweetMaxLength)
-                            body += " " + tag;
-                    }
-                }
-
-                // ready
-
-                if (this.inReplyToId != 0)
-                    this.RecentPostCount = PostOffice.UpdateTweet(this.accountInfo, body, this.inReplyToId);
-                else
-                    this.RecentPostCount = PostOffice.UpdateTweet(this.accountInfo, body);
-
-                this.WorkingState = InputBlock.WorkingState.Updated;
-
-                return true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                this.WorkingState = e is TweetAnnotationException ? InputBlock.WorkingState.Annotated : InputBlock.WorkingState.Failed;
-                this.ExceptionString = e.ToString();
-                ParseFailException(e);
+                this.WorkingState = ex is TweetAnnotationException ? InputBlock.WorkingState.Annotated : InputBlock.WorkingState.Failed;
+                this.ExceptionString = ex.ToString();
+                ParseFailException(ex);
                 this.RecentPostCount = -1;
                 return this.WorkingState == InputBlock.WorkingState.Annotated;
             }
@@ -165,15 +214,13 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 switch (tex.Kind)
                 {
                     case TweetAnnotationException.AnnotationKind.NearUnderControl:
-                        this.ErrorTitle = "まもなく規制されそうです。";
-                        this.ErrorSummary =
-                            "ツイートは正常に投稿されました。" + Environment.NewLine +
-                            "短時間に多くのツイートを行っているようなので、POST規制に注意してください。";
+                        this.ErrorTitle = "Expect POST Limit";
+                        break;
+                    case TweetAnnotationException.AnnotationKind.Fallbacked:
+                        this.ErrorTitle = "Fallbacked";
                         break;
                     default:
-                        this.ErrorTitle = "アノテーションがあります。";
-                        this.ErrorSummary = "(内部エラー: アノテーションの特定に失敗しました。)" + Environment.NewLine +
-                            tex.Message;
+                        this.ErrorTitle = "Unknown(" + tex.Message + ")";
                         break;
                 }
                 return;
@@ -232,7 +279,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public bool IsInformationAvailable
         {
-            get { return this._workstate == InputBlock.WorkingState.Annotated || this._workstate == InputBlock.WorkingState.Failed; }
+            get { return this._workstate == InputBlock.WorkingState.Failed; }
         }
 
         public bool IsInFailed

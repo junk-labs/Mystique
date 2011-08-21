@@ -20,6 +20,8 @@ namespace Dulcet.Twitter
 
         public DateTime CreatedAt { get; set; }
 
+        public TwitterEntityNode Entities { get; set; }
+
         public override bool Equals(object obj)
         {
             return this.Equals(obj as TwitterStatusBase);

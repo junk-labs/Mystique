@@ -13,10 +13,12 @@ namespace Dulcet.Twitter.Rest
         private static TwitterStatus GetStatus(this CredentialProvider provider, string partialUriFormat, CredentialProvider.RequestMethod method, long id)
         {
             string partialUri = string.Format(partialUriFormat, id);
-            var doc = provider.RequestAPIv1(partialUri, method, null);
+            List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
+            para.Add(new KeyValuePair<string, string>("include_entitis", "true"));
+            var doc = provider.RequestAPIv1(partialUri, method, para);
             if (doc == null)
                 return null;
-            return TwitterStatus.FromNode(doc.Element("status"));
+            return TwitterStatus.FromNode(doc.Root);
         }
 
         /// <summary>
@@ -26,7 +28,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="id">user id</param>
         public static TwitterStatus GetStatus(this CredentialProvider provider, long id)
         {
-            return provider.GetStatus("statuses/show/{0}.xml", CredentialProvider.RequestMethod.GET, id);
+            return provider.GetStatus("statuses/show/{0}.json", CredentialProvider.RequestMethod.GET, id);
         }
 
         /// <summary>
@@ -40,12 +42,13 @@ namespace Dulcet.Twitter.Rest
             List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
             para.Add(new KeyValuePair<string, string>("status", HttpUtility.UrlEncodeStrict(body, Encoding.UTF8, true)));
             if (inReplyToStatusId != null && inReplyToStatusId.HasValue)
-            {
                 para.Add(new KeyValuePair<string, string>("in_reply_to_status_id", inReplyToStatusId.Value.ToString()));
-            }
-            var doc = provider.RequestAPIv1("statuses/update.xml", CredentialProvider.RequestMethod.POST, para);
+
+            para.Add(new KeyValuePair<string, string>("include_entities", "true"));
+
+            var doc = provider.RequestAPIv1("statuses/update.json", CredentialProvider.RequestMethod.POST, para);
             if (doc != null)
-                return TwitterStatus.FromNode(doc.Element("status"));
+                return TwitterStatus.FromNode(doc.Root);
             else
                 return null;
         }
@@ -57,7 +60,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="id">tweet id</param>
         public static TwitterStatus DestroyStatus(this CredentialProvider provider, long id)
         {
-            return provider.GetStatus("statuses/destroy/{0}.xml", CredentialProvider.RequestMethod.POST, id);
+            return provider.GetStatus("statuses/destroy/{0}.json", CredentialProvider.RequestMethod.POST, id);
         }
     }
 }

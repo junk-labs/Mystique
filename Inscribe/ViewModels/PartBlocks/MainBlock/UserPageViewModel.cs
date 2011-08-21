@@ -323,7 +323,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 try
                 {
                     var acc = AccountStorage.GetRandom(a => a.Followings.Contains(this.User.TwitterUser.NumericId), true);
-                    var tweets = ApiHelper.ExecApi(() => acc.GetUserTimeline(userId: this.User.TwitterUser.NumericId, count: 100));
+                    var tweets = ApiHelper.ExecApi(() => acc.GetUserTimeline(userId: this.User.TwitterUser.NumericId, count: 100, includeRts: true));
                     if (tweets != null)
                         tweets.ForEach(t => TweetStorage.Register(t));
                 }

@@ -43,9 +43,21 @@ namespace Inscribe.Core
                 // .completeファイルが存在するか
                 if (System.IO.File.Exists(updater + ".completed"))
                 {
-                    // アップデータを削除
-                    System.IO.File.Delete(updater);
-                    System.IO.File.Delete(updater + ".completed");
+                    Action deleteAction = null;
+                    deleteAction = new Action(() =>
+                        {
+                            try
+                            {
+                                // アップデータを削除
+                                System.IO.File.Delete(updater);
+                                System.IO.File.Delete(updater + ".completed");
+                            }
+                            catch (Exception e)
+                            {
+                                ExceptionStorage.Register(e, ExceptionCategory.AssertionFailed, "アップデータファイルの削除ができませんでした。", () => deleteAction());
+                            }
+                        });
+                    deleteAction();
                 }
                 else
                 {

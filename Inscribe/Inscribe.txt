@@ -1,6 +1,6 @@
 ﻿Inscribe Library
 
-Krile2 Mystiqueのコアシステムです。
+Krile Mystiqueのコアシステムです。
 Windows Presentation Foundationと密結合し、
 データキャッシュサービスやViewModelデータの統合的な管理を行います。
 

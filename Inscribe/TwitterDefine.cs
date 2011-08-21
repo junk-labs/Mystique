@@ -9,7 +9,7 @@ namespace Inscribe
     {
         #region ほぼ固定されている値
 
-        public static int TweetMaxLength = 140;
+        public static readonly int TweetMaxLength = 140;
 
         #endregion
 
@@ -53,6 +53,7 @@ namespace Inscribe
         public static readonly int IntervalLookPrevious = 10;
         public static readonly double MinDensity = 0.1;
         public static readonly int UserStreamsTimeout = 90;
+        public static readonly int UrlMaxLength = 19;
 
         #endregion
     }

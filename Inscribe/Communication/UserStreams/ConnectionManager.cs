@@ -8,6 +8,7 @@ using Inscribe.Storage;
 using Livet;
 using System.Windows;
 using Inscribe.Threading;
+using System.Collections.Concurrent;
 
 namespace Inscribe.Communication.UserStreams
 {
@@ -16,7 +17,7 @@ namespace Inscribe.Communication.UserStreams
     /// </summary>
     public static class ConnectionManager
     {
-        private static Dictionary<AccountInfo, UserStreamsConnection> connections = new Dictionary<AccountInfo,UserStreamsConnection>();
+        private static ConcurrentDictionary<AccountInfo, UserStreamsConnection> connections = new ConcurrentDictionary<AccountInfo, UserStreamsConnection>();
 
         private static object _cmLocker = new object();
 
@@ -85,6 +86,8 @@ namespace Inscribe.Communication.UserStreams
         /// </summary>
         public static bool RefreshConnection(AccountInfo info)
         {
+            if (info == null)
+                throw new ArgumentNullException("info", "AccountInfo is not set.");
             var ncon = new UserStreamsConnection(info);
             if (connections.ContainsKey(info))
             {
@@ -96,7 +99,7 @@ namespace Inscribe.Communication.UserStreams
             }
             else
             {
-                connections.Add(info, ncon);
+                connections.AddOrUpdate(info, ncon);
             }
             var queries = lookupDictionary.Where(v => v.Value == info).Select(v => v.Key).ToArray();
             try
@@ -104,14 +107,14 @@ namespace Inscribe.Communication.UserStreams
                 ncon.Connect(queries);
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 connections[info] = null;
                 ncon.Dispose();
                 ExceptionStorage.Register(e, ExceptionCategory.TwitterError,
                     "User Streams接続に失敗しました。", () =>
                         {
-                            if(connections.ContainsKey(info) &&connections[info] == null)
+                            if (connections.ContainsKey(info) && connections[info] == null)
                                 RefreshConnection(info);
                         });
                 return false;
@@ -182,7 +185,7 @@ namespace Inscribe.Communication.UserStreams
 
         #region Reconnection Control
 
-        private static Timer reconPatrolTimer = new Timer(DoPatrol, null, 60 * 1000, 60 * 1000);
+        private static Timer reconPatrolTimer = new Timer(DoPatrol, null, 5 * 60 * 1000, 5 * 60 * 1000);
 
         /// <summary>
         /// 不正に切断されているストリーミング接続があった場合、再接続を行います。
@@ -191,7 +194,7 @@ namespace Inscribe.Communication.UserStreams
         private static void DoPatrol(object o)
         {
             Parallel.ForEach(AccountStorage.Accounts
-                .Where(a => connections.ContainsKey(a) && connections[a] == null)
+                .Where(a => connections.ContainsKey(a) && (connections[a] == null || !connections[a].IsAlive))
                 , i => RefreshConnection(i));
         }
 

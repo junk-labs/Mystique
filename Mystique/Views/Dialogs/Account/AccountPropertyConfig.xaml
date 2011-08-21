@@ -122,50 +122,72 @@
                              VerticalAlignment="Top"
                              Text="{Binding Footer,
                                             UpdateSourceTrigger=PropertyChanged}" />
-                </Grid>
-            </TabItem>
-            <TabItem Header="クエリー">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <TextBlock Margin="4,2">
-                        <Run Text="指定の文字列を含むツイートを追加で受信します。" />
-                        <LineBreak />
-                        <Run Text="英語のみ指定可能です。User Streams接続が必要です。" />
-                    </TextBlock>
-                    <DockPanel Grid.Row="1" Margin="4,0">
-                        <Button Width="80"
-                                Command="{Binding AddQueryCommand}"
-                                Content="追加"
-                                DockPanel.Dock="Right" />
-                        <TextBox VerticalAlignment="Center" Text="{Binding AddQueryCandidate, UpdateSourceTrigger=PropertyChanged}" />
+                    <DockPanel Width="408"
+                               Margin="6,84,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top">
+                        <TextBlock Margin="0,0,4,0"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   Text="POSTフォールバック先アカウント" />
+                        <ComboBox VerticalAlignment="Center"
+                                  ItemsSource="{Binding AccountInformations}"
+                                  SelectedIndex="{Binding FallbackIndex}" />
                     </DockPanel>
-                    <ListBox Grid.Row="2"
-                             Margin="4,2"
-                             HorizontalContentAlignment="Stretch"
-                             ItemsSource="{Binding Queries}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <DockPanel>
-                                    <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                                             AncestorType={x:Type ListBox}},
-                                                              Path=DataContext.RemoveQueryCommand}"
-                                            CommandParameter="{Binding}"
-                                            DockPanel.Dock="Right">
-                                        <Image Width="16"
-                                               Height="16"
-                                               Source="{StaticResource Delete}" />
-                                    </Button>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding}" />
-                                </DockPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <TextBlock Margin="6,109,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Foreground="DimGray"
+                               TextWrapping="Wrap">
+                        <Run Text="このアカウントがPOST規制されて投稿できないことを検知した時に、自動で別のアカウントでのツイートを試みます。フォールバックは連鎖します。" />
+                    </TextBlock>
                 </Grid>
             </TabItem>
+            <!--  Below configuration is no longer supported (but still existed in AccountProperty).  -->
+            <!--
+                <TabItem Header="クエリー">
+                <Grid>
+                <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Margin="4,2">
+                <Run Text="指定の文字列を含むツイートを追加で受信します。" />
+                <LineBreak />
+                <Run Text="英語のみ指定可能です。User Streams接続が必要です。" />
+                </TextBlock>
+                <DockPanel Grid.Row="1" Margin="4,0">
+                <Button Width="80"
+                Command="{Binding AddQueryCommand}"
+                Content="追加"
+                DockPanel.Dock="Right" />
+                <TextBox VerticalAlignment="Center" Text="{Binding AddQueryCandidate, UpdateSourceTrigger=PropertyChanged}" />
+                </DockPanel>
+                <ListBox Grid.Row="2"
+                Margin="4,2"
+                HorizontalContentAlignment="Stretch"
+                ItemsSource="{Binding Queries}">
+                <ListBox.ItemTemplate>
+                <DataTemplate>
+                <DockPanel>
+                <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                AncestorType={x:Type ListBox}},
+                Path=DataContext.RemoveQueryCommand}"
+                CommandParameter="{Binding}"
+                DockPanel.Dock="Right">
+                <Image Width="16"
+                Height="16"
+                Source="{StaticResource Delete}" />
+                </Button>
+                <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+                </DockPanel>
+                </DataTemplate>
+                </ListBox.ItemTemplate>
+                </ListBox>
+                </Grid>
+                </TabItem>
+            -->
             <TabItem Header="詳細設定">
                 <Grid>
                     <TextBlock Margin="6,9,0,0"

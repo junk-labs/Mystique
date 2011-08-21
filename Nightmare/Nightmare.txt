@@ -1,6 +1,6 @@
 ﻿Nightmare Library
 
-Krile2 Mystiqueに対して、Windows Formsに依存するラッピングされた操作を提供します。
+Krile Mystiqueに対して、Windows Formsに依存するラッピングされた操作を提供します。
 唯一、System.Windows.Formsを参照します。
 
 from 超越↑↑恋して☆ないしょメア！！ ave;new feat.あべにゅうぷろじぇくと

@@ -30,7 +30,7 @@ namespace Mystique.Views.Text
         {
             if (String.IsNullOrEmpty(raw)) yield break;
             var escaped = Escape(raw);
-            escaped = RegularExpressions.URLRegex.Replace(escaped, (m) =>
+            escaped = RegularExpressions.UrlRegex.Replace(escaped, (m) =>
             {
                 // # => &sharp; (ハッシュタグで再識別されることを防ぐ)
                 var repl = m.Groups[1].Value.Replace("#", "&sharp;");

@@ -1,6 +1,6 @@
 ﻿Mystique UI
 
-Krile2 MystiqueのUI部分を司ります。
+Krile MystiqueのUI部分を司ります。
 Viewの実装を含みます。
 
 from mystique? ave;new feat.佐倉紗織

@@ -10,23 +10,12 @@ namespace Dulcet.Twitter.Rest
     public static partial class Api
     {
         /// <summary>
-        /// Get list statuses
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="userScreenName">list owner user id</param>
-        /// <param name="listId">list id</param>
-        public static IEnumerable<TwitterStatus> GetListStatuses(this CredentialProvider provider, string userScreenName, string listId)
-        {
-            return provider.GetListStatuses(userScreenName, listId, null, null, null, null);
-        }
-
-        /// <summary>
         /// Get list statuses with full params
         /// </summary>
-        public static IEnumerable<TwitterStatus> GetListStatuses(this CredentialProvider provider, string userScreenName, string listId, string sinceId = null, string maxId = null, long? perPage = null, long? page = null)
+        public static IEnumerable<TwitterStatus> GetListStatuses(this CredentialProvider provider, string userScreenName, string listId, string sinceId = null, string maxId = null, long? perPage = null, long? page = null, bool? includeRts = null, bool? includeEntities = null)
         {
             listId = listId.Replace("_", "-");
-            var partialUri = userScreenName + "/lists/" + listId + "/statuses.xml";
+            var partialUri = userScreenName + "/lists/" + listId + "/statuses.json";
 
             List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
 
@@ -42,6 +31,12 @@ namespace Dulcet.Twitter.Rest
             if (page != null)
                 para.Add(new KeyValuePair<string, string>("page", page.ToString()));
 
+            if (includeRts != null && includeRts.Value)
+                para.Add(new KeyValuePair<string, string>("includeRts", "true"));
+
+            if (includeEntities != null && includeEntities.Value)
+                para.Add(new KeyValuePair<string, string>("includeEntities", "true"));
+
             return provider.GetTimeline(partialUri, para);
         }
 
@@ -54,7 +49,7 @@ namespace Dulcet.Twitter.Rest
         public static IEnumerable<TwitterUser> GetListMembersAll(this CredentialProvider provider, string userScreenName, string listId)
         {
             listId = listId.Replace("_", "-");
-            return provider.GetUsersAll(userScreenName + "/" + listId + "/members.xml", null, null);
+            return provider.GetUsersAll(userScreenName + "/" + listId + "/members.json", null, null);
         }
 
         /// <summary>
@@ -65,7 +60,7 @@ namespace Dulcet.Twitter.Rest
             if (cursor == null)
                 cursor = -1;
             listId = listId.Replace("_", "-");
-            return provider.GetUsers(userScreenName + "/" + listId + "/members.xml", null, null, cursor, out prevCursor, out nextCursor);
+            return provider.GetUsers(userScreenName + "/" + listId + "/members.json", null, null, cursor, out prevCursor, out nextCursor);
         }
 
         /// <summary>
@@ -76,7 +71,7 @@ namespace Dulcet.Twitter.Rest
             if (cursor == null)
                 cursor = -1;
             listId = listId.Replace("_", "-");
-            return provider.GetUsers(userScreenName + "/" + listId + "/subscribers.xml", null, null, cursor, out prevCursor, out nextCursor);
+            return provider.GetUsers(userScreenName + "/" + listId + "/subscribers.json", null, null, cursor, out prevCursor, out nextCursor);
         }
 
         /// <summary>
@@ -88,7 +83,7 @@ namespace Dulcet.Twitter.Rest
         public static IEnumerable<TwitterUser> GetListSubscribersAll(this CredentialProvider provider, string userScreenName, string listId)
         {
             listId = listId.Replace("_", "-");
-            return provider.GetUsersAll(userScreenName + "/" + listId + "/subscribers.xml", null, null);
+            return provider.GetUsersAll(userScreenName + "/" + listId + "/subscribers.json", null, null);
         }
 
         /// <summary>
@@ -108,22 +103,16 @@ namespace Dulcet.Twitter.Rest
             var doc = provider.RequestAPIv1(partialUri, CredentialProvider.RequestMethod.GET, para);
             if (doc == null)
                 return null;
-            var ll = doc.Element("lists_list");
-            if (ll != null)
-            {
-                var nc = ll.Element("next_cursor");
-                if (nc != null)
-                    nextCursor = (long)nc.ParseLong();
-                var pc = ll.Element("previous_cursor");
-                if (pc != null)
-                    prevCursor = (long)pc.ParseLong();
-            }
+            var nc = doc.Root.Element("next_cursor");
+            if (nc != null)
+                nextCursor = (long)nc.ParseLong();
+            var pc = doc.Root.Element("previous_cursor");
+            if (pc != null)
+                prevCursor = (long)pc.ParseLong();
 
+            System.Diagnostics.Debug.WriteLine("Lists :::" + Environment.NewLine + doc);
 
-            return from n in doc.Descendants("list")
-                   let l = TwitterList.FromNode(n)
-                   where l != null
-                   select l;
+            return doc.Root.Element("lists").Elements().Select(n => TwitterList.FromNode(n)).Where(n => n != null);
         }
 
         /// <summary>
@@ -162,7 +151,7 @@ namespace Dulcet.Twitter.Rest
         /// </summary>
         public static IEnumerable<TwitterList> GetUserLists(this CredentialProvider provider, string userScreenName, long? cursor, out long prevCursor, out long nextCursor)
         {
-            var partialUri = userScreenName + "/lists.xml";
+            var partialUri = userScreenName + "/lists.json";
             return provider.GetLists(partialUri, cursor, out prevCursor, out nextCursor);
         }
 
@@ -173,7 +162,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="userScreenName">target user id</param>
         public static IEnumerable<TwitterList> GetUserListsAll(this CredentialProvider provider, string userScreenName)
         {
-            var partialUri = userScreenName + "/lists.xml";
+            var partialUri = userScreenName + "/lists.json";
             return provider.GetListsAll(partialUri);
         }
 
@@ -182,7 +171,7 @@ namespace Dulcet.Twitter.Rest
         /// </summary>
         public static IEnumerable<TwitterList> GetMembershipLists(this CredentialProvider provider, string userScreenName, long? cursor, out long prevCursor, out long nextCursor)
         {
-            var partialUri = userScreenName + "/lists/memberships.xml";
+            var partialUri = userScreenName + "/lists/memberships.json";
             return provider.GetLists(partialUri, cursor, out prevCursor, out nextCursor);
         }
 
@@ -193,7 +182,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="userScreenName">target user id</param>
         public static IEnumerable<TwitterList> GetMembershipListsAll(this CredentialProvider provider, string userScreenName)
         {
-            var partialUri = userScreenName + "/lists/memberships.xml";
+            var partialUri = userScreenName + "/lists/memberships.json";
             return provider.GetListsAll(partialUri);
         }
 
@@ -202,7 +191,7 @@ namespace Dulcet.Twitter.Rest
         /// </summary>
         public static IEnumerable<TwitterList> GetSubscribedLists(this CredentialProvider provider, string userScreenName, long? cursor, out long prevCursor, out long nextCursor)
         {
-            var partialUri = userScreenName + "/lists/subscriptions.xml";
+            var partialUri = userScreenName + "/lists/subscriptions.json";
             return provider.GetLists(partialUri, cursor, out prevCursor, out nextCursor);
         }
 
@@ -213,7 +202,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="userScreenName">target user id</param>
         public static IEnumerable<TwitterList> GetSubscribedListsAll(this CredentialProvider provider, string userScreenName)
         {
-            var partialUri = userScreenName + "/lists/subscriptions.xml";
+            var partialUri = userScreenName + "/lists/subscriptions.json";
             return provider.GetListsAll(partialUri);
         }
 
@@ -225,116 +214,8 @@ namespace Dulcet.Twitter.Rest
         /// <param name="listId">list is</param>
         public static TwitterList GetList(this CredentialProvider provider, string userScreenName, string listId)
         {
-            var list = provider.RequestAPIv1(userScreenName + "/lists/" + listId + ".xml",
-                 CredentialProvider.RequestMethod.GET, null).Element("list");
-            if (list != null)
-                return TwitterList.FromNode(list);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Create or update list
-        /// </summary>
-        private static TwitterList CreateOrUpdateList(this CredentialProvider provider, string id, string name, string description, bool? inPrivate)
-        {
-            var kvp = new List<KeyValuePair<string, string>>();
-            if (id != null)
-                kvp.Add(new KeyValuePair<string, string>("id", id));
-            if (name != null)
-                kvp.Add(new KeyValuePair<string, string>("name", HttpUtility.UrlEncodeStrict(name, Encoding.UTF8, true)));
-            if (description != null)
-                kvp.Add(new KeyValuePair<string, string>("description", HttpUtility.UrlEncodeStrict(description, Encoding.UTF8, true)));
-            if (inPrivate != null)
-                kvp.Add(new KeyValuePair<string, string>("mode", inPrivate.Value ? "private" : "public"));
-            var list = provider.RequestAPIv1(
-                "user/lists.xml",
-                 CredentialProvider.RequestMethod.POST,
-                 kvp).Element("list");
-            if (list != null)
-                return TwitterList.FromNode(list);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Create new list
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="name">list name</param>
-        /// <param name="description">list description</param>
-        /// <param name="inPrivate">private mode</param>
-        public static TwitterList CreateList(this CredentialProvider provider, string name, string description, bool? inPrivate)
-        {
-            return provider.CreateOrUpdateList(null, name, description, inPrivate);
-        }
-
-        /// <summary>
-        /// Update list information
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="id">list id</param>
-        /// <param name="newName">list's new name</param>
-        /// <param name="description">new description</param>
-        /// <param name="inPrivate">private mode</param>
-        public static TwitterList UpdateList(this CredentialProvider provider, string id, string newName, string description, bool? inPrivate)
-        {
-            return provider.CreateOrUpdateList(id, newName, description, inPrivate);
-        }
-
-        /// <summary>
-        /// Delete list you created
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="userScreenName">your id</param>
-        /// <param name="listId">list id</param>
-        public static TwitterList DeleteList(this CredentialProvider provider, string userScreenName, string listId)
-        {
-            var kvp = new[] { new KeyValuePair<string, string>("_method", "DELETE") };
-            var list = provider.RequestAPIv1(
-                 userScreenName + "/lists/" + listId + ".xml",
-                  CredentialProvider.RequestMethod.POST,
-                  kvp).Element("list");
-            if (list != null)
-                return TwitterList.FromNode(list);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Add user into your list
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="yourScreenName">your screen name</param>
-        /// <param name="listId">list id</param>
-        /// <param name="addUserScreenName">adding user id or screen name</param>
-        public static TwitterList AddUserIntoList(this CredentialProvider provider, string yourScreenName, string listId, string addUserScreenName)
-        {
-            var kvp = new[] { new KeyValuePair<string, string>("id", addUserScreenName) };
-            var list = provider.RequestAPIv1(
-                yourScreenName + "/" + listId + ".xml",
-                CredentialProvider.RequestMethod.POST,
-                kvp).Element("list");
-            if (list != null)
-                return TwitterList.FromNode(list);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Delete user from your list
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="yourScreenName">your screen name</param>
-        /// <param name="listId">list id</param>
-        /// <param name="deleteUserScreenName">deleting user id</param>
-        public static TwitterList DeleteUserFromList(this CredentialProvider provider, string yourScreenName, string listId, string deleteUserScreenName)
-        {
-            var kvp = new[] { new KeyValuePair<string, string>("id", deleteUserScreenName), new KeyValuePair<string, string>("_method", "DELETE") };
-            var list = provider.RequestAPIv1(
-                yourScreenName + "/" + listId + ".xml",
-                CredentialProvider.RequestMethod.POST,
-                kvp).Element("list");
+            var list = provider.RequestAPIv1(userScreenName + "/lists/" + listId + ".json",
+                 CredentialProvider.RequestMethod.GET, null).Root;
             if (list != null)
                 return TwitterList.FromNode(list);
             else
@@ -352,63 +233,9 @@ namespace Dulcet.Twitter.Rest
         public static TwitterUser GetListMember(this CredentialProvider provider, string user, string listId, string queryUserScreenName)
         {
             var query = provider.RequestAPIv1(
-                user + "/" + listId + "/members/" + queryUserScreenName + ".xml",
-                CredentialProvider.RequestMethod.GET, null).Element("user");
+                user + "/" + listId + "/members/" + queryUserScreenName + ".json",
+                CredentialProvider.RequestMethod.GET, null).Root;
             if (user != null)
-                return TwitterUser.FromNode(query);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Subscribe list
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="screenName">list owner user screen name</param>
-        /// <param name="listId">list id</param>
-        public static bool SubscribeList(this CredentialProvider provider, string screenName, string listId)
-        {
-            var users = provider.RequestAPIv1(
-                screenName + "/" + listId + "/subscribers.xml",
-                CredentialProvider.RequestMethod.POST, null).Element("users");
-            if (users == null)
-                return false;
-            else
-                return true;
-        }
-
-        /// <summary>
-        /// UnSubscribe list
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="screenName">list owner user screen name</param>
-        /// <param name="listId">list id</param>
-        public static bool UnsubscribeList(this CredentialProvider provider, string screenName, string listId)
-        {
-            var kvp = new[] { new KeyValuePair<string, string>("_method", "DELETE") };
-            var users = provider.RequestAPIv1(
-                screenName + "/" + listId + "/subscribers.xml",
-                CredentialProvider.RequestMethod.POST, kvp).Element("users");
-            if (users == null)
-                return false;
-            else
-                return true;
-        }
-
-        /// <summary>
-        /// Get subscriber information in list<para />
-        /// You can use this method for check someone subscribing a list.
-        /// </summary>
-        /// <param name="provider">credential provider</param>
-        /// <param name="screenName">list owner user id</param>
-        /// <param name="listId">list id</param>
-        /// <param name="queryUserScreenName">query user id</param>
-        public static TwitterUser GetListSubscriber(this CredentialProvider provider, string screenName, string listId, string queryUserScreenName)
-        {
-            var query = provider.RequestAPIv1(
-                screenName + "/" + listId + "/subscribers/" + queryUserScreenName + ".xml",
-                CredentialProvider.RequestMethod.GET, null).Element("user");
-            if (query != null)
                 return TwitterUser.FromNode(query);
             else
                 return null;

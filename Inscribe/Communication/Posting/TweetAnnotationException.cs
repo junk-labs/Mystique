@@ -10,7 +10,8 @@ namespace Inscribe.Communication.Posting
     {
         public enum AnnotationKind
         {
-            NearUnderControl
+            NearUnderControl,
+            Fallbacked,
         }
 
         public AnnotationKind Kind { get; set; }

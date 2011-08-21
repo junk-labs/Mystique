@@ -7,7 +7,6 @@ namespace Inscribe.Configuration.Settings
         {
             this.PostFinishShowLength = 3000;
             this.UpdateKind = Define.GetVersion().FileBuildPart;
-            this.PostAnnotatedFinishShowLength = 8000;
             this.TwitterActionNotifyShowLength = 5000;
             this.PowerUserMode = false;
             this.StatusMessageDefaultShowLengthSec = 5;
@@ -33,8 +32,6 @@ namespace Inscribe.Configuration.Settings
         #region Callback show expereience
 
         public int PostFinishShowLength { get; set; }
-
-        public int PostAnnotatedFinishShowLength { get; set; }
 
         public int TwitterActionNotifyShowLength { get; set; }
 

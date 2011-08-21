@@ -1,15 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Dulcet.Twitter.Rest;
-using Inscribe.Communication;
 using Inscribe.Model;
 using Inscribe.Storage;
-using Livet;
-using Livet.Messaging;
-using Livet.Commands;
-using Livet.Messaging.Windows;
 using Inscribe.ViewModels.Common;
+using Livet;
+using Livet.Commands;
+using Livet.Messaging;
+using Livet.Messaging.Windows;
 
 namespace Inscribe.ViewModels.Dialogs.Account
 {
@@ -64,13 +62,43 @@ namespace Inscribe.ViewModels.Dialogs.Account
             }
         }
 
-        public string[] Queries
+        public IEnumerable<string> AccountInformations
         {
-            get { return this.AccountInfo.AccoutProperty.AccountDependentQuery ?? new string[0]; }
+            get
+            {
+                return new[] { "なし" }.Concat(AccountStorage.Accounts.Except(new[] { AccountInfo })
+                    .Select(a => "@" + a.ScreenName)).ToArray();
+            }
+        }
+
+        public int FallbackIndex
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(AccountInfo.AccoutProperty.FallbackAccount) ||
+                    !AccountStorage.Contains(AccountInfo.AccoutProperty.FallbackAccount))
+                {
+                    return 0;
+                }
+                else
+                {
+                    return Array.IndexOf(AccountStorage.Accounts.Except(new[] { AccountInfo })
+                        .Select(a => a.ScreenName).ToArray(),
+                        AccountInfo.AccoutProperty.FallbackAccount) + 1;
+                }
+            }
             set
             {
-                this.AccountInfo.AccoutProperty.AccountDependentQuery = value;
-                RaisePropertyChanged(() => Queries);
+                if (value == 0)
+                {
+                    AccountInfo.AccoutProperty.FallbackAccount = null;
+                }
+                else
+                {
+                    AccountInfo.AccoutProperty.FallbackAccount = AccountStorage.Accounts
+                        .Except(new[] { AccountInfo }).ElementAt(value - 1).ScreenName;
+                }
+                RaisePropertyChanged(() => FallbackIndex);
             }
         }
 
@@ -93,7 +121,6 @@ namespace Inscribe.ViewModels.Dialogs.Account
                 RaisePropertyChanged(() => AutoCruiseMu);
             }
         }
-
 
         #region ReauthCommand
         DelegateCommand _ReauthCommand;
@@ -138,6 +165,18 @@ namespace Inscribe.ViewModels.Dialogs.Account
         }
         #endregion
 
+        #region Deprecated configuration
+
+        public string[] Queries
+        {
+            get { return this.AccountInfo.AccoutProperty.AccountDependentQuery ?? new string[0]; }
+            set
+            {
+                this.AccountInfo.AccoutProperty.AccountDependentQuery = value;
+                RaisePropertyChanged(() => Queries);
+            }
+        }
+
         private string _addQueryCandidate = null;
         public string AddQueryCandidate
         {
@@ -149,7 +188,6 @@ namespace Inscribe.ViewModels.Dialogs.Account
                 this.AddQueryCommand.RaiseCanExecuteChanged();
             }
         }
-
 
         #region AddQueryCommand
         DelegateCommand _AddQueryCommand;
@@ -177,7 +215,6 @@ namespace Inscribe.ViewModels.Dialogs.Account
         }
         #endregion
 
-
         #region RemoveQueryCommand
         DelegateCommand<object> _RemoveQueryCommand;
 
@@ -197,7 +234,8 @@ namespace Inscribe.ViewModels.Dialogs.Account
             RaisePropertyChanged(() => Queries);
         }
         #endregion
-      
-      
+
+        #endregion
+
     }
 }

@@ -1,0 +1,5 @@
+﻿Voices Feedback Agent
+
+Krile Mystiqueで発生したエラーを自動的に報告します。
+
+from Pure My Voices ave;new feat.佐倉紗織

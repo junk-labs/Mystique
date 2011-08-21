@@ -12,8 +12,8 @@ namespace Dulcet.Twitter.Rest
         /// <returns>If twitter is available, returns true</returns>
         public static bool Test(this CredentialProvider provider)
         {
-            var doc = provider.RequestAPIv1("help/test.xml", CredentialProvider.RequestMethod.GET, null);
-            return doc.Element("ok").ParseBool();
+            var doc = provider.RequestAPIv1("help/test.json", CredentialProvider.RequestMethod.GET, null);
+            return doc.Root.Value == "ok";
         }
 
 
@@ -25,7 +25,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="provider">credential provider</param>
         public static bool RateLimitStatus(this CredentialProvider provider)
         {
-            var doc = provider.RequestAPIv1("account/rate_limit_status.xml", CredentialProvider.RequestMethod.GET, null);
+            var doc = provider.RequestAPIv1("account/rate_limit_status.json", CredentialProvider.RequestMethod.GET, null);
             if (doc == null) return false;
             var rate = doc.Element("hash");
             if (rate == null) return false;

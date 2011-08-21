@@ -422,9 +422,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     {
                         var mentions = RegularExpressions.AtRegex.Matches(tweet.Text);
                         var sns = new[] { "@" + tweet.Status.User.ScreenName }.Concat(mentions.Cast<Match>().Select(m => m.Value))
-                            .Distinct().ToArray();
+                            .Distinct().Where(s => !AccountStorage.Contains(s)).ToArray();
+                        /*
                         if (tweet.Status is TwitterStatus && AccountStorage.Contains(((TwitterStatus)tweet.Status).InReplyToUserScreenName))
                             sns = sns.Except(new[] { "@" + ((TwitterStatus)tweet.Status).InReplyToUserScreenName }).ToArray();
+                        */
                         if (sns.Length > 1)
                         {
                             this.CurrentInputDescription.InputText = sns.JoinString(" ") + " ";
@@ -819,7 +821,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         private bool CanUpdate()
         {
             return !String.IsNullOrEmpty(this.CurrentInputDescription.InputText)
-                && this.CurrentInputDescription.InputText.Length <= TwitterDefine.TweetMaxLength &&
+                && TweetTextCounter.Count(this.CurrentInputDescription.InputText) <= TwitterDefine.TweetMaxLength &&
                 (this.overrideTargets != null || this.UserSelectorViewModel.LinkElements.Count() > 0);
         }
 
@@ -844,11 +846,12 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         {
             DispatcherHelper.BeginInvoke(() => this._updateWorkers.Add(w));
             w.RemoveRequired += () => DispatcherHelper.BeginInvoke(() => this._updateWorkers.Remove(w));
+            w.WorkerAddRequired += AddUpdateWorker;
             w.DoWork().ContinueWith(t =>
             {
                 if (t.Result)
                 {
-                    Thread.Sleep(3000);
+                    Thread.Sleep(Setting.Instance.ExperienceProperty.PostFinishShowLength);
                     DispatcherHelper.BeginInvoke(() => this._updateWorkers.Remove(w));
                 }
             });

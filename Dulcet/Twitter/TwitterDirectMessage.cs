@@ -1,5 +1,6 @@
 ﻿using System.Xml.Linq;
 using Dulcet.Util;
+using System;
 
 namespace Dulcet.Twitter
 {
@@ -9,6 +10,8 @@ namespace Dulcet.Twitter
 
         public static TwitterDirectMessage FromNode(XElement node)
         {
+            if (node == null)
+                throw new ArgumentNullException("node");
             return new TwitterDirectMessage()
             {
                 Id = node.Element("id").ParseLong(),
@@ -16,6 +19,7 @@ namespace Dulcet.Twitter
                 CreatedAt = node.Element("created_at").ParseDateTime("ddd MMM d HH':'mm':'ss zzz yyyy"),
                 Sender = TwitterUser.FromNode(node.Element("sender")),
                 Recipient = TwitterUser.FromNode(node.Element("recipient")),
+                Entities = TwitterEntity.Parse(node.Element("entities")),
             };
         }
 

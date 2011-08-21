@@ -10,6 +10,8 @@ namespace Dulcet.Twitter
 
         public static TwitterUser FromNode(XElement node)
         {
+            if (node == null || node.Element("id") == null)
+                throw new ArgumentNullException("node");
             // IDだけが存在して、screen_nameが取得できないことがある
             return new TwitterUser()
             {

@@ -70,6 +70,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             if (parent == null)
                 throw new ArgumentNullException("parent");
+            this._tweetsSource = new CachedConcurrentObservableCollection<TabDependentTweetViewModel>();
             this.Parent = parent;
             this.sources = sources;
             UpdateReacceptionChain(sources, true);
@@ -77,7 +78,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             ViewModelHelper.BindNotification(TweetStorage.TweetStorageChangedEvent, this, TweetStorageChanged);
             ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, SettingValueChanged);
             // Initialize binding timeline
-            this._tweetsSource = new CachedConcurrentObservableCollection<TabDependentTweetViewModel>();
             if (DispatcherHelper.UIDispatcher.CheckAccess())
             {
                 this._tweetCollectionView = new CollectionViewSource();
@@ -178,6 +178,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             {
                 // ディスパッチャ スレッドではInvalidateCacheを行わない
                 throw new InvalidOperationException("Can't invalidate cache on Dispatcher thread.");
+            }
+
+            if (this._tweetsSource == null)
+            {
+                // TODO: remove this
+                throw new NullReferenceException("Tweet Source is null.(debug)");
             }
 
             this._tweetsSource.Clear();

@@ -90,11 +90,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         {
             var containsTags = RegularExpressions.HashRegex.Matches(InputText)
                 .Cast<Match>().Select(m => m.Value).ToArray();
-            var tagstr = bindTags.Except(containsTags).JoinString(" ");
-            var cstr = InputText;
-            if (!String.IsNullOrWhiteSpace(tagstr))
-                cstr += " " + tagstr;
-            return infos.Select(i => new TweetWorker(ibvm, i, cstr, InReplyToId, AttachedImage, null));
+            var excepteds = bindTags.Except(containsTags).Distinct();
+            return infos.Select(i => new TweetWorker(ibvm, i, InputText, InReplyToId, AttachedImage, excepteds.ToArray()));
         }
 
     }
