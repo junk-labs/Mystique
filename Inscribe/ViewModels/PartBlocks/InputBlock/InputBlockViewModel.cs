@@ -20,6 +20,7 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using Inscribe.Communication.Posting;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -829,11 +830,25 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         {
             if (!this.CanUpdate()) return;
             var boundTags = this.automaticBoundTags.Concat(this.bindingTags).Distinct().ToArray();
-            if (this.overrideTargets != null)
-                this.CurrentInputDescription.ReadyUpdate(this, boundTags, this.overrideTargets.ToArray()).ForEach(AddUpdateWorker);
-            else
-                this.CurrentInputDescription.ReadyUpdate(this, boundTags, this.UserSelectorViewModel.LinkElements.ToArray()).ForEach(AddUpdateWorker);
+            var targets = this.overrideTargets;
+            if (targets == null)
+                targets = this.UserSelectorViewModel.LinkElements;
+            var decidedTargets = targets.ToArray();
+            if (Setting.Instance.InputExperienceProperty.ActiveFallback)
+                decidedTargets = targets.Select(a => FallbackAccount(a, a)).Distinct().ToArray();
+            this.CurrentInputDescription.ReadyUpdate(this, boundTags, decidedTargets).ForEach(AddUpdateWorker);
             ResetInputDescription();
+        }
+
+        private AccountInfo FallbackAccount(AccountInfo original, AccountInfo current)
+        {
+            if (!PostOffice.IsAccountUnderControlled(current))
+                return current;
+            var fallback = AccountStorage.Get(current.AccoutProperty.FallbackAccount);
+            if (fallback == null || fallback == original)
+                return current;
+            else
+                return FallbackAccount(original, fallback);
         }
 
         #endregion

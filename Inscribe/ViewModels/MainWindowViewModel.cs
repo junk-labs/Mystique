@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Core;
 using Inscribe.Model;
@@ -15,10 +13,6 @@ using Inscribe.ViewModels.PartBlocks.ModalParts;
 using Inscribe.ViewModels.PartBlocks.NotifyBlock;
 using Livet;
 using Livet.Commands;
-using Nightmare.Forms;
-using Livet.Messaging.Windows;
-using Livet.Messaging;
-using System.Threading.Tasks;
 
 namespace Inscribe.ViewModels
 {
@@ -47,6 +41,10 @@ namespace Inscribe.ViewModels
                 RaisePropertyChanged(() => IsVisibleUserSelection);
                 RaisePropertyChanged(() => IsActivateMain);
             };
+            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (o, e) =>
+            {
+                RaisePropertyChanged(() => IsNotifierBarBottom);
+            });
         }
 
         public string Title
@@ -96,6 +94,11 @@ namespace Inscribe.ViewModels
         public bool IsVisibleUserSelection
         {
             get { return _isVisibleUserSelection; }
+        }
+
+        public bool IsNotifierBarBottom
+        {
+            get { return Setting.Instance.NotificationProperty.IsNotifierBarBottom; }
         }
 
         public void SelectUser(SelectionKind kind, IEnumerable<AccountInfo> defaultSelect, Action<IEnumerable<AccountInfo>> returning)

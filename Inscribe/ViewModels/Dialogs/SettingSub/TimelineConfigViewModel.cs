@@ -55,6 +55,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+
         public void Apply()
         {
             Setting.Instance.TimelineExperienceProperty.ScrollLockMode = (ScrollLock)this._timelineScrollLockIndex;

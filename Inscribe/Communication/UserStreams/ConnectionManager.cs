@@ -193,9 +193,9 @@ namespace Inscribe.Communication.UserStreams
         /// <param name="o"></param>
         private static void DoPatrol(object o)
         {
-            Parallel.ForEach(AccountStorage.Accounts
-                .Where(a => connections.ContainsKey(a) && (connections[a] == null || !connections[a].IsAlive))
-                , i => RefreshConnection(i));
+            AccountStorage.Accounts
+                .Where(i => connections.ContainsKey(i) && (connections[i] == null || !connections[i].IsAlive))
+                .ForEach(i => Task.Factory.StartNew(() => RefreshConnection(i)));
         }
 
         /// <summary>

@@ -90,7 +90,7 @@
                                  Text="{Binding QueryText,
                                                 UpdateSourceTrigger=PropertyChanged}"
                                  Visibility="{Binding IsStackTopUserPage,
-                                                      Converter={StaticResource BoolInvisibleConverter}}">
+                                                      Converter={StaticResource BoolInvisibleConverter}}" KeyDown="TextBox_KeyDown" PreviewKeyDown="TextBox_PreviewKeyDown">
                             <i:Interaction.Triggers>
                                 <l:InteractionMessageTrigger MessageKey="FocusToSearch" Messenger="{Binding Messenger}">
                                     <ba:FrameworkSetFocusAction />

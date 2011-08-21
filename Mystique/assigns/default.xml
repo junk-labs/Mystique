@@ -47,5 +47,8 @@
 			<Assign Action="PostAndClose" Key="Ctrl+Shift+Enter" Preview="True" InTextBox="True" />
 			<Assign Action="CloseInput" Key="Escape" Preview="True" InTextBox="True" />
 		</AssignGroup>
+    <AssignGroup Region="SearchBar">
+      <Assign Action="RemoveViewStackTop" Key="Esc" Preview="True" InTextBox="True" />
+    </AssignGroup>
 	</AssignGroups>
 </KeyAssign>

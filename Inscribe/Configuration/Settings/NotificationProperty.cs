@@ -12,6 +12,7 @@ namespace Inscribe.Configuration.Settings
             this.TabNotifyEnabledAsDefault = false;
             this.TabNotifyStackTopTimeline = false;
             this.IsEnabledNotificationBar = true;
+            this.IsNotifierBarBottom = false;
 
             this.NotifyMentionEvent = false;
             this.NotifyDmEvent = true;
@@ -40,6 +41,8 @@ namespace Inscribe.Configuration.Settings
         public bool TabNotifyStackTopTimeline { get; set; }
 
         public bool IsEnabledNotificationBar { get; set; }
+
+        public bool IsNotifierBarBottom { get; set; }
 
         public bool NotifyMentionEvent { get; set; }
 

@@ -14,7 +14,8 @@
                   Content="文頭の空白文字を削除する(_D)"
                   IsChecked="{Binding TrimBeginSpace}" />
         <CheckBox Margin="4,2"
-                  Content="手動入力されたハッシュタグを自動でバインドする(_B)"
-                  IsChecked="{Binding AutoBindInputtedHashtag}" />
+                  Content="POSTフォールバックを積極的に行う(_F)"
+                  ToolTip="POST規制されている情報がKrile内にあるとき、試験的に投稿を行うことなくフォールバックします。"
+                  IsChecked="{Binding ActiveFallback}" />
     </StackPanel>
 </UserControl>

@@ -404,7 +404,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         private void EditFinish(String parameter)
         {
             bool condition;
-            if (!Boolean.TryParse(parameter, out condition) && condition &&
+            if (Boolean.TryParse(parameter, out condition) && condition &&
                 !String.IsNullOrEmpty(EditScreenName))
                 this.SetUser(EditScreenName);
             else
@@ -439,7 +439,20 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                             var cred = AccountStorage.GetRandom();
                             if (cred != null)
                             {
-                                user = UserStorage.Get(ApiHelper.ExecApi(() => cred.GetUserByScreenName(screenName)));
+                                var ud = ApiHelper.ExecApi(() => cred.GetUserByScreenName(screenName));
+                                if (ud == null)
+                                {
+                                    DispatcherHelper.BeginInvoke(() => this.Messenger.Raise(new Livet.Messaging.InformationMessage(
+                                                "ユーザー @" + screenName + " の情報を取得できません。" + Environment.NewLine +
+                                                "ユーザーが存在しない可能性があります。",
+                                                "ユーザー情報取得エラー", System.Windows.MessageBoxImage.Warning,
+                                                "InformationMessage")));
+                                    return;
+                                }
+                                else
+                                {
+                                    user = UserStorage.Get(ud);
+                                }
                             }
                         }
                         if (user == null)

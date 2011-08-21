@@ -53,15 +53,28 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--  INPUT BLOCK  -->
             <ib:InputBlock DataContext="{Binding InputBlockViewModel}" />
-            <!--  NOTIFIER  -->
-            <bc:Notifier Grid.Row="1" DataContext="{Binding NotifierViewModel}" />
+            <!--  NOTIFIER (TOP)  -->
+            <bc:Notifier Grid.Row="1"
+                         DataContext="{Binding NotifierViewModel}"
+                         Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                             AncestorType={x:Type Window}},
+                                              Path=DataContext.IsNotifierBarBottom,
+                                              Converter={StaticResource BoolInvisibleConverter}}" />
             <!--  TIMELINE CORE  -->
             <main:ColumnOwner Grid.Row="2" DataContext="{Binding ColumnOwnerViewModel}" />
+            <!--  NOTIFIER (BOTTOM)  -->
+            <bc:Notifier Grid.Row="3"
+                         DataContext="{Binding NotifierViewModel}"
+                         Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                             AncestorType={x:Type Window}},
+                                              Path=DataContext.IsNotifierBarBottom,
+                                              Converter={StaticResource BoolVisibleConverter}}" />
             <!--  STATUS BAR AREA  -->
-            <nb:NotifyBlock Grid.Row="3" DataContext="{Binding NotifyBlockViewModel}" />
+            <nb:NotifyBlock Grid.Row="4" DataContext="{Binding NotifyBlockViewModel}" />
         </Grid>
         <Grid Visibility="{Binding IsVisibleUserSelection, Converter={StaticResource BoolVisibleConverter}}">
             <my:UserSelection DataContext="{Binding UserSelectionViewModel}" />

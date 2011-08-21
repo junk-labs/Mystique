@@ -10,5 +10,6 @@ namespace Inscribe.Subsystems.KeyAssign
         General,
         Timeline,
         Input,
+        SearchBar,
     }
 }

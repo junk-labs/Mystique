@@ -265,8 +265,14 @@ namespace Inscribe.Storage
                     var urls = status.Entities.GetChildNode("urls");
                     if (urls != null)
                     {
+                        System.Diagnostics.Debug.WriteLine("before:" + status.Text);
+                        System.Diagnostics.Debug.WriteLine("entities:" + status.Entities);
+                        // indicesの始まりが遅い順に置換していく
                         urls.GetChildNodes("item")
-                            .OrderByDescending(i => i.GetChildNode("indices").GetChildValues("item").Select(s => s.Value).First())
+                            .Where(i => i.GetChildNode("indices") != null)
+                            .Where(i => i.GetChildNode("indices").GetChildValues("item") != null)
+                            .OrderByDescending(i => i.GetChildNode("indices").GetChildValues("item")
+                                .Select(s => int.Parse(s.Value)).First())
                             .ForEach(i =>
                         {
                             var expand = i.GetChildValue("expanded_url").Value;
@@ -274,7 +280,8 @@ namespace Inscribe.Storage
                                 expand = i.GetChildValue("url").Value;
                             if (!String.IsNullOrWhiteSpace(expand))
                             {
-                                var indices = i.GetChildNode("indices").GetChildValues("item").Select(v => int.Parse(v.Value)).ToArray();
+                                var indices = i.GetChildNode("indices").GetChildValues("item")
+                                    .Select(v => int.Parse(v.Value)).OrderBy(v => v).ToArray();
                                 if (indices.Length == 2)
                                 {
                                     status.Text = status.Text.Substring(0, indices[0]) +
@@ -282,6 +289,7 @@ namespace Inscribe.Storage
                                 }
                             }
                         });
+                        System.Diagnostics.Debug.WriteLine("after:" + status.Text);
                     }
                 }
             }

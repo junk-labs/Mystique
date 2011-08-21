@@ -16,7 +16,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._tabNotifyEnabledAsDefault = Setting.Instance.NotificationProperty.TabNotifyEnabledAsDefault;
             this._isEnabledNotificationBar = Setting.Instance.NotificationProperty.IsEnabledNotificationBar;
             this._isShowMultiple = Setting.Instance.NotificationProperty.IsShowMultiple;
-
+            this._isNotifierBarBottom = Setting.Instance.NotificationProperty.IsNotifierBarBottom;
 
             this._notifyLocationIndex = (int)Setting.Instance.NotificationProperty.NotifyLocation;
             this._windowNotificationStrategyIndex = (int)Setting.Instance.NotificationProperty.WindowNotificationStrategy;
@@ -44,7 +44,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 RaisePropertyChanged(() => IsEnabledNotificationBar);
             }
         }
-
 
         private bool _isShowMultiple;
         public bool IsShowMultiple
@@ -90,15 +89,28 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+        private bool _isNotifierBarBottom;
+        public bool IsNotifierBarBottom
+        {
+            get { return _isNotifierBarBottom; }
+            set
+            {
+                _isNotifierBarBottom = value;
+                RaisePropertyChanged(() => IsNotifierBarBottom);
+            }
+        }
+
         public void Apply()
         {
             Setting.Instance.NotificationProperty.TabNotifyEnabledAsDefault = this._tabNotifyEnabledAsDefault;
             Setting.Instance.NotificationProperty.IsEnabledNotificationBar = this._isEnabledNotificationBar;
-
             Setting.Instance.NotificationProperty.IsShowMultiple = this._isShowMultiple;
-            Setting.Instance.NotificationProperty.NotifyLocation = (NotifyLocation) this._notifyLocationIndex;
+            Setting.Instance.NotificationProperty.IsNotifierBarBottom = this._isNotifierBarBottom;
+
+            Setting.Instance.NotificationProperty.NotifyLocation = (NotifyLocation)this._notifyLocationIndex;
             Setting.Instance.NotificationProperty.WindowNotificationStrategy = (NotificationStrategy)this._windowNotificationStrategyIndex;
             Setting.Instance.NotificationProperty.SoundNotificationStrategy = (NotificationStrategy)this._soundNotificationStrategyIndex;
         }
+
     }
 }

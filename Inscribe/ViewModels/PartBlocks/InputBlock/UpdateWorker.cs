@@ -214,7 +214,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 switch (tex.Kind)
                 {
                     case TweetAnnotationException.AnnotationKind.NearUnderControl:
-                        this.ErrorTitle = "Expect POST Limit";
+                        this.ErrorTitle = "Warning POST Limit";
                         break;
                     case TweetAnnotationException.AnnotationKind.Fallbacked:
                         this.ErrorTitle = "Fallbacked";

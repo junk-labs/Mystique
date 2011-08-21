@@ -42,5 +42,6 @@ namespace Inscribe.Configuration.Settings
         public int StatusMessageDefaultShowLengthSec { get; set; }
 
         #endregion
+
     }
 }

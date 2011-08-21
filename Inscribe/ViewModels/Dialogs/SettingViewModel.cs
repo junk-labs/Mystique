@@ -53,7 +53,7 @@ namespace Inscribe.ViewModels.Dialogs
         }
 
         private InputConfigViewModel _inputConfigViewModel = new InputConfigViewModel();
-        internal InputConfigViewModel InputConfigViewModel
+        public InputConfigViewModel InputConfigViewModel
         {
             get { return _inputConfigViewModel; }
         }
