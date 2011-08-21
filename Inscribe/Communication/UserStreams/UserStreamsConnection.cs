@@ -368,7 +368,12 @@ namespace Inscribe.Communication.UserStreams
 
         public bool IsAlive
         {
-            get { return !this.disposed; }
+            get
+            {
+                if (!this.connection.IsAlive) // Connection finalized
+                    this.Dispose();
+                return !this.disposed;
+            }
         }
     }
 }

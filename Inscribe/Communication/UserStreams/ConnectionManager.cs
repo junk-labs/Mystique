@@ -221,6 +221,10 @@ namespace Inscribe.Communication.UserStreams
                 // -> エラー切断であるので再接続
                 RefreshConnection(accountInfo);
             }
+            else
+            {
+                pusc.Dispose();
+            }
         }
 
         #endregion

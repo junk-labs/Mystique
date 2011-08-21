@@ -109,6 +109,11 @@ namespace Dulcet.Twitter.Streaming
             }
         }
 
+        public bool IsAlive
+        {
+            get { return !this.disposed; }
+        }
+
         /// <summary>
         /// Finalize streaming connection
         /// </summary>
