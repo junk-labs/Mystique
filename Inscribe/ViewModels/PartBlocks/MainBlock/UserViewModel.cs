@@ -18,5 +18,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 throw new NullReferenceException("user");
             this.TwitterUser = user;
         }
+
+        public override bool Equals(object obj)
+        {
+            var tvm = obj as UserViewModel;
+            return tvm != null && tvm.TwitterUser.NumericId == this.TwitterUser.NumericId;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)TwitterUser.NumericId;
+        }
+
     }
 }

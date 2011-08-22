@@ -75,14 +75,9 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
             get
             {
                 if (_OkCommand == null)
-                    _OkCommand = new DelegateCommand(Ok, CanOk);
+                    _OkCommand = new DelegateCommand(Ok);
                 return _OkCommand;
             }
-        }
-
-        private bool CanOk()
-        {
-            return this._userSelectorViewModel.LinkElements.Count() > 0;
         }
 
         private void Ok()

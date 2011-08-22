@@ -17,18 +17,27 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
         private static void DynamicInlineChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             var rt = o as DynamicRichTextBox;
-            FlowDocument fd = new FlowDocument();
-            fd.PreviewMouseDown += (ob, ev) => rt.DocumentPreviewMouseDown(ob, ev);
-            fd.PreviewMouseMove += (ob, ev) => rt.DocumentPreviewMouseMove(ob, ev);
-            fd.PreviewMouseUp += (ob, ev) => rt.DocumentPreviewMouseUp(ob, ev);
-            fd.MouseDown += (ob, ev) => rt.DocumentMouseDown(ob, ev);
-            fd.MouseMove += (ob, ev) => rt.DocumentMouseMove(ob, ev);
-            fd.MouseUp += (ob, ev) => rt.DocumentMouseUp(ob, ev);
-            var para = new Paragraph();
-            fd.Blocks.Add(para);
+            if (rt.Document == null)
+            {
+                // initialize
+                rt.Document = new FlowDocument();
+                rt.Document.PreviewMouseDown += (ob, ev) => rt.DocumentPreviewMouseDown(ob, ev);
+                rt.Document.PreviewMouseMove += (ob, ev) => rt.DocumentPreviewMouseMove(ob, ev);
+                rt.Document.PreviewMouseUp += (ob, ev) => rt.DocumentPreviewMouseUp(ob, ev);
+                rt.Document.MouseDown += (ob, ev) => rt.DocumentMouseDown(ob, ev);
+                rt.Document.MouseMove += (ob, ev) => rt.DocumentMouseMove(ob, ev);
+                rt.Document.MouseUp += (ob, ev) => rt.DocumentMouseUp(ob, ev);
+            }
+            var para = rt.Document.Blocks.FirstBlock as Paragraph;
+            if (para == null)
+            {
+                para = new Paragraph();
+                rt.Document.Blocks.Clear();
+                rt.Document.Blocks.Add(para);
+            }
+            para.Inlines.Clear();
             if (e.NewValue != null)
                 para.Inlines.AddRange(e.NewValue as IEnumerable<Inline>);
-            rt.Document = fd;
         }
 
         public void EntryOnMouseDown(MouseButtonEventArgs e)

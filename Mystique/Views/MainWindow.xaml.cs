@@ -32,11 +32,18 @@ namespace Mystique.Views
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Setting.IsInitialized)
+            if (MessageBox.Show(this, "Krileを終了してもよろしいですか？", "Krileの終了", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
             {
-                var rect = Nightmare.WinAPI.NativeWindowControl.GetWindowPlacement(this);
-                Setting.Instance.StateProperty.WindowPosition = rect;
-                Setting.Instance.StateProperty.WindowState = this.WindowState;
+                if (Setting.IsInitialized)
+                {
+                    var rect = Nightmare.WinAPI.NativeWindowControl.GetWindowPlacement(this);
+                    Setting.Instance.StateProperty.WindowPosition = rect;
+                    Setting.Instance.StateProperty.WindowState = this.WindowState;
+                }
+            }
+            else
+            {
+                e.Cancel = true;
             }
         }
 

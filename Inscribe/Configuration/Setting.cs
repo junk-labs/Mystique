@@ -120,6 +120,7 @@ namespace Inscribe.Configuration
 
         public static void RaiseSettingValueChanged()
         {
+            Instance.Save();
             OnSettingValueChanged(EventArgs.Empty);
             // TweetModel.RaiseInvalidateAllCache();
         }

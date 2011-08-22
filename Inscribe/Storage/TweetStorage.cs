@@ -265,8 +265,6 @@ namespace Inscribe.Storage
                     var urls = status.Entities.GetChildNode("urls");
                     if (urls != null)
                     {
-                        System.Diagnostics.Debug.WriteLine("before:" + status.Text);
-                        System.Diagnostics.Debug.WriteLine("entities:" + status.Entities);
                         // indicesの始まりが遅い順に置換していく
                         urls.GetChildNodes("item")
                             .Where(i => i.GetChildNode("indices") != null)
@@ -289,7 +287,6 @@ namespace Inscribe.Storage
                                 }
                             }
                         });
-                        System.Diagnostics.Debug.WriteLine("after:" + status.Text);
                     }
                 }
             }
@@ -303,15 +300,27 @@ namespace Inscribe.Storage
         public static void Remove(long id)
         {
             // 削除する
+            TweetViewModel remobj = null;
             deleteReserveds.Add(id);
             lock (__regCoreLock__)
             {
                 empties.Remove(id);
                 if (dictionary.ContainsKey(id))
                 {
-                    var remobj = dictionary[id];
+                    remobj = dictionary[id];
                     dictionary.Remove(id);
                     Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
+                }
+            }
+            if (remobj != null)
+            {
+                // リツイート判定
+                var status = remobj.Status as TwitterStatus;
+                if (status != null && status.RetweetedOriginal != null)
+                {
+                    var ros = TweetStorage.Get(status.RetweetedOriginal.Id);
+                    if (ros != null)
+                        ros.RemoveRetweeted(UserStorage.Get(status.User));
                 }
             }
         }
@@ -374,7 +383,7 @@ namespace Inscribe.Storage
         internal static void UpdateMute()
         {
             if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster == null) return;
-            var ng = GetAll(t => Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(t.Status));
+            var ng = GetAll(t => Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(t.Status)).ToArray();
             foreach (var t in ng)
             {
                 if (!AccountStorage.Contains(t.Status.User.ScreenName))

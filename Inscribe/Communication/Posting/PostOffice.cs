@@ -319,20 +319,54 @@ namespace Inscribe.Communication.Posting
             Parallel.ForEach(infos,
                 (d) =>
                 {
-                    if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) != null)
-                    {
-                        var ud = UserStorage.Get(d.ScreenName);
-                        if (ud != null)
-                            status.RegisterFavored(ud);
-                    }
-                    else
+                    var ud = UserStorage.Get(d.ScreenName);
+                    // ふぁぼり状態更新
+                    if (ud != null)
+                        status.RegisterFavored(ud);
+                    if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) == null)
                     {
                         success = false;
+                        if (ud != null)
+                            status.RemoveFavored(ud);
                         NotifyStorage.Notify("Favに失敗しました: @" + d.ScreenName);
                     }
                 });
             if (success)
                 NotifyStorage.Notify("Favしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
+        }
+
+        public static void UnfavTweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
+        {
+            Task.Factory.StartNew(() => UnfavTweetSink(infos, status), TaskCreationOptions.LongRunning);
+        }
+
+        private static void UnfavTweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
+        {
+            if (((TwitterStatus)status.Status).RetweetedOriginal != null)
+                status = TweetStorage.Get(((TwitterStatus)status.Status).RetweetedOriginal.Id, true);
+            if (status == null)
+            {
+                NotifyStorage.Notify("Unfav 対象ステータスが見つかりません。");
+                return;
+            }
+            bool success = true;
+            Parallel.ForEach(infos,
+                (d) =>
+                {
+                    var ud = UserStorage.Get(d.ScreenName);
+                    // ふぁぼり状態更新
+                    if (ud != null)
+                        status.RemoveFavored(ud);
+                    if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) == null)
+                    {
+                        success = false;
+                        if(ud != null)
+                            status.RegisterFavored(ud);
+                        NotifyStorage.Notify("Favに失敗しました: @" + d.ScreenName);
+                    }
+                });
+            if (success)
+                NotifyStorage.Notify("Unfavしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
         }
 
         public static void Retweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
@@ -353,20 +387,60 @@ namespace Inscribe.Communication.Posting
             Parallel.ForEach(infos,
                 (d) =>
                 {
-                    if (ApiHelper.ExecApi(() => d.Retweet(status.Status.Id)) != null)
+                    // リツイート状態更新
+
+                    var ud = UserStorage.Get(d.ScreenName);
+                    if (ud != null)
+                        status.RegisterRetweeted(ud);
+                    if (ApiHelper.ExecApi(() => d.Retweet(status.Status.Id)) == null)
                     {
-                        var ud = UserStorage.Get(d.ScreenName);
                         if (ud != null)
-                            status.RegisterRetweeted(ud);
-                    }
-                    else
-                    {
+                            status.RemoveRetweeted(ud);
                         success = false;
                         NotifyStorage.Notify("Retweetに失敗しました: @" + d.ScreenName);
                     }
                 });
             if (success)
                 NotifyStorage.Notify("Retweetしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
+        }
+
+        public static void Unretweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
+        {
+            Task.Factory.StartNew(() => UnretweetSink(infos, status), TaskCreationOptions.LongRunning);
+        }
+
+        private static void UnretweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
+        {
+            if (((TwitterStatus)status.Status).RetweetedOriginal != null)
+                status = TweetStorage.Get(((TwitterStatus)status.Status).RetweetedOriginal.Id);
+            if (status == null)
+            {
+                NotifyStorage.Notify("Retweet オリジナルデータが見つかりません。");
+                return;
+            }
+            bool success = true;
+            Parallel.ForEach(infos,
+                d =>
+                {
+                    // リツイート状態更新
+                    var ud = UserStorage.Get(d.ScreenName);
+                    if (ud != null)
+                        status.RegisterRetweeted(ud);
+
+                    // リツイートステータスの特定
+                    var rts = TweetStorage.GetAll(vm =>
+                        vm.Status.User.ScreenName == d.ScreenName && vm.Status is TwitterStatus &&
+                        ((TwitterStatus)vm.Status).RetweetedOriginal != null && ((TwitterStatus)vm.Status).RetweetedOriginal.Id == status.Status.Id).FirstOrDefault();
+                    if (rts == null || ApiHelper.ExecApi(() => d.DestroyStatus(rts.Status.Id) == null))
+                    {
+                        if (ud != null)
+                            status.RemoveRetweeted(ud);
+                        success = false;
+                        NotifyStorage.Notify("Retweetキャンセルに失敗しました: @" + d.ScreenName);
+                    }
+                });
+            if (success)
+                NotifyStorage.Notify("Retweetをキャンセルしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
         }
 
         public static void RemoveTweet(AccountInfo info, long tweetId)

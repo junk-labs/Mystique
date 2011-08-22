@@ -215,7 +215,7 @@
     <Compile Include="Views\Converters\Particular\CollectionExistToVisibleConverter.cs" />
     <Compile Include="Views\Converters\Particular\CollectionToCountConverter.cs" />
     <Compile Include="Views\Converters\Particular\StringRemoveLineFeedConverter.cs" />
-    <Compile Include="Views\Converters\Particular\TextToFlowDocumentConvereter.cs" />
+    <Compile Include="Views\Converters\Particular\TextToInlinesConvereter.cs" />
     <Compile Include="Views\Converters\Particular\TVMToUserNameConverter.cs" />
     <Compile Include="Views\Converters\StringEqVisibleConverter.cs" />
     <Compile Include="Views\CustomPanels\FillPanel.cs" />

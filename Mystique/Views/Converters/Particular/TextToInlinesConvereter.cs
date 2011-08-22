@@ -17,25 +17,25 @@ using Mystique.Views.Text;
 
 namespace Mystique.Views.Converters.Particular
 {
-    public enum FlowDocumentConversion
+    public enum InlineConversionMode
     {
         Full,
         Digest,
         Source,
     }
 
-    public class TextToFlowDocumentConverter : OneWayConverter<string, IEnumerable<Inline>>
+    public class TextToInlinesConverter : OneWayConverter<string, IEnumerable<Inline>>
     {
         public override IEnumerable<Inline> ToTarget(string input, object parameter)
         {
-            FlowDocumentConversion kind;
+            InlineConversionMode kind;
             if (!Enum.TryParse(parameter as string, true, out kind))
-                kind = FlowDocumentConversion.Full;
+                kind = InlineConversionMode.Full;
             switch (kind)
             {
-                case FlowDocumentConversion.Full:
+                case InlineConversionMode.Full:
                     return TextToFlowConversionStatic.Generate(input);
-                case FlowDocumentConversion.Digest:
+                case InlineConversionMode.Digest:
                     return TextToFlowConversionStatic.GenerateDigest(input);
                 default:
                     return TextToFlowConversionStatic.Generate(input);

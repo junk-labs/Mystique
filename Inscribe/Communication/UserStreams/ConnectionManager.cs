@@ -123,37 +123,58 @@ namespace Inscribe.Communication.UserStreams
 
         #region Streaming-Query Control
 
-        static Dictionary<string, AccountInfo> lookupDictionary = new Dictionary<string, AccountInfo>();
+        private static ConcurrentDictionary<string, AccountInfo> lookupDictionary = new ConcurrentDictionary<string, AccountInfo>();
 
-        static Dictionary<string, int> referenceCount = new Dictionary<string, int>();
+        private static ConcurrentDictionary<string, int> referenceCount = new ConcurrentDictionary<string, int>();
+
+        private static object addQueryLocker = new object();
 
         public static bool AddQuery(string query)
         {
-            if (referenceCount.ContainsKey(query))
+            lock (addQueryLocker)
             {
-                referenceCount[query]++;
-                return true;
-            }
-            else
-            {
-                if (!StartListenQuery(query))
-                    return false;
-                referenceCount.Add(query, 1);
-                return true;
+                if (referenceCount.ContainsKey(query))
+                {
+                    referenceCount[query]++;
+                    return true;
+                }
+                else
+                {
+                    if (!StartListenQuery(query))
+                        return false;
+                    referenceCount.AddOrUpdate(query, 1, (q, i) => i++);
+                    return true;
+                }
             }
         }
 
         private static bool StartListenQuery(string query)
         {
-            var info = AccountStorage.Accounts
-                .Where(a => a.AccoutProperty.UseUserStreams && connections.ContainsKey(a))
-                .OrderByDescending(a => lookupDictionary.Where(v => v.Value == a).Count())
-                .FirstOrDefault();
-            if (info == null)
-                return false;
-            lookupDictionary.Add(query, info);
-            RefreshConnection(info);
-            return true;
+            if (connections.Count == 0)
+            {
+                // コネクションカウントが0の時はとりあえず受け付ける
+                // まだ接続されていないんじゃないかな？
+                var info = AccountStorage.Accounts
+                    .Where(a => a.AccoutProperty.UseUserStreams)
+                    .OrderByDescending(a => lookupDictionary.Where(v => v.Value == a).Count())
+                    .FirstOrDefault();
+                if (info == null)
+                    return false;
+                lookupDictionary.AddOrUpdate(query, info);
+                return true;
+            }
+            else
+            {
+                var info = AccountStorage.Accounts
+                    .Where(a => a.AccoutProperty.UseUserStreams && connections.ContainsKey(a))
+                    .OrderByDescending(a => lookupDictionary.Where(v => v.Value == a).Count())
+                    .FirstOrDefault();
+                if (info == null)
+                    return false;
+                lookupDictionary.AddOrUpdate(query, info);
+                RefreshConnection(info);
+                return true;
+            }
         }
 
         public static void RemoveQuery(string query)
@@ -168,6 +189,20 @@ namespace Inscribe.Communication.UserStreams
                 lookupDictionary.Remove(query);
                 RefreshConnection(info);
             }
+        }
+
+        public static void RemoveQueries(string[] queries)
+        {
+            queries.Where(q => referenceCount.ContainsKey(q))
+                .Where(q => (referenceCount[q]-- == 0))
+                .Select(q =>
+                {
+                    referenceCount.Remove(q);
+                    var i = lookupDictionary[q];
+                    lookupDictionary.Remove(q);
+                    return i;
+                }).Distinct()
+                .ForEach(i => Task.Factory.StartNew(() => RefreshConnection(i)));
         }
 
         private static void RefreshQuery()
@@ -193,9 +228,17 @@ namespace Inscribe.Communication.UserStreams
         /// <param name="o"></param>
         private static void DoPatrol(object o)
         {
-            AccountStorage.Accounts
-                .Where(i => connections.ContainsKey(i) && (connections[i] == null || !connections[i].IsAlive))
-                .ForEach(i => Task.Factory.StartNew(() => RefreshConnection(i)));
+            try
+            {
+                AccountStorage.Accounts
+                    .Where(i => connections.ContainsKey(i) && (connections[i] == null || !connections[i].IsAlive))
+                    .ForEach(i => Task.Factory.StartNew(() => RefreshConnection(i)));
+            }
+            catch (Exception e)
+            {
+                ExceptionStorage.Register(e, ExceptionCategory.InternalError,
+                    "User Streamsの接続監視中にエラーが発生しました。", () => DoPatrol(null));
+            }
         }
 
         /// <summary>

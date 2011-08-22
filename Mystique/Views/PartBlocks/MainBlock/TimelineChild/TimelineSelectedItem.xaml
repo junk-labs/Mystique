@@ -19,7 +19,7 @@
              InputMethod.IsInputMethodEnabled="False"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <cp:TextToFlowDocumentConverter x:Key="TextFlowDocumentConverter" />
+        <cp:TextToInlinesConverter x:Key="TextFlowDocumentConverter" />
         <cp:TVMToUserNameConverter x:Key="TweetUserNameConverter" />
         <cp:TVMToUserImageConverter x:Key="TweetUserImageConverter" />
         <cp:CollectionToCountConverter x:Key="CollectionCountConverter" />

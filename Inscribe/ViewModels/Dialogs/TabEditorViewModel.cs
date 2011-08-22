@@ -156,10 +156,10 @@ namespace Inscribe.ViewModels.Dialogs
         {
             this.property.StreamingQueries =
                 this.property.StreamingQueries.Except(new[] { parameter }).ToArray();
-            ConnectionManager.RemoveQuery(parameter);
             this.FilterEditorViewModel.RootFilters.OfType<FilterText>()
                 .Where(f => f.Needle == parameter).ForEach(f => this.FilterEditorViewModel.RemoveChild(f));
             RaisePropertyChanged(() => StreamingQueries);
+            Task.Factory.StartNew(() => ConnectionManager.RemoveQuery(parameter));
         }
         #endregion
 

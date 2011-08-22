@@ -245,6 +245,7 @@ namespace Inscribe.Communication.UserStreams
                         {
                             info.ConnectionState = ConnectionState.TryConnection;
                             ConnectionManager.OnConnectionStateChanged(EventArgs.Empty);
+                            System.Diagnostics.Debug.WriteLine("User Streams Connection with Track: " + track);
                             connection = streamingCore.ConnectNew(
                                 info, StreamingDescription.ForUserStreams(TwitterDefine.UserStreamsTimeout,
                                 track: track, repliesAll: info.AccoutProperty.UserStreamsRepliesAll));
@@ -364,13 +365,16 @@ namespace Inscribe.Communication.UserStreams
             this.disposed = true;
             if (this.connection != null)
                 this.connection.Dispose();
+            this.connection = null;
         }
 
         public bool IsAlive
         {
             get
             {
-                if (!this.connection.IsAlive) // Connection finalized
+                if (this.connection == null)
+                    this.disposed = true;
+                else if (!this.connection.IsAlive) // Connection finalized
                     this.Dispose();
                 return !this.disposed;
             }

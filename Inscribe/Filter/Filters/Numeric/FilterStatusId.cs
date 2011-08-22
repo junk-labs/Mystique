@@ -31,7 +31,7 @@ namespace Inscribe.Filter.Filters.Numeric
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
-            return this.range.Check(status.Id);
+            return this.Range.Check(status.Id);
         }
 
         public override string Identifier

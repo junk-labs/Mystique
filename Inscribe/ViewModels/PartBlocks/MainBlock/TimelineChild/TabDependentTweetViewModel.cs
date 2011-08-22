@@ -580,9 +580,22 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         private void Favorite()
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+            {
                 FavoriteMultiUser();
+            }
             else
-                PostOffice.FavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+            {
+                if (this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
+                    .All(u => this.Tweet.FavoredUsers.Contains(u)))
+                {
+                    // all account favored
+                    PostOffice.UnfavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+                }
+                else
+                {
+                    PostOffice.FavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+                }
+            }
         }
         #endregion
 
@@ -601,7 +614,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void FavoriteMultiUser()
         {
-            this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.Favorite, this.Parent.TabProperty.LinkAccountInfos, u => PostOffice.FavTweet(u, this.Tweet));
+            var favored = AccountStorage.Accounts.Where(a => this.Tweet.FavoredUsers.Contains(a.UserViewModel)).ToArray();
+            this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.Favorite,
+                favored,
+                u =>
+                {
+                    PostOffice.FavTweet(u.Except(favored), this.Tweet);
+                    PostOffice.UnfavTweet(favored.Except(u), this.Tweet);
+                });
         }
         #endregion
 
@@ -621,9 +641,22 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         private void Retweet()
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+            {
                 RetweetMultiUser();
+            }
             else
-                PostOffice.Retweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+            {
+                if (this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
+                    .All(u => this.Tweet.RetweetedUsers.Contains(u)))
+                {
+                    // all account favored
+                    PostOffice.Unretweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+                }
+                else
+                {
+                    PostOffice.Retweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+                }
+            }
         }
         #endregion
 
@@ -642,7 +675,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void RetweetMultiUser()
         {
-            this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.Retweet, this.Parent.TabProperty.LinkAccountInfos, u => PostOffice.Retweet(u, this.Tweet));
+            var retweeted = AccountStorage.Accounts.Where(a => this.Tweet.RetweetedUsers.Contains(a.UserViewModel)).ToArray();
+            this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.Retweet,
+                retweeted,
+                u =>
+                {
+                    PostOffice.Retweet(u.Except(retweeted), this.Tweet);
+                    PostOffice.Unretweet(retweeted.Except(u), this.Tweet);
+                });
         }
         #endregion
 

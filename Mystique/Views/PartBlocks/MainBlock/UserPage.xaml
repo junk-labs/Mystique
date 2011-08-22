@@ -24,7 +24,7 @@
         <BitmapImage x:Key="Cancel" UriSource="/Resources/cancel.png" />
         <BitmapImage x:Key="Lock" UriSource="/Resources/lock.png" />
         <BitmapImage x:Key="Verified" UriSource="/Resources/tick.png" />
-        <cp:TextToFlowDocumentConverter x:Key="TextToInlinesConverter" />
+        <cp:TextToInlinesConverter x:Key="TextToInlinesConverter" />
     </UserControl.Resources>
     <i:Interaction.Triggers>
         <l:InteractionMessageTrigger MessageKey="InformationMessage" Messenger="{Binding Messenger}">

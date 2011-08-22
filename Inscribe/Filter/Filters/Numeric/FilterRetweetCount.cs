@@ -30,7 +30,7 @@ namespace Inscribe.Filter.Filters.Numeric
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
-            return this.range.Check(TweetStorage.Get(status.Id).RetweetedUsers.Count());
+            return this.Range.Check(TweetStorage.Get(status.Id).RetweetedUsers.Count());
         }
 
         public override string Identifier
