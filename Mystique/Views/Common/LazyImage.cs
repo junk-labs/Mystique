@@ -66,6 +66,9 @@ namespace Mystique.Views.Common
                             {
                                 try
                                 {
+                                    if (img.DefaultImage != null &&
+                                        !img.DefaultImage.IsFrozen && img.DefaultImage.CanFreeze)
+                                        img.DefaultImage.Freeze();
                                     img.Source = img.DefaultImage;
                                 }
                                 catch { }
@@ -75,7 +78,8 @@ namespace Mystique.Views.Common
                                 try
                                 {
                                     var bi = CloneFreeze(ImageCacheStorage.DownloadImage(uri));
-                                    Application.Current.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri), DispatcherPriority.ContextIdle);
+                                    Application.Current.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri),
+                                        DispatcherPriority.ContextIdle);
                                 }
                                 catch { }
                             });
@@ -92,7 +96,7 @@ namespace Mystique.Views.Common
             {
                 if (bitmap != null)
                 {
-                    if (!bitmap.IsFrozen)
+                    if (!bitmap.IsFrozen && bitmap.CanFreeze)
                         bitmap.Freeze();
                     if (checkUri == null || image.UriSource == checkUri)
                         image.Source = bitmap;

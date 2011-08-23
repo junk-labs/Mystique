@@ -343,7 +343,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             if (user == null) return;
             this.TimelineListCoreViewModel.Sources = new[] { new FilterUserId(user.TwitterUser.NumericId) };
-            Task.Factory.StartNew(() => this.TimelineListCoreViewModel.InvalidateCache(true));
+            Task.Factory.StartNew(() => this.TimelineListCoreViewModel.InvalidateCache());
         }
 
         public event Action CloseRequired = () => { };
@@ -513,7 +513,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public override void InvalidateCache()
         {
-            this.TimelineListCoreViewModel.InvalidateCache(true);
+            this.TimelineListCoreViewModel.InvalidateCache();
         }
     }
 }

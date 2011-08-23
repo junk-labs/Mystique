@@ -19,6 +19,8 @@ namespace Inscribe.Configuration.Settings
             UserOpenTransition = TransitionMethod.AddTab;
             IsShowConversationAsTree = true;
             MoveAboveTopToDeselect = true;
+            UseIntelligentOrdering = false;
+            IntelligentOrderingThresholdSec = 60 * 5;
         }
 
         public bool FastScrolling { get; set; }
@@ -48,6 +50,13 @@ namespace Inscribe.Configuration.Settings
         /// タイムラインの一番上の要素を選択している時にさらに上に移動しようとした時、選択を外す
         /// </summary>
         public bool MoveAboveTopToDeselect { get; set; }
+
+        /// <summary>
+        /// 受信順を投稿順よりも優先
+        /// </summary>
+        public bool UseIntelligentOrdering { get; set; }
+
+        public int IntelligentOrderingThresholdSec { get; set; }
     }
 
     /// <summary>

@@ -836,7 +836,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     Negate = false,
                     Filters = this.Parent.TabProperty.TweetSources.ToArray()};
                 this.Parent.TabProperty.TweetSources = new[]{ cluster.Restrict(new FilterCluster(){ ConcatenateAnd = false, Negate = true, Filters = new[]{ new FilterUserId(user.NumericId) }}).Optimize()}.ToArray();
-                Task.Factory.StartNew(() => this.Parent.BaseTimeline.CoreViewModel.InvalidateCache(true));
+                Task.Factory.StartNew(() => this.Parent.BaseTimeline.CoreViewModel.InvalidateCache());
             }
             else
             {

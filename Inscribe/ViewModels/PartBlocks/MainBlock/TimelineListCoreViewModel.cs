@@ -49,6 +49,40 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
+        private bool _referenced = false;
+
+        private CachedConcurrentObservableCollection<TabDependentTweetViewModel> _tweetsSource;
+        public CachedConcurrentObservableCollection<TabDependentTweetViewModel> TweetsSource
+        {
+            get
+            {
+                if (!_referenced)
+                {
+                    this._tweetsSource.Commit(true);
+                    _referenced = true;
+                }
+                return this._tweetsSource;
+            }
+        }
+
+        /*
+        private CollectionViewSource _tweetCollectionView;
+        public CollectionViewSource TweetCollectionView { get { return this._tweetCollectionView; } }
+        */
+
+        private TabDependentTweetViewModel _selectedTweetViewModel = null;
+        public TabDependentTweetViewModel SelectedTweetViewModel
+        {
+            get { return _selectedTweetViewModel; }
+            set
+            {
+                this._selectedTweetViewModel = value;
+                RaisePropertyChanged(() => SelectedTweetViewModel);
+                Task.Factory.StartNew(() => this._tweetsSource.ToArrayVolatile()
+                    .ForEach(vm => _updateDispatcher.Enqueue(() => vm.PendingColorChanged())));
+            }
+        }
+
         private void UpdateReacceptionChain(IEnumerable<IFilter> filter, bool join)
         {
             if (filter != null)
@@ -63,7 +97,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         void f_RequireReaccept()
         {
             System.Diagnostics.Debug.WriteLine("received reacception");
-            Task.Factory.StartNew(() => this.InvalidateCache(true));
+            Task.Factory.StartNew(() => this.InvalidateCache());
         }
 
         public TimelineListCoreViewModel(TabViewModel parent, IEnumerable<IFilter> sources)
@@ -77,34 +111,15 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             // binding nortifications
             ViewModelHelper.BindNotification(TweetStorage.TweetStorageChangedEvent, this, TweetStorageChanged);
             ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, SettingValueChanged);
-            // Initialize binding timeline
-            if (DispatcherHelper.UIDispatcher.CheckAccess())
-            {
-                this._tweetCollectionView = new CollectionViewSource();
-                this._tweetCollectionView.Source = this._tweetsSource;
-                Task.Factory.StartNew(() => InvalidateCache(false))
-                    .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => UpdateSortDescription()));
-            }
-            else
-            {
-                this._tweetCollectionView = null;
-                DispatcherHelper.BeginInvoke(() =>
-                {
-                    this._tweetCollectionView = new CollectionViewSource();
-                    this._tweetCollectionView.Source = this._tweetsSource;
-                    Task.Factory.StartNew(() => InvalidateCache(false))
-                        .ContinueWith(_ => DispatcherHelper.BeginInvoke(() => UpdateSortDescription()));
-                });
-            }
             // Generate timeline
+            Task.Factory.StartNew(() => this.InvalidateCache());
         }
 
-        public void Commit(bool reinvalidate)
+        public void Commit()
         {
-            this._tweetsSource.Commit(reinvalidate);
+            this._tweetsSource.Sort(Setting.Instance.TimelineExperienceProperty.OrderByAscending,
+                t => t.Tweet.CreatedAt);
         }
-
-        private object duplLock = new object();
 
         private void TweetStorageChanged(object o, TweetStorageChangedEventArgs e)
         {
@@ -114,18 +129,26 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     if (CheckFilters(e.Tweet))
                     {
                         var atdtvm = new TabDependentTweetViewModel(e.Tweet, this.Parent);
-                        lock (duplLock)
+                        if (Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering &&
+                            DateTime.Now.Subtract(e.Tweet.CreatedAt).TotalSeconds < Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec)
                         {
-                            if (this._tweetsSource.Contains(atdtvm))
-                                return;
-                            this._tweetsSource.Add(atdtvm);
+                            if (Setting.Instance.TimelineExperienceProperty.OrderByAscending)
+                                this._tweetsSource.AddLastSingle(atdtvm);
+                            else
+                                this._tweetsSource.AddTopSingle(atdtvm);
+                        }
+                        else
+                        {
+                            this._tweetsSource.AddOrderedSingle(
+                                atdtvm, Setting.Instance.TimelineExperienceProperty.OrderByAscending,
+                                t => t.Tweet.CreatedAt);
                         }
                         OnNewTweetReceived();
                         this.Parent.NotifyNewTweetReceived(this, e.Tweet);
                     }
                     break;
                 case TweetActionKind.Refresh:
-                    Task.Factory.StartNew(() => InvalidateCache(true));
+                    Task.Factory.StartNew(() => InvalidateCache());
                     break;
                 case TweetActionKind.Changed:
                     var ctdtvm = new TabDependentTweetViewModel(e.Tweet, this.Parent);
@@ -146,23 +169,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void SettingValueChanged(object o, EventArgs e)
         {
-            UpdateSortDescription();
-        }
-
-        private void UpdateSortDescription()
-        {
-            if (this._tweetCollectionView == null) return;
-            using (var disp = this._tweetCollectionView.DeferRefresh())
-            {
-                this._tweetsSource.Commit();
-                this._tweetCollectionView.SortDescriptions.Clear();
-                if (Setting.Instance.TimelineExperienceProperty.OrderByAscending)
-                    this._tweetCollectionView.SortDescriptions.Add(
-                        new SortDescription("Tweet.CreatedAt", ListSortDirection.Ascending));
-                else
-                    this._tweetCollectionView.SortDescriptions.Add(
-                        new SortDescription("Tweet.CreatedAt", ListSortDirection.Descending));
-            }
+            this.Commit();
+            // UpdateSortDescription();
         }
 
         public bool CheckFilters(TweetViewModel viewModel)
@@ -172,7 +180,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 .Any(f => f.Filter(viewModel.Status));
         }
 
-        public void InvalidateCache(bool commit)
+        public void InvalidateCache()
         {
             if (DispatcherHelper.UIDispatcher.CheckAccess())
             {
@@ -180,45 +188,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 throw new InvalidOperationException("Can't invalidate cache on Dispatcher thread.");
             }
 
-            if (this._tweetsSource == null)
-            {
-                // TODO: remove this
-                throw new NullReferenceException("Tweet Source is null.(debug)");
-            }
-
             this._tweetsSource.Clear();
             var collection = TweetStorage.GetAll(vm => CheckFilters(vm))
                 .Select(tvm => new TabDependentTweetViewModel(tvm, this.Parent)).ToArray();
-            lock (duplLock)
+            foreach (var tvm in collection)
             {
-                foreach (var tvm in collection)
-                {
-                    if (!this._tweetsSource.Contains(tvm))
-                        this._tweetsSource.Add(tvm);
-                }
+                this._tweetsSource.AddTopSingle(tvm);
             }
-
-            if (commit)
-                this.Commit(true);
-        }
-
-        private CachedConcurrentObservableCollection<TabDependentTweetViewModel> _tweetsSource;
-        public CachedConcurrentObservableCollection<TabDependentTweetViewModel> TweetsSource { get { return this._tweetsSource; } }
-
-        private CollectionViewSource _tweetCollectionView;
-        public CollectionViewSource TweetCollectionView { get { return this._tweetCollectionView; } }
-
-        private TabDependentTweetViewModel _selectedTweetViewModel = null;
-        public TabDependentTweetViewModel SelectedTweetViewModel
-        {
-            get { return _selectedTweetViewModel; }
-            set
-            {
-                this._selectedTweetViewModel = value;
-                RaisePropertyChanged(() => SelectedTweetViewModel);
-                Task.Factory.StartNew(() => this._tweetsSource.ToArrayVolatile()
-                    .ForEach(vm => _updateDispatcher.Enqueue(() => vm.PendingColorChanged())));
-            }
+            this.Commit();
         }
 
         public void SetSelect(ListSelectionKind kind)

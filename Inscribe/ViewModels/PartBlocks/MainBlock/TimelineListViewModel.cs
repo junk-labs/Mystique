@@ -48,7 +48,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public override void InvalidateCache()
         {
-            this._timelineListCoreViewModel.InvalidateCache(true);
+            this._timelineListCoreViewModel.InvalidateCache();
         }
 
         #region GetFocusCommand

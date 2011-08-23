@@ -43,7 +43,7 @@
              HorizontalContentAlignment="Stretch"
              InputMethod.IsInputMethodEnabled="False"
              ItemContainerStyle="{StaticResource ContainerStyle}"
-             ItemsSource="{Binding Path=TweetCollectionView.View}"
+             ItemsSource="{Binding Path=TweetsSource}"
              Padding="0"
              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
              ScrollViewer.VerticalScrollBarVisibility="Visible"

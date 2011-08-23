@@ -20,6 +20,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._timelineScrollLockIndex = (int)Setting.Instance.TimelineExperienceProperty.ScrollLockMode;
             this._useFastScrolling = Setting.Instance.TimelineExperienceProperty.FastScrolling;
             this._tweetInitStrategyIndex = (int)Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy;
+            this._useIntelligentOrdering = Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering;
+            this._intelligentOrderingThresholdSec = Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec;
         }
 
         public int _timelineScrollLockIndex;
@@ -55,12 +57,33 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+        private bool _useIntelligentOrdering;
+        public bool UseIntelligentOrdering
+        {
+            get { return _useIntelligentOrdering; }
+            set
+            {
+                _useIntelligentOrdering = value;
+                RaisePropertyChanged(() => UseIntelligentOrdering);
+            }
+        }
+
+        private int _intelligentOrderingThresholdSec;
+        public int IntelligentOrderingThresholdSec
+        {
+            get { return _intelligentOrderingThresholdSec; }
+            set { _intelligentOrderingThresholdSec = value;
+            RaisePropertyChanged(() => IntelligentOrderingThresholdSec);
+            }
+        }
 
         public void Apply()
         {
             Setting.Instance.TimelineExperienceProperty.ScrollLockMode = (ScrollLock)this._timelineScrollLockIndex;
             Setting.Instance.TimelineExperienceProperty.FastScrolling = this._useFastScrolling;
             Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy = (ItemInitStrategy)this._tweetInitStrategyIndex;
+            Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering = this._useIntelligentOrdering;
+            Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec = this._intelligentOrderingThresholdSec;
         }
     }
 }

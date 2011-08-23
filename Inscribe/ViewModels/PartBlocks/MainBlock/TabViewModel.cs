@@ -290,7 +290,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.IsQueryValid = true;
             CreateTabFromTopTimelineCommand.RaiseCanExecuteChanged();
             cf.TimelineListCoreViewModel.Sources = filter;
-            Task.Factory.StartNew(() => cf.TimelineListCoreViewModel.InvalidateCache(true));
+            Task.Factory.StartNew(() => cf.TimelineListCoreViewModel.InvalidateCache());
         }
 
         private void WritebackQuery()

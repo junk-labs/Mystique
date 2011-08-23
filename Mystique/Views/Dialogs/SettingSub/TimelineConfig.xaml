@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="300"
-             d:DesignWidth="300"
+             d:DesignWidth="400"
              mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -13,6 +13,8 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -41,7 +43,29 @@
                 <AccessText Text="高速スクロールを使う(_F)" />
             </StackPanel>
         </CheckBox>
-        <GroupBox Grid.Row="2"
+        <StackPanel Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Margin="4,2"
+                    Orientation="Horizontal">
+            <CheckBox VerticalAlignment="Center" IsChecked="{Binding UseIntelligentOrdering}">
+                <StackPanel Orientation="Horizontal">
+                    <AccessText Text="並び替えを受信順にする(_R)" />
+                </StackPanel>
+            </CheckBox>
+            <TextBlock Margin="4,0"
+                       VerticalAlignment="Center"
+                       Text="遅延許可境界(sec):" />
+            <TextBox Width="90"
+                     VerticalAlignment="Center"
+                     bat:TextBoxExtension.IsNumeric="True"
+                     Text="{Binding IntelligentOrderingThresholdSec}" />
+        </StackPanel>
+        <TextBlock Grid.Row="3"
+                   Grid.ColumnSpan="2"
+                   Margin="4,2"
+                   Foreground="Gray"
+                   Text="タイムラインの並べ替えを、受信した順序も考慮して行います。" />
+        <GroupBox Grid.Row="4"
                   Grid.ColumnSpan="2"
                   Margin="4"
                   Header="高度な設定"
