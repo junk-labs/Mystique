@@ -255,10 +255,10 @@ namespace Inscribe.Communication.UserStreams
                 return;
 
             UserStreamsConnection pusc;
-            if (!connections.TryGetValue(accountInfo, out pusc))
+            if (!connections.TryGetValue(accountInfo, out pusc) || pusc == null)
                 return; // User Streams接続を行わない
 
-            if (pusc != null && pusc.CheckUsingConnection(con))
+            if (pusc.CheckUsingConnection(con))
             {
                 // 切断通知されたコネクションを使用しているようだ
                 // -> エラー切断であるので再接続

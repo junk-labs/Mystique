@@ -186,7 +186,8 @@ namespace Mystique.Views.Common
                     ViewModel.CurrentToken = ctoken;
                     // 現在のトークン更新で表示要素が無くなったら閉じる
                     // or トークン長がIntelliSenseサジェストアイテムの最大長を上回ったら閉じる
-                    if (ViewModel.FilteredItems.Count() == 0 ||
+                    if (ViewModel.FilteredItems == null ||
+                        ViewModel.FilteredItems.Count() == 0 ||
                         ctoken.Length > ViewModel.FilteredItems.Select(t => t.ItemText.Length).Max())
                     {
                         isOpening = false;

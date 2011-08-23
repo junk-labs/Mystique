@@ -357,12 +357,12 @@ namespace Inscribe.Communication.Posting
                     // ふぁぼり状態更新
                     if (ud != null)
                         status.RemoveFavored(ud);
-                    if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) == null)
+                    if (ApiHelper.ExecApi(() => d.DestroyFavorites(status.Status.Id)) == null)
                     {
                         success = false;
                         if(ud != null)
                             status.RegisterFavored(ud);
-                        NotifyStorage.Notify("Favに失敗しました: @" + d.ScreenName);
+                        NotifyStorage.Notify("Unfavに失敗しました: @" + d.ScreenName);
                     }
                 });
             if (success)
