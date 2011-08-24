@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Dulcet.Twitter.Streaming;
-using System.Threading;
-using Dulcet.Twitter.Credential;
-using Inscribe.Threading;
-using Inscribe.Storage;
-using Inscribe.Model;
 using System.Net;
-using Inscribe.Configuration;
-using Dulcet.Twitter.Rest;
 using System.Net.NetworkInformation;
+using System.Threading;
+using Dulcet.Twitter.Rest;
+using Dulcet.Twitter.Streaming;
+using Inscribe.Configuration;
+using Inscribe.Model;
+using Inscribe.Storage;
+using Inscribe.Threading;
 
 namespace Inscribe.Communication.UserStreams
 {

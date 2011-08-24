@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Inscribe.Model;
 using Inscribe.Storage;
-using Livet;
-using System.Windows;
 using Inscribe.Threading;
-using System.Collections.Concurrent;
+using Livet;
 
 namespace Inscribe.Communication.UserStreams
 {

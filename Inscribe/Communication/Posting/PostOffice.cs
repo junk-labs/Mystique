@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -14,8 +15,6 @@ using Inscribe.Storage;
 using Inscribe.Threading;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
-using System.Runtime.Serialization.Json;
-using System.Text;
 
 namespace Inscribe.Communication.Posting
 {
@@ -323,12 +322,22 @@ namespace Inscribe.Communication.Posting
                     // ふぁぼり状態更新
                     if (ud != null)
                         status.RegisterFavored(ud);
-                    if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) == null)
+                    try
+                    {
+                        if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) == null)
+                            throw new ApplicationException();
+                    }
+                    catch (Exception ex)
                     {
                         success = false;
                         if (ud != null)
                             status.RemoveFavored(ud);
                         NotifyStorage.Notify("Favに失敗しました: @" + d.ScreenName);
+                        if (!(ex is ApplicationException))
+                        {
+                            ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
+                                "Fav操作時にエラーが発生しました");
+                        }
                     }
                 });
             if (success)
@@ -357,12 +366,22 @@ namespace Inscribe.Communication.Posting
                     // ふぁぼり状態更新
                     if (ud != null)
                         status.RemoveFavored(ud);
-                    if (ApiHelper.ExecApi(() => d.DestroyFavorites(status.Status.Id)) == null)
+                    try
+                    {
+                        if (ApiHelper.ExecApi(() => d.DestroyFavorites(status.Status.Id)) == null)
+                            throw new ApplicationException();
+                    }
+                    catch (Exception ex)
                     {
                         success = false;
-                        if(ud != null)
+                        if (ud != null)
                             status.RegisterFavored(ud);
                         NotifyStorage.Notify("Unfavに失敗しました: @" + d.ScreenName);
+                        if (!(ex is ApplicationException))
+                        {
+                            ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
+                                "Unfav操作時にエラーが発生しました");
+                        }
                     }
                 });
             if (success)
@@ -388,16 +407,25 @@ namespace Inscribe.Communication.Posting
                 (d) =>
                 {
                     // リツイート状態更新
-
                     var ud = UserStorage.Get(d.ScreenName);
                     if (ud != null)
                         status.RegisterRetweeted(ud);
-                    if (ApiHelper.ExecApi(() => d.Retweet(status.Status.Id)) == null)
+                    try
+                    {
+                        if (ApiHelper.ExecApi(() => d.Retweet(status.Status.Id)) == null)
+                            throw new ApplicationException();
+                    }
+                    catch (Exception ex)
                     {
                         if (ud != null)
                             status.RemoveRetweeted(ud);
                         success = false;
                         NotifyStorage.Notify("Retweetに失敗しました: @" + d.ScreenName);
+                        if (!(ex is ApplicationException))
+                        {
+                            ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
+                                "Retweet操作時にエラーが発生しました");
+                        }
                     }
                 });
             if (success)
@@ -426,17 +454,26 @@ namespace Inscribe.Communication.Posting
                     var ud = UserStorage.Get(d.ScreenName);
                     if (ud != null)
                         status.RegisterRetweeted(ud);
-
-                    // リツイートステータスの特定
-                    var rts = TweetStorage.GetAll(vm =>
-                        vm.Status.User.ScreenName == d.ScreenName && vm.Status is TwitterStatus &&
-                        ((TwitterStatus)vm.Status).RetweetedOriginal != null && ((TwitterStatus)vm.Status).RetweetedOriginal.Id == status.Status.Id).FirstOrDefault();
-                    if (rts == null || ApiHelper.ExecApi(() => d.DestroyStatus(rts.Status.Id) == null))
+                    try
+                    {
+                        // リツイートステータスの特定
+                        var rts = TweetStorage.GetAll(vm =>
+                            vm.Status.User.ScreenName == d.ScreenName && vm.Status is TwitterStatus &&
+                            ((TwitterStatus)vm.Status).RetweetedOriginal != null && ((TwitterStatus)vm.Status).RetweetedOriginal.Id == status.Status.Id).FirstOrDefault();
+                        if (rts == null || ApiHelper.ExecApi(() => d.DestroyStatus(rts.Status.Id) == null))
+                            throw new ApplicationException();
+                    }
+                    catch (Exception ex)
                     {
                         if (ud != null)
                             status.RemoveRetweeted(ud);
                         success = false;
                         NotifyStorage.Notify("Retweetキャンセルに失敗しました: @" + d.ScreenName);
+                        if (!(ex is ApplicationException))
+                        {
+                            ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
+                                "Retweetキャンセル操作時にエラーが発生しました");
+                        }
                     }
                 });
             if (success)
@@ -450,25 +487,32 @@ namespace Inscribe.Communication.Posting
 
         private static void RemoveTweetSink(AccountInfo info, long tweetId)
         {
-            var tweet = ApiHelper.ExecApi(() => info.DestroyStatus(tweetId));
-            if (tweet != null)
+            try
             {
-                if (tweet.Id != tweetId)
+                var tweet = ApiHelper.ExecApi(() => info.DestroyStatus(tweetId));
+                if (tweet != null)
                 {
-                    NotifyStorage.Notify("削除には成功しましたが、ツイートIDが一致しません。(" + tweetId.ToString() + " -> " + tweet.Id.ToString() + ")");
+                    if (tweet.Id != tweetId)
+                    {
+                        NotifyStorage.Notify("削除には成功しましたが、ツイートIDが一致しません。(" + tweetId.ToString() + " -> " + tweet.Id.ToString() + ")");
+                    }
+                    else
+                    {
+                        TweetStorage.Remove(tweetId);
+                        NotifyStorage.Notify("削除しました:" + tweet.ToString());
+                    }
                 }
                 else
                 {
-                    TweetStorage.Remove(tweetId);
-                    NotifyStorage.Notify("削除しました:" + tweet.ToString());
+                    NotifyStorage.Notify("ツイートを削除できませんでした(@" + info.ScreenName + ")");
                 }
             }
-            else
+            catch (Exception ex)
             {
                 NotifyStorage.Notify("ツイートを削除できませんでした(@" + info.ScreenName + ")");
+                ExceptionStorage.Register(ex, ExceptionCategory.TwitterError, "ツイート削除時にエラーが発生しました");
             }
         }
-
     }
 
     public class UnderControlEventArgs : EventArgs

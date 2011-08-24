@@ -41,7 +41,7 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
 
         private void ItemMouseMove(object sender, MouseEventArgs e)
         {
-            if (captured && e.GetPosition(this).DistanceDouble(ip) > 4)
+            if (captured && e.GetPosition(this).DistanceDouble(ip) >= 4)
             {
                 origEventArgs.Handled = false;
                 BodyText.EntryOnMouseDown(origEventArgs);
@@ -50,7 +50,7 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
 
         private void ItemMouseButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).DistanceDouble(ip) <= 4)
+            if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).DistanceDouble(ip) < 4)
             {
                 if (Setting.Instance.TweetExperienceProperty.FullLineView )
                 {

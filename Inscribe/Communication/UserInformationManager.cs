@@ -15,7 +15,7 @@ namespace Inscribe.Communication
         public static void RunUserInfoTimer()
         {
             userInfoUpdateTimer = new Timer(_ => AccountStorage.Accounts.ForEach(ReceiveInidividualInfo)
-            , null, TwitterDefine.UserInformationRefreshPeriod, TwitterDefine.UserInformationRefreshPeriod);
+                , null, TwitterDefine.UserInformationRefreshPeriod, TwitterDefine.UserInformationRefreshPeriod);
             ThreadHelper.Halt += () => userInfoUpdateTimer.Dispose();
         }
 

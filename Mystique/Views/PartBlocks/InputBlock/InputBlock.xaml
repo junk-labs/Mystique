@@ -79,7 +79,7 @@
                 <TextBlock Cursor="IBeam"
                            Foreground="Gray"
                            Padding="2"
-                           Text="Input tweeet to update...">
+                           Text="What's happening?">
                     <TextBlock.InputBindings>
                         <MouseBinding Command="{Binding OpenInputCommand}" MouseAction="LeftClick" />
                     </TextBlock.InputBindings>
@@ -410,7 +410,7 @@
                                 Command="{Binding UpdateCommand}"
                                 Focusable="False"
                                 Style="{StaticResource FlatButtonStyle}">
-                            <TextBlock Margin="16,0" Text="POST" />
+                            <TextBlock Margin="16,0" Text="Tweet" />
                         </Button>
                     </Grid>
                 </StackPanel>

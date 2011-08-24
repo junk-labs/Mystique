@@ -26,7 +26,7 @@ namespace Inscribe.Filter.Filters.Text
 
         public override string Description
         {
-            get { return "ユーザーのLocationからフィルタ"; }
+            get { return "ユーザーのLocation"; }
         }
     }
 }

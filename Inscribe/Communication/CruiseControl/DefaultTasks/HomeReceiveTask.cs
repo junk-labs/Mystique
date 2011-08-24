@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Dulcet.Twitter.Rest;
 using Inscribe.Model;
-using Dulcet.Twitter;
 
 namespace Inscribe.Communication.CruiseControl.DefaultTasks
 {

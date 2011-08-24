@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Inscribe.Filter.Core;
+using Inscribe.Storage;
 
 namespace Inscribe.Filter.Filters.Numeric
 {
@@ -51,7 +52,25 @@ namespace Inscribe.Filter.Filters.Numeric
 
         public override string FilterStateString
         {
-            get { return "ユーザー数値ID:" + this.Range.ToString(); }
+            get
+            {
+                if (this.range != null && this.range.From != null && this.Range.RangeType == RangeType.Pivot)
+                {
+                    var u = UserStorage.GetAll().Where(uvm => uvm.TwitterUser.NumericId == this.range.From).FirstOrDefault();
+                    if (u == null)
+                    {
+                        return "ユーザー数値ID:" + this.Range.ToString() + "(逆引き: Krile内に見つかりません)";
+                    }
+                    else
+                    {
+                        return "ユーザー数値ID:" + this.Range.ToString() + "(逆引き: @" + u.TwitterUser.ScreenName + ")";
+                    }
+                }
+                else
+                {
+                    return "ユーザー数値ID:" + this.Range.ToString();
+                }
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Inscribe.Filter.Filters.Text
 
         public override string Identifier
         {
-            get { return "u_web"; }
+            get { return "web"; }
         }
 
         public override string Description

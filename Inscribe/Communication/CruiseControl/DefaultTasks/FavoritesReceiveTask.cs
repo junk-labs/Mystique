@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.Model;
+﻿using System.Collections.Generic;
 using Dulcet.Twitter.Rest;
+using Inscribe.Model;
 
 namespace Inscribe.Communication.CruiseControl.DefaultTasks
 {

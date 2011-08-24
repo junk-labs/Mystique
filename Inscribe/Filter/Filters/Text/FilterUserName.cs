@@ -21,7 +21,7 @@ namespace Inscribe.Filter.Filters.Text
 
         public override string Identifier
         {
-            get { return "uname"; }
+            get { return "name"; }
         }
 
         public override string Description

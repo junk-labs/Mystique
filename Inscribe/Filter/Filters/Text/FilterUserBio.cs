@@ -20,12 +20,12 @@ namespace Inscribe.Filter.Filters.Text
 
         public override string Identifier
         {
-            get { return "u_bio"; }
+            get { return "bio"; }
         }
 
         public override string Description
         {
-            get { return "ユーザー説明"; }
+            get { return "ユーザーのBio(Description)"; }
         }
     }
 }

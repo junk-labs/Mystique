@@ -17,7 +17,7 @@
             <l:WindowInteractionMessageAction />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
-    <Grid>
+    <Grid Background="WhiteSmoke">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="40" />
@@ -28,7 +28,7 @@
         </Grid.ColumnDefinitions>
         <ListBox Name="ItemList"
                  Height="300"
-                 Margin="12,12,12,0"
+                 Margin="14,10,10,0"
                  VerticalAlignment="Stretch"
                  SelectedIndex="0">
             <ListBoxItem Content="アカウント" />
@@ -47,7 +47,7 @@
         <Grid Grid.Column="1"
               Width="400"
               Height="300"
-              Margin="0,12,12,0"
+              Margin="0,10,10,0"
               VerticalAlignment="Stretch">
             <my:AccountConfig DataContext="{Binding AccountConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=0}" />
             <my:GeneralConfig DataContext="{Binding GeneralConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=1}" />

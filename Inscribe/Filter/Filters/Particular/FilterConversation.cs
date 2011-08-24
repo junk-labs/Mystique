@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Inscribe.Text;
 using System.Text.RegularExpressions;
-using Inscribe.Storage;
 using Dulcet.Twitter;
 using Inscribe.Filter.Core;
+using Inscribe.Storage;
+using Inscribe.Text;
 
 namespace Inscribe.Filter.Filters.Particular
 {

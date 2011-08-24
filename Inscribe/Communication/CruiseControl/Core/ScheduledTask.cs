@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Inscribe.Commnuication.CruiseControl.Core
 {
     public abstract class ScheduledTask

@@ -25,6 +25,7 @@ namespace Inscribe.Communication.CruiseControl
             this.AddSchedule(new DirectMessageReceiveTask(info));
             this.AddSchedule(new SentDirectMessageReceiveTask(info));
             this.AddSchedule(new FavoritesReceiveTask(info));
+            this.AddSchedule(new MyTweetsTask(info));
             Task.Factory.StartNew(() =>
                 {
                     try

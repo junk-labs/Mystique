@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.Configuration;
 using System.Net;
 using System.Threading;
+using Inscribe.Configuration;
 using Inscribe.Storage;
 
 namespace Inscribe.Communication

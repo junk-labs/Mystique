@@ -8,6 +8,19 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
 {
     public class DynamicRichTextBox : RichTextBox
     {
+        public DynamicRichTextBox()
+        {
+            if (this.Document == null)
+                this.Document = new FlowDocument();
+            this.Document.PreviewMouseDown += (ob, ev) => this.DocumentPreviewMouseDown(ob, ev);
+            this.Document.PreviewMouseMove += (ob, ev) => this.DocumentPreviewMouseMove(ob, ev);
+            this.Document.PreviewMouseUp += (ob, ev) => this.DocumentPreviewMouseUp(ob, ev);
+            this.Document.MouseDown += (ob, ev) => this.DocumentMouseDown(ob, ev);
+            this.Document.MouseMove += (ob, ev) => this.DocumentMouseMove(ob, ev);
+            this.Document.MouseUp += (ob, ev) => this.DocumentMouseUp(ob, ev);
+        }
+
+
         public IEnumerable<Inline> DynamicInline
         {
             get { return (IEnumerable<Inline>)GetValue(DynamicInlineProperty); }
@@ -18,16 +31,7 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
         {
             var rt = o as DynamicRichTextBox;
             if (rt.Document == null)
-            {
-                // initialize
-                rt.Document = new FlowDocument();
-                rt.Document.PreviewMouseDown += (ob, ev) => rt.DocumentPreviewMouseDown(ob, ev);
-                rt.Document.PreviewMouseMove += (ob, ev) => rt.DocumentPreviewMouseMove(ob, ev);
-                rt.Document.PreviewMouseUp += (ob, ev) => rt.DocumentPreviewMouseUp(ob, ev);
-                rt.Document.MouseDown += (ob, ev) => rt.DocumentMouseDown(ob, ev);
-                rt.Document.MouseMove += (ob, ev) => rt.DocumentMouseMove(ob, ev);
-                rt.Document.MouseUp += (ob, ev) => rt.DocumentMouseUp(ob, ev);
-            }
+                return;
             var para = rt.Document.Blocks.FirstBlock as Paragraph;
             if (para == null)
             {
