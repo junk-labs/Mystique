@@ -584,12 +584,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 if (_FavoriteCommand == null)
-                    _FavoriteCommand = new DelegateCommand(Favorite);
+                    _FavoriteCommand = new DelegateCommand(FavoriteInternal);
                 return _FavoriteCommand;
             }
         }
 
-        private void Favorite()
+        private void FavoriteInternal()
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
             {
@@ -597,19 +597,38 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
             else
             {
-                if (this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
-                    .All(u => this.Tweet.FavoredUsers.Contains(u)))
-                {
-                    // all account favored
-                    PostOffice.UnfavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
-                }
-                else
-                {
-                    PostOffice.FavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
-                }
+                ToggleFavorite();
+
             }
         }
         #endregion
+
+        public void ToggleFavorite()
+        {
+            if (this.Tweet.Status is TwitterDirectMessage) return;
+            if (this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
+                .All(u => this.Tweet.FavoredUsers.Contains(u)))
+            {
+                // all account favored
+                Unfavorite();
+            }
+            else
+            {
+                Favorite();
+            }
+        }
+
+        public void Favorite()
+        {
+            if (this.Tweet.Status is TwitterDirectMessage) return;
+            PostOffice.FavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+        }
+
+        public void Unfavorite()
+        {
+            if (this.Tweet.Status is TwitterDirectMessage) return;
+            PostOffice.UnfavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+        }
 
         #region FavoriteMultiUserCommand
         DelegateCommand _FavoriteMultiUserCommand;
@@ -645,12 +664,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 if (_RetweetCommand == null)
-                    _RetweetCommand = new DelegateCommand(Retweet);
+                    _RetweetCommand = new DelegateCommand(RetweetInternal);
                 return _RetweetCommand;
             }
         }
 
-        private void Retweet()
+        private void RetweetInternal()
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
             {
@@ -658,19 +677,37 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
             else
             {
-                if (this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
-                    .All(u => this.Tweet.RetweetedUsers.Contains(u)))
-                {
-                    // all account favored
-                    PostOffice.Unretweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
-                }
-                else
-                {
-                    PostOffice.Retweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
-                }
+                ToggleRetweet();
             }
         }
         #endregion
+
+        public void ToggleRetweet()
+        {
+            if (this.Tweet.Status is TwitterDirectMessage) return;
+            if (this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
+                .All(u => this.Tweet.RetweetedUsers.Contains(u)))
+            {
+                // all account favored
+                Unretweet();
+            }
+            else
+            {
+                Retweet();
+            }
+        }
+
+        public void Retweet()
+        {
+            if (this.Tweet.Status is TwitterDirectMessage) return;
+            PostOffice.Retweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+        }
+
+        public void Unretweet()
+        {
+            if (this.Tweet.Status is TwitterDirectMessage) return;
+            PostOffice.Unretweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
+        }
 
         #region RetweetMultiUserCommand
         DelegateCommand _RetweetMultiUserCommand;
@@ -713,6 +750,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void UnofficialRetweet()
         {
+            if (this.Tweet.Status is TwitterDirectMessage) return;
             this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
             var status = this.Tweet.Status;
             if(status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
@@ -737,6 +775,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Quote()
         {
+            if (this.Tweet.Status is TwitterDirectMessage) return;
             this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
             this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(null);
             this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(this.Tweet);

@@ -10,6 +10,7 @@ using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Messaging;
+using System.Threading.Tasks;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -208,9 +209,29 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 this.SetFocus();
             }));
             KeyAssignCore.RegisterOperation("SendDirectMessage", () => ExecTVMAction(vm => vm.DirectMessageCommand.Execute()));
-            KeyAssignCore.RegisterOperation("Favorite", () => ExecTVMAction(vm => vm.FavoriteCommand.Execute()));
+            KeyAssignCore.RegisterOperation("FavoriteAndRetweet", () => ExecTVMAction(vm =>
+            {
+                vm.Favorite();
+                vm.Retweet();
+            }));
+            KeyAssignCore.RegisterOperation("FavoriteThisTabAll", () => ExecTabAction(vm =>
+            {
+                var items = vm.StackingTimelines.First().CoreViewModel.TweetsSource.ToArray();
+                var cms = new ConfirmationMessage(
+                    "タブ " + vm.TabProperty.Name + " に存在するすべてのステータスをFavoriteに追加します。" + Environment.NewLine +
+                    "(このタブには" + items.Length + "ステータスが存在します)" + Environment.NewLine +
+                    "よろしいですか？", "全Favoriteの警告", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
+                this.Messenger.Raise(cms);
+                if (cms.Response)
+                    items.ForEach(tdtvm => tdtvm.Favorite());
+            }));
+            KeyAssignCore.RegisterOperation("Favorite", () => ExecTVMAction(vm => vm.ToggleFavorite()));
+            KeyAssignCore.RegisterOperation("FavoriteCreate", () => ExecTVMAction(vm => vm.Favorite()));
+            KeyAssignCore.RegisterOperation("FavoriteDelete", () => ExecTVMAction(vm => vm.Unfavorite()));
             KeyAssignCore.RegisterOperation("FavoriteMulti", () => ExecTVMAction(vm => vm.FavoriteMultiUserCommand.Execute()));
-            KeyAssignCore.RegisterOperation("Retweet", () => ExecTVMAction(vm => vm.RetweetCommand.Execute()));
+            KeyAssignCore.RegisterOperation("Retweet", () => ExecTVMAction(vm => vm.ToggleRetweet()));
+            KeyAssignCore.RegisterOperation("RetweetCreate", () => ExecTVMAction(vm => vm.Retweet()));
+            KeyAssignCore.RegisterOperation("RetweetDelete", () => ExecTVMAction(vm => vm.Unretweet()));
             KeyAssignCore.RegisterOperation("RetweetMulti", () => ExecTVMAction(vm => vm.RetweetMultiUserCommand.Execute()));
             KeyAssignCore.RegisterOperation("UnofficialRetweet", () => ExecTVMAction(vm => vm.UnofficialRetweetCommand.Execute()));
             KeyAssignCore.RegisterOperation("QuoteTweet", () => ExecTVMAction(vm => vm.QuoteCommand.Execute()));
@@ -222,6 +243,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("CreateSelectedUserColumn", () => ExecTVMAction(vm => CreateUserTab(vm, true)));
             KeyAssignCore.RegisterOperation("OpenTweetWeb", () => ExecTVMAction(vm => vm.Tweet.ShowTweetCommand.Execute()));
             KeyAssignCore.RegisterOperation("ShowUserDetail", () => ExecTVMAction(vm => vm.ShowUserDetailCommand.Execute()));
+            KeyAssignCore.RegisterOperation("CopySTOT", () => ExecTVMAction(vm => vm.Tweet.CopySTOTCommand.Execute()));
+            KeyAssignCore.RegisterOperation("CopyWebUrl", () => ExecTVMAction(vm => vm.Tweet.CopyWebUrlCommand.Execute()));
+            KeyAssignCore.RegisterOperation("CopyScreenName", () => ExecTVMAction(vm => vm.Tweet.CopyScreenNameCommand.Execute()));
 
             // Tab Action
             KeyAssignCore.RegisterOperation("Search", () => ExecTabAction(vm =>

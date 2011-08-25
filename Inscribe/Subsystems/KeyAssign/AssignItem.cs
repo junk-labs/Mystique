@@ -15,7 +15,7 @@ namespace Inscribe.Subsystems.KeyAssign
             this.HandleInTextBox = handleInTextBox;
         }
 
-        public AssignItem(string key, string method, bool preview, bool handleInTextBox)
+        public AssignItem(string key, string action, bool preview, bool handleInTextBox)
         {
             try
             {
@@ -29,7 +29,9 @@ namespace Inscribe.Subsystems.KeyAssign
                         this.Modifiers |= m;
                 }
                 this.Key = (Key)(new KeyConverter().ConvertFromString(kexs.Last()));
-                this.ActionId = method;
+                if (!KeyAssignCore.ExistsAction(action))
+                    throw new Exception("アクション " + action + " は存在しません。");
+                this.ActionId = action;
                 this.LookInPreview = preview;
                 this.HandleInTextBox = handleInTextBox;
             }

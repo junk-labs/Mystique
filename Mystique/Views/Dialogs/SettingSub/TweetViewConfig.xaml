@@ -4,8 +4,8 @@
              xmlns:bat="clr-namespace:Mystique.Views.Behaviors.Attached"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DesignHeight="305"
-             d:DesignWidth="417"
+             d:DesignHeight="300"
+             d:DesignWidth="400"
              mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -34,7 +34,7 @@
                   SelectedIndex="{Binding ResolveStrategyIndex}">
             <ComboBoxItem Content="しない" />
             <ComboBoxItem Content="マウスオーバー時にする" />
-            <ComboBoxItem Content="受信時にする[非推奨]" />
+            <ComboBoxItem Content="受信時にする(非推奨, 遅延します)" />
         </ComboBox>
         <Grid Grid.Row="1"
               Grid.Column="1"

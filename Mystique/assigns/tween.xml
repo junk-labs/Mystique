@@ -1,0 +1,63 @@
+﻿<?xml version="1.0"?>
+<KeyAssign Name="Tween">
+  <AssignGroups>
+    <AssignGroup Region="General">
+      <Assign Action="FocusToTimeline" Key="Shift+Tab" />
+      <Assign Action="OpenInput" Key="Tab" />
+    </AssignGroup>
+    <AssignGroup Region="Timeline">
+      <!-- Edit Menu -->
+      <Assign Action="CopySTOT" Key="Ctrl+C" />
+      <Assign Action="CopyWebUrl" Key="Shift+Ctrl+C" />
+      <Assign Action="CopyScreenName" Key="Shift+Alt+C" />
+      <Assign Action="Search" Key="Ctrl+F" />
+      <!-- Control Menu -->
+      <Assign Action="Mention" Key="Ctrl+R" />
+      <Assign Action="Mention" Key="Enter" />
+      <Assign Action="MentionMulti" Key="Ctrl+Shift+R" />
+      <Assign Action="SendDirectMessage" Key="Ctrl+M" />
+      <Assign Action="FavoriteCreate" Key="Ctrl+S" />
+      <Assign Action="FavoriteDelete" Key="Ctrl+Shift+S" />
+      <Assign Action="FavoriteMulti" Key="Ctrl+Alt+S" />
+      <Assign Action="OpenTweetWeb" Key="Ctrl+O" />
+      <Assign Action="ShowConversation" Key="Ctrl+I" />
+      <Assign Action="FavoriteThisTabAll" Key="Ctrl+Alt+F" />
+      <Assign Action="RetweetCreate" Key="Alt+R" />
+      <Assign Action="RetweetMulti" Key="Alt+E" />
+      <Assign Action="UnofficialRetweet" Key="Alt+Shift+R" />
+      <Assign Action="QuoteTweet" Key="Ctrl+Q" />
+      <Assign Action="ShowUserDetail" Key="Alt+P" />
+      <!-- Move -->
+      <Assign Action="OpenInput" Key="I" />
+      <Assign Action="MoveDown" Key="J" />
+      <Assign Action="MoveUp" Key="K" />
+      <Assign Action="MoveLeft" Key="A" />
+      <Assign Action="MoveLeft" Key="Ctrl+P" />
+      <Assign Action="MoveLeft" Key="Ctrl+PageUp" />
+      <Assign Action="MoveLeft" Key="Ctrl+Tab" />
+      <Assign Action="MoveRight" Key="S" />
+      <Assign Action="MoveRight" Key="Ctrl+N" />
+      <Assign Action="MoveRight" Key="Ctrl+PageDown" />
+      <Assign Action="MoveRight" Key="Ctrl+Shift+Tab" />
+      <Assign Action="MoveLeftColumn" Key="Shift+Left" Preview="True" />
+      <Assign Action="MoveRightColumn" Key="Shift+Right" Preview="True" />
+      <Assign Action="Deselect" Key="Escape" />
+      <Assign Action="MoveTop" Key="0" />
+      <!-- Action -->
+      <Assign Action="RemoveViewStackTop" Key="F4" Preview="True" InTextBox="True" />
+      <Assign Action="CloseTab" Key="Ctrl+F4" Preview="True" />
+      <Assign Action="CreateTab" Key="Ctrl+N" Preview="True" />
+    </AssignGroup>
+    <AssignGroup Region="Input">
+      <Assign Action="ToggleAutoBind" Key="Ctrl+B" Preview="True" InTextBox="True" />
+      <Assign Action="Post" Key="Ctrl+Enter" Preview="True" InTextBox="True" />
+      <!-- If you want to post with Enter key, comment above and uncomment below. -->
+      <!-- <Assign Action="Post" Key="Enter" Preview="True" InTextBox="True" /> -->
+      <Assign Action="PostAndClose" Key="Ctrl+Shift+Enter" Preview="True" InTextBox="True" />
+      <Assign Action="CloseInput" Key="Escape" Preview="True" InTextBox="True" />
+    </AssignGroup>
+    <AssignGroup Region="SearchBar">
+      <Assign Action="RemoveViewStackTop" Key="Esc" Preview="True" InTextBox="True" />
+    </AssignGroup>
+  </AssignGroups>
+</KeyAssign>

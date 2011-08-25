@@ -497,6 +497,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assigns\tween.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="media\new.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

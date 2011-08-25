@@ -224,7 +224,7 @@ namespace Inscribe.Storage
             if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster == null ||
                 !Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(statusBase))
             {
-                if (Setting.Instance.TimelineFilteringProperty.ShareBlocking)
+                if (Setting.Instance.TimelineFilteringProperty.MuteBlockedUsers)
                 {
                     // 何か一つのBlockにでも引っかかったらダメ
                     if (AccountStorage.Accounts.Any(a => a.IsBlocking(statusBase.User.NumericId)))

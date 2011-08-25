@@ -97,6 +97,7 @@
                            Source="{StaticResource Krile}" />
                     <Image Width="6"
                            Height="6"
+                           Margin="2,0,0,0"
                            VerticalAlignment="Center"
                            Source="{StaticResource Chevron}" />
                 </StackPanel>
@@ -110,9 +111,9 @@
                             <MenuItem Command="{Binding ClearClosedTabStackCommand}" Header="閉じたタブの履歴をクリア(_C)" />
                         </MenuItem>
                         <MenuItem Header="メンテナンス(_M)">
-                            <MenuItem Command="{Binding ReconnectStreamsCommand}" Header="User Streamsを再接続(_U)" />
-                            <MenuItem Header="キャッシュのクリア(_C)">
-                                <MenuItem Command="{Binding ClearImageCachesCommand}" Header="画像キャッシュ(_I)" />
+                            <MenuItem Command="{Binding ReconnectStreamsCommand}" Header="全てのアカウントを再接続(_U)" />
+                            <MenuItem Header="キャッシュ(_C)">
+                                <MenuItem Command="{Binding ClearImageCachesCommand}" Header="画像キャッシュをクリア(_I)" />
                             </MenuItem>
                         </MenuItem>
                         <Separator />
@@ -189,24 +190,6 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <!--
-                            <TextBox MinHeight="38"
-                            AcceptsReturn="True"
-                            BorderThickness="0"
-                            Padding="2"
-                            Text="{Binding Path=CurrentInputDescription.InputText,
-                            UpdateSourceTrigger=PropertyChanged}"
-                            TextWrapping="Wrap">
-                            <i:Interaction.Triggers>
-                            <l:InteractionMessageTrigger MessageKey="SetCaret" Messenger="{Binding Messenger}">
-                            <ma:TextBoxSetCaretAction />
-                            </l:InteractionMessageTrigger>
-                            <l:InteractionMessageTrigger MessageKey="FocusToText" Messenger="{Binding Messenger}">
-                            <ma:FrameworkSetFocusAction />
-                            </l:InteractionMessageTrigger>
-                            </i:Interaction.Triggers>
-                            </TextBox>
-                        -->
                         <com:IntelliSenseTextBox MinHeight="38"
                                                  BorderThickness="0"
                                                  DataContext="{Binding IntelliSenseTextBoxViewModel}"
@@ -218,7 +201,7 @@
                                 Cursor="Arrow"
                                 Focusable="False"
                                 Style="{StaticResource FlatButtonStyle}"
-                                ToolTip="ツイートを削除して閉じる">
+                                ToolTip="入力内容を削除して閉じる">
                             <Image Width="14"
                                    Height="14"
                                    Source="{StaticResource Close}" />
@@ -300,7 +283,9 @@
                                     <Separator />
                                     <MenuItem Header="自動バインドを有効にする(_E)"
                                               IsCheckable="True"
-                                              IsChecked="{Binding IsEnabledAutoBind}" />
+                                              IsChecked="{Binding IsEnabledAutoBind}"
+                                              InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 ConverterParameter=ToggleAutoBind}" />
                                     <MenuItem Command="{Binding EditAutoBindCommand}" Header="自動バインドの設定(_A)..." />
                                 </ContextMenu>
                             </com:DropDownButton.DropDownMenu>

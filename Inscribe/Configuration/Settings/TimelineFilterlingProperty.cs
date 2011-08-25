@@ -15,7 +15,7 @@ namespace Inscribe.Configuration.Settings
         {
             // FilterCluster is Empty.
             this.MuteFilterCluster = new FilterCluster();
-            this.ShareBlocking = false;
+            this.MuteBlockedUsers = false;
         }
 
         /// <summary>
@@ -48,6 +48,6 @@ namespace Inscribe.Configuration.Settings
         /// <summary>
         /// ブロックを共有する
         /// </summary>
-        public bool ShareBlocking { get; set; }
+        public bool MuteBlockedUsers { get; set; }
     }
 }

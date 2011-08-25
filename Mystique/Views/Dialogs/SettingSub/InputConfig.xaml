@@ -1,21 +1,37 @@
 ﻿<UserControl x:Class="Mystique.Views.Dialogs.SettingSub.InputConfig"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:bcd="clr-namespace:Mystique.Views.Dialogs.Common.TagBinding"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:ma="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="300"
-             d:DesignWidth="300"
+             d:DesignWidth="400"
              mc:Ignorable="d">
     <StackPanel Orientation="Vertical">
         <CheckBox Margin="4,2"
-                  Content="入力補助を利用する(_S)"
+                  Content="オートコンプリートを利用する(_A)"
                   IsChecked="{Binding UseInputSuggesting}" />
         <CheckBox Margin="4,2"
-                  Content="文頭の空白文字を削除する(_D)"
+                  Content="文頭の空白文字を削除する(_R)"
                   IsChecked="{Binding TrimBeginSpace}" />
         <CheckBox Margin="4,2"
-                  Content="POSTフォールバックを積極的に行う(_F)"
-                  ToolTip="POST規制されている情報がKrile内にあるとき、試験的に投稿を行うことなくフォールバックします。"
-                  IsChecked="{Binding ActiveFallback}" />
+                  Content="POST規制情報がある時はすぐにフォールバックする(_F)"
+                  IsChecked="{Binding ActiveFallback}"
+                  ToolTip="POST規制されている情報がKrile内にあるとき、試験的に投稿を行うことなくフォールバックします。" />
+        <Button Margin="4,2" Content="ハッシュタグ自動バインド設定(_A)...">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <ma:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type bcd:AutoBindConfig}">
+                        <l:DirectInteractionMessage>
+                            <l:TransitionMessage />
+                        </l:DirectInteractionMessage>
+                    </ma:TransitionInteractionMessageAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
     </StackPanel>
 </UserControl>

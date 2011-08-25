@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Dulcet.Twitter;
+using Inscribe.Communication.Posting;
 using Inscribe.Communication.UserStreams;
 using Inscribe.Configuration;
 using Inscribe.Model;
@@ -20,7 +21,6 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.Communication.Posting;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -421,7 +421,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     }
                     else
                     {
-                        var mentions = RegularExpressions.AtRegex.Matches(tweet.Text);
+                        var mentions = RegularExpressions.AtRegex.Matches(tweet.TweetText);
                         var sns = new[] { "@" + tweet.Status.User.ScreenName }.Concat(mentions.Cast<Match>().Select(m => m.Value))
                             .Distinct().Where(s => !AccountStorage.Contains(s)).ToArray();
                         /*
@@ -890,6 +890,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 this.CloseInput();
                 this.Parent.ColumnOwnerViewModel.SetFocus();
             });
+            KeyAssignCore.RegisterOperation("ToggleAutoBind", () => this.IsEnabledAutoBind = !this.IsEnabledAutoBind);
             KeyAssignCore.RegisterOperation("RemoveInReplyTo", () => this.RemoveInReplyTo());
             KeyAssignCore.RegisterOperation("AttachImage", () => this.AttachImage());
             KeyAssignCore.RegisterOperation("Post", () => this.Update());

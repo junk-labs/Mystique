@@ -43,7 +43,10 @@
       <Assign Action="CreateTab" Key="Ctrl+N" Preview="True" />
 		</AssignGroup>
 		<AssignGroup Region="Input">
+			<Assign Action="ToggleAutoBind" Key="Ctrl+B" Preview="True" InTextBox="True" />
 			<Assign Action="Post" Key="Ctrl+Enter" Preview="True" InTextBox="True" />
+      <!-- If you want to post with Enter key, comment above and uncomment below. -->
+      <!-- <Assign Action="Post" Key="Enter" Preview="True" InTextBox="True" /> -->
 			<Assign Action="PostAndClose" Key="Ctrl+Shift+Enter" Preview="True" InTextBox="True" />
 			<Assign Action="CloseInput" Key="Escape" Preview="True" InTextBox="True" />
 		</AssignGroup>

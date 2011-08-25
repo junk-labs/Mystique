@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:my="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
              d:DesignHeight="300"
@@ -14,6 +17,11 @@
     <UserControl.Resources>
         <cp:TwoOrMoreVisibleConverter x:Key="TwoOrMoreVisibleConverter" />
     </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
+            <l:ConfirmationDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
     <ItemsControl x:Name="ColumnsOwner" ItemsSource="{Binding Columns}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>

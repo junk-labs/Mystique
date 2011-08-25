@@ -37,6 +37,7 @@
         <BitmapImage x:Key="Delete" UriSource="/Resources/cancel.png" />
         <BitmapImage x:Key="Lock" UriSource="/Resources/lock.png" />
         <BitmapImage x:Key="Verified" UriSource="/Resources/tick.png" />
+        <BitmapImage x:Key="User" UriSource="/Resources/user.png" />
         <BitmapImage x:Key="Spam" UriSource="/Resources/bug.png" />
         <ContextMenu x:Key="TweetContextMenu">
             <MenuItem Click="cCopy_Click"
@@ -58,7 +59,7 @@
                                            Converter={StaticResource BoolVisibleConverter}}" />
             <Separator Visibility="{Binding IsTextSelected, Converter={StaticResource BoolVisibleConverter}}" />
             <MenuItem Command="{Binding MentionCommand}"
-                      Header="_Reply"
+                      Header="返信(_R)"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Mention}">
                 <MenuItem.Icon>
@@ -66,7 +67,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding FavoriteCommand}"
-                      Header="_Favorite..."
+                      Header="_Favorite"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Favorite}">
                 <MenuItem.Icon>
@@ -74,7 +75,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding RetweetCommand}"
-                      Header="_Retweet..."
+                      Header="R_etweet"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Retweet}">
                 <MenuItem.Icon>
@@ -82,7 +83,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding UnofficialRetweetCommand}"
-                      Header="非公式RT(_E)"
+                      Header="非公式RT(_N)"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=UnofficialRetweet}"
                       Visibility="{Binding Path=Tweet.ShowUnofficialRetweetButton,
@@ -95,14 +96,14 @@
                       Header="_QT"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=QuoteTweet}"
-                      Visibility="{Binding Path=Tweet.ShowQuoteTweetButton,
+                      Visibility="{Binding Path=Tweet.ShowQuoteButton,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource QuoteTweet}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding DeleteCommand}"
-                      Header="削除(_D)"
+                      Header="ツイートを削除(_D)"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Delete}"
                       Visibility="{Binding Path=Tweet.ShowDeleteButton,
@@ -111,7 +112,27 @@
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Delete}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <Separator />
+            <MenuItem Header="複数アカウント(M)">
+                <MenuItem Command="{Binding FavoriteMultiUserCommand}"
+                          Header="_Favorite..."
+                          InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 ConverterParameter=FavoriteMulti}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+                               Source="{StaticResource Favorite}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding RetweetMultiUserCommand}"
+                          Header="_Retweet..."
+                          InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 ConverterParameter=RetweetMulti}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+                               Source="{StaticResource Retweet}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+                <Separator />
             <MenuItem Command="{Binding OpenConversationCommand}"
                       Header="返信先とこのユーザーの会話を表示(_.)"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
@@ -123,15 +144,34 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator Visibility="{Binding Path=Tweet.IsMention, Converter={StaticResource BoolVisibleConverter}}" />
-            <MenuItem Command="{Binding Path=Tweet.ShowTweetCommand}"
-                      Header="ブラウザーで開く(_W)..."
-                      InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+            <MenuItem Header="このツイート(_T)">
+                <MenuItem Command="{Binding Path=Tweet.CopySTOTCommand}"
+                          Header="_STOT形式でコピー"
+                          InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 ConverterParameter=CopySTOT}" />
+                <MenuItem Command="{Binding Path=Tweet.CopyWebUrlCommand}"
+                          Header="Web_URLをコピー"
+                          InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 ConverterParameter=CopyWebUrl}" />
+                <MenuItem Command="{Binding Path=Tweet.CopyScreenNameCommand}"
+                          Header="ユーザー@IDをコピー(_C)"
+                          InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 ConverterParameter=CopyScreenName}" />
+                <Separator />
+                <MenuItem Command="{Binding Path=Tweet.ShowTweetCommand}"
+                          Header="_Webを開く..."
+                          InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=OpenTweetWeb}" />
+            </MenuItem>
             <MenuItem Header="このユーザー(_U)">
                 <MenuItem Command="{Binding ShowUserDetailCommand}"
                           Header="ユーザー情報を表示(_I)"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                     ConverterParameter=ShowUserDetail}" />
+                                                     ConverterParameter=ShowUserDetail}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource User}" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Command="{Binding DirectMessageCommand}"
                           Header="ダイレクトメッセージを送信(_D)"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
@@ -148,7 +188,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Command="{Binding MuteCommand}"
-                      Header="ミュート(_M)..."
+                      Header="ミュート(_X)..."
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Mute}">
                 <MenuItem.Icon>
@@ -442,14 +482,14 @@
                             Style="{DynamicResource FlatButtonStyle}"
                             VerticalContentAlignment="Center">
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Chevron}" />
-                        <Button.ToolTip>多重Fav...</Button.ToolTip>
+                        <Button.ToolTip>多重Favorite...</Button.ToolTip>
                     </Button>
                     <Button VerticalAlignment="Center"
                             Command="{Binding FavoriteCommand}"
                             Focusable="False"
                             Style="{DynamicResource FlatButtonStyle}">
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Favorite}" />
-                        <Button.ToolTip>Fav追加</Button.ToolTip>
+                        <Button.ToolTip>Favorite</Button.ToolTip>
                     </Button>
                 </Grid>
                 <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.ShowRetweetButton, Converter={StaticResource BoolVisibleConverter}}">
@@ -466,14 +506,14 @@
                             Style="{DynamicResource FlatButtonStyle}"
                             VerticalContentAlignment="Center">
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Chevron}" />
-                        <Button.ToolTip>多重公式RT...</Button.ToolTip>
+                        <Button.ToolTip>多重公式Retweet...</Button.ToolTip>
                     </Button>
                     <Button VerticalAlignment="Center"
                             Command="{Binding RetweetCommand}"
                             Focusable="False"
                             Style="{DynamicResource FlatButtonStyle}">
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Retweet}" />
-                        <Button.ToolTip>公式RT</Button.ToolTip>
+                        <Button.ToolTip>公式Retweet</Button.ToolTip>
                     </Button>
                 </Grid>
                 <Button VerticalAlignment="Center"

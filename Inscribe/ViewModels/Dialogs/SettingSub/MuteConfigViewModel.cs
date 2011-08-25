@@ -18,7 +18,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             else
                 this._filterEditorViewModel = new FilterEditorViewModel(
                     Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filters.ToArray());
-            this._shareBlocking = Setting.Instance.TimelineFilteringProperty.ShareBlocking;
+            this._muteBlockedUsers = Setting.Instance.TimelineFilteringProperty.MuteBlockedUsers;
         }
 
         private FilterEditorViewModel _filterEditorViewModel;
@@ -27,14 +27,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             get { return _filterEditorViewModel; }
         }
 
-        private bool _shareBlocking;
-        public bool ShareBlocking
+        private bool _muteBlockedUsers;
+        public bool MuteBlockedUsers
         {
-            get { return _shareBlocking; }
+            get { return _muteBlockedUsers; }
             set
             {
-                _shareBlocking = value;
-                RaisePropertyChanged(() => ShareBlocking);
+                _muteBlockedUsers = value;
+                RaisePropertyChanged(() => MuteBlockedUsers);
             }
         }
 
@@ -43,7 +43,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.TimelineFilteringProperty.MuteFilterCluster =
                 new FilterCluster() { Filters = this._filterEditorViewModel.RootFilters };
             TweetStorage.UpdateMute();
-            Setting.Instance.TimelineFilteringProperty.ShareBlocking = this._shareBlocking;
+            Setting.Instance.TimelineFilteringProperty.MuteBlockedUsers = this._muteBlockedUsers;
         }
     }
 }

@@ -198,5 +198,10 @@ namespace Inscribe.Subsystems
             }
             return dispatched;
         }
+
+        internal static bool ExistsAction(string action)
+        {
+            return callbacks.ContainsKey(action);
+        }
     }
 }

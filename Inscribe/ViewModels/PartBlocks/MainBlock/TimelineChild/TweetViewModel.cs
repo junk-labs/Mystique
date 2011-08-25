@@ -9,6 +9,7 @@ using Inscribe.Data;
 using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
+using System.Windows;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -53,6 +54,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get { return this.Status != null; }
         }
 
+        /// <summary>
+        /// Retweetを考慮したすべての本文を取得します。
+        /// </summary>
         public string TweetText
         {
             get
@@ -84,9 +88,24 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
 
+        /// <summary>
+        /// 何も考慮せず本文を返します。<para />
+        /// Retweetされたツイートの場合、RTが付きます。また、途切れる可能性があります。
+        /// </summary>
         public string Text
         {
             get { return this.Status.Text; }
+        }
+
+        /// <summary>
+        /// このツイートのURL(Permalink)を取得します。
+        /// </summary>
+        public string Permalink
+        {
+            get
+            {
+                return "http://twitter.com/" + this.Status.User.ScreenName + "/status/" + this.Status.Id.ToString();
+            }
         }
 
         #endregion
@@ -353,6 +372,80 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         #region Commands
 
+        #region CopySTOTCommand
+        DelegateCommand _CopySTOTCommand;
+
+        public DelegateCommand CopySTOTCommand
+        {
+            get
+            {
+                if (_CopySTOTCommand == null)
+                    _CopySTOTCommand = new DelegateCommand(CopySTOT);
+                return _CopySTOTCommand;
+            }
+        }
+
+        private void CopySTOT()
+        {
+            CopyClipboard(TwitterHelper.GetSuggestedUser(this).ScreenName + ":" +
+                this.TweetText + " [" + this.Permalink + "]");
+
+        }
+        #endregion
+
+        #region CopyWebUrlCommand
+        DelegateCommand _CopyWebUrlCommand;
+
+        public DelegateCommand CopyWebUrlCommand
+        {
+            get
+            {
+                if (_CopyWebUrlCommand == null)
+                    _CopyWebUrlCommand = new DelegateCommand(CopyWebUrl);
+                return _CopyWebUrlCommand;
+            }
+        }
+
+        private void CopyWebUrl()
+        {
+            CopyClipboard(this.Permalink);
+        }
+        #endregion
+
+
+        #region CopyScreenNameCommand
+        DelegateCommand _CopyScreenNameCommand;
+
+        public DelegateCommand CopyScreenNameCommand
+        {
+            get
+            {
+                if (_CopyScreenNameCommand == null)
+                    _CopyScreenNameCommand = new DelegateCommand(CopyScreenName);
+                return _CopyScreenNameCommand;
+            }
+        }
+
+        private void CopyScreenName()
+        {
+            CopyClipboard(TwitterHelper.GetSuggestedUser(this).ScreenName);
+        }
+        #endregion
+
+        private void CopyClipboard(string text)
+        {
+            try
+            {
+                Clipboard.SetText(text);
+                NotifyStorage.Notify("コピーしました: " + text);
+            }
+            catch (Exception ex)
+            {
+                ExceptionStorage.Register(ex, ExceptionCategory.InternalError,
+                    "コピーに失敗しました");
+            }
+        }
+
         #region ShowTweetCommand
 
         DelegateCommand _ShowTweetCommand;
@@ -369,7 +462,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void ShowTweet()
         {
-            Browser.Start("http://twitter.com/" + this.Status.User.ScreenName + "/status/" + this.Status.Id.ToString());
+            Browser.Start(this.Permalink);
         }
 
         #endregion

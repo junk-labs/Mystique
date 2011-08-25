@@ -31,8 +31,8 @@
                   VerticalAlignment="Top"
                   IsChecked="{Binding PowerUserMode}">
             <StackPanel Orientation="Vertical">
-                <AccessText FontWeight="Bold" Text="パワーユーザーモードにする(_P)[非推奨]" />
-                <TextBlock Text="Krileの取り扱いに自信のある方はどうぞ。" />
+                <AccessText FontWeight="Bold" Text="ハイレベルモードにする(_P)[非推奨]" />
+                <TextBlock Text="Krileの取り扱いに自信のある方向けです。" />
             </StackPanel>
         </CheckBox>
         <TextBlock Grid.Row="1"
@@ -55,7 +55,7 @@
                           IsEnabled="{Binding PowerUserMode}"
                           Visibility="{Binding PowerUserMode,
                                                Converter={StaticResource BoolVisibleConverter}}" />
-            <ComboBoxItem Content="(危険)開発版(twilight)を自動受信して更新"
+            <ComboBoxItem Content="(危険)試験版(twilight)を自動受信して更新"
                           IsEnabled="{Binding PowerUserMode}"
                           Visibility="{Binding PowerUserMode,
                                                Converter={StaticResource BoolVisibleConverter}}" />

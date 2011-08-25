@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:my="clr-namespace:Mystique.Views.Common.Filter"
              d:DesignHeight="300"
-             d:DesignWidth="300"
+             d:DesignWidth="400"
              mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -17,7 +17,8 @@
         <my:FilterEditor Grid.Row="1" DataContext="{Binding FilterEditorViewModel}" />
         <CheckBox Grid.Row="2"
                   Margin="4"
-                  Content="ブロック情報を共有する(_B)"
-                  IsChecked="{Binding ShareBlocking}" />
+                  Content="ブロックユーザーをミュートする(_B)"
+                  IsChecked="{Binding MuteBlockedUsers}"
+                  ToolTip="Krileに登録されているアカウントのうちどれかからブロックされていたらミュートします。" />
     </Grid>
 </UserControl>
