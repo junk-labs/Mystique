@@ -348,14 +348,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
 
         #region CopyExceptionCommand
-        DelegateCommand _CopyExceptionCommand;
+        ViewModelCommand _CopyExceptionCommand;
 
-        public DelegateCommand CopyExceptionCommand
+        public ViewModelCommand CopyExceptionCommand
         {
             get
             {
                 if (_CopyExceptionCommand == null)
-                    _CopyExceptionCommand = new DelegateCommand(CopyException);
+                    _CopyExceptionCommand = new ViewModelCommand(CopyException);
                 return _CopyExceptionCommand;
             }
         }
@@ -371,14 +371,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region ReturnToBoxCommand
-        DelegateCommand _ReturnToBoxCommand;
+        ViewModelCommand _ReturnToBoxCommand;
 
-        public DelegateCommand ReturnToBoxCommand
+        public ViewModelCommand ReturnToBoxCommand
         {
             get
             {
                 if (_ReturnToBoxCommand == null)
-                    _ReturnToBoxCommand = new DelegateCommand(ReturnToBox);
+                    _ReturnToBoxCommand = new ViewModelCommand(ReturnToBox);
                 return _ReturnToBoxCommand;
             }
         }
@@ -397,14 +397,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region RemoveCommand
-        DelegateCommand _RemoveCommand;
+        ViewModelCommand _RemoveCommand;
 
-        public DelegateCommand RemoveCommand
+        public ViewModelCommand RemoveCommand
         {
             get
             {
                 if (_RemoveCommand == null)
-                    _RemoveCommand = new DelegateCommand(Remove);
+                    _RemoveCommand = new ViewModelCommand(Remove);
                 return _RemoveCommand;
             }
         }

@@ -105,14 +105,14 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
         #endregion
        
         #region CloseCommand
-        DelegateCommand _CloseCommand;
+        ViewModelCommand _CloseCommand;
 
-        public DelegateCommand CloseCommand
+        public ViewModelCommand CloseCommand
         {
             get
             {
                 if (_CloseCommand == null)
-                    _CloseCommand = new DelegateCommand(Close);
+                    _CloseCommand = new ViewModelCommand(Close);
                 return _CloseCommand;
             }
         }
@@ -125,14 +125,14 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
         
         #region ShowUserCommand
         
-        DelegateCommand _ShowUserCommand;
+        ViewModelCommand _ShowUserCommand;
 
-        public DelegateCommand ShowUserCommand
+        public ViewModelCommand ShowUserCommand
         {
             get
             {
                 if (_ShowUserCommand == null)
-                    _ShowUserCommand = new DelegateCommand(ShowUser);
+                    _ShowUserCommand = new ViewModelCommand(ShowUser);
                 return _ShowUserCommand;
             }
         }

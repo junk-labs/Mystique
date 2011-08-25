@@ -39,14 +39,14 @@ namespace Inscribe.ViewModels.Common.TagBinding
 
 
         #region AddAutoBindCommand
-        DelegateCommand _AddAutoBindCommand;
+        ViewModelCommand _AddAutoBindCommand;
 
-        public DelegateCommand AddAutoBindCommand
+        public ViewModelCommand AddAutoBindCommand
         {
             get
             {
                 if (_AddAutoBindCommand == null)
-                    _AddAutoBindCommand = new DelegateCommand(AddAutoBind);
+                    _AddAutoBindCommand = new ViewModelCommand(AddAutoBind);
                 return _AddAutoBindCommand;
             }
         }
@@ -83,14 +83,14 @@ namespace Inscribe.ViewModels.Common.TagBinding
         public HashtagAutoBindDescription Description { get; private set; }
 
         #region EditCommand
-        DelegateCommand _EditCommand;
+        ViewModelCommand _EditCommand;
 
-        public DelegateCommand EditCommand
+        public ViewModelCommand EditCommand
         {
             get
             {
                 if (_EditCommand == null)
-                    _EditCommand = new DelegateCommand(Edit);
+                    _EditCommand = new ViewModelCommand(Edit);
                 return _EditCommand;
             }
         }
@@ -109,14 +109,14 @@ namespace Inscribe.ViewModels.Common.TagBinding
         #endregion
 
         #region DeleteCommand
-        DelegateCommand _DeleteCommand;
+        ViewModelCommand _DeleteCommand;
 
-        public DelegateCommand DeleteCommand
+        public ViewModelCommand DeleteCommand
         {
             get
             {
                 if (_DeleteCommand == null)
-                    _DeleteCommand = new DelegateCommand(Delete);
+                    _DeleteCommand = new ViewModelCommand(Delete);
                 return _DeleteCommand;
             }
         }

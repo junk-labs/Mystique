@@ -19,14 +19,14 @@ namespace Inscribe.ViewModels.Common.Filter
 
 
         #region AddClusterCommand
-        DelegateCommand _AddClusterCommand;
+        ViewModelCommand _AddClusterCommand;
 
-        public DelegateCommand AddClusterCommand
+        public ViewModelCommand AddClusterCommand
         {
             get
             {
                 if (_AddClusterCommand == null)
-                    _AddClusterCommand = new DelegateCommand(AddCluster);
+                    _AddClusterCommand = new ViewModelCommand(AddCluster);
                 return _AddClusterCommand;
             }
         }
@@ -42,14 +42,14 @@ namespace Inscribe.ViewModels.Common.Filter
 
 
         #region AddFilterCommand
-        DelegateCommand _AddFilterCommand;
+        ViewModelCommand _AddFilterCommand;
 
-        public DelegateCommand AddFilterCommand
+        public ViewModelCommand AddFilterCommand
         {
             get
             {
                 if (_AddFilterCommand == null)
-                    _AddFilterCommand = new DelegateCommand(AddFilter);
+                    _AddFilterCommand = new ViewModelCommand(AddFilter);
                 return _AddFilterCommand;
             }
         }

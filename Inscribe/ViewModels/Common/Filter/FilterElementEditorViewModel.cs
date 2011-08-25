@@ -148,14 +148,14 @@ namespace Inscribe.ViewModels.Common.Filter
         }
 
         #region OKCommand
-        DelegateCommand _OKCommand;
+        ViewModelCommand _OKCommand;
 
-        public DelegateCommand OKCommand
+        public ViewModelCommand OKCommand
         {
             get
             {
                 if (_OKCommand == null)
-                    _OKCommand = new DelegateCommand(OK);
+                    _OKCommand = new ViewModelCommand(OK);
                 return _OKCommand;
             }
         }
@@ -168,14 +168,14 @@ namespace Inscribe.ViewModels.Common.Filter
         #endregion
 
         #region CancelCommand
-        DelegateCommand _CancelCommand;
+        ViewModelCommand _CancelCommand;
 
-        public DelegateCommand CancelCommand
+        public ViewModelCommand CancelCommand
         {
             get
             {
                 if (_CancelCommand == null)
-                    _CancelCommand = new DelegateCommand(Cancel);
+                    _CancelCommand = new ViewModelCommand(Cancel);
                 return _CancelCommand;
             }
         }

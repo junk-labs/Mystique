@@ -68,14 +68,14 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
         }
 
         #region OkCommand
-        DelegateCommand _OkCommand;
+        ViewModelCommand _OkCommand;
 
-        public DelegateCommand OkCommand
+        public ViewModelCommand OkCommand
         {
             get
             {
                 if (_OkCommand == null)
-                    _OkCommand = new DelegateCommand(Ok);
+                    _OkCommand = new ViewModelCommand(Ok);
                 return _OkCommand;
             }
         }
@@ -90,14 +90,14 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
         #endregion
 
         #region CancelCommand
-        DelegateCommand _CancelCommand;
+        ViewModelCommand _CancelCommand;
 
-        public DelegateCommand CancelCommand
+        public ViewModelCommand CancelCommand
         {
             get
             {
                 if (_CancelCommand == null)
-                    _CancelCommand = new DelegateCommand(Cancel);
+                    _CancelCommand = new ViewModelCommand(Cancel);
                 return _CancelCommand;
             }
         }

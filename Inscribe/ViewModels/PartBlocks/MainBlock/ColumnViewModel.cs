@@ -168,14 +168,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
 
         #region DragDropStartCommand
-        DelegateCommand _DragDropStartCommand;
+        ViewModelCommand _DragDropStartCommand;
 
-        public DelegateCommand DragDropStartCommand
+        public ViewModelCommand DragDropStartCommand
         {
             get
             {
                 if (_DragDropStartCommand == null)
-                    _DragDropStartCommand = new DelegateCommand(DragDropStart);
+                    _DragDropStartCommand = new ViewModelCommand(DragDropStart);
                 return _DragDropStartCommand;
             }
         }
@@ -187,14 +187,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region OnDropCommand
-        DelegateCommand<DragEventArgs> _OnDropCommand;
+        ListenerCommand<DragEventArgs> _OnDropCommand;
 
-        public DelegateCommand<DragEventArgs> OnDropCommand
+        public ListenerCommand<DragEventArgs> OnDropCommand
         {
             get
             {
                 if (_OnDropCommand == null)
-                    _OnDropCommand = new DelegateCommand<DragEventArgs>(OnDrop);
+                    _OnDropCommand = new ListenerCommand<DragEventArgs>(OnDrop);
                 return _OnDropCommand;
             }
         }
@@ -236,14 +236,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region OnDropLeftColumnCommand
-        DelegateCommand<DragEventArgs> _OnDropLeftColumnCommand;
+        ListenerCommand<DragEventArgs> _OnDropLeftColumnCommand;
 
-        public DelegateCommand<DragEventArgs> OnDropLeftColumnCommand
+        public ListenerCommand<DragEventArgs> OnDropLeftColumnCommand
         {
             get
             {
                 if (_OnDropLeftColumnCommand == null)
-                    _OnDropLeftColumnCommand = new DelegateCommand<DragEventArgs>(OnDropLeftColumn);
+                    _OnDropLeftColumnCommand = new ListenerCommand<DragEventArgs>(OnDropLeftColumn);
                 return _OnDropLeftColumnCommand;
             }
         }
@@ -260,14 +260,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region OnDropRightColumnCommand
-        DelegateCommand<DragEventArgs> _OnDropRightColumnCommand;
+        ListenerCommand<DragEventArgs> _OnDropRightColumnCommand;
 
-        public DelegateCommand<DragEventArgs> OnDropRightColumnCommand
+        public ListenerCommand<DragEventArgs> OnDropRightColumnCommand
         {
             get
             {
                 if (_OnDropRightColumnCommand == null)
-                    _OnDropRightColumnCommand = new DelegateCommand<DragEventArgs>(OnDropRightColumn);
+                    _OnDropRightColumnCommand = new ListenerCommand<DragEventArgs>(OnDropRightColumn);
                 return _OnDropRightColumnCommand;
             }
         }
@@ -285,14 +285,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region DragDropFinishCommand
-        DelegateCommand _DragDropFinishCommand;
+        ViewModelCommand _DragDropFinishCommand;
 
-        public DelegateCommand DragDropFinishCommand
+        public ViewModelCommand DragDropFinishCommand
         {
             get
             {
                 if (_DragDropFinishCommand == null)
-                    _DragDropFinishCommand = new DelegateCommand(DragDropFinish);
+                    _DragDropFinishCommand = new ViewModelCommand(DragDropFinish);
                 return _DragDropFinishCommand;
             }
         }
@@ -305,14 +305,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region GetFocusCommand
-        DelegateCommand _GetFocusCommand;
+        ViewModelCommand _GetFocusCommand;
 
-        public DelegateCommand GetFocusCommand
+        public ViewModelCommand GetFocusCommand
         {
             get
             {
                 if (_GetFocusCommand == null)
-                    _GetFocusCommand = new DelegateCommand(GetFocus);
+                    _GetFocusCommand = new ViewModelCommand(GetFocus);
                 return _GetFocusCommand;
             }
         }
@@ -332,14 +332,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
 
         #region AddNewTabCommand
-        DelegateCommand _AddNewTabCommand;
+        ViewModelCommand _AddNewTabCommand;
 
-        public DelegateCommand AddNewTabCommand
+        public ViewModelCommand AddNewTabCommand
         {
             get
             {
                 if (_AddNewTabCommand == null)
-                    _AddNewTabCommand = new DelegateCommand(AddNewTab);
+                    _AddNewTabCommand = new ViewModelCommand(AddNewTab);
                 return _AddNewTabCommand;
             }
         }
@@ -352,14 +352,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region RebirthTabCommand
-        DelegateCommand _RebirthTabCommand;
+        ViewModelCommand _RebirthTabCommand;
 
-        public DelegateCommand RebirthTabCommand
+        public ViewModelCommand RebirthTabCommand
         {
             get
             {
                 if (_RebirthTabCommand == null)
-                    _RebirthTabCommand = new DelegateCommand(RebirthTab, CanRebirthTab);
+                    _RebirthTabCommand = new ViewModelCommand(RebirthTab, CanRebirthTab);
                 return _RebirthTabCommand;
             }
         }

@@ -90,14 +90,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         public event Action CloseRequired = () => { };
 
         #region R4SAllCommand
-        DelegateCommand _R4SAllCommand;
+        ViewModelCommand _R4SAllCommand;
 
-        public DelegateCommand R4SAllCommand
+        public ViewModelCommand R4SAllCommand
         {
             get
             {
                 if (_R4SAllCommand == null)
-                    _R4SAllCommand = new DelegateCommand(R4SAll);
+                    _R4SAllCommand = new ViewModelCommand(R4SAll);
                 return _R4SAllCommand;
             }
         }
@@ -109,14 +109,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         #endregion
 
         #region CommitCommand
-        DelegateCommand _CommitCommand;
+        ViewModelCommand _CommitCommand;
 
-        public DelegateCommand CommitCommand
+        public ViewModelCommand CommitCommand
         {
             get
             {
                 if (_CommitCommand == null)
-                    _CommitCommand = new DelegateCommand(Commit);
+                    _CommitCommand = new ViewModelCommand(Commit);
                 return _CommitCommand;
             }
         }
@@ -129,14 +129,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         #endregion
 
         #region CancelCommand
-        DelegateCommand _CancelCommand;
+        ViewModelCommand _CancelCommand;
 
-        public DelegateCommand CancelCommand
+        public ViewModelCommand CancelCommand
         {
             get
             {
                 if (_CancelCommand == null)
-                    _CancelCommand = new DelegateCommand(Cancel);
+                    _CancelCommand = new ViewModelCommand(Cancel);
                 return _CancelCommand;
             }
         }
@@ -279,14 +279,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         }
 
         #region FollowCommand
-        DelegateCommand _FollowCommand;
+        ViewModelCommand _FollowCommand;
 
-        public DelegateCommand FollowCommand
+        public ViewModelCommand FollowCommand
         {
             get
             {
                 if (_FollowCommand == null)
-                    _FollowCommand = new DelegateCommand(Follow);
+                    _FollowCommand = new ViewModelCommand(Follow);
                 return _FollowCommand;
             }
         }
@@ -298,14 +298,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         #endregion
 
         #region RemoveCommand
-        DelegateCommand _RemoveCommand;
+        ViewModelCommand _RemoveCommand;
 
-        public DelegateCommand RemoveCommand
+        public ViewModelCommand RemoveCommand
         {
             get
             {
                 if (_RemoveCommand == null)
-                    _RemoveCommand = new DelegateCommand(Remove);
+                    _RemoveCommand = new ViewModelCommand(Remove);
                 return _RemoveCommand;
             }
         }
@@ -317,14 +317,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         #endregion
 
         #region BlockCommand
-        DelegateCommand _BlockCommand;
+        ViewModelCommand _BlockCommand;
 
-        public DelegateCommand BlockCommand
+        public ViewModelCommand BlockCommand
         {
             get
             {
                 if (_BlockCommand == null)
-                    _BlockCommand = new DelegateCommand(Block);
+                    _BlockCommand = new ViewModelCommand(Block);
                 return _BlockCommand;
             }
         }
@@ -336,14 +336,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         #endregion
 
         #region UnblockCommand
-        DelegateCommand _UnblockCommand;
+        ViewModelCommand _UnblockCommand;
 
-        public DelegateCommand UnblockCommand
+        public ViewModelCommand UnblockCommand
         {
             get
             {
                 if (_UnblockCommand == null)
-                    _UnblockCommand = new DelegateCommand(Unblock);
+                    _UnblockCommand = new ViewModelCommand(Unblock);
                 return _UnblockCommand;
             }
         }
@@ -355,14 +355,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         #endregion
 
         #region ReportForSpamCommand
-        DelegateCommand _ReportForSpamCommand;
+        ViewModelCommand _ReportForSpamCommand;
 
-        public DelegateCommand ReportForSpamCommand
+        public ViewModelCommand ReportForSpamCommand
         {
             get
             {
                 if (_ReportForSpamCommand == null)
-                    _ReportForSpamCommand = new DelegateCommand(ReportForSpam);
+                    _ReportForSpamCommand = new ViewModelCommand(ReportForSpam);
                 return _ReportForSpamCommand;
             }
         }
@@ -374,14 +374,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         #endregion
 
         #region RefreshInfoCommand
-        DelegateCommand _RefreshInfoCommand;
+        ViewModelCommand _RefreshInfoCommand;
 
-        public DelegateCommand RefreshInfoCommand
+        public ViewModelCommand RefreshInfoCommand
         {
             get
             {
                 if (_RefreshInfoCommand == null)
-                    _RefreshInfoCommand = new DelegateCommand(RefreshInfo);
+                    _RefreshInfoCommand = new ViewModelCommand(RefreshInfo);
                 return _RefreshInfoCommand;
             }
         }

@@ -123,14 +123,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
         }
 
         #region ReauthCommand
-        DelegateCommand _ReauthCommand;
+        ViewModelCommand _ReauthCommand;
 
-        public DelegateCommand ReauthCommand
+        public ViewModelCommand ReauthCommand
         {
             get
             {
                 if (_ReauthCommand == null)
-                    _ReauthCommand = new DelegateCommand(Reauth);
+                    _ReauthCommand = new ViewModelCommand(Reauth);
                 return _ReauthCommand;
             }
         }
@@ -147,14 +147,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
         #endregion
 
         #region CloseCommand
-        DelegateCommand _CloseCommand;
+        ViewModelCommand _CloseCommand;
 
-        public DelegateCommand CloseCommand
+        public ViewModelCommand CloseCommand
         {
             get
             {
                 if (_CloseCommand == null)
-                    _CloseCommand = new DelegateCommand(Close);
+                    _CloseCommand = new ViewModelCommand(Close);
                 return _CloseCommand;
             }
         }
@@ -190,14 +190,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
         }
 
         #region AddQueryCommand
-        DelegateCommand _AddQueryCommand;
+        ViewModelCommand _AddQueryCommand;
 
-        public DelegateCommand AddQueryCommand
+        public ViewModelCommand AddQueryCommand
         {
             get
             {
                 if (_AddQueryCommand == null)
-                    _AddQueryCommand = new DelegateCommand(AddQuery, CanAddQuery);
+                    _AddQueryCommand = new ViewModelCommand(AddQuery, CanAddQuery);
                 return _AddQueryCommand;
             }
         }
@@ -216,14 +216,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
         #endregion
 
         #region RemoveQueryCommand
-        DelegateCommand<object> _RemoveQueryCommand;
+        ListenerCommand<object> _RemoveQueryCommand;
 
-        public DelegateCommand<object> RemoveQueryCommand
+        public ListenerCommand<object> RemoveQueryCommand
         {
             get
             {
                 if (_RemoveQueryCommand == null)
-                    _RemoveQueryCommand = new DelegateCommand<object>(RemoveQuery);
+                    _RemoveQueryCommand = new ListenerCommand<object>(RemoveQuery);
                 return _RemoveQueryCommand;
             }
         }

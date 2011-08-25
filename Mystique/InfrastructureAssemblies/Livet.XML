@@ -113,6 +113,16 @@
             拡張子を指定しなかった場合、自動で拡張子を追加するかどうかを指定、または取得します。デフォルトはtrueです。
             </summary>
         </member>
+        <member name="M:Livet.Commands.Command.OnCanExecuteChanged">
+            <summary>
+            コマンドが実行可能かどうかが変化した時に呼び出されます。
+            </summary>
+        </member>
+        <member name="E:Livet.Commands.Command.CanExecuteChanged">
+            <summary>
+            コマンドが実行可能かどうかが変化した時に発生します。
+            </summary>
+        </member>
         <member name="T:Livet.ViewModel">
             <summary>
             ViewModelの基底クラスです。
@@ -125,9 +135,14 @@
         </member>
         <member name="T:Livet.IWeakEventListenerHolder">
             <summary>
-            IWeakEventListenerのリストを持つクラスです。
-            通常このリストにIWeakEventListenerを追加することで、<br/>
+            WeakEventListenerHolderを持つクラスです。
+            通常WeakEventListenerHolderにIWeakEventListenerを追加することで、<br/>
             IWeakEventListenerとこのインターフェースを実装したオブジェクトのライフサイクルを一致させます。
+            </summary>
+        </member>
+        <member name="P:Livet.IWeakEventListenerHolder.ListenerHolder">
+            <summary>
+            WeakEventListenerHolderのインスタンスを取得します。
             </summary>
         </member>
         <member name="M:Livet.NotificationObject.RaisePropertyChanged``1(System.Linq.Expressions.Expression{System.Func{``0}})">
@@ -148,10 +163,15 @@
             プロパティ変更通知イベントです。
             </summary>
         </member>
-        <member name="P:Livet.NotificationObject.ListenerList">
+        <member name="P:Livet.NotificationObject.ListenerHolder">
             <summary>
-            このクラスが購読するWeakEventのListenerの参照を確保するためのリストです。
+            このクラスが購読するWeakEventのListenerの参照を確保するためのホルダーです。。
             このクラスインスタンスの生存期間の間、保持しておきたいIWeakEventLisntenerはこのリストに入れてください。
+            </summary>
+        </member>
+        <member name="M:Livet.ViewModel.#ctor">
+            <summary>
+            コンストラクタ
             </summary>
         </member>
         <member name="P:Livet.ViewModel.Messenger">
@@ -203,70 +223,42 @@
             メッセージボックスイメージを指定、または取得します。
             </summary>
         </member>
-        <member name="T:Livet.Commands.DelegateCommand`1">
+        <member name="T:Livet.Commands.ViewModelCommand">
             <summary>
-            通常ViewModelで使用するコマンドクラスです。
-            </summary>
-            <typeparam name="T">このコマンドを実行する際のパラメータの型</typeparam>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand`1.#ctor(System.Action{`0})">
-            <summary>
-            コマンドが実行するアクションを指定して、DelegateCommandの新しいインスタンスを作成します。
-            </summary>
-            <param name="execute">コマンドが実行するアクション</param>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand`1.#ctor(System.Action{`0},System.Func{`0,System.Boolean})">
-            <summary>
-            コマンドが実行するアクションを指定して、DelegateCommandの新しいインスタンスを作成します。
-            </summary>
-            <param name="execute">コマンドが実行するアクション</param>
-            <param name="canExecute">コマンドが実行可能かどうかを返すFunc</param>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand`1.CanExecute(`0)">
-            <summary>
-            コマンドが実行可能かを返します。
-            </summary>
-            <param name="parameter">コマンドの実行に使用するパラメータ</param>
-            <returns>コマンドの実行可非</returns>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand`1.System#Windows#Input#ICommand#CanExecute(System.Object)">
-            <summary>
-            コマンドが実行可能かを返します。
-            </summary>
-            <param name="parameter">コマンドの実行に使用するパラメータ</param>
-            <returns>コマンドの実行可非</returns>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand`1.Execute(`0)">
-            <summary>
-            このコマンドを実行します。
-            </summary>
-            <param name="parameter">コマンドの実行に使用するパラメータ</param>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand`1.System#Windows#Input#ICommand#Execute(System.Object)">
-            <summary>
-            このコマンドを実行します。
-            </summary>
-            <param name="parameter">コマンドの実行に使用するパラメータ</param>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand`1.RaiseCanExecuteChanged">
-            <summary>
-            コマンドの実行可非状態が変化した事をCommandManagerに通知します。
+            ViewModelがViewに公開するコマンドを表します。
             </summary>
         </member>
-        <member name="M:Livet.Commands.DelegateCommand`1.RaisePropertyChanged(System.String)">
+        <member name="M:Livet.Commands.ViewModelCommand.#ctor(System.Action)">
             <summary>
-            プロパティ変更通知イベントを発生させます
+            コンストラクタ
             </summary>
-            <param name="propertyName">プロパティ名</param>
+            <param name="execute">コマンドが実行するAction</param>
         </member>
-        <member name="E:Livet.Commands.DelegateCommand`1.CanExecuteChanged">
+        <member name="M:Livet.Commands.ViewModelCommand.#ctor(System.Action,System.Func{System.Boolean})">
             <summary>
-            コマンドの実行可非状態が変化した場合に発行されるイベントです。
+            コンストラクタ
+            </summary>
+            <param name="execute">コマンドが実行するAction</param>
+            <param name="canExecute">コマンドが実行可能かどうかをあらわすFunc&lt;bool&gt;</param>
+        </member>
+        <member name="M:Livet.Commands.ViewModelCommand.Execute">
+            <summary>
+            コマンドを実行します。
             </summary>
         </member>
-        <member name="E:Livet.Commands.DelegateCommand`1.PropertyChanged">
+        <member name="M:Livet.Commands.ViewModelCommand.RaiseCanExecuteChanged">
             <summary>
-            プロパティ変更通知イベントです。
+            コマンドが実行可能かどうかが変化したことを通知します。
+            </summary>
+        </member>
+        <member name="P:Livet.Commands.ViewModelCommand.CanExecute">
+            <summary>
+            コマンドが実行可能かどうかを取得します。
+            </summary>
+        </member>
+        <member name="E:Livet.Commands.ViewModelCommand.PropertyChanged">
+            <summary>
+            コマンドが実行可能かどうかが変化した時に発生します。
             </summary>
         </member>
         <member name="T:Livet.Behaviors.Messaging.TransitionInteractionMessageAction">
@@ -283,6 +275,11 @@
             <summary>
             画面遷移の種類を指定するTransitionMode列挙体を指定、または取得します。<br/>
             TransitionMessageでModeがUnKnown以外に指定されていた場合、そちらが優先されます。
+            </summary>
+        </member>
+        <member name="P:Livet.Behaviors.Messaging.TransitionInteractionMessageAction.IsOwned">
+            <summary>
+            遷移先ウィンドウがこのウィンドウに所有されるかを設定します。
             </summary>
         </member>
         <member name="T:Livet.Behaviors.Messaging.InteractionMessageTrigger">
@@ -324,9 +321,19 @@
             このコレクションが変更通知を行うDispatcherを取得します。
             </summary>
         </member>
-        <member name="P:Livet.ReadOnlyNotificationDispatcherCollection`1.ListenerList">
+        <member name="E:Livet.ReadOnlyNotificationDispatcherCollection`1.CollectionChanged">
             <summary>
-            このクラスが購読するWeakEventのListenerの参照を確保するためのリストです。
+            コレクションが変更された時に発生します。
+            </summary>
+        </member>
+        <member name="E:Livet.ReadOnlyNotificationDispatcherCollection`1.PropertyChanged">
+            <summary>
+            プロパティが変更された時に発生します。
+            </summary>
+        </member>
+        <member name="P:Livet.ReadOnlyNotificationDispatcherCollection`1.ListenerHolder">
+            <summary>
+            このクラスが購読するWeakEventのListenerの参照を確保するためのホルダーです。
             このクラスインスタンスの生存期間の間、保持しておきたいIWeakEventLisntenerはこのリストに入れてください。
             </summary>
         </member>
@@ -351,7 +358,7 @@
             <exception cref="T:System.InvalidOperationException">UIDispatcherインスタンスがApp.StartUpなどで確保されていません。</exception>
         </member>
         <member name="P:Livet.DispatcherHelper.UIDispatcher">
-            <summary>
+            <summary>s
             UIDispatcherを指定、または取得します。通常このプロパティはApp_StartUpで指定されます。
             </summary>
         </member>
@@ -427,6 +434,15 @@
             <param name="handler">PropertyChangedEventHandler</param>
             <exception cref="T:System.ArgumentException">source,lifecycleObject,handlerのいずれかにnullが指定されました。</exception>
         </member>
+        <member name="M:Livet.ViewModelHelper.UnBindNotifyChanged(System.ComponentModel.INotifyPropertyChanged,Livet.ViewModel,System.ComponentModel.PropertyChangedEventHandler)">
+            <summary>
+            イベントハンドラとINotifyPropertyChanged(Model、あるいは他のViewModel)からのPropertyChangedイベントのWeakEventによる紐づけを解除します。。
+            </summary>
+            <param name="source">Model(INotifyPropertyChanged)</param>
+            <param name="lifecycleObject">このイベントの購読期間をそのライフサイクルと一致させたいViewModelです。</param>
+            <param name="handler">PropertyChangedEventHandler</param>
+            <exception cref="T:System.ArgumentException">source,lifecycleObject,handlerのいずれかにnullが指定されました。</exception>
+        </member>
         <member name="M:Livet.ViewModelHelper.BindNotifyCollectionChanged(System.Collections.Specialized.INotifyCollectionChanged,Livet.ViewModel,System.Collections.Specialized.NotifyCollectionChangedEventHandler)">
             <summary>
             イベントハンドラとINotifyCollectionChanged(ObservableCollection)からのCollectionChangedイベントをWeakEventで紐づけします。
@@ -436,9 +452,27 @@
             <param name="handler">NotifyCollectionChangedEventHandler</param>
             <exception cref="T:System.ArgumentException">source,lifecycleObject,handlerのいずれかにnullが指定されました。</exception>
         </member>
+        <member name="M:Livet.ViewModelHelper.UnBindNotifyCollectionChanged(System.Collections.Specialized.INotifyCollectionChanged,Livet.ViewModel,System.Collections.Specialized.NotifyCollectionChangedEventHandler)">
+            <summary>
+            イベントハンドラとINotifyCollectionChanged(ObservableCollection)からのCollectionChangedイベントのWeakEventによる紐づけを解除します。
+            </summary>
+            <param name="source">INotifyCollectionChangedオブジェクト</param>
+            <param name="lifecycleObject">このイベントの購読期間をそのライフサイクルと一致させたいViewModelです。</param>
+            <param name="handler">NotifyCollectionChangedEventHandler</param>
+            <exception cref="T:System.ArgumentException">source,lifecycleObject,handlerのいずれかにnullが指定されました。</exception>
+        </member>
         <member name="M:Livet.ViewModelHelper.BindNotification``1(Livet.Notificator{``0},Livet.ViewModel,System.EventHandler{``0})">
             <summary>
             イベントハンドラとNotificatorからのRaisedイベントをWeakEventで紐づけします。
+            </summary>
+            <param name="source">Notificatorオブジェクト</param>
+            <param name="lifecycleObject">このイベントの購読期間をそのライフサイクルと一致させたいViewModelです。</param>
+            <param name="handler">EventHandler</param>
+            <typeparam name="T">イベント引数型</typeparam>
+        </member>
+        <member name="M:Livet.ViewModelHelper.UnBindNotification``1(Livet.Notificator{``0},Livet.ViewModel,System.EventHandler{``0})">
+            <summary>
+            イベントハンドラとNotificatorからのRaisedイベントのWeakEventによる紐づけを解除します。
             </summary>
             <param name="source">Notificatorオブジェクト</param>
             <param name="lifecycleObject">このイベントの購読期間をそのライフサイクルと一致させたいViewModelです。</param>
@@ -507,6 +541,34 @@
         <member name="P:Livet.Messaging.ConfirmationMessage.Button">
             <summary>
             メッセージボックスボタンを指定、または取得します。
+            </summary>
+        </member>
+        <member name="T:Livet.WeakEventListenerInformation">
+            <summary>
+            WeakEvent関連情報を紐づけて格納するクラスです。
+            </summary>
+        </member>
+        <member name="M:Livet.WeakEventListenerInformation.#ctor(System.Object,System.Delegate,System.Windows.IWeakEventListener)">
+            <summary>
+            コンストラクタ
+            </summary>
+            <param name="eventSource">イベントの発行元</param>
+            <param name="handler">イベントハンドラ</param>
+            <param name="listener">IWeakEventListener</param>
+        </member>
+        <member name="P:Livet.WeakEventListenerInformation.EventSource">
+            <summary>
+            イベント発行元を弱参照として取得します。
+            </summary>
+        </member>
+        <member name="P:Livet.WeakEventListenerInformation.Handler">
+            <summary>
+            イベントハンドラを取得します。通常このプロパティはEventHandler&lt;T&gt;を示します。
+            </summary>
+        </member>
+        <member name="P:Livet.WeakEventListenerInformation.Listener">
+            <summary>
+            IWeakEventListenerを取得します。
             </summary>
         </member>
         <member name="T:Livet.Messaging.IO.OpeningFileSelectionMessage">
@@ -681,67 +743,44 @@
             Windowが遷移すべき状態を表すWindowAction列挙体を指定、または取得します。
             </summary>
         </member>
-        <member name="T:Livet.Commands.DelegateCommand">
+        <member name="T:Livet.Commands.ListenerCommand`1">
             <summary>
-            通常ViewModelで使用するコマンドクラスです。
+            ViewModelにおいて、Viewからメッセージ、あるいはオブジェクトを受け取って動作するコマンドを表します。
+            </summary>
+            <typeparam name="T">Viewから受け取るオブジェクトの型</typeparam>
+        </member>
+        <member name="M:Livet.Commands.ListenerCommand`1.#ctor(System.Action{`0})">
+            <summary>
+            コンストラクタ
+            </summary>
+            <param name="execute">コマンドが実行するAction</param>
+        </member>
+        <member name="M:Livet.Commands.ListenerCommand`1.#ctor(System.Action{`0},System.Func{System.Boolean})">
+            <summary>
+            コンストラクタ
+            </summary>
+            <param name="execute">コマンドが実行するAction</param>
+            <param name="canExecute">コマンドが実行可能かどうかをあらわすFunc&lt;bool&gt;</param>
+        </member>
+        <member name="M:Livet.Commands.ListenerCommand`1.Execute(`0)">
+            <summary>
+            コマンドを実行します。
+            </summary>
+            <param name="parameter">Viewから渡されたオブジェクト</param>
+        </member>
+        <member name="M:Livet.Commands.ListenerCommand`1.RaiseCanExecuteChanged">
+            <summary>
+            コマンドが実行可能かどうかが変化したことを通知します。
             </summary>
         </member>
-        <member name="M:Livet.Commands.DelegateCommand.#ctor(System.Action)">
+        <member name="P:Livet.Commands.ListenerCommand`1.CanExecute">
             <summary>
-            コマンドが実行するアクションを指定して、DelegateCommandの新しいインスタンスを作成します。
-            </summary>
-            <param name="execute">コマンドが実行するアクション</param>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand.#ctor(System.Action,System.Func{System.Boolean})">
-            <summary>
-            コマンドが実行するアクションを指定して、DelegateCommandの新しいインスタンスを作成します。
-            </summary>
-            <param name="execute">コマンドが実行するアクション</param>
-            <param name="canExecute">コマンドが実行可能かどうかを返すFunc</param>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand.CanExecute">
-            <summary>
-            コマンドが実行可能かを返します。
-            </summary>
-            <returns>コマンドの実行可非</returns>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand.System#Windows#Input#ICommand#CanExecute(System.Object)">
-            <summary>
-            型引数を持たないDelegateCommandでは実行しないでください。
-            </summary>
-            <param name="parameter"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand.Execute">
-            <summary>
-            このコマンドを実行します。
+            コマンドが実行可能かどうかを取得します。
             </summary>
         </member>
-        <member name="M:Livet.Commands.DelegateCommand.System#Windows#Input#ICommand#Execute(System.Object)">
+        <member name="E:Livet.Commands.ListenerCommand`1.PropertyChanged">
             <summary>
-            型引数を持たないDelegateCommandでは実行しないでください。
-            </summary>
-            <param name="parameter"></param>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand.RaiseCanExecuteChanged">
-            <summary>
-            コマンドの実行可非状態が変化した事をCommandManagerに通知します。
-            </summary>
-        </member>
-        <member name="M:Livet.Commands.DelegateCommand.RaisePropertyChanged(System.String)">
-            <summary>
-            プロパティ変更通知イベントを発生させます
-            </summary>
-            <param name="propertyName">プロパティ名</param>
-        </member>
-        <member name="E:Livet.Commands.DelegateCommand.CanExecuteChanged">
-            <summary>
-            コマンドの実行可非状態が変化した場合に発行されるイベントです。
-            </summary>
-        </member>
-        <member name="E:Livet.Commands.DelegateCommand.PropertyChanged">
-            <summary>
-            プロパティ変更通知イベントです。
+            コマンドが実行可能かどうかが変化した時に発生します。
             </summary>
         </member>
         <member name="T:Livet.NotificatorHelper">
@@ -759,11 +798,68 @@
             <typeparam name="T">イベント引数型</typeparam>
             <exception cref="T:System.ArgumentException">source,lifecycleObject,handlerのいずれかにnullが指定されました。</exception>
         </member>
+        <member name="M:Livet.NotificatorHelper.UnBindNotification``1(Livet.Notificator{``0},Livet.IWeakEventListenerHolder,System.EventHandler{``0})">
+            <summary>
+            イベントハンドラとNotificatorからのRaisedイベントのWeakEventによる紐づけを解除します。
+            </summary>
+            <typeparam name="T">イベント引数型</typeparam>
+            <param name="source">Notificatorオブジェクト</param>
+            <param name="lifecycleObject">このイベントの購読期間をそのライフサイクルと一致させたいIWeakEventListenerHavingオブジェクトです。</param>
+            <param name="handler">EventHandler</param>
+            <exception cref="T:System.ArgumentException">source,lifecycleObject,handlerのいずれかにnullが指定されました。</exception>
+        </member>
+        <member name="T:Livet.WeakEventListenerHolder">
+            <summary>
+            IWeakEventListenerへの参照と関連情報への参照を保持するクラスです。
+            </summary>
+        </member>
+        <member name="M:Livet.WeakEventListenerHolder.Add(System.Object,System.Delegate,System.Windows.IWeakEventListener)">
+            <summary>
+            IWeakEventListenerとイベントハンドラとイベントソースを関連付けて保持します。
+            </summary>
+            <param name="eventSource">イベントソース</param>
+            <param name="handler">イベントハンドラ</param>
+            <param name="listener">IWeakEventListener</param>
+        </member>
+        <member name="M:Livet.WeakEventListenerHolder.Remove(System.Windows.IWeakEventListener)">
+            <summary>
+            指定されたリスナと関連情報をこのインスタンスから削除します。
+            </summary>
+            <param name="listener">IWeakEventListener</param>
+        </member>
+        <member name="M:Livet.WeakEventListenerHolder.GetListeners(System.Object,System.Delegate)">
+            <summary>
+            指定されたイベントソースとイベントハンドラに紐づいているIWeakEventListenerを取得します。
+            </summary>
+            <param name="eventSource">イベントソース</param>
+            <param name="handler">イベントハンドラ</param>
+            <returns>IEnumerable&lt;IWeakEventListener&gt;></returns>
+        </member>
         <member name="T:Livet.DispatcherCollection`1">
             <summary>
             コレクション変更通知を指定されたDisptcher経由で行うコレクションです。
             </summary>
             <typeparam name="T">コレクションアイテムの型</typeparam>
+        </member>
+        <member name="M:Livet.DispatcherCollection`1.#ctor(System.Windows.Threading.Dispatcher)">
+            <summary>
+            コンストラクタ
+            </summary>
+            <param name="dispatcher">UIDispatcher(通常はDispatcherHelper.UIDispatcher)</param>
+        </member>
+        <member name="M:Livet.DispatcherCollection`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Windows.Threading.Dispatcher)">
+            <summary>
+            コンストラクタ
+            </summary>
+            <param name="collection">元となるコレクション</param>
+            <param name="dispatcher">UIDispatcher(通常はDispatcherHelper.UIDispatcher)</param>
+        </member>
+        <member name="M:Livet.DispatcherCollection`1.#ctor(System.Collections.Generic.List{`0},System.Windows.Threading.Dispatcher)">
+            <summary>
+            コンストラクタ
+            </summary>
+            <param name="collection">元となるコレクション</param>
+            <param name="dispatcher">UIDispatcher(通常はDispatcherHelper.UIDispatcher)</param>
         </member>
         <member name="P:Livet.DispatcherCollection`1.Dispatcher">
             <summary>
@@ -773,6 +869,11 @@
         <member name="P:Livet.DispatcherCollection`1.CollectionChangedDispatcherPriority">
             <summary>
             コレクション変更通知時のDispatcherPriorityを指定、または取得します。
+            </summary>
+        </member>
+        <member name="T:Livet.Behaviors.SetFocusAction">
+            <summary>
+            アタッチしているコントロールにフォーカスを試みます。
             </summary>
         </member>
         <member name="T:Livet.Behaviors.ControlBinding.TextBoxBindingSupportBehavior">
@@ -825,7 +926,7 @@
         </member>
         <member name="T:Livet.Notificator`1">
             <summary>
-            汎用変更通知オブジェクトです。通常ModelからViewModel(あるいは他のModelオブジェクト)への通知としてイベントの代わりに使用します。
+            汎用変更通知オブジェクトです。通常ModelからViewModelへの通知としてイベントの代わりに使用します。
             </summary>
             <typeparam name="T">イベント引数型</typeparam>
         </member>

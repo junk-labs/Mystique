@@ -34,14 +34,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         }
 
         #region ShowBrowserCommand
-        DelegateCommand<string> _ShowBrowserCommand;
+        ListenerCommand<string> _ShowBrowserCommand;
 
-        public DelegateCommand<string> ShowBrowserCommand
+        public ListenerCommand<string> ShowBrowserCommand
         {
             get
             {
                 if (_ShowBrowserCommand == null)
-                    _ShowBrowserCommand = new DelegateCommand<string>(ShowBrowser);
+                    _ShowBrowserCommand = new ListenerCommand<string>(ShowBrowser);
                 return _ShowBrowserCommand;
             }
         }
@@ -86,14 +86,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
         }
 
         #region AppUpdateCommand
-        DelegateCommand _AppUpdateCommand;
+        ViewModelCommand _AppUpdateCommand;
 
-        public DelegateCommand AppUpdateCommand
+        public ViewModelCommand AppUpdateCommand
         {
             get
             {
                 if (_AppUpdateCommand == null)
-                    _AppUpdateCommand = new DelegateCommand(AppUpdate);
+                    _AppUpdateCommand = new ViewModelCommand(AppUpdate);
                 return _AppUpdateCommand;
             }
         }
@@ -118,14 +118,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
 
 
         #region ShowLicenseCommand
-        DelegateCommand _ShowLicenseCommand;
+        ViewModelCommand _ShowLicenseCommand;
 
-        public DelegateCommand ShowLicenseCommand
+        public ViewModelCommand ShowLicenseCommand
         {
             get
             {
                 if (_ShowLicenseCommand == null)
-                    _ShowLicenseCommand = new DelegateCommand(ShowLicense);
+                    _ShowLicenseCommand = new ViewModelCommand(ShowLicense);
                 return _ShowLicenseCommand;
             }
         }
@@ -138,14 +138,14 @@ namespace Inscribe.ViewModels.Dialogs.Common
 
 
         #region HideLicenseCommand
-        DelegateCommand _HideLicenseCommand;
+        ViewModelCommand _HideLicenseCommand;
 
-        public DelegateCommand HideLicenseCommand
+        public ViewModelCommand HideLicenseCommand
         {
             get
             {
                 if (_HideLicenseCommand == null)
-                    _HideLicenseCommand = new DelegateCommand(HideLicense);
+                    _HideLicenseCommand = new ViewModelCommand(HideLicense);
                 return _HideLicenseCommand;
             }
         }

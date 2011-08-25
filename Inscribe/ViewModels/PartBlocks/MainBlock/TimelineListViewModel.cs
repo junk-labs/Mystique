@@ -52,14 +52,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
 
         #region GetFocusCommand
-        DelegateCommand _GetFocusCommand;
+        ViewModelCommand _GetFocusCommand;
 
-        public DelegateCommand GetFocusCommand
+        public ViewModelCommand GetFocusCommand
         {
             get
             {
                 if (_GetFocusCommand == null)
-                    _GetFocusCommand = new DelegateCommand(GetFocus);
+                    _GetFocusCommand = new ViewModelCommand(GetFocus);
                 return _GetFocusCommand;
             }
         }

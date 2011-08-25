@@ -110,14 +110,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
 
 
         #region BeginAuthorizeCommand
-        DelegateCommand _BeginAuthorizeCommand;
+        ViewModelCommand _BeginAuthorizeCommand;
 
-        public DelegateCommand BeginAuthorizeCommand
+        public ViewModelCommand BeginAuthorizeCommand
         {
             get
             {
                 if (_BeginAuthorizeCommand == null)
-                    _BeginAuthorizeCommand = new DelegateCommand(BeginAuthorize);
+                    _BeginAuthorizeCommand = new ViewModelCommand(BeginAuthorize);
                 return _BeginAuthorizeCommand;
             }
         }
@@ -170,14 +170,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
         }
 
         #region ValidatePinCommand
-        DelegateCommand _ValidatePinCommand;
+        ViewModelCommand _ValidatePinCommand;
 
-        public DelegateCommand ValidatePinCommand
+        public ViewModelCommand ValidatePinCommand
         {
             get
             {
                 if (_ValidatePinCommand == null)
-                    _ValidatePinCommand = new DelegateCommand(ValidatePin, CanValidatePin);
+                    _ValidatePinCommand = new ViewModelCommand(ValidatePin, CanValidatePin);
                 return _ValidatePinCommand;
             }
         }
@@ -248,14 +248,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
         #endregion
 
         #region CancelCommand
-        DelegateCommand _CancelCommand;
+        ViewModelCommand _CancelCommand;
 
-        public DelegateCommand CancelCommand
+        public ViewModelCommand CancelCommand
         {
             get
             {
                 if (_CancelCommand == null)
-                    _CancelCommand = new DelegateCommand(Cancel);
+                    _CancelCommand = new ViewModelCommand(Cancel);
                 return _CancelCommand;
             }
         }
@@ -270,14 +270,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
 
         #region ShowBrowserCommand
 
-        DelegateCommand<string> _ShowBrowserCommand;
+        ListenerCommand<string> _ShowBrowserCommand;
 
-        public DelegateCommand<string> ShowBrowserCommand
+        public ListenerCommand<string> ShowBrowserCommand
         {
             get
             {
                 if (_ShowBrowserCommand == null)
-                    _ShowBrowserCommand = new DelegateCommand<string>(ShowBrowser);
+                    _ShowBrowserCommand = new ListenerCommand<string>(ShowBrowser);
                 return _ShowBrowserCommand;
             }
         }

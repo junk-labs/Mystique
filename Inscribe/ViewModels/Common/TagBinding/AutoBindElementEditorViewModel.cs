@@ -79,14 +79,14 @@ namespace Inscribe.ViewModels.Common.TagBinding
         }
 
         #region OkCommand
-        DelegateCommand _OkCommand;
+        ViewModelCommand _OkCommand;
 
-        public DelegateCommand OkCommand
+        public ViewModelCommand OkCommand
         {
             get
             {
                 if (_OkCommand == null)
-                    _OkCommand = new DelegateCommand(Ok);
+                    _OkCommand = new ViewModelCommand(Ok);
                 return _OkCommand;
             }
         }

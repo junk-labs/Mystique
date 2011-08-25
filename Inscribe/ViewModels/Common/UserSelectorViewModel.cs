@@ -55,14 +55,14 @@ namespace Inscribe.ViewModels.Common
         }
       
         #region CheckAllCommand
-        DelegateCommand _CheckAllCommand;
+        ViewModelCommand _CheckAllCommand;
 
-        public DelegateCommand CheckAllCommand
+        public ViewModelCommand CheckAllCommand
         {
             get
             {
                 if (_CheckAllCommand == null)
-                    _CheckAllCommand = new DelegateCommand(CheckAll);
+                    _CheckAllCommand = new ViewModelCommand(CheckAll);
                 return _CheckAllCommand;
             }
         }
@@ -75,14 +75,14 @@ namespace Inscribe.ViewModels.Common
         #endregion
 
         #region UncheckAllCommand
-        DelegateCommand _UncheckAllCommand;
+        ViewModelCommand _UncheckAllCommand;
 
-        public DelegateCommand UncheckAllCommand
+        public ViewModelCommand UncheckAllCommand
         {
             get
             {
                 if (_UncheckAllCommand == null)
-                    _UncheckAllCommand = new DelegateCommand(UncheckAll);
+                    _UncheckAllCommand = new ViewModelCommand(UncheckAll);
                 return _UncheckAllCommand;
             }
         }
@@ -156,14 +156,14 @@ namespace Inscribe.ViewModels.Common
         }
 
         #region SelectThisCommand
-        DelegateCommand _SelectThisCommand;
+        ViewModelCommand _SelectThisCommand;
 
-        public DelegateCommand SelectThisCommand
+        public ViewModelCommand SelectThisCommand
         {
             get
             {
                 if (_SelectThisCommand == null)
-                    _SelectThisCommand = new DelegateCommand(SelectThis);
+                    _SelectThisCommand = new ViewModelCommand(SelectThis);
                 return _SelectThisCommand;
             }
         }

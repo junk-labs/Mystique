@@ -408,14 +408,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
 
         #region ClearNewTweetsCountCommand
-        DelegateCommand _ClearNewTweetsCountCommand;
+        ViewModelCommand _ClearNewTweetsCountCommand;
 
-        public DelegateCommand ClearNewTweetsCountCommand
+        public ViewModelCommand ClearNewTweetsCountCommand
         {
             get
             {
                 if (_ClearNewTweetsCountCommand == null)
-                    _ClearNewTweetsCountCommand = new DelegateCommand(ClearNewTweetsCount);
+                    _ClearNewTweetsCountCommand = new ViewModelCommand(ClearNewTweetsCount);
                 return _ClearNewTweetsCountCommand;
             }
         }
@@ -427,14 +427,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region CreateTopTimelineCommand
-        DelegateCommand _CreateTopTimelineCommand;
+        ViewModelCommand _CreateTopTimelineCommand;
 
-        public DelegateCommand CreateTopTimelineCommand
+        public ViewModelCommand CreateTopTimelineCommand
         {
             get
             {
                 if (_CreateTopTimelineCommand == null)
-                    _CreateTopTimelineCommand = new DelegateCommand(CreateTopView);
+                    _CreateTopTimelineCommand = new ViewModelCommand(CreateTopView);
                 return _CreateTopTimelineCommand;
             }
         }
@@ -447,14 +447,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region CreateTabFromTopTimelineCommand
-        DelegateCommand _CreateTabFromTopTimelineCommand;
+        ViewModelCommand _CreateTabFromTopTimelineCommand;
 
-        public DelegateCommand CreateTabFromTopTimelineCommand
+        public ViewModelCommand CreateTabFromTopTimelineCommand
         {
             get
             {
                 if (_CreateTabFromTopTimelineCommand == null)
-                    _CreateTabFromTopTimelineCommand = new DelegateCommand(CreateTabFromTopTimeline, CanCreateTabFromTopTimeline);
+                    _CreateTabFromTopTimelineCommand = new ViewModelCommand(CreateTabFromTopTimeline, CanCreateTabFromTopTimeline);
                 return _CreateTabFromTopTimelineCommand;
             }
         }
@@ -477,14 +477,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region RemoveTopTimelineCommand
-        DelegateCommand _RemoveTopTimelineCommand;
+        ViewModelCommand _RemoveTopTimelineCommand;
 
-        public DelegateCommand RemoveTopTimelineCommand
+        public ViewModelCommand RemoveTopTimelineCommand
         {
             get
             {
                 if (_RemoveTopTimelineCommand == null)
-                    _RemoveTopTimelineCommand = new DelegateCommand(RemoveTopTimeline);
+                    _RemoveTopTimelineCommand = new ViewModelCommand(RemoveTopTimeline);
                 return _RemoveTopTimelineCommand;
             }
         }
@@ -496,14 +496,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region EditTabCommand
-        DelegateCommand _EditTabCommand;
+        ViewModelCommand _EditTabCommand;
 
-        public DelegateCommand EditTabCommand
+        public ViewModelCommand EditTabCommand
         {
             get
             {
                 if (_EditTabCommand == null)
-                    _EditTabCommand = new DelegateCommand(EditTab);
+                    _EditTabCommand = new ViewModelCommand(EditTab);
                 return _EditTabCommand;
             }
         }
@@ -515,14 +515,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region CloseCommand
-        DelegateCommand _CloseCommand;
+        ViewModelCommand _CloseCommand;
 
-        public DelegateCommand CloseCommand
+        public ViewModelCommand CloseCommand
         {
             get
             {
                 if (_CloseCommand == null)
-                    _CloseCommand = new DelegateCommand(Close);
+                    _CloseCommand = new ViewModelCommand(Close);
                 return _CloseCommand;
             }
         }
@@ -534,14 +534,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
         
         #region TabMouseDownCommand
-        DelegateCommand<MouseEventArgs> _TabMouseDownCommand;
+        ListenerCommand<MouseEventArgs> _TabMouseDownCommand;
 
-        public DelegateCommand<MouseEventArgs> TabMouseDownCommand
+        public ListenerCommand<MouseEventArgs> TabMouseDownCommand
         {
             get
             {
                 if (_TabMouseDownCommand == null)
-                    _TabMouseDownCommand = new DelegateCommand<MouseEventArgs>(TabMouseDown);
+                    _TabMouseDownCommand = new ListenerCommand<MouseEventArgs>(TabMouseDown);
                 return _TabMouseDownCommand;
             }
         }

@@ -402,14 +402,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #region Navigation Commands
 
         #region ShowUserDetailCommand
-        DelegateCommand _ShowUserDetailCommand;
+        ViewModelCommand _ShowUserDetailCommand;
 
-        public DelegateCommand ShowUserDetailCommand
+        public ViewModelCommand ShowUserDetailCommand
         {
             get
             {
                 if (_ShowUserDetailCommand == null)
-                    _ShowUserDetailCommand = new DelegateCommand(ShowUserDetail);
+                    _ShowUserDetailCommand = new ViewModelCommand(ShowUserDetail);
                 return _ShowUserDetailCommand;
             }
         }
@@ -421,14 +421,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region RetweetedUserDetailCommand
-        DelegateCommand _RetweetedUserDetailCommand;
+        ViewModelCommand _RetweetedUserDetailCommand;
 
-        public DelegateCommand RetweetedUserDetailCommand
+        public ViewModelCommand RetweetedUserDetailCommand
         {
             get
             {
                 if (_RetweetedUserDetailCommand == null)
-                    _RetweetedUserDetailCommand = new DelegateCommand(RetweetedUserDetail);
+                    _RetweetedUserDetailCommand = new ViewModelCommand(RetweetedUserDetail);
                 return _RetweetedUserDetailCommand;
             }
         }
@@ -440,14 +440,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region DirectMessageReceipientDetailCommand
-        DelegateCommand _DirectMessageReceipientDetailCommand;
+        ViewModelCommand _DirectMessageReceipientDetailCommand;
 
-        public DelegateCommand DirectMessageReceipientDetailCommand
+        public ViewModelCommand DirectMessageReceipientDetailCommand
         {
             get
             {
                 if (_DirectMessageReceipientDetailCommand == null)
-                    _DirectMessageReceipientDetailCommand = new DelegateCommand(DirectMessageReceipientDetail);
+                    _DirectMessageReceipientDetailCommand = new ViewModelCommand(DirectMessageReceipientDetail);
                 return _DirectMessageReceipientDetailCommand;
             }
         }
@@ -459,14 +459,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region OpenConversationCommand
-        DelegateCommand _OpenConversationCommand;
+        ViewModelCommand _OpenConversationCommand;
 
-        public DelegateCommand OpenConversationCommand
+        public ViewModelCommand OpenConversationCommand
         {
             get
             {
                 if (_OpenConversationCommand == null)
-                    _OpenConversationCommand = new DelegateCommand(OpenConversation);
+                    _OpenConversationCommand = new ViewModelCommand(OpenConversation);
                 return _OpenConversationCommand;
             }
         }
@@ -512,14 +512,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region OpenDMConversationCommand
-        DelegateCommand _OpenDMConversationCommand;
+        ViewModelCommand _OpenDMConversationCommand;
 
-        public DelegateCommand OpenDMConversationCommand
+        public ViewModelCommand OpenDMConversationCommand
         {
             get
             {
                 if (_OpenDMConversationCommand == null)
-                    _OpenDMConversationCommand = new DelegateCommand(OpenDMConversation);
+                    _OpenDMConversationCommand = new ViewModelCommand(OpenDMConversation);
                 return _OpenDMConversationCommand;
             }
         }
@@ -557,14 +557,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #region Timeline Action Commands
 
         #region MentionCommand
-        DelegateCommand _MentionCommand;
+        ViewModelCommand _MentionCommand;
 
-        public DelegateCommand MentionCommand
+        public ViewModelCommand MentionCommand
         {
             get
             {
                 if (_MentionCommand == null)
-                    _MentionCommand = new DelegateCommand(Mention);
+                    _MentionCommand = new ViewModelCommand(Mention);
                 return _MentionCommand;
             }
         }
@@ -577,14 +577,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region FavoriteCommand
-        DelegateCommand _FavoriteCommand;
+        ViewModelCommand _FavoriteCommand;
 
-        public DelegateCommand FavoriteCommand
+        public ViewModelCommand FavoriteCommand
         {
             get
             {
                 if (_FavoriteCommand == null)
-                    _FavoriteCommand = new DelegateCommand(FavoriteInternal);
+                    _FavoriteCommand = new ViewModelCommand(FavoriteInternal);
                 return _FavoriteCommand;
             }
         }
@@ -631,14 +631,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
 
         #region FavoriteMultiUserCommand
-        DelegateCommand _FavoriteMultiUserCommand;
+        ViewModelCommand _FavoriteMultiUserCommand;
 
-        public DelegateCommand FavoriteMultiUserCommand
+        public ViewModelCommand FavoriteMultiUserCommand
         {
             get
             {
                 if (_FavoriteMultiUserCommand == null)
-                    _FavoriteMultiUserCommand = new DelegateCommand(FavoriteMultiUser);
+                    _FavoriteMultiUserCommand = new ViewModelCommand(FavoriteMultiUser);
                 return _FavoriteMultiUserCommand;
             }
         }
@@ -657,14 +657,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region RetweetCommand
-        DelegateCommand _RetweetCommand;
+        ViewModelCommand _RetweetCommand;
 
-        public DelegateCommand RetweetCommand
+        public ViewModelCommand RetweetCommand
         {
             get
             {
                 if (_RetweetCommand == null)
-                    _RetweetCommand = new DelegateCommand(RetweetInternal);
+                    _RetweetCommand = new ViewModelCommand(RetweetInternal);
                 return _RetweetCommand;
             }
         }
@@ -710,14 +710,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
 
         #region RetweetMultiUserCommand
-        DelegateCommand _RetweetMultiUserCommand;
+        ViewModelCommand _RetweetMultiUserCommand;
 
-        public DelegateCommand RetweetMultiUserCommand
+        public ViewModelCommand RetweetMultiUserCommand
         {
             get
             {
                 if (_RetweetMultiUserCommand == null)
-                    _RetweetMultiUserCommand = new DelegateCommand(RetweetMultiUser);
+                    _RetweetMultiUserCommand = new ViewModelCommand(RetweetMultiUser);
                 return _RetweetMultiUserCommand;
             }
         }
@@ -736,14 +736,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region UnofficialRetweetCommand
-        DelegateCommand _UnofficialRetweetCommand;
+        ViewModelCommand _UnofficialRetweetCommand;
 
-        public DelegateCommand UnofficialRetweetCommand
+        public ViewModelCommand UnofficialRetweetCommand
         {
             get
             {
                 if (_UnofficialRetweetCommand == null)
-                    _UnofficialRetweetCommand = new DelegateCommand(UnofficialRetweet);
+                    _UnofficialRetweetCommand = new ViewModelCommand(UnofficialRetweet);
                 return _UnofficialRetweetCommand;
             }
         }
@@ -761,14 +761,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
       
         #region QuoteCommand
-        DelegateCommand _QuoteCommand;
+        ViewModelCommand _QuoteCommand;
 
-        public DelegateCommand QuoteCommand
+        public ViewModelCommand QuoteCommand
         {
             get
             {
                 if (_QuoteCommand == null)
-                    _QuoteCommand = new DelegateCommand(Quote);
+                    _QuoteCommand = new ViewModelCommand(Quote);
                 return _QuoteCommand;
             }
         }
@@ -789,14 +789,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region DeleteCommand
-        DelegateCommand _DeleteCommand;
+        ViewModelCommand _DeleteCommand;
 
-        public DelegateCommand DeleteCommand
+        public ViewModelCommand DeleteCommand
         {
             get
             {
                 if (_DeleteCommand == null)
-                    _DeleteCommand = new DelegateCommand(Delete);
+                    _DeleteCommand = new ViewModelCommand(Delete);
                 return _DeleteCommand;
             }
         }
@@ -815,14 +815,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region ReportForSpamCommand
-        DelegateCommand _ReportForSpamCommand;
+        ViewModelCommand _ReportForSpamCommand;
 
-        public DelegateCommand ReportForSpamCommand
+        public ViewModelCommand ReportForSpamCommand
         {
             get
             {
                 if (_ReportForSpamCommand == null)
-                    _ReportForSpamCommand = new DelegateCommand(ReportForSpam);
+                    _ReportForSpamCommand = new ViewModelCommand(ReportForSpam);
                 return _ReportForSpamCommand;
             }
         }
@@ -846,14 +846,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
       
         #region DeselectCommand
-        DelegateCommand _DeselectCommand;
+        ViewModelCommand _DeselectCommand;
 
-        public DelegateCommand DeselectCommand
+        public ViewModelCommand DeselectCommand
         {
             get
             {
                 if (_DeselectCommand == null)
-                    _DeselectCommand = new DelegateCommand(Deselect);
+                    _DeselectCommand = new ViewModelCommand(Deselect);
                 return _DeselectCommand;
             }
         }
@@ -865,14 +865,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region ClickUserIconCommand
-        DelegateCommand _ClickUserIconCommand;
+        ViewModelCommand _ClickUserIconCommand;
 
-        public DelegateCommand ClickUserIconCommand
+        public ViewModelCommand ClickUserIconCommand
         {
             get
             {
                 if (_ClickUserIconCommand == null)
-                    _ClickUserIconCommand = new DelegateCommand(ClickUserIcon);
+                    _ClickUserIconCommand = new ViewModelCommand(ClickUserIcon);
                 return _ClickUserIconCommand;
             }
         }
@@ -911,14 +911,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region DirectMessageCommand
-        DelegateCommand _DirectMessageCommand;
+        ViewModelCommand _DirectMessageCommand;
 
-        public DelegateCommand DirectMessageCommand
+        public ViewModelCommand DirectMessageCommand
         {
             get
             {
                 if (_DirectMessageCommand == null)
-                    _DirectMessageCommand = new DelegateCommand(DirectMessage);
+                    _DirectMessageCommand = new ViewModelCommand(DirectMessage);
                 return _DirectMessageCommand;
             }
         }
@@ -933,14 +933,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region MuteCommand
-        DelegateCommand _MuteCommand;
+        ViewModelCommand _MuteCommand;
 
-        public DelegateCommand MuteCommand
+        public ViewModelCommand MuteCommand
         {
             get
             {
                 if (_MuteCommand == null)
-                    _MuteCommand = new DelegateCommand(Mute);
+                    _MuteCommand = new ViewModelCommand(Mute);
                 return _MuteCommand;
             }
         }
@@ -953,14 +953,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region OpenUserCommand
-        DelegateCommand<UserViewModel> _OpenUserCommand;
+        ListenerCommand<UserViewModel> _OpenUserCommand;
 
-        public DelegateCommand<UserViewModel> OpenUserCommand
+        public ListenerCommand<UserViewModel> OpenUserCommand
         {
             get
             {
                 if (_OpenUserCommand == null)
-                    _OpenUserCommand = new DelegateCommand<UserViewModel>(OpenUser);
+                    _OpenUserCommand = new ListenerCommand<UserViewModel>(OpenUser);
                 return _OpenUserCommand;
             }
         }

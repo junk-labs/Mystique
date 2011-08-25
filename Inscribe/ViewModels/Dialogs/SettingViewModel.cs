@@ -78,14 +78,14 @@ namespace Inscribe.ViewModels.Dialogs
 
 
         #region ApplyCommand
-        DelegateCommand _ApplyCommand;
+        ViewModelCommand _ApplyCommand;
 
-        public DelegateCommand ApplyCommand
+        public ViewModelCommand ApplyCommand
         {
             get
             {
                 if (_ApplyCommand == null)
-                    _ApplyCommand = new DelegateCommand(Apply);
+                    _ApplyCommand = new ViewModelCommand(Apply);
                 return _ApplyCommand;
             }
         }
@@ -111,14 +111,14 @@ namespace Inscribe.ViewModels.Dialogs
         #endregion
 
         #region CloseCommand
-        DelegateCommand _CloseCommand;
+        ViewModelCommand _CloseCommand;
 
-        public DelegateCommand CloseCommand
+        public ViewModelCommand CloseCommand
         {
             get
             {
                 if (_CloseCommand == null)
-                    _CloseCommand = new DelegateCommand(Close);
+                    _CloseCommand = new ViewModelCommand(Close);
                 return _CloseCommand;
             }
         }

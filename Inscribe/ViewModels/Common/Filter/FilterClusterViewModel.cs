@@ -101,14 +101,14 @@ namespace Inscribe.ViewModels.Common.Filter
         #region Commands
 
         #region DeleteCommand
-        DelegateCommand _DeleteCommand;
+        ViewModelCommand _DeleteCommand;
         
-        public DelegateCommand DeleteCommand
+        public ViewModelCommand DeleteCommand
         {
             get
             {
                 if (_DeleteCommand == null)
-                    _DeleteCommand = new DelegateCommand(Delete);
+                    _DeleteCommand = new ViewModelCommand(Delete);
                 return _DeleteCommand;
             }
         }

@@ -42,14 +42,14 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
         }
 
         #region ClearAllExceptionsCommand
-        DelegateCommand _ClearAllExceptionsCommand;
+        ViewModelCommand _ClearAllExceptionsCommand;
 
-        public DelegateCommand ClearAllExceptionsCommand
+        public ViewModelCommand ClearAllExceptionsCommand
         {
             get
             {
                 if (_ClearAllExceptionsCommand == null)
-                    _ClearAllExceptionsCommand = new DelegateCommand(ClearAllExceptions);
+                    _ClearAllExceptionsCommand = new ViewModelCommand(ClearAllExceptions);
                 return _ClearAllExceptionsCommand;
             }
         }
@@ -292,14 +292,14 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 
         #region RetryCommand
 
-        DelegateCommand _RetryCommand;
+        ViewModelCommand _RetryCommand;
 
-        public DelegateCommand RetryCommand
+        public ViewModelCommand RetryCommand
         {
             get
             {
                 if (_RetryCommand == null)
-                    _RetryCommand = new DelegateCommand(Retry, () => desc.RetryAction != null);
+                    _RetryCommand = new ViewModelCommand(Retry, () => desc.RetryAction != null);
                 return _RetryCommand;
             }
         }
@@ -313,14 +313,14 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
         #endregion
 
         #region CopyCommand
-        DelegateCommand _CopyCommand;
+        ViewModelCommand _CopyCommand;
 
-        public DelegateCommand CopyCommand
+        public ViewModelCommand CopyCommand
         {
             get
             {
                 if (_CopyCommand == null)
-                    _CopyCommand = new DelegateCommand(Copy);
+                    _CopyCommand = new ViewModelCommand(Copy);
                 return _CopyCommand;
             }
         }
@@ -335,14 +335,14 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 
         #region RemoveCommand
 
-        DelegateCommand _RemoveCommand;
+        ViewModelCommand _RemoveCommand;
 
-        public DelegateCommand RemoveCommand
+        public ViewModelCommand RemoveCommand
         {
             get
             {
                 if (_RemoveCommand == null)
-                    _RemoveCommand = new DelegateCommand(Remove);
+                    _RemoveCommand = new ViewModelCommand(Remove);
                 return _RemoveCommand;
             }
         }

@@ -69,14 +69,14 @@ namespace Inscribe.ViewModels.Common.Filter
         #region Commands
 
         #region EditWithQueryCommand
-        DelegateCommand _EditWithQueryCommand;
+        ViewModelCommand _EditWithQueryCommand;
 
-        public DelegateCommand EditWithQueryCommand
+        public ViewModelCommand EditWithQueryCommand
         {
             get
             {
                 if (_EditWithQueryCommand == null)
-                    _EditWithQueryCommand = new DelegateCommand(EditWithQuery);
+                    _EditWithQueryCommand = new ViewModelCommand(EditWithQuery);
                 return _EditWithQueryCommand;
             }
         }
@@ -97,14 +97,14 @@ namespace Inscribe.ViewModels.Common.Filter
         #endregion
 
         #region OnDropCommand
-        DelegateCommand<DragEventArgs> _OnDropCommand;
+        ListenerCommand<DragEventArgs> _OnDropCommand;
 
-        public DelegateCommand<DragEventArgs> OnDropCommand
+        public ListenerCommand<DragEventArgs> OnDropCommand
         {
             get
             {
                 if (_OnDropCommand == null)
-                    _OnDropCommand = new DelegateCommand<DragEventArgs>(OnDrop);
+                    _OnDropCommand = new ListenerCommand<DragEventArgs>(OnDrop);
                 return _OnDropCommand;
             }
         }

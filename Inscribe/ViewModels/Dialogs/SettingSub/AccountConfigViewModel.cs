@@ -38,14 +38,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         }
 
         #region ShowAccountConfigCommand
-        DelegateCommand<AccountInfoViewModel> _ShowAccountConfigCommand;
+        ListenerCommand<AccountInfoViewModel> _ShowAccountConfigCommand;
 
-        public DelegateCommand<AccountInfoViewModel> ShowAccountConfigCommand
+        public ListenerCommand<AccountInfoViewModel> ShowAccountConfigCommand
         {
             get
             {
                 if (_ShowAccountConfigCommand == null)
-                    _ShowAccountConfigCommand = new DelegateCommand<AccountInfoViewModel>(i => ShowAccountConfig(i.info));
+                    _ShowAccountConfigCommand = new ListenerCommand<AccountInfoViewModel>(i => ShowAccountConfig(i.info));
                 return _ShowAccountConfigCommand;
             }
         }
@@ -65,14 +65,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         #endregion
 
         #region AddAccountCommand
-        DelegateCommand _AddAccountCommand;
+        ViewModelCommand _AddAccountCommand;
 
-        public DelegateCommand AddAccountCommand
+        public ViewModelCommand AddAccountCommand
         {
             get
             {
                 if (_AddAccountCommand == null)
-                    _AddAccountCommand = new DelegateCommand(AddAccount);
+                    _AddAccountCommand = new ViewModelCommand(AddAccount);
                 return _AddAccountCommand;
             }
         }
@@ -123,14 +123,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         }
 
         #region MoveUpCommand
-        DelegateCommand _MoveUpCommand;
+        ViewModelCommand _MoveUpCommand;
 
-        public DelegateCommand MoveUpCommand
+        public ViewModelCommand MoveUpCommand
         {
             get
             {
                 if (_MoveUpCommand == null)
-                    _MoveUpCommand = new DelegateCommand(MoveUp);
+                    _MoveUpCommand = new ViewModelCommand(MoveUp);
                 return _MoveUpCommand;
             }
         }
@@ -142,14 +142,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         #endregion
 
         #region MoveDownCommand
-        DelegateCommand _MoveDownCommand;
+        ViewModelCommand _MoveDownCommand;
 
-        public DelegateCommand MoveDownCommand
+        public ViewModelCommand MoveDownCommand
         {
             get
             {
                 if (_MoveDownCommand == null)
-                    _MoveDownCommand = new DelegateCommand(MoveDown);
+                    _MoveDownCommand = new ViewModelCommand(MoveDown);
                 return _MoveDownCommand;
             }
         }
@@ -161,14 +161,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         #endregion
 
         #region DeleteCommand
-        DelegateCommand _DeleteCommand;
+        ViewModelCommand _DeleteCommand;
 
-        public DelegateCommand DeleteCommand
+        public ViewModelCommand DeleteCommand
         {
             get
             {
                 if (_DeleteCommand == null)
-                    _DeleteCommand = new DelegateCommand(Delete);
+                    _DeleteCommand = new ViewModelCommand(Delete);
                 return _DeleteCommand;
             }
         }
@@ -181,14 +181,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
 
         #region DeleteConfirmCommand
-        DelegateCommand<ConfirmationMessage> _DeleteConfirmCommand;
+        ListenerCommand<ConfirmationMessage> _DeleteConfirmCommand;
 
-        public DelegateCommand<ConfirmationMessage> DeleteConfirmCommand
+        public ListenerCommand<ConfirmationMessage> DeleteConfirmCommand
         {
             get
             {
                 if (_DeleteConfirmCommand == null)
-                    _DeleteConfirmCommand = new DelegateCommand<ConfirmationMessage>(DeleteConfirm);
+                    _DeleteConfirmCommand = new ListenerCommand<ConfirmationMessage>(DeleteConfirm);
                 return _DeleteConfirmCommand;
             }
         }

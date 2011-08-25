@@ -146,14 +146,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
 
         #region OpenLinkCommand
-        DelegateCommand<string> _OpenLinkCommand;
+        ListenerCommand<string> _OpenLinkCommand;
 
-        public DelegateCommand<string> OpenLinkCommand
+        public ListenerCommand<string> OpenLinkCommand
         {
             get
             {
                 if (_OpenLinkCommand == null)
-                    _OpenLinkCommand = new DelegateCommand<string>(OpenLink);
+                    _OpenLinkCommand = new ListenerCommand<string>(OpenLink);
                 return _OpenLinkCommand;
             }
         }
@@ -168,14 +168,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region OpenUserWebCommand
-        DelegateCommand _OpenUserWebCommand;
+        ViewModelCommand _OpenUserWebCommand;
 
-        public DelegateCommand OpenUserWebCommand
+        public ViewModelCommand OpenUserWebCommand
         {
             get
             {
                 if (_OpenUserWebCommand == null)
-                    _OpenUserWebCommand = new DelegateCommand(OpenUserWeb);
+                    _OpenUserWebCommand = new ViewModelCommand(OpenUserWeb);
                 return _OpenUserWebCommand;
             }
         }
@@ -258,14 +258,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
 
         #region CreateUserTabCommand
-        DelegateCommand _CreateUserTabCommand;
+        ViewModelCommand _CreateUserTabCommand;
 
-        public DelegateCommand CreateUserTabCommand
+        public ViewModelCommand CreateUserTabCommand
         {
             get
             {
                 if (_CreateUserTabCommand == null)
-                    _CreateUserTabCommand = new DelegateCommand(CreateUserTab);
+                    _CreateUserTabCommand = new ViewModelCommand(CreateUserTab);
                 return _CreateUserTabCommand;
             }
         }
@@ -302,14 +302,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region ReceiveTimelineCommand
-        DelegateCommand _ReceiveTimelineCommand;
+        ViewModelCommand _ReceiveTimelineCommand;
 
-        public DelegateCommand ReceiveTimelineCommand
+        public ViewModelCommand ReceiveTimelineCommand
         {
             get
             {
                 if (_ReceiveTimelineCommand == null)
-                    _ReceiveTimelineCommand = new DelegateCommand(ReceiveTimeline);
+                    _ReceiveTimelineCommand = new ViewModelCommand(ReceiveTimeline);
                 return _ReceiveTimelineCommand;
             }
         }
@@ -349,14 +349,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public event Action CloseRequired = () => { };
 
         #region ManageFollowCommand
-        DelegateCommand _ManageFollowCommand;
+        ViewModelCommand _ManageFollowCommand;
 
-        public DelegateCommand ManageFollowCommand
+        public ViewModelCommand ManageFollowCommand
         {
             get
             {
                 if (_ManageFollowCommand == null)
-                    _ManageFollowCommand = new DelegateCommand(ManageFollow);
+                    _ManageFollowCommand = new ViewModelCommand(ManageFollow);
                 return _ManageFollowCommand;
             }
         }
@@ -368,14 +368,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region EditUserCommand
-        DelegateCommand _EditUserCommand;
+        ViewModelCommand _EditUserCommand;
 
-        public DelegateCommand EditUserCommand
+        public ViewModelCommand EditUserCommand
         {
             get
             {
                 if (_EditUserCommand == null)
-                    _EditUserCommand = new DelegateCommand(EditUser);
+                    _EditUserCommand = new ViewModelCommand(EditUser);
                 return _EditUserCommand;
             }
         }
@@ -389,14 +389,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         #endregion
 
         #region EditFinishCommand
-        DelegateCommand<String> _EditFinishCommand;
+        ListenerCommand<String> _EditFinishCommand;
 
-        public DelegateCommand<String> EditFinishCommand
+        public ListenerCommand<String> EditFinishCommand
         {
             get
             {
                 if (_EditFinishCommand == null)
-                    _EditFinishCommand = new DelegateCommand<String>(EditFinish);
+                    _EditFinishCommand = new ListenerCommand<String>(EditFinish);
                 return _EditFinishCommand;
             }
         }
@@ -476,14 +476,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
 
         #region GetFocusCommand
-        DelegateCommand _GetFocusCommand;
+        ViewModelCommand _GetFocusCommand;
 
-        public DelegateCommand GetFocusCommand
+        public ViewModelCommand GetFocusCommand
         {
             get
             {
                 if (_GetFocusCommand == null)
-                    _GetFocusCommand = new DelegateCommand(GetFocus);
+                    _GetFocusCommand = new ViewModelCommand(GetFocus);
                 return _GetFocusCommand;
             }
         }

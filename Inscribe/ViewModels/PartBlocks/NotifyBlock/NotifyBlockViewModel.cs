@@ -139,14 +139,14 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 
         #region ShowAdditionalInfoCommand
 
-        DelegateCommand _ShowAdditionalInfoCommand;
+        ViewModelCommand _ShowAdditionalInfoCommand;
 
-        public DelegateCommand ShowAdditionalInfoCommand
+        public ViewModelCommand ShowAdditionalInfoCommand
         {
             get
             {
                 if (_ShowAdditionalInfoCommand == null)
-                    _ShowAdditionalInfoCommand = new DelegateCommand(ShowAdditionalInfo);
+                    _ShowAdditionalInfoCommand = new ViewModelCommand(ShowAdditionalInfo);
                 return _ShowAdditionalInfoCommand;
             }
         }
@@ -177,14 +177,14 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 
         #region ShowTwitterEventInfoCommand
 
-        DelegateCommand _ShowTwitterEventInfoCommand;
+        ViewModelCommand _ShowTwitterEventInfoCommand;
 
-        public DelegateCommand ShowTwitterEventInfoCommand
+        public ViewModelCommand ShowTwitterEventInfoCommand
         {
             get
             {
                 if (_ShowTwitterEventInfoCommand == null)
-                    _ShowTwitterEventInfoCommand = new DelegateCommand(ShowTwitterEventInfo);
+                    _ShowTwitterEventInfoCommand = new ViewModelCommand(ShowTwitterEventInfo);
                 return _ShowTwitterEventInfoCommand;
             }
         }

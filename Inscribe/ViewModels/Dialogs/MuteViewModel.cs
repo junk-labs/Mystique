@@ -73,14 +73,14 @@ namespace Inscribe.ViewModels.Dialogs
 
 
         #region OkCommand
-        DelegateCommand _OkCommand;
+        ViewModelCommand _OkCommand;
 
-        public DelegateCommand OkCommand
+        public ViewModelCommand OkCommand
         {
             get
             {
                 if (_OkCommand == null)
-                    _OkCommand = new DelegateCommand(Ok, CanOk);
+                    _OkCommand = new ViewModelCommand(Ok, CanOk);
                 return _OkCommand;
             }
         }

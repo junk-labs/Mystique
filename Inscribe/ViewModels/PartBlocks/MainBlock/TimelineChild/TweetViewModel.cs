@@ -373,14 +373,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #region Commands
 
         #region CopySTOTCommand
-        DelegateCommand _CopySTOTCommand;
+        ViewModelCommand _CopySTOTCommand;
 
-        public DelegateCommand CopySTOTCommand
+        public ViewModelCommand CopySTOTCommand
         {
             get
             {
                 if (_CopySTOTCommand == null)
-                    _CopySTOTCommand = new DelegateCommand(CopySTOT);
+                    _CopySTOTCommand = new ViewModelCommand(CopySTOT);
                 return _CopySTOTCommand;
             }
         }
@@ -394,14 +394,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         #endregion
 
         #region CopyWebUrlCommand
-        DelegateCommand _CopyWebUrlCommand;
+        ViewModelCommand _CopyWebUrlCommand;
 
-        public DelegateCommand CopyWebUrlCommand
+        public ViewModelCommand CopyWebUrlCommand
         {
             get
             {
                 if (_CopyWebUrlCommand == null)
-                    _CopyWebUrlCommand = new DelegateCommand(CopyWebUrl);
+                    _CopyWebUrlCommand = new ViewModelCommand(CopyWebUrl);
                 return _CopyWebUrlCommand;
             }
         }
@@ -414,14 +414,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
 
         #region CopyScreenNameCommand
-        DelegateCommand _CopyScreenNameCommand;
+        ViewModelCommand _CopyScreenNameCommand;
 
-        public DelegateCommand CopyScreenNameCommand
+        public ViewModelCommand CopyScreenNameCommand
         {
             get
             {
                 if (_CopyScreenNameCommand == null)
-                    _CopyScreenNameCommand = new DelegateCommand(CopyScreenName);
+                    _CopyScreenNameCommand = new ViewModelCommand(CopyScreenName);
                 return _CopyScreenNameCommand;
             }
         }
@@ -448,14 +448,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         #region ShowTweetCommand
 
-        DelegateCommand _ShowTweetCommand;
+        ViewModelCommand _ShowTweetCommand;
 
-        public DelegateCommand ShowTweetCommand
+        public ViewModelCommand ShowTweetCommand
         {
             get
             {
                 if (_ShowTweetCommand == null)
-                    _ShowTweetCommand = new DelegateCommand(ShowTweet);
+                    _ShowTweetCommand = new ViewModelCommand(ShowTweet);
                 return _ShowTweetCommand;
             }
         }

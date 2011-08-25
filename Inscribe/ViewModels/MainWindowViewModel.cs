@@ -110,14 +110,14 @@ namespace Inscribe.ViewModels
         }
 
         #region LoadedCommand
-        DelegateCommand _LoadedCommand;
+        ViewModelCommand _LoadedCommand;
 
-        public DelegateCommand LoadedCommand
+        public ViewModelCommand LoadedCommand
         {
             get
             {
                 if (_LoadedCommand == null)
-                    _LoadedCommand = new DelegateCommand(Loaded);
+                    _LoadedCommand = new ViewModelCommand(Loaded);
                 return _LoadedCommand;
             }
         }

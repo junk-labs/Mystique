@@ -49,14 +49,14 @@ namespace Inscribe.ViewModels.Common.Filter
         }
 
         #region EditCommand
-        DelegateCommand _EditCommand;
+        ViewModelCommand _EditCommand;
 
-        public DelegateCommand EditCommand
+        public ViewModelCommand EditCommand
         {
             get
             {
                 if (_EditCommand == null)
-                    _EditCommand = new DelegateCommand(Edit);
+                    _EditCommand = new ViewModelCommand(Edit);
                 return _EditCommand;
             }
         }
@@ -74,14 +74,14 @@ namespace Inscribe.ViewModels.Common.Filter
         #endregion
 
         #region DeleteCommand
-        DelegateCommand _DeleteCommand;
+        ViewModelCommand _DeleteCommand;
 
-        public DelegateCommand DeleteCommand
+        public ViewModelCommand DeleteCommand
         {
             get
             {
                 if (_DeleteCommand == null)
-                    _DeleteCommand = new DelegateCommand(Delete);
+                    _DeleteCommand = new ViewModelCommand(Delete);
                 return _DeleteCommand;
             }
         }

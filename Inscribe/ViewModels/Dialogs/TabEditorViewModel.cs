@@ -48,14 +48,15 @@ namespace Inscribe.ViewModels.Dialogs
         }
 
         #region SelectSoundPathCommand
-        DelegateCommand<OpeningFileSelectionMessage> _SelectSoundPathCommand;
 
-        public DelegateCommand<OpeningFileSelectionMessage> SelectSoundPathCommand
+        ListenerCommand<OpeningFileSelectionMessage> _SelectSoundPathCommand;
+
+        public ListenerCommand<OpeningFileSelectionMessage> SelectSoundPathCommand
         {
             get
             {
                 if (_SelectSoundPathCommand == null)
-                    _SelectSoundPathCommand = new DelegateCommand<OpeningFileSelectionMessage>(SelectSoundPath);
+                    _SelectSoundPathCommand = new ListenerCommand<OpeningFileSelectionMessage>(SelectSoundPath);
                 return _SelectSoundPathCommand;
             }
         }
@@ -106,14 +107,14 @@ namespace Inscribe.ViewModels.Dialogs
         }
 
         #region AddQueryCommand
-        DelegateCommand _AddQueryCommand;
+        ViewModelCommand _AddQueryCommand;
 
-        public DelegateCommand AddQueryCommand
+        public ViewModelCommand AddQueryCommand
         {
             get
             {
                 if (_AddQueryCommand == null)
-                    _AddQueryCommand = new DelegateCommand(AddQuery, CanAddQuery);
+                    _AddQueryCommand = new ViewModelCommand(AddQuery, CanAddQuery);
                 return _AddQueryCommand;
             }
         }
@@ -140,14 +141,14 @@ namespace Inscribe.ViewModels.Dialogs
         #endregion
 
         #region RemoveQueryCommand
-        DelegateCommand<string> _RemoveQueryCommand;
+        ListenerCommand<string> _RemoveQueryCommand;
 
-        public DelegateCommand<string> RemoveQueryCommand
+        public ListenerCommand<string> RemoveQueryCommand
         {
             get
             {
                 if (_RemoveQueryCommand == null)
-                    _RemoveQueryCommand = new DelegateCommand<string>(RemoveQuery);
+                    _RemoveQueryCommand = new ListenerCommand<string>(RemoveQuery);
                 return _RemoveQueryCommand;
             }
         }
@@ -185,14 +186,14 @@ namespace Inscribe.ViewModels.Dialogs
         }
 
         #region UpdateListCommand
-        DelegateCommand _UpdateListCommand;
+        ViewModelCommand _UpdateListCommand;
 
-        public DelegateCommand UpdateListCommand
+        public ViewModelCommand UpdateListCommand
         {
             get
             {
                 if (_UpdateListCommand == null)
-                    _UpdateListCommand = new DelegateCommand(UpdateList);
+                    _UpdateListCommand = new ViewModelCommand(UpdateList);
                 return _UpdateListCommand;
             }
         }
@@ -242,25 +243,25 @@ namespace Inscribe.ViewModels.Dialogs
         }
 
         #region AddListCommand
-        DelegateCommand<string> _AddListCommand;
+        ListenerCommand<string> _AddListCommand;
 
-        public DelegateCommand<string> AddListCommand
+        public ListenerCommand<string> AddListCommand
         {
             get
             {
                 if (_AddListCommand == null)
-                    _AddListCommand = new DelegateCommand<string>(AddList, CanAddList);
+                    _AddListCommand = new ListenerCommand<string>(AddList);
                 return _AddListCommand;
             }
         }
 
-        private bool CanAddList(string parameter)
-        {
-            return !String.IsNullOrEmpty(parameter);
-        }
-
         private void AddList(string parameter)
         {
+            if (String.IsNullOrEmpty(parameter))
+            {
+                this.Messenger.Raise(new InformationMessage("リストが選択されていません。", "追加エラー", System.Windows.MessageBoxImage.Error, "WarningMessage"));
+                return;
+            }
             this.property.FollowingLists =
                 this.property.FollowingLists.Concat(new[] { parameter }).Distinct().ToArray();
             var sp = parameter.Split('/');
@@ -271,25 +272,25 @@ namespace Inscribe.ViewModels.Dialogs
         #endregion
 
         #region RemoveListCommand
-        DelegateCommand<string> _RemoveListCommand;
+        ListenerCommand<string> _RemoveListCommand;
 
-        public DelegateCommand<string> RemoveListCommand
+        public ListenerCommand<string> RemoveListCommand
         {
             get
             {
                 if (_RemoveListCommand == null)
-                    _RemoveListCommand = new DelegateCommand<string>(RemoveList, CanRemoveList);
+                    _RemoveListCommand = new ListenerCommand<string>(RemoveList);
                 return _RemoveListCommand;
             }
         }
 
-        private bool CanRemoveList(string parameter)
-        {
-            return !String.IsNullOrEmpty(parameter);
-        }
-
         private void RemoveList(string parameter)
         {
+            if (String.IsNullOrEmpty(parameter))
+            {
+                this.Messenger.Raise(new InformationMessage("リストが選択されていません。", "削除エラー", System.Windows.MessageBoxImage.Error, "WarningMessage"));
+                return;
+            }
             this.property.FollowingLists =
                 this.property.FollowingLists.Except(new[] { parameter }).Distinct().ToArray();
             var sp = parameter.Split('/');
@@ -310,14 +311,14 @@ namespace Inscribe.ViewModels.Dialogs
         #endregion 
 
         #region CloseCommand
-        DelegateCommand _CloseCommand;
+        ViewModelCommand _CloseCommand;
 
-        public DelegateCommand CloseCommand
+        public ViewModelCommand CloseCommand
         {
             get
             {
                 if (_CloseCommand == null)
-                    _CloseCommand = new DelegateCommand(Close);
+                    _CloseCommand = new ViewModelCommand(Close);
                 return _CloseCommand;
             }
         }

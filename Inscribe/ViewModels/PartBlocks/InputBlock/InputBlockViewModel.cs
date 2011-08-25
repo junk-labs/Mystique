@@ -69,14 +69,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #region MenuItems
 
         #region ShowConfigCommand
-        DelegateCommand _ShowConfigCommand;
+        ViewModelCommand _ShowConfigCommand;
 
-        public DelegateCommand ShowConfigCommand
+        public ViewModelCommand ShowConfigCommand
         {
             get
             {
                 if (_ShowConfigCommand == null)
-                    _ShowConfigCommand = new DelegateCommand(ShowConfig);
+                    _ShowConfigCommand = new ViewModelCommand(ShowConfig);
                 return _ShowConfigCommand;
             }
         }
@@ -89,14 +89,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region CreateNewColumnCommand
-        DelegateCommand _CreateNewColumnCommand;
+        ViewModelCommand _CreateNewColumnCommand;
 
-        public DelegateCommand CreateNewColumnCommand
+        public ViewModelCommand CreateNewColumnCommand
         {
             get
             {
                 if (_CreateNewColumnCommand == null)
-                    _CreateNewColumnCommand = new DelegateCommand(CreateNewColumn);
+                    _CreateNewColumnCommand = new ViewModelCommand(CreateNewColumn);
                 return _CreateNewColumnCommand;
             }
         }
@@ -109,14 +109,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region CreateNewTabCommand
-        DelegateCommand _CreateNewTabCommand;
+        ViewModelCommand _CreateNewTabCommand;
 
-        public DelegateCommand CreateNewTabCommand
+        public ViewModelCommand CreateNewTabCommand
         {
             get
             {
                 if (_CreateNewTabCommand == null)
-                    _CreateNewTabCommand = new DelegateCommand(CreateNewTab);
+                    _CreateNewTabCommand = new ViewModelCommand(CreateNewTab);
                 return _CreateNewTabCommand;
             }
         }
@@ -128,14 +128,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region CollectTabsCommand
-        DelegateCommand _CollectTabsCommand;
+        ViewModelCommand _CollectTabsCommand;
 
-        public DelegateCommand CollectTabsCommand
+        public ViewModelCommand CollectTabsCommand
         {
             get
             {
                 if (_CollectTabsCommand == null)
-                    _CollectTabsCommand = new DelegateCommand(CollectTabs);
+                    _CollectTabsCommand = new ViewModelCommand(CollectTabs);
                 return _CollectTabsCommand;
             }
         }
@@ -156,14 +156,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
       
         #region ClearClosedTabStackCommand
-        DelegateCommand _ClearClosedTabStackCommand;
+        ViewModelCommand _ClearClosedTabStackCommand;
 
-        public DelegateCommand ClearClosedTabStackCommand
+        public ViewModelCommand ClearClosedTabStackCommand
         {
             get
             {
                 if (_ClearClosedTabStackCommand == null)
-                    _ClearClosedTabStackCommand = new DelegateCommand(ClearClosedTabStack);
+                    _ClearClosedTabStackCommand = new ViewModelCommand(ClearClosedTabStack);
                 return _ClearClosedTabStackCommand;
             }
         }
@@ -175,14 +175,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region ShowAssignViewerCommand
-        DelegateCommand _ShowAssignViewerCommand;
+        ViewModelCommand _ShowAssignViewerCommand;
 
-        public DelegateCommand ShowAssignViewerCommand
+        public ViewModelCommand ShowAssignViewerCommand
         {
             get
             {
                 if (_ShowAssignViewerCommand == null)
-                    _ShowAssignViewerCommand = new DelegateCommand(ShowAssignViewer);
+                    _ShowAssignViewerCommand = new ViewModelCommand(ShowAssignViewer);
                 return _ShowAssignViewerCommand;
             }
         }
@@ -194,14 +194,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region ReconnectStreamsCommand
-        DelegateCommand _ReconnectStreamsCommand;
+        ViewModelCommand _ReconnectStreamsCommand;
 
-        public DelegateCommand ReconnectStreamsCommand
+        public ViewModelCommand ReconnectStreamsCommand
         {
             get
             {
                 if (_ReconnectStreamsCommand == null)
-                    _ReconnectStreamsCommand = new DelegateCommand(ReconnectStreams);
+                    _ReconnectStreamsCommand = new ViewModelCommand(ReconnectStreams);
                 return _ReconnectStreamsCommand;
             }
         }
@@ -213,14 +213,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region ClearImageCachesCommand
-        DelegateCommand _ClearImageCachesCommand;
+        ViewModelCommand _ClearImageCachesCommand;
 
-        public DelegateCommand ClearImageCachesCommand
+        public ViewModelCommand ClearImageCachesCommand
         {
             get
             {
                 if (_ClearImageCachesCommand == null)
-                    _ClearImageCachesCommand = new DelegateCommand(ClearImageCaches);
+                    _ClearImageCachesCommand = new ViewModelCommand(ClearImageCaches);
                 return _ClearImageCachesCommand;
             }
         }
@@ -232,14 +232,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region ShowAboutCommand
-        DelegateCommand _ShowAboutCommand;
+        ViewModelCommand _ShowAboutCommand;
 
-        public DelegateCommand ShowAboutCommand
+        public ViewModelCommand ShowAboutCommand
         {
             get
             {
                 if (_ShowAboutCommand == null)
-                    _ShowAboutCommand = new DelegateCommand(ShowAbout);
+                    _ShowAboutCommand = new ViewModelCommand(ShowAbout);
                 return _ShowAboutCommand;
             }
         }
@@ -251,14 +251,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region FeedbackCommand
-        DelegateCommand _FeedbackCommand;
+        ViewModelCommand _FeedbackCommand;
 
-        public DelegateCommand FeedbackCommand
+        public ViewModelCommand FeedbackCommand
         {
             get
             {
                 if (_FeedbackCommand == null)
-                    _FeedbackCommand = new DelegateCommand(Feedback);
+                    _FeedbackCommand = new ViewModelCommand(Feedback);
                 return _FeedbackCommand;
             }
         }
@@ -283,14 +283,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         
         #region ExitCommand
-        DelegateCommand _ExitCommand;
+        ViewModelCommand _ExitCommand;
 
-        public DelegateCommand ExitCommand
+        public ViewModelCommand ExitCommand
         {
             get
             {
                 if (_ExitCommand == null)
-                    _ExitCommand = new DelegateCommand(Exit);
+                    _ExitCommand = new ViewModelCommand(Exit);
                 return _ExitCommand;
             }
         }
@@ -583,14 +583,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
 
         #region ClearBindCommand
-        DelegateCommand _ClearBindCommand;
+        ViewModelCommand _ClearBindCommand;
 
-        public DelegateCommand ClearBindCommand
+        public ViewModelCommand ClearBindCommand
         {
             get
             {
                 if (_ClearBindCommand == null)
-                    _ClearBindCommand = new DelegateCommand(ClearBind);
+                    _ClearBindCommand = new ViewModelCommand(ClearBind);
                 return _ClearBindCommand;
             }
         }
@@ -603,14 +603,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region AddBindCommand
-        DelegateCommand<string> _AddBindCommand;
+        ListenerCommand<string> _AddBindCommand;
 
-        public DelegateCommand<string> AddBindCommand
+        public ListenerCommand<string> AddBindCommand
         {
             get
             {
                 if (_AddBindCommand == null)
-                    _AddBindCommand = new DelegateCommand<string>(AddBind);
+                    _AddBindCommand = new ListenerCommand<string>(AddBind);
                 return _AddBindCommand;
             }
         }
@@ -624,14 +624,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region RemoveBindCommand
-        DelegateCommand<string> _RemoveBindCommand;
+        ListenerCommand<string> _RemoveBindCommand;
 
-        public DelegateCommand<string> RemoveBindCommand
+        public ListenerCommand<string> RemoveBindCommand
         {
             get
             {
                 if (_RemoveBindCommand == null)
-                    _RemoveBindCommand = new DelegateCommand<string>(RemoveBind);
+                    _RemoveBindCommand = new ListenerCommand<string>(RemoveBind);
                 return _RemoveBindCommand;
             }
         }
@@ -645,14 +645,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region EditAutoBindCommand
-        DelegateCommand _EditAutoBindCommand;
+        ViewModelCommand _EditAutoBindCommand;
 
-        public DelegateCommand EditAutoBindCommand
+        public ViewModelCommand EditAutoBindCommand
         {
             get
             {
                 if (_EditAutoBindCommand == null)
-                    _EditAutoBindCommand = new DelegateCommand(EditAutoBind);
+                    _EditAutoBindCommand = new ViewModelCommand(EditAutoBind);
                 return _EditAutoBindCommand;
             }
         }
@@ -701,14 +701,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #region Commands
 
         #region OpenInputCommand
-        DelegateCommand _OpenInputCommand;
+        ViewModelCommand _OpenInputCommand;
 
-        public DelegateCommand OpenInputCommand
+        public ViewModelCommand OpenInputCommand
         {
             get
             {
                 if (_OpenInputCommand == null)
-                    _OpenInputCommand = new DelegateCommand(OpenInput);
+                    _OpenInputCommand = new ViewModelCommand(OpenInput);
                 return _OpenInputCommand;
             }
         }
@@ -720,14 +720,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region CloseInputCommand
-        DelegateCommand _CloseInputCommand;
+        ViewModelCommand _CloseInputCommand;
 
-        public DelegateCommand CloseInputCommand
+        public ViewModelCommand CloseInputCommand
         {
             get
             {
                 if (_CloseInputCommand == null)
-                    _CloseInputCommand = new DelegateCommand(CloseInput);
+                    _CloseInputCommand = new ViewModelCommand(CloseInput);
                 return _CloseInputCommand;
             }
         }
@@ -739,14 +739,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region RemoveInReplyToCommand
-        DelegateCommand _RemoveInReplyToCommand;
+        ViewModelCommand _RemoveInReplyToCommand;
 
-        public DelegateCommand RemoveInReplyToCommand
+        public ViewModelCommand RemoveInReplyToCommand
         {
             get
             {
                 if (_RemoveInReplyToCommand == null)
-                    _RemoveInReplyToCommand = new DelegateCommand(RemoveInReplyTo);
+                    _RemoveInReplyToCommand = new ViewModelCommand(RemoveInReplyTo);
                 return _RemoveInReplyToCommand;
             }
         }
@@ -774,14 +774,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region AttachImageCommand
-        DelegateCommand _AttachImageCommand;
+        ViewModelCommand _AttachImageCommand;
 
-        public DelegateCommand AttachImageCommand
+        public ViewModelCommand AttachImageCommand
         {
             get
             {
                 if (_AttachImageCommand == null)
-                    _AttachImageCommand = new DelegateCommand(AttachImage);
+                    _AttachImageCommand = new ViewModelCommand(AttachImage);
                 return _AttachImageCommand;
             }
         }
@@ -807,14 +807,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         #endregion
 
         #region UpdateCommand
-        DelegateCommand _UpdateCommand;
+        ViewModelCommand _UpdateCommand;
 
-        public DelegateCommand UpdateCommand
+        public ViewModelCommand UpdateCommand
         {
             get
             {
                 if (_UpdateCommand == null)
-                    _UpdateCommand = new DelegateCommand(Update, CanUpdate);
+                    _UpdateCommand = new ViewModelCommand(Update, CanUpdate);
                 return _UpdateCommand;
             }
         }

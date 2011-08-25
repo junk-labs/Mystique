@@ -53,14 +53,14 @@ namespace Inscribe.ViewModels
         }
 
         #region ClickCommand
-        DelegateCommand _ClickCommand;
+        ViewModelCommand _ClickCommand;
 
-        public DelegateCommand ClickCommand
+        public ViewModelCommand ClickCommand
         {
             get
             {
                 if (_ClickCommand == null)
-                    _ClickCommand = new DelegateCommand(Click);
+                    _ClickCommand = new ViewModelCommand(Click);
                 return _ClickCommand;
             }
         }
