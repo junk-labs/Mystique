@@ -140,6 +140,14 @@ namespace Mystique.Views.Converters.Particular
         /// </summary>
         public static IEnumerable<Inline> GenerateDigest(this string text)
         {
+            if (!Application.Current.Dispatcher.CheckAccess())
+                return Application.Current.Dispatcher.Invoke((Func<string, IEnumerable<Inline>>)GenerateDigestSink, text) as IEnumerable<Inline>;
+            else
+                return GenerateDigestSink(text);
+        }
+
+        private static IEnumerable<Inline> GenerateDigestSink(this string text)
+        {
             foreach (var tok in Tokenizer.Tokenize(text))
             {
                 switch (tok.Kind)

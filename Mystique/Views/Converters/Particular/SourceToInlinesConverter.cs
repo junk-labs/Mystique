@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -16,6 +17,9 @@ namespace Mystique.Views.Converters.Particular
 
         public override IEnumerable<Inline> ToTarget(TweetViewModel input, object parameter)
         {
+            if (!Application.Current.Dispatcher.CheckAccess())
+                return Application.Current.Dispatcher.Invoke(new Action(() => ToTarget(input, parameter)), null) as IEnumerable<Inline>;
+
             var status = input.Status as TwitterStatus;
             if (status != null)
             {
