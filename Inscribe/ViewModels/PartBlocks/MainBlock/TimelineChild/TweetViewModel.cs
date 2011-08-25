@@ -34,7 +34,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             this.bindingId = id;
         }
 
-
         /// <summary>
         /// まだステータス情報が関連付けられていない場合に、ステータス情報を関連付けます。
         /// </summary>

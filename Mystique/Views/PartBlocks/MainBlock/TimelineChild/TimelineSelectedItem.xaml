@@ -39,8 +39,26 @@
         <BitmapImage x:Key="Verified" UriSource="/Resources/tick.png" />
         <BitmapImage x:Key="Spam" UriSource="/Resources/bug.png" />
         <ContextMenu x:Key="TweetContextMenu">
+            <MenuItem Click="cCopy_Click"
+                      Header="コピー(_C)"
+                      Visibility="{Binding IsTextSelected,
+                                           Converter={StaticResource BoolVisibleConverter}}" />
+            <MenuItem Click="cSelectAll_Click"
+                      Header="すべて選択(_A)"
+                      Visibility="{Binding IsTextSelected,
+                                           Converter={StaticResource BoolVisibleConverter}}" />
+            <Separator Visibility="{Binding IsTextSelected, Converter={StaticResource BoolVisibleConverter}}" />
+            <MenuItem Click="cSearchInKrile_Click"
+                      Header="_Krile内で検索..."
+                      Visibility="{Binding IsTextSelected,
+                                           Converter={StaticResource BoolVisibleConverter}}" />
+            <MenuItem Click="cGoogle_Click"
+                      Header="_Googleで検索..."
+                      Visibility="{Binding IsTextSelected,
+                                           Converter={StaticResource BoolVisibleConverter}}" />
+            <Separator Visibility="{Binding IsTextSelected, Converter={StaticResource BoolVisibleConverter}}" />
             <MenuItem Command="{Binding MentionCommand}"
-                      Header="返信(_R)"
+                      Header="_Reply"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Mention}">
                 <MenuItem.Icon>
@@ -48,7 +66,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding FavoriteCommand}"
-                      Header="ふぁぼる(_F)..."
+                      Header="_Favorite..."
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Favorite}">
                 <MenuItem.Icon>
@@ -56,7 +74,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding RetweetCommand}"
-                      Header="公式RT(_R)..."
+                      Header="_Retweet..."
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Retweet}">
                 <MenuItem.Icon>
@@ -74,7 +92,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding QuoteCommand}"
-                      Header="QT(_Q)"
+                      Header="_QT"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=QuoteTweet}"
                       Visibility="{Binding Path=Tweet.ShowQuoteTweetButton,
@@ -290,6 +308,7 @@
                                    HorizontalAlignment="Stretch"
                                    Background="Transparent"
                                    BorderThickness="0"
+                                   ContextMenu="{StaticResource TweetContextMenu}"
                                    DocumentMouseDown="ItemMouseButtonDown"
                                    DocumentMouseMove="ItemMouseMove"
                                    DocumentMouseUp="ItemMouseButtonUp"
@@ -299,116 +318,8 @@
                                    IsDocumentEnabled="True"
                                    IsReadOnly="True"
                                    IsUndoEnabled="False"
-                                   Padding="0">
-                <tc:DynamicRichTextBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Click="cCopy_Click" Header="コピー(_C)" />
-                        <MenuItem Click="cSelectAll_Click" Header="すべて選択(_A)" />
-                        <Separator />
-                        <MenuItem Click="cSearchInKrile_Click" Header="_Krile内で検索..." />
-                        <MenuItem Click="cGoogle_Click" Header="_Googleで検索..." />
-                        <Separator />
-                        <MenuItem Command="{Binding MentionCommand}"
-                                  Header="返信(_R)"
-                                  InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                             ConverterParameter=Mention}">
-                            <MenuItem.Icon>
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Comment}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Command="{Binding FavoriteCommand}"
-                                  Header="ふぁぼる(_F)..."
-                                  InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                             ConverterParameter=Favorite}">
-                            <MenuItem.Icon>
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Favorite}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Command="{Binding RetweetCommand}"
-                                  Header="公式RT(_R)..."
-                                  InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                             ConverterParameter=Retweet}">
-                            <MenuItem.Icon>
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Retweet}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Command="{Binding UnofficialRetweetCommand}"
-                                  Header="非公式RT(_E)"
-                                  InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                             ConverterParameter=UnofficialRetweet}"
-                                  Visibility="{Binding Path=Tweet.ShowUnofficialRetweetButton,
-                                                       Converter={StaticResource BoolVisibleConverter}}">
-                            <MenuItem.Icon>
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource UORetweet}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Command="{Binding QuoteCommand}"
-                                  Header="QT(_Q)"
-                                  InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                             ConverterParameter=QuoteTweet}"
-                                  Visibility="{Binding Path=Tweet.ShowQuoteTweetButton,
-                                                       Converter={StaticResource BoolVisibleConverter}}">
-                            <MenuItem.Icon>
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource QuoteTweet}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Command="{Binding DeleteCommand}"
-                                  Header="削除(_D)"
-                                  InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                             ConverterParameter=Delete}"
-                                  Visibility="{Binding Path=Tweet.ShowDeleteButton,
-                                                       Converter={StaticResource BoolVisibleConverter}}">
-                            <MenuItem.Icon>
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Delete}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator />
-                        <MenuItem Command="{Binding OpenConversationCommand}"
-                                  Header="返信先とこのユーザーの会話を表示(_.)"
-                                  InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                             ConverterParameter=ShowConversation}"
-                                  Visibility="{Binding Path=Tweet.IsMention,
-                                                       Converter={StaticResource BoolVisibleConverter}}">
-                            <MenuItem.Icon>
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Conversation}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator Visibility="{Binding Path=Tweet.IsMention, Converter={StaticResource BoolVisibleConverter}}" />
-                        <MenuItem Command="{Binding Path=Tweet.ShowTweetCommand}"
-                                  Header="ブラウザーで開く(_W)..."
-                                  InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                             ConverterParameter=OpenTweetWeb}" />
-                        <MenuItem Header="このユーザー(_U)">
-                            <MenuItem Command="{Binding ShowUserDetailCommand}"
-                                      Header="ユーザー情報を表示(_I)"
-                                      InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                                 ConverterParameter=ShowUserDetail}" />
-                            <MenuItem Command="{Binding DirectMessageCommand}"
-                                      Header="ダイレクトメッセージを送信(_D)"
-                                      InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                                 ConverterParameter=SendDirectMessage}" />
-                            <Separator />
-                            <MenuItem Command="{Binding ReportForSpamCommand}"
-                                      CommandParameter="Red"
-                                      Header="スパムとして報告(_R)"
-                                      InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                                 ConverterParameter=ReportForSpam}">
-                                <MenuItem.Icon>
-                                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Spam}" />
-                                </MenuItem.Icon>
-                            </MenuItem>
-                        </MenuItem>
-                        <MenuItem Command="{Binding MuteCommand}"
-                                  Header="ミュート(_M)..."
-                                  InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                             ConverterParameter=Mute}">
-                            <MenuItem.Icon>
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource NG}" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </ContextMenu>
-                </tc:DynamicRichTextBox.ContextMenu>
-            </tc:DynamicRichTextBox>
+                                   Padding="0"
+                                   SelectionChanged="BodyText_SelectionChanged" />
             <Border Margin="4,2"
                     VerticalAlignment="Center"
                     Background="LightGoldenrodYellow"

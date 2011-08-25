@@ -16,10 +16,10 @@ using Inscribe.Filter.Filters.Numeric;
 using Inscribe.Filter.Filters.Particular;
 using Inscribe.Storage;
 using Inscribe.Threading;
+using Inscribe.ViewModels.Dialogs;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.ViewModels.Dialogs;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -68,6 +68,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 RaisePropertyChanged(() => TooltipWidth);
             }
         }
+
+        private bool _isTextSelected = false;
+        public bool IsTextSelected
+        {
+            get { return _isTextSelected; }
+            set
+            {
+                _isTextSelected = value;
+                RaisePropertyChanged(() => IsTextSelected);
+            }
+        }
+
         #endregion
 
         public void SettingValueChanged()

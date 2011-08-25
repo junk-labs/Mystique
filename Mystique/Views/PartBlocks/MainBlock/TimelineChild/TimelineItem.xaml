@@ -1,14 +1,14 @@
 ﻿<UserControl x:Class="Mystique.Views.PartBlocks.MainBlock.TimelineChild.TimelineItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:cp="clr-namespace:Mystique.Views.CustomPanels"
+             xmlns:cpanel="clr-namespace:Mystique.Views.CustomPanels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:l="clr-namespace:Livet;assembly=Livet"
              xmlns:mb="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:my="clr-namespace:Mystique.Views.Common"
-             xmlns:pc="clr-namespace:Mystique.Views.Converters.Particular"
+             xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
              d:DesignHeight="50"
              d:DesignWidth="500"
              InputMethod.IsInputMethodEnabled="False"
@@ -18,11 +18,11 @@
         <BitmapImage x:Key="Favorited" UriSource="/Resources/star.png" />
         <BitmapImage x:Key="Retweeted" UriSource="/Resources/rt.png" />
         <BitmapImage x:Key="Loading" UriSource="/Resources/refresh_large.png" />
-        <pc:TVMToUserNameConverter x:Key="TweetUserNameConverter" />
-        <pc:TVMToUserImageConverter x:Key="TweetUserImageConverter" />
-        <pc:StringRemoveLineFeedConverter x:Key="SingleLineConverter" />
-        <pc:CollectionToCountConverter x:Key="CollectionCountConverter" />
-        <pc:CollectionExistToVisibleConverter x:Key="ExistVisibleConverter" />
+        <cp:TVMToUserNameConverter x:Key="TweetUserNameConverter" />
+        <cp:TVMToUserImageConverter x:Key="TweetUserImageConverter" />
+        <cp:StringRemoveLineFeedConverter x:Key="SingleLineConverter" />
+        <cp:CollectionToCountConverter x:Key="CollectionCountConverter" />
+        <cp:CollectionExistToVisibleConverter x:Key="ExistVisibleConverter" />
         <Style x:Key="SimpleButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
             <Setter Property="Background" Value="{StaticResource ButtonNormalBackground}" />
@@ -136,7 +136,7 @@
                 </DockPanel>
             </ToolTip>
         </Grid.ToolTip>
-        <cp:FillPanel x:Name="UserImageOwner">
+        <cpanel:FillPanel x:Name="UserImageOwner">
             <my:LazyImage x:Name="Owner"
                           VerticalAlignment="Center"
                           DefaultImage="{StaticResource Loading}"
@@ -213,7 +213,7 @@
                     <Button.ToolTip>Retweetする(+ShiftでマルチRT)</Button.ToolTip>
                 </Button>
             </Grid>
-        </cp:FillPanel>
+        </cpanel:FillPanel>
         <TextBlock Grid.Column="1"
                    Margin="2"
                    Foreground="{Binding Path=ForeBrush}"

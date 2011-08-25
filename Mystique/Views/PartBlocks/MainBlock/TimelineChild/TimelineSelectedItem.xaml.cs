@@ -1,10 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Inscribe.Common;
-using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using System.Windows.Media;
+using Inscribe.Common;
 using Inscribe.Configuration;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
 {
@@ -86,6 +87,9 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
         private void cCopy_Click(object sender, RoutedEventArgs e)
         {
             BodyText.Copy();
+            var cbtext = Clipboard.GetText();
+            if (cbtext != null && cbtext.EndsWith(Environment.NewLine))
+                Clipboard.SetText(cbtext.Substring(0, cbtext.Length - 1));
         }
 
         private void cSelectAll_Click(object sender, RoutedEventArgs e)
@@ -109,6 +113,13 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
                     Dulcet.Util.HttpUtility.UrlEncode(BodyText.Selection.Text));
             }
             catch { }
+        }
+
+        private void BodyText_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var tvm = this.DataContext as TabDependentTweetViewModel;
+            if (tvm == null) return;
+            tvm.IsTextSelected = BodyText.Selection != null && !String.IsNullOrEmpty(BodyText.Selection.Text);
         }
     }
 }
