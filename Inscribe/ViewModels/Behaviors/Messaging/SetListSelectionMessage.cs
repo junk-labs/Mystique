@@ -13,7 +13,7 @@ namespace Inscribe.ViewModels.Behaviors.Messaging
      * Tは戻り値の型です。
      * 戻り値のない相互作用メッセージはInteractionMessageを継承して作成します。
      */
-    public class SetListSelectionMessage : ResponsiveInteractionMessage<string>
+    public class SetListSelectionMessage : InteractionMessage
     {
         //Viewでメッセージインスタンスを生成する時のためのコンストラクタ
         public SetListSelectionMessage()
@@ -26,13 +26,6 @@ namespace Inscribe.ViewModels.Behaviors.Messaging
         {
             this.ListSelectionKind = kind;
         }
-
-        /*
-         * メッセージに保持させたい情報をプロパティとして定義してください。
-         * Viewでバインド可能なプロパティにするために依存関係プロパティとして定義する事をお勧めします。
-         * 通常依存関係プロパティはコードスニペット propdpを使用して定義します。
-         * もし普通のプロパティとして定義したい場合はコードスニペット propを使用して定義します。
-         */
 
         public ListSelectionKind ListSelectionKind
         {
