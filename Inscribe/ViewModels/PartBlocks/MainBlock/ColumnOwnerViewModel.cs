@@ -21,8 +21,13 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private Stack<TabViewModel> _closedTabStacks = new Stack<TabViewModel>();
 
+        /// <summary>
+        /// 閉じタブスタックにタブをプッシュします。<para />
+        /// IsAliveのステート変更は行いますが、クエリやリストの購読解除は呼び出し側で行う必要があります。
+        /// </summary>
         public void PushClosedTabStack(TabViewModel viewmodel)
         {
+            // タブを殺す
             viewmodel.IsAlive = false;
             lock (this._ctsLock)
             {
@@ -31,6 +36,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this._columns.ForEach(c => c.RebirthTabCommand.RaiseCanExecuteChanged());
         }
 
+        /// <summary>
+        /// 閉じタブスタックからタブをポップします。<para />
+        /// IsAliveのステート変更は行いますが、クエリやリストの再購読は呼び出し側で行う必要があります。
+        /// </summary>
         public TabViewModel PopClosedTab()
         {
             TabViewModel ret;
@@ -39,10 +48,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 ret = this._closedTabStacks.Pop();
             }
             this._columns.ForEach(c => c.RebirthTabCommand.RaiseCanExecuteChanged());
+            // タブをブッ生き返す
             ret.IsAlive = true;
             return ret;
         }
 
+        /// <summary>
+        /// 閉じタブスタックにタブが存在するかを返します。
+        /// </summary>
         public bool IsExistedClosedTab()
         {
             lock (this._ctsLock)
@@ -51,6 +64,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
+        /// <summary>
+        /// 閉じタブスタックをクリアします。
+        /// </summary>
         public void ClearClosedTab()
         {
             lock (this._ctsLock)

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Livet;
 using System.Windows;
 using Inscribe.Common;
+using Livet;
 
 namespace Inscribe.ViewModels.Common
 {
+    /// <summary>
+    /// 画像を重ねて配置するためのアレ
+    /// </summary>
     public class ImageStackingViewViewModel : ViewModel
     {
         public IEnumerable<ImageStackItem> Images

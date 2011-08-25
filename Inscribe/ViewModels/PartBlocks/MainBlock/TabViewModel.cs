@@ -66,6 +66,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
 
         private bool _isTimelineMouseOver = false;
+        /// <summary>
+        /// タイムラインにマウスが乗ってるか<para />
+        /// タイムライン上にマウスがあるときスクロールしない っていう設定の実現のためだけにある
+        /// </summary>
         public bool IsTimelineMouseOver
         {
             get { return this._isTimelineMouseOver; }
@@ -95,6 +99,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return Setting.Instance.TweetExperienceProperty.FullLineView; }
         }
 
+        /// <summary>
+        /// キャッシュを色んなところで更新するとカオスになるので
+        /// </summary>
         private static QueueTaskDispatcher cacheInvalidator;
 
         static TabViewModel()
@@ -102,7 +109,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             cacheInvalidator = new QueueTaskDispatcher(1);
             ThreadHelper.Halt += () => cacheInvalidator.Dispose();
         }
-
 
         public TabViewModel(ColumnViewModel parent, TabProperty property = null)
         {
@@ -115,21 +121,28 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 .SelectMany(vm => vm.TimelineListCoreViewModel.TweetsSource)
                 .ForEach(t => t.PendingColorChanged(true)));
 
+            // 初期TLとしてnullを
             this.AddTopTimeline(null);
             ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (o, e) => UpdateSettingValue());
         }
 
         private void UpdateSettingValue()
         {
+            // FullLineViewが変わったかどうか見るだけ
             RaisePropertyChanged(() => IsFullLineView);
         }
 
+        /// <summary>
+        /// このタブを保持しているカラムをセットします。
+        /// </summary>
         public void SetTabOwner(ColumnViewModel newParent)
         {
             this.Parent = newParent;
         }
 
-
+        /// <summary>
+        /// タイムラインの再構築を行います。
+        /// </summary>
         public void InvalidateCache()
         {
             cacheInvalidator.Enqueue(() =>
@@ -369,8 +382,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         /// <summary>
         /// スタックトップタイムラインを追加します。
         /// </summary>
-        /// <param name="newFilter"></param>
-        /// <param name="description"></param>
+        /// <param name="newFilter">スタックトップタイムラインにセットするフィルタ。デフォルト値は、スタックベースタイムラインはnull、それ以外はnew[]{new FilterCluster()} を使う事。</param>
         public void AddTopTimeline(IEnumerable<IFilter> newFilter)
         {
             if (this._stackings.Count > 0 && newFilter == null)
@@ -383,9 +395,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             WritebackQuery();
         }
 
-        public void AddTopUser(string userId)
+        /// <summary>
+        /// スタックトップタイムラインにユーザービューを追加します。
+        /// </summary>
+        public void AddTopUser(string userScreenName)
         {
-            this._stackings.Add(new UserPageViewModel(this, userId));
+            this._stackings.Add(new UserPageViewModel(this, userScreenName));
             this._stackings.ForEach(t => t.InvalidateIsActive());
             RaisePropertyChanged(() => TimelinesCount);
             RaisePropertyChanged(() => IsContainsSingle);
@@ -541,17 +556,23 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
       
-
         internal void NotifyNewTweetReceived(TimelineListCoreViewModel timelineListCoreViewModel, TimelineChild.TweetViewModel tweetViewModel)
         {
             if (AccountStorage.Contains(tweetViewModel.Status.User.ScreenName) || !this.IsAlive)
                 return;
 
+            // 正直謎設定だし、スタックトップTLの新着を伝えるってあんまり直感的じゃないから
+            // 設定じゃなくて固定にしてよかったかもしれない
             if (Setting.Instance.NotificationProperty.TabNotifyStackTopTimeline ?
                 this.CurrentForegroundTimeline.CoreViewModel == timelineListCoreViewModel :
                 this.BaseTimeline.CoreViewModel == timelineListCoreViewModel)
             {
+                // NewTweetsCountはプロパティが良きに計らってくれるので
+                // ＿人人人人人人人人人人人人人人人＿ 
+                // ＞　　インクリしていってね！！！＜
+                // ￣ＹＹＹＹＹＹＹＹＹＹＹＹＹＹＹ￣ 
                 this.NewTweetsCount++;
+
                 if (this.TabProperty.IsNotifyEnabled)
                 {
                     if (String.IsNullOrEmpty(this.TabProperty.NotifySoundPath))
