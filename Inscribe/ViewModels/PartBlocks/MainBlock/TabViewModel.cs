@@ -377,6 +377,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             RaisePropertyChanged(() => IsStackTopUserPage);
             WritebackQuery();
             this.IsQueryValid = true;
+            this.Parent.SetFocus();
         }
 
         /// <summary>

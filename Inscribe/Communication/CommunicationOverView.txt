@@ -1,0 +1,22 @@
+﻿Inscribe.Communication について
+
+Inscribe.Communication 名前空間は、以下の処理を担っています。
+
+Cruise Control: Twitter REST APIを使ったタイムライン受信処理を自動化します。
+	REST API Rate Limitとタイムライン速度に応じ、受信間隔を自動調整しています。
+	User Streams接続時でも完全には停止しませんが、受信頻度は下がります。
+	リスト受信もCruise Controlの枠組みで管理されます。
+
+PostOffice: Twitterへのアクションを管理します。
+	UpdateやRetweet/FavoriteをIEnumerable<AccountInfo>を指定して行えるようにしています。
+	また、UpdateにはPOST規制対策アルゴリズムが組み込まれています。
+
+UserStreams: UserStreamsへの接続を行います。
+	UserStreamsへの複数本の並列接続や切断時の自動再接続試行などを行います。
+
+Robustness: Twitter APIを確実に実行します。
+	Twitter APIは正常に実行できる場合でもエラーを返すことがあります。
+	ApiHelper.Execute を経由してAPIをコールすると、タイムアウトやサーバーエラーが返ってきた場合、自動で数回試みます。
+	より確実なAPIオペレーションを行う事ができます。
+
+User Information Receiver: ユーザーの固有情報を受信する支援をします。

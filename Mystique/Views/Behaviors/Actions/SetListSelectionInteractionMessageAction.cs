@@ -11,6 +11,7 @@ namespace Mystique.Views.Behaviors.Actions
         {
             var listmsg = m as SetListSelectionMessage;
             if (listmsg == null) return;
+            if (this.AssociatedObject.SelectedItem != listmsg.InitialSelectedItem) return;
             switch (listmsg.ListSelectionKind)
             {
                 case ListSelectionKind.Deselect:

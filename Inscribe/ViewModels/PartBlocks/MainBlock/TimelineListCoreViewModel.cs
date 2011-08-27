@@ -200,7 +200,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public void SetSelect(ListSelectionKind kind)
         {
-            Messenger.Raise(new SetListSelectionMessage("SetListSelection", kind));
+            Messenger.Raise(new SetListSelectionMessage("SetListSelection", kind, this.SelectedTweetViewModel));
         }
     }
 }

@@ -246,6 +246,7 @@
     <Compile Include="ViewModels\PartBlocks\MainBlock\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Communication\CommunicationOverView.txt" />
     <Content Include="Filter\Filter.txt" />
     <Content Include="Inscribe.txt" />
   </ItemGroup>

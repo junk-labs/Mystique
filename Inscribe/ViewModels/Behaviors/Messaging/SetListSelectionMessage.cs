@@ -21,10 +21,11 @@ namespace Inscribe.ViewModels.Behaviors.Messaging
         }
 
         //ViewModelからMessenger経由での発信目的でメッセージインスタンスを生成するためのコンストラクタ
-        public SetListSelectionMessage(string messageKey, ListSelectionKind kind)
+        public SetListSelectionMessage(string messageKey, ListSelectionKind kind, object initSelectedItem)
             : base(messageKey)
         {
             this.ListSelectionKind = kind;
+            this.InitialSelectedItem = initSelectedItem;
         }
 
         public ListSelectionKind ListSelectionKind
@@ -37,6 +38,16 @@ namespace Inscribe.ViewModels.Behaviors.Messaging
         public static readonly DependencyProperty ListSelectionKindProperty =
             DependencyProperty.Register("ListSelectionKind", typeof(ListSelectionKind), typeof(SetListSelectionMessage), new UIPropertyMetadata(ListSelectionKind.Deselect));
 
+        public object InitialSelectedItem
+        {
+            get { return (object)GetValue(InitialSelectedItemProperty); }
+            set { SetValue(InitialSelectedItemProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for InitialSelectedItem.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty InitialSelectedItemProperty =
+            DependencyProperty.Register("InitialSelectedItem", typeof(object), typeof(SetListSelectionMessage), new UIPropertyMetadata(null));
+
         /// <summary>
         /// 派生クラスでは必ずオーバーライドしてください。Freezableオブジェクトとして必要な実装です。<br/>
         /// 通常このメソッドは、自身の新しいインスタンスを返すように実装します。
@@ -44,7 +55,7 @@ namespace Inscribe.ViewModels.Behaviors.Messaging
         /// <returns>自身の新しいインスタンス</returns>
         protected override System.Windows.Freezable CreateInstanceCore()
         {
-            return new SetListSelectionMessage(this.MessageKey, this.ListSelectionKind);
+            return new SetListSelectionMessage(this.MessageKey, this.ListSelectionKind, this.InitialSelectedItem);
         }
     }
 

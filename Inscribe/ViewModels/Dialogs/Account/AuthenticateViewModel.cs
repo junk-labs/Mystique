@@ -103,7 +103,7 @@ namespace Inscribe.ViewModels.Dialogs.Account
             set
             {
                 this._requestToken = value;
-                this.ValidatePinCommand.RaiseCanExecuteChanged();
+                DispatcherHelper.BeginInvoke(() => this.ValidatePinCommand.RaiseCanExecuteChanged());
                 RaisePropertyChanged(() => GotToken);
             }
         }
