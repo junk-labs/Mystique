@@ -57,7 +57,7 @@ namespace Mystique.Views
             // クリティカル セクション
             lock (notifyLock)
             {
-                if (Setting.Instance.NotificationProperty.IsShowMultiple)
+                if (Setting.Instance.NotificationProperty.ShowMultiple)
                 {
                     try
                     {

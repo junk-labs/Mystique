@@ -11,20 +11,20 @@ namespace Inscribe.Configuration.Settings
         {
             ShowUnofficialRetweetButton = true;
             ShowQuoteButton = false;
-            P3StyleIcon = true;
+            UseP3StyleIcon = true;
             NameAreaWidth = 120;
             UserNameViewMode = NameView.ID;
             NotificationNameViewMode = NameView.ID;
             UrlResolveMode = UrlResolve.OnPointed;
             UrlTooltipShowLength = 60 * 1000;
-            this.FullLineView = false;
+            this.UseFullLineView = false;
         }
 
         public bool ShowUnofficialRetweetButton { get; set; }
 
         public bool ShowQuoteButton { get; set; }
 
-        public bool P3StyleIcon { get; set; }
+        public bool UseP3StyleIcon { get; set; }
 
         public int NameAreaWidth { get; set; }
 
@@ -36,7 +36,7 @@ namespace Inscribe.Configuration.Settings
 
         public int UrlTooltipShowLength { get; set; }
 
-        public bool FullLineView { get; set; }
+        public bool UseFullLineView { get; set; }
     }
 
     public enum NameView

@@ -24,7 +24,7 @@ namespace Inscribe.Configuration.Tabs
             if (Setting.IsInitialized)
                 this.LinkAccountInfos = AccountStorage.Accounts.Where(i => i.AccoutProperty.IsSelectedDefault).ToArray();
             this.Name = "Untitled";
-            this.IsNotifyEnabled = Setting.IsInitialized ? Setting.Instance.NotificationProperty.TabNotifyEnabledAsDefault : false;
+            this.IsNotifyEnabled = Setting.IsInitialized ? Setting.Instance.NotificationProperty.IsTabNotifyEnabledAsDefault : false;
         }
 
         #region LinkAccountInfoChangedイベント

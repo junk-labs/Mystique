@@ -7,7 +7,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
     {
         public GeneralConfigViewModel()
         {
-            this._powerUserMode = Setting.Instance.ExperienceProperty.PowerUserMode;
+            this._powerUserMode = Setting.Instance.ExperienceProperty.IsPowerUserMode;
             this._updateKind = Setting.Instance.ExperienceProperty.UpdateKind;
         }
 
@@ -35,7 +35,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public void Apply()
         {
-            Setting.Instance.ExperienceProperty.PowerUserMode = this._powerUserMode;
+            Setting.Instance.ExperienceProperty.IsPowerUserMode = this._powerUserMode;
             Setting.Instance.ExperienceProperty.UpdateKind = this._updateKind;
         }
     }

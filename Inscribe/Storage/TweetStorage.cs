@@ -12,6 +12,7 @@ using Inscribe.Text;
 using Inscribe.Threading;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
+using Inscribe.Common;
 
 namespace Inscribe.Storage
 {
@@ -177,13 +178,9 @@ namespace Inscribe.Storage
             UserStorage.Register(status.User);
             var registered = RegisterCore(status);
 
-            if (status.RetweetedOriginal == null)
-            { 
-                // リツイートステータス以外で、自分への返信を探す
-                var matches = RegularExpressions.AtRegex.Matches(status.Text);
-                if (matches.Count > 0 && matches.Cast<Match>().Select(m => m.Value)
-                        .Where(s => AccountStorage.Contains(s)).FirstOrDefault() != null)
-                    EventStorage.OnMention(registered);
+            if (TwitterHelper.IsMentionOfMe(status))
+            {
+                EventStorage.OnMention(registered);
             }
             return registered;
         }
@@ -360,7 +357,11 @@ namespace Inscribe.Storage
 
         static void RaiseStatusAdded(TweetViewModel added)
         {
-            NotificationCore.RegisterNotify(added);
+            // Mention通知設定がないか、
+            // 自分へのMentionでない場合にのみRegisterする
+            if (!Setting.Instance.NotificationProperty.NotifyMention ||
+                TwitterHelper.IsMentionOfMe(added.Status))
+                NotificationCore.RegisterNotify(added);
             OnTweetStorageChanged(new TweetStorageChangedEventArgs(TweetActionKind.Added, added));
             NotificationCore.DispatchNotify(added);
         }

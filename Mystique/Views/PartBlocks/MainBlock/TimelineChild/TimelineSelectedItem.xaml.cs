@@ -53,7 +53,7 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
         {
             if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).DistanceDouble(ip) < 4)
             {
-                if (Setting.Instance.TweetExperienceProperty.FullLineView )
+                if (Setting.Instance.TweetExperienceProperty.UseFullLineView )
                 {
                     var lbi = GetListBoxItem();
                     if (lbi != null &&

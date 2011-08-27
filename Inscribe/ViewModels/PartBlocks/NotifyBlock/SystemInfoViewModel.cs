@@ -118,27 +118,27 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
                 switch (this.Info.ConnectionState)
                 {
                     case ConnectionState.Disconnected:
-                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                        if (Setting.Instance.ExperienceProperty.IsPowerUserMode)
                             return "REST APIで接続しています";
                         else
                             return "接続しています";
                     case ConnectionState.WaitNetwork:
-                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                        if (Setting.Instance.ExperienceProperty.IsPowerUserMode)
                             return "User Streams: ネットワーク接続を待っています...";
                         else
                             return "リアルタイム接続を試行しています...";
                     case ConnectionState.WaitTwitter:
-                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                        if (Setting.Instance.ExperienceProperty.IsPowerUserMode)
                             return "User Streams: Twitterの応答を待っています...";
                         else
                             return "リアルタイム接続を試行しています...";
                     case ConnectionState.TryConnection:
-                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                        if (Setting.Instance.ExperienceProperty.IsPowerUserMode)
                             return "User Streams: 接続を開始しています...";
                         else
                             return "リアルタイム接続を開始しています...";
                     case ConnectionState.Connected:
-                        if (Setting.Instance.ExperienceProperty.PowerUserMode)
+                        if (Setting.Instance.ExperienceProperty.IsPowerUserMode)
                             return "User Streams接続しています";
                         else
                             return "リアルタイム接続しています";

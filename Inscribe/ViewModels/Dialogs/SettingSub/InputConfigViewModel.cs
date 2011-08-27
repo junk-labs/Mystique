@@ -9,20 +9,25 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             this.UseInputSuggesting = Setting.Instance.InputExperienceProperty.UseInputSuggesting;
             this.TrimBeginSpace = Setting.Instance.InputExperienceProperty.TrimBeginSpace;
-            this.ActiveFallback = Setting.Instance.InputExperienceProperty.ActiveFallback;
+            this.UseActiveFallback = Setting.Instance.InputExperienceProperty.UseActiveFallback;
+            this.EnableTemporarilyUserSelection = Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection;
         }
 
         public bool UseInputSuggesting { get; set; }
 
         public bool TrimBeginSpace { get; set; }
 
-        public bool ActiveFallback { get; set; }
+        public bool UseActiveFallback { get; set; }
+
+        public bool EnableTemporarilyUserSelection { get; set; }
+
 
         public void Apply()
         {
             Setting.Instance.InputExperienceProperty.UseInputSuggesting = this.UseInputSuggesting;
             Setting.Instance.InputExperienceProperty.TrimBeginSpace = this.TrimBeginSpace;
-            Setting.Instance.InputExperienceProperty.ActiveFallback = this.ActiveFallback;
+            Setting.Instance.InputExperienceProperty.UseActiveFallback = this.UseActiveFallback;
+            Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection = this.EnableTemporarilyUserSelection;
         }
     }
 }

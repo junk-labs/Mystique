@@ -10,7 +10,7 @@ namespace Inscribe.Configuration.Settings
         public TimelineExperienceProperty()
         {
             this.OrderByAscending = false;
-            FastScrolling = true;
+            UseFastScrolling = true;
             ScrollLockMode = ScrollLock.OnSelected;
             QueryApplyWait = 200;
             KeywordSearchTransition = TransitionMethod.ViewStack;
@@ -23,7 +23,7 @@ namespace Inscribe.Configuration.Settings
             IntelligentOrderingThresholdSec = 60 * 5;
         }
 
-        public bool FastScrolling { get; set; }
+        public bool UseFastScrolling { get; set; }
 
         public bool OrderByAscending { get; set; }
 

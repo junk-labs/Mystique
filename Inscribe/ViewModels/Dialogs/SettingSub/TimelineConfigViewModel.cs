@@ -12,13 +12,13 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
     {
         public bool PowerUserMode
         {
-            get { return Setting.Instance.ExperienceProperty.PowerUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsPowerUserMode; }
         }
 
         public TimelineConfigViewModel()
         {
             this._timelineScrollLockIndex = (int)Setting.Instance.TimelineExperienceProperty.ScrollLockMode;
-            this._useFastScrolling = Setting.Instance.TimelineExperienceProperty.FastScrolling;
+            this._useFastScrolling = Setting.Instance.TimelineExperienceProperty.UseFastScrolling;
             this._tweetInitStrategyIndex = (int)Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy;
             this._useIntelligentOrdering = Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering;
             this._intelligentOrderingThresholdSec = Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec;
@@ -80,7 +80,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public void Apply()
         {
             Setting.Instance.TimelineExperienceProperty.ScrollLockMode = (ScrollLock)this._timelineScrollLockIndex;
-            Setting.Instance.TimelineExperienceProperty.FastScrolling = this._useFastScrolling;
+            Setting.Instance.TimelineExperienceProperty.UseFastScrolling = this._useFastScrolling;
             Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy = (ItemInitStrategy)this._tweetInitStrategyIndex;
             Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering = this._useIntelligentOrdering;
             Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec = this._intelligentOrderingThresholdSec;

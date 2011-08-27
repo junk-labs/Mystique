@@ -13,7 +13,8 @@ namespace Inscribe.Configuration.Settings
         {
             TrimBeginSpace = true;
             UseInputSuggesting = true;
-            this.ActiveFallback = false;
+            this.UseActiveFallback = false;
+            this.IsEnabledTemporarilyUserSelection = false;
         }
 
         public bool TrimBeginSpace { get; set; }
@@ -27,7 +28,9 @@ namespace Inscribe.Configuration.Settings
             set { _hashtagAutoBindDescriptions = value; }
         }
 
-        public bool ActiveFallback { get; set; }
+        public bool UseActiveFallback { get; set; }
+
+        public bool IsEnabledTemporarilyUserSelection { get; set; }
     }
 
     public class HashtagAutoBindDescription

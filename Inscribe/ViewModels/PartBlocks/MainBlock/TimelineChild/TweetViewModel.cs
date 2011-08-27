@@ -237,7 +237,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public bool IsP3StyleIcon
         {
-            get { return Setting.Instance.TweetExperienceProperty.P3StyleIcon; }
+            get { return Setting.Instance.TweetExperienceProperty.UseP3StyleIcon; }
         }
 
         #endregion

@@ -9,10 +9,10 @@ namespace Inscribe.Configuration.Settings
     {
         public NotificationProperty()
         {
-            this.TabNotifyEnabledAsDefault = false;
-            this.TabNotifyStackTopTimeline = false;
+            this.IsTabNotifyEnabledAsDefault = false;
+            this.NotifyStackTopTimeline = false;
             this.IsEnabledNotificationBar = true;
-            this.IsNotifierBarBottom = false;
+            this.ShowNotifierBarInBottom = false;
 
             this.NotifyMentionEvent = false;
             this.NotifyDmEvent = true;
@@ -27,7 +27,7 @@ namespace Inscribe.Configuration.Settings
             this.NotifyReceives = true;
             this.NotifyFollow = true;
 
-            this.IsShowMultiple = true;
+            this.ShowMultiple = true;
             this.NotifyInMainWindowDisplay = false;
             this.NotifyLocation = Settings.NotifyLocation.RightBottom;
             this.NotifyWindowShowLength = 4500;
@@ -36,13 +36,13 @@ namespace Inscribe.Configuration.Settings
             this.SoundNotificationStrategy = NotificationStrategy.Always;
         }
 
-        public bool TabNotifyEnabledAsDefault { get; set; }
+        public bool IsTabNotifyEnabledAsDefault { get; set; }
 
-        public bool TabNotifyStackTopTimeline { get; set; }
+        public bool NotifyStackTopTimeline { get; set; }
 
         public bool IsEnabledNotificationBar { get; set; }
 
-        public bool IsNotifierBarBottom { get; set; }
+        public bool ShowNotifierBarInBottom { get; set; }
 
         public bool NotifyMentionEvent { get; set; }
 
@@ -66,7 +66,7 @@ namespace Inscribe.Configuration.Settings
 
         public bool NotifyReceives { get; set; }
 
-        public bool IsShowMultiple { get; set; }
+        public bool ShowMultiple { get; set; }
 
         public bool NotifyInMainWindowDisplay { get; set; }
 

@@ -5,6 +5,7 @@ using Inscribe.Configuration.Tabs;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Inscribe.Text;
 
 namespace Inscribe.Common
 {
@@ -149,6 +150,21 @@ namespace Inscribe.Common
             if (status == null) return false;
             var ss = status as TwitterStatus;
             return ss != null && ss.RetweetedOriginal != null;
+        }
+
+        public static bool IsMentionOfMe(TwitterStatusBase status)
+        {
+            var tweet = status as TwitterStatus;
+            // DMではなくて、リツイートでもないことを確認する
+            if (tweet != null && tweet.RetweetedOriginal == null)
+            {
+                // リツイートステータス以外で、自分への返信を探す
+                var matches = RegularExpressions.AtRegex.Matches(status.Text);
+                if (matches.Count > 0 && matches.Cast<Match>().Select(m => m.Value)
+                        .Where(s => AccountStorage.Contains(s)).FirstOrDefault() != null)
+                    return true;
+            }
+            return false;
         }
 
         public static TwitterUser GetSuggestedUser(TweetViewModel status)

@@ -98,7 +98,7 @@ namespace Inscribe.ViewModels
 
         public bool IsNotifierBarBottom
         {
-            get { return Setting.Instance.NotificationProperty.IsNotifierBarBottom; }
+            get { return Setting.Instance.NotificationProperty.ShowNotifierBarInBottom; }
         }
 
         public void SelectUser(SelectionKind kind, IEnumerable<AccountInfo> defaultSelect, Action<IEnumerable<AccountInfo>> returning)

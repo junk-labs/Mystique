@@ -28,7 +28,7 @@ namespace Mystique.Views.Behaviors.Particular
         void PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             // delta ** 2
-            if (Setting.Instance.TimelineExperienceProperty.FastScrolling &&
+            if (Setting.Instance.TimelineExperienceProperty.UseFastScrolling &&
                 e.LeftButton != MouseButtonState.Pressed)
             {
                 e.Handled = true;

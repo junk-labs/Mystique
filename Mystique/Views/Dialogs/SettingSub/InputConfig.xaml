@@ -19,8 +19,12 @@
                   Content="文頭の空白文字を削除する(_R)"
                   IsChecked="{Binding TrimBeginSpace}" />
         <CheckBox Margin="4,2"
+                  Content="入力中のユーザー選択はその投稿にのみ使用する(_U)"
+                  IsChecked="{Binding EnableTemporarilyUserSelection}" 
+                  ToolTip="入力ボックスがオープンされている時のユーザー選択を、投稿時や入力キャンセル時に消去するようにします。" />
+        <CheckBox Margin="4,2"
                   Content="POST規制情報がある時はすぐにフォールバックする(_F)"
-                  IsChecked="{Binding ActiveFallback}"
+                  IsChecked="{Binding UseActiveFallback}"
                   ToolTip="POST規制されている情報がKrile内にあるとき、試験的に投稿を行うことなくフォールバックします。" />
         <Button Margin="4,2" Content="ハッシュタグ自動バインド設定(_A)...">
             <i:Interaction.Triggers>

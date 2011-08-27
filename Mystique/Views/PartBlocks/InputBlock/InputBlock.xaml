@@ -145,7 +145,7 @@
                 <com:ImageStackingView DataContext="{Binding ImageStackingViewViewModel}" />
                 <com:PopupButton.DropDownPopup>
                     <Popup>
-                        <com:UserSelector Background="White" DataContext="{Binding UserSelectorViewModel}" />
+                        <com:UserSelector Background="White" DataContext="{Binding InputUserSelectorViewModel}" />
                     </Popup>
                 </com:PopupButton.DropDownPopup>
             </com:PopupButton>

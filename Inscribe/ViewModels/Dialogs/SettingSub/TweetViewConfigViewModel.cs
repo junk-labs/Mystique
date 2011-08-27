@@ -12,7 +12,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
     {
         public bool PowerUserMode
         {
-            get { return Setting.Instance.ExperienceProperty.PowerUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsPowerUserMode; }
         }
 
         public TweetViewConfigViewModel()
@@ -22,10 +22,10 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._userNameViewModeIndex = (int)Setting.Instance.TweetExperienceProperty.UserNameViewMode;
             this._notificationNameViewModeIndex = (int)Setting.Instance.TweetExperienceProperty.NotificationNameViewMode;
             this._userNameAreaWidthString = Setting.Instance.TweetExperienceProperty.NameAreaWidth.ToString();
-            this._p3StyleIcon = Setting.Instance.TweetExperienceProperty.P3StyleIcon;
+            this._p3StyleIcon = Setting.Instance.TweetExperienceProperty.UseP3StyleIcon;
             this._showUnofficialRTButton = Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton;
             this._showQuoteTweetButton = Setting.Instance.TweetExperienceProperty.ShowQuoteButton;
-            this._fullLineView = Setting.Instance.TweetExperienceProperty.FullLineView;
+            this._fullLineView = Setting.Instance.TweetExperienceProperty.UseFullLineView;
         }
 
         private int _resolveStrategyIndex;
@@ -140,10 +140,10 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.TweetExperienceProperty.UserNameViewMode = (NameView)this._userNameViewModeIndex;
             Setting.Instance.TweetExperienceProperty.NotificationNameViewMode = (NameView)this._notificationNameViewModeIndex;
             Setting.Instance.TweetExperienceProperty.NameAreaWidth = this.UserNameAreaWidthInt;
-            Setting.Instance.TweetExperienceProperty.P3StyleIcon = this._p3StyleIcon;
+            Setting.Instance.TweetExperienceProperty.UseP3StyleIcon = this._p3StyleIcon;
             Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton = this._showUnofficialRTButton;
             Setting.Instance.TweetExperienceProperty.ShowQuoteButton = this._showQuoteTweetButton;
-            Setting.Instance.TweetExperienceProperty.FullLineView = this._fullLineView;
+            Setting.Instance.TweetExperienceProperty.UseFullLineView = this._fullLineView;
         }
     }
 }

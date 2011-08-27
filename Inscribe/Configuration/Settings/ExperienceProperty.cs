@@ -8,7 +8,7 @@ namespace Inscribe.Configuration.Settings
             this.PostFinishShowLength = 3000;
             this.UpdateKind = Define.GetVersion().FileBuildPart;
             this.TwitterActionNotifyShowLength = 5000;
-            this.PowerUserMode = false;
+            this.IsPowerUserMode = false;
             this.StatusMessageDefaultShowLengthSec = 5;
         }
 
@@ -17,7 +17,7 @@ namespace Inscribe.Configuration.Settings
         /// <summary>
         /// 上級者向けの解説を使用する
         /// </summary>
-        public bool PowerUserMode { get; set; }
+        public bool IsPowerUserMode { get; set; }
 
         /// <summary>
         /// 更新パッケージ種別

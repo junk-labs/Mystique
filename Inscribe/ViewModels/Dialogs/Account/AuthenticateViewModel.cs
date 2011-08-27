@@ -56,7 +56,7 @@ namespace Inscribe.ViewModels.Dialogs.Account
 
         public bool CanOverrideAPIKey
         {
-            get { return Setting.Instance.ExperienceProperty.PowerUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsPowerUserMode; }
         }
 
         public bool IsOverridesConsumerInfo

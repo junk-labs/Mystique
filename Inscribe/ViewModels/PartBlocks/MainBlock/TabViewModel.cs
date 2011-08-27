@@ -96,7 +96,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public bool IsFullLineView
         {
-            get { return Setting.Instance.TweetExperienceProperty.FullLineView; }
+            get { return Setting.Instance.TweetExperienceProperty.UseFullLineView; }
         }
 
         /// <summary>
@@ -564,7 +564,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
             // 正直謎設定だし、スタックトップTLの新着を伝えるってあんまり直感的じゃないから
             // 設定じゃなくて固定にしてよかったかもしれない
-            if (Setting.Instance.NotificationProperty.TabNotifyStackTopTimeline ?
+            if (Setting.Instance.NotificationProperty.NotifyStackTopTimeline ?
                 this.CurrentForegroundTimeline.CoreViewModel == timelineListCoreViewModel :
                 this.BaseTimeline.CoreViewModel == timelineListCoreViewModel)
             {

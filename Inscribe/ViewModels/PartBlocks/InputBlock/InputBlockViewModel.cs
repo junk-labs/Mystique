@@ -30,9 +30,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         public InputBlockViewModel(MainWindowViewModel parent)
         {
             this.Parent = parent;
-            this._ImageStackingViewViewModel = new ImageStackingViewViewModel();
-            this._UserSelectorViewModel = new UserSelectorViewModel();
-            this._UserSelectorViewModel.LinkChanged += () => this.LinkUserChanged(this.UserSelectorViewModel.LinkElements);
+            this._imageStackingViewViewModel = new ImageStackingViewViewModel();
+            this._userSelectorViewModel = new UserSelectorViewModel();
+            this._userSelectorViewModel.LinkChanged += () => this.LinkUserChanged(this.UserSelectorViewModel.LinkElements);
+            this._inputUserSelectorViewModel = new UserSelectorViewModel();
+            this._inputUserSelectorViewModel.LinkChanged += this.inputLinkUserChanged;
             this._intelliSenseTextBoxViewModel = new IntelliSenseTextBoxViewModel();
             this._intelliSenseTextBoxViewModel.TextChanged += (o, e) => invalidateTagBindState();
             this._intelliSenseTextBoxViewModel.ItemsOpening += (o, e) => _intelliSenseTextBoxViewModel_OnItemsOpening();
@@ -42,28 +44,39 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             RegisterKeyAssign();
         }
 
-        void UserSelectorLinkChanged(object sender, EventArgs e)
-        {
-            this.LinkUserChanged(this.UserSelectorViewModel.LinkElements);
-        }
-
         void CurrentTabChanged(TabViewModel tab)
         {
             this.SetCurrentTab(tab);
         }
 
-        UserSelectorViewModel _UserSelectorViewModel;
-
+        UserSelectorViewModel _userSelectorViewModel;
         public UserSelectorViewModel UserSelectorViewModel
         {
-            get { return _UserSelectorViewModel; }
+            get { return _userSelectorViewModel; }
         }
 
-        ImageStackingViewViewModel _ImageStackingViewViewModel;
+        UserSelectorViewModel _inputUserSelectorViewModel;
+        public UserSelectorViewModel InputUserSelectorViewModel
+        {
+            get { return _inputUserSelectorViewModel; }
+        }
 
+        private void inputLinkUserChanged()
+        {
+            if (Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection)
+            {
+                this.OverrideTarget(this.InputUserSelectorViewModel.LinkElements);
+            }
+            else
+            {
+                this.LinkUserChanged(this.InputUserSelectorViewModel.LinkElements);
+            }
+        }
+
+        ImageStackingViewViewModel _imageStackingViewViewModel;
         public ImageStackingViewViewModel ImageStackingViewViewModel
         {
-            get { return _ImageStackingViewViewModel; }
+            get { return _imageStackingViewViewModel; }
         }
       
         #region MenuItems
@@ -341,7 +354,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         {
             System.Diagnostics.Debug.WriteLine("input description resetted");
             this._currentInputDescription = null;
-            this.overrideTargets = null;
+            this.OverrideTarget(null);
             RaisePropertyChanged(() => CurrentInputDescription);
             UpdateAccountImages();
         }
@@ -496,8 +509,21 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         public void OverrideTarget(IEnumerable<AccountInfo> accounts)
         {
             this.overrideTargets = accounts;
-            UpdateAccountImages();
-            UpdateCommand.RaiseCanExecuteChanged();
+            if (accounts == null)
+            {
+                var ctab = this.Parent.ColumnOwnerViewModel.CurrentTab;
+                this.overrideTargets = null;
+                if (ctab == null) return;
+                this.InputUserSelectorViewModel.LinkElements = ctab.TabProperty.LinkAccountInfos;
+                UpdateAccountImages();
+                UpdateCommand.RaiseCanExecuteChanged();
+            }
+            else
+            {
+                this.InputUserSelectorViewModel.LinkElements = accounts;
+                UpdateAccountImages();
+                UpdateCommand.RaiseCanExecuteChanged();
+            }
         }
 
         private void LinkUserChanged(IEnumerable<AccountInfo> info)
@@ -506,6 +532,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             this.overrideTargets = null;
             if (ctab == null) return;
             ctab.TabProperty.LinkAccountInfos = info.ToArray();
+            this.UserSelectorViewModel.LinkElements = info;
+            this.InputUserSelectorViewModel.LinkElements = info;
             UpdateAccountImages();
             UpdateCommand.RaiseCanExecuteChanged();
         }
@@ -834,7 +862,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             if (targets == null)
                 targets = this.UserSelectorViewModel.LinkElements;
             var decidedTargets = targets.ToArray();
-            if (Setting.Instance.InputExperienceProperty.ActiveFallback)
+            if (Setting.Instance.InputExperienceProperty.UseActiveFallback)
                 decidedTargets = targets.Select(a => FallbackAccount(a, a)).Distinct().ToArray();
             this.CurrentInputDescription.ReadyUpdate(this, boundTags, decidedTargets).ForEach(AddUpdateWorker);
             ResetInputDescription();
