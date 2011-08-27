@@ -222,7 +222,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     "(このタブには" + items.Length + "ステータスが存在します)" + Environment.NewLine +
                     "よろしいですか？", "全Favoriteの警告", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
                 this.Messenger.Raise(cms);
-                if (cms.Response)
+                if (cms.Response.GetValueOrDefault())
                     items.ForEach(tdtvm => tdtvm.Favorite());
             }));
             KeyAssignCore.RegisterOperation("Favorite", () => ExecTVMAction(vm => vm.ToggleFavorite()));

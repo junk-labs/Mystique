@@ -807,7 +807,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             var conf = new ConfirmationMessage("ツイート @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Status.Text + " を削除してもよろしいですか？", 
                 "ツイートの削除", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
             this.Messenger.Raise(conf);
-            if (conf.Response)
+            if (conf.Response.GetValueOrDefault())
             {
                 PostOffice.RemoveTweet(AccountStorage.Get(this.Tweet.Status.User.ScreenName), this.Tweet.Status.Id);
             }
@@ -833,7 +833,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 "(Krileに存在するすべてのアカウントでスパム報告を行います)",
                 "スパム報告の確認", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
             this.Messenger.Raise(conf);
-            if (conf.Response)
+            if (conf.Response.GetValueOrDefault())
             {
                 AccountStorage.Accounts.ForEach(i => Task.Factory.StartNew(() => ApiHelper.ExecApi(() => i.ReportSpam(this.Tweet.Status.User.NumericId))));
                 TweetStorage.Remove(this.Tweet.Status.Id);

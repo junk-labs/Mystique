@@ -360,7 +360,7 @@ namespace Inscribe.Storage
             // Mention通知設定がないか、
             // 自分へのMentionでない場合にのみRegisterする
             if (!Setting.Instance.NotificationProperty.NotifyMention ||
-                TwitterHelper.IsMentionOfMe(added.Status))
+                !TwitterHelper.IsMentionOfMe(added.Status))
                 NotificationCore.RegisterNotify(added);
             OnTweetStorageChanged(new TweetStorageChangedEventArgs(TweetActionKind.Added, added));
             NotificationCore.DispatchNotify(added);
