@@ -25,6 +25,9 @@
         <l:InteractionMessageTrigger MessageKey="ShowAuth" Messenger="{Binding Messenger}">
             <ma:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type auth:Authenticate}" />
         </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="Information" Messenger="{Binding Messenger}">
+            <l:InformationDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>

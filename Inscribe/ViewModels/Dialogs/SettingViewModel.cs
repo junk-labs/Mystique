@@ -1,8 +1,8 @@
-﻿using Livet;
+﻿using Inscribe.Configuration;
+using Inscribe.ViewModels.Dialogs.SettingSub;
+using Livet;
 using Livet.Commands;
 using Livet.Messaging.Windows;
-using Inscribe.ViewModels.Dialogs.SettingSub;
-using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.Dialogs
 {
@@ -76,6 +76,11 @@ namespace Inscribe.ViewModels.Dialogs
             get { return _extServiceConfigViewModel; }
         }
 
+        private PluginConfigViewModel _pluginConfigViewModel = new PluginConfigViewModel();
+        public PluginConfigViewModel PluginConfigViewModel
+        {
+            get { return _pluginConfigViewModel; }
+        }
 
         #region ApplyCommand
         ViewModelCommand _ApplyCommand;

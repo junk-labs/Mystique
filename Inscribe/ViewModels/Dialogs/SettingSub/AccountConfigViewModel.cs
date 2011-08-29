@@ -85,9 +85,16 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             var ainfo = auth.GetAccountInfo();
             if (auth.Success && ainfo != null)
             {
-                ShowAccountConfig(ainfo);
-                AccountStorage.RegisterAccount(ainfo);
-                UserInformationManager.ReceiveInidividualInfo(ainfo);
+                if (AccountStorage.Contains(ainfo.ScreenName))
+                {
+                    this.Messenger.Raise(new InformationMessage("アカウント @" + ainfo.ScreenName + " は既に存在します。", "アカウント追加エラー", System.Windows.MessageBoxImage.Error, "Information"));
+                }
+                else
+                {
+                    ShowAccountConfig(ainfo);
+                    AccountStorage.RegisterAccount(ainfo);
+                    UserInformationManager.ReceiveInidividualInfo(ainfo);
+                }
             }
         }
         #endregion
@@ -178,7 +185,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             AccountStorage.DeleteAccount(this.ScreenName);
         }
         #endregion
-
 
         #region DeleteConfirmCommand
         ListenerCommand<ConfirmationMessage> _DeleteConfirmCommand;

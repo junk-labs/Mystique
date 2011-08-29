@@ -87,7 +87,12 @@ namespace Inscribe.Core
             standby = true;
             Task.Factory.StartNew(() => Inscribe.Communication.CruiseControl.AutoCruiseSchedulerManager.Begin());
             Task.Factory.StartNew(() => ConnectionManager.RefreshReceivers());
+            var call = OnStandbyApp;
+            if (call != null)
+                call();
         }
+
+        public static event Action OnStandbyApp;
 
         static void AppExit(object sender, ExitEventArgs e)
         {

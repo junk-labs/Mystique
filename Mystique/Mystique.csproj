@@ -96,6 +96,7 @@
     <Compile Include="Views\Behaviors\Actions\InvokePassThruCommandAction.cs" />
     <Compile Include="Views\Behaviors\Actions\SetListSelectionInteractionMessageAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TextBoxSetCaretAction.cs" />
+    <Compile Include="Views\Behaviors\Actions\TransitionExInteractionMessageAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TransitionInteractionMessageAction.cs" />
     <Compile Include="Views\Behaviors\Attached\RichTextBoxText.cs" />
     <Compile Include="Views\Behaviors\Attached\TextBoxExtension.cs" />

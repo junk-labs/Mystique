@@ -60,6 +60,7 @@
             <my:MuteConfig DataContext="{Binding MuteConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=8}" />
             <my:KeyAssignConfig DataContext="{Binding KeyAssignConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=9}" />
             <my:ExtServiceConfig DataContext="{Binding ExtServiceConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=10}" />
+            <my:PluginConfig DataContext="{Binding PluginConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=11}" />
         </Grid>
         <Button Grid.Row="1"
                 Grid.Column="1"

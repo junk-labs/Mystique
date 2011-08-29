@@ -16,12 +16,12 @@ namespace Casket
 
         public string Name
         {
-            get { return "Image uploader supporting plugin"; }
+            get { return "Krile basic plugin"; }
         }
 
         public double Version
         {
-            get { return 0.0; }
+            get { return 1.0; }
         }
 
         public IConfigurator ConfigurationInterface

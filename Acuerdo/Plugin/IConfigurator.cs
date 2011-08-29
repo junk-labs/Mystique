@@ -7,6 +7,6 @@ namespace Acuerdo.Plugin
     /// </summary>
     public interface IConfigurator
     {
-        void Transition(Window owner);
+        Window GetTransitionWindow();
     }
 }
