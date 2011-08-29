@@ -116,23 +116,21 @@
                 <MenuItem Command="{Binding FavoriteMultiUserCommand}"
                           Header="_Favorite..."
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                 ConverterParameter=FavoriteMulti}">
+                                                     ConverterParameter=FavoriteMulti}">
                     <MenuItem.Icon>
-                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
-                               Source="{StaticResource Favorite}" />
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Favorite}" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="{Binding RetweetMultiUserCommand}"
                           Header="_Retweet..."
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                 ConverterParameter=RetweetMulti}">
+                                                     ConverterParameter=RetweetMulti}">
                     <MenuItem.Icon>
-                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
-                               Source="{StaticResource Retweet}" />
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Retweet}" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-                <Separator />
+            <Separator />
             <MenuItem Command="{Binding OpenConversationCommand}"
                       Header="返信先とこのユーザーの会話を表示(_.)"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
@@ -143,25 +141,29 @@
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Conversation}" />
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Click="cSelectAll_Click"
+                      Header="すべて選択(_A)"
+                      Visibility="{Binding IsTextSelected,
+                                           Converter={StaticResource BoolInvisibleConverter}}" />
             <Separator Visibility="{Binding Path=Tweet.IsMention, Converter={StaticResource BoolVisibleConverter}}" />
             <MenuItem Header="このツイート(_T)">
                 <MenuItem Command="{Binding Path=Tweet.CopySTOTCommand}"
                           Header="_STOT形式でコピー"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                 ConverterParameter=CopySTOT}" />
+                                                     ConverterParameter=CopySTOT}" />
                 <MenuItem Command="{Binding Path=Tweet.CopyWebUrlCommand}"
                           Header="Web_URLをコピー"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                 ConverterParameter=CopyWebUrl}" />
+                                                     ConverterParameter=CopyWebUrl}" />
                 <MenuItem Command="{Binding Path=Tweet.CopyScreenNameCommand}"
                           Header="ユーザー@IDをコピー(_C)"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                 ConverterParameter=CopyScreenName}" />
+                                                     ConverterParameter=CopyScreenName}" />
                 <Separator />
                 <MenuItem Command="{Binding Path=Tweet.ShowTweetCommand}"
                           Header="_Webを開く..."
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                 ConverterParameter=OpenTweetWeb}" />
+                                                     ConverterParameter=OpenTweetWeb}" />
             </MenuItem>
             <MenuItem Header="このユーザー(_U)">
                 <MenuItem Command="{Binding ShowUserDetailCommand}"

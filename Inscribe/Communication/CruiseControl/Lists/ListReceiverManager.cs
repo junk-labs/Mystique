@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Inscribe.Data;
 using Inscribe.Model;
 using Inscribe.Storage;
-using System.Threading.Tasks;
 
 namespace Inscribe.Communication.CruiseControl.Lists
 {
@@ -77,7 +77,7 @@ namespace Inscribe.Communication.CruiseControl.Lists
 
         private static string NormalizeListName(string listName)
         {
-            return listName.ToLower().Replace("_", "-");
+            return listName.ToLower().Replace("_", "-").Replace(" ", "_");
         }
 
         private static string BuildListName(string user, string list)

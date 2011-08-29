@@ -155,6 +155,7 @@ namespace Inscribe.ViewModels.Dialogs
 
         private void RemoveQuery(string parameter)
         {
+            if (parameter == null) return;
             this.property.StreamingQueries =
                 this.property.StreamingQueries.Except(new[] { parameter }).ToArray();
             this.FilterEditorViewModel.RootFilters.OfType<FilterText>()

@@ -97,7 +97,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             this.isColorChanged = true;
             if (isRefreshBrightColor)
                 this.lightningColorChanged = true;
-            RaisePropertyChanged(() => BackBrush);
+            // RaisePropertyChanged(() => BackBrush);
+            // more speedy
+            RaisePropertyChanged("BackBrush");
         }
 
         #region Coloring Property
@@ -313,7 +315,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         static TabDependentTweetViewModel()
         {
-            taskDispatcher = new StackTaskDispatcher(10);
+            taskDispatcher = new StackTaskDispatcher(4);
             ThreadHelper.Halt += () => taskDispatcher.Dispose();
         }
 

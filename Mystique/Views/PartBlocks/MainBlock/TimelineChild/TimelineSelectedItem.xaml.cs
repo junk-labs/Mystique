@@ -6,6 +6,7 @@ using System.Windows.Media;
 using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Inscribe.Storage;
 
 namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
 {
@@ -53,7 +54,7 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
         {
             if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).DistanceDouble(ip) < 4)
             {
-                if (Setting.Instance.TweetExperienceProperty.UseFullLineView )
+                if (Setting.Instance.TweetExperienceProperty.UseFullLineView)
                 {
                     var lbi = GetListBoxItem();
                     if (lbi != null &&
@@ -86,10 +87,17 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
 
         private void cCopy_Click(object sender, RoutedEventArgs e)
         {
-            BodyText.Copy();
-            var cbtext = Clipboard.GetText();
-            if (cbtext != null && cbtext.EndsWith(Environment.NewLine))
-                Clipboard.SetText(cbtext.Substring(0, cbtext.Length - 1));
+            try
+            {
+                BodyText.Copy();
+                var cbtext = Clipboard.GetText();
+                if (cbtext != null && cbtext.EndsWith(Environment.NewLine))
+                    Clipboard.SetText(cbtext.Substring(0, cbtext.Length - 1));
+            }
+            catch (Exception ex)
+            {
+                ExceptionStorage.Register(ex, ExceptionCategory.UserError, "コピーに失敗しました。");
+            }
         }
 
         private void cSelectAll_Click(object sender, RoutedEventArgs e)

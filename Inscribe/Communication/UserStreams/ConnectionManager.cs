@@ -177,7 +177,7 @@ namespace Inscribe.Communication.UserStreams
 
         public static void RemoveQuery(string query)
         {
-            if (!referenceCount.ContainsKey(query))
+            if (query == null || !referenceCount.ContainsKey(query))
                 return;
             referenceCount[query]--;
             if (referenceCount[query] == 0)

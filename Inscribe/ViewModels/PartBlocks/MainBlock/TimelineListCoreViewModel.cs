@@ -79,6 +79,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 this._selectedTweetViewModel = value;
                 RaisePropertyChanged(() => SelectedTweetViewModel);
                 Task.Factory.StartNew(() => this._tweetsSource.ToArrayVolatile()
+                    // .ForEach(vm => vm.PendingColorChanged()));
                     .ForEach(vm => _updateDispatcher.Enqueue(() => vm.PendingColorChanged())));
             }
         }

@@ -183,6 +183,9 @@
     <Compile Include="Views\Dialogs\SettingSub\NotifyKindConfig.xaml.cs">
       <DependentUpon>NotifyKindConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\PluginConfig.xaml.cs">
+      <DependentUpon>PluginConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\SettingSub\TimelineConfig.xaml.cs">
       <DependentUpon>TimelineConfig.xaml</DependentUpon>
     </Compile>
@@ -365,6 +368,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\SettingSub\NotifyKindConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\PluginConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

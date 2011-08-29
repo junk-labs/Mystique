@@ -115,7 +115,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
 
                     // bind tag
-                    if (tags != null)
+                    if (tags != null && tags.Count() > 0)
                     {
                         foreach (var tag in tags.Select(t => t.StartsWith("#") ? t : "#" + t))
                         {
@@ -128,6 +128,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
                     // join quote
                     body += quoteBody;
+
+                    this.TweetSummary = body;
 
                     // ready
 

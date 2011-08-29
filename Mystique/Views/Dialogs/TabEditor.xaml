@@ -116,7 +116,7 @@
                         <Run Text="アイテムを追加すると、このタブのフィルタ設定に新たなソースとして追加されます。" />
                     </TextBlock>
                     <TabControl Grid.Row="1">
-                        <TabItem Header="ストリーミングクエリー">
+                        <TabItem Header="キーワード/ハッシュタグ">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />

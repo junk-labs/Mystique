@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using Dulcet.Twitter;
 using Inscribe.Communication.Posting;
 using Inscribe.Communication.UserStreams;
 using Inscribe.Configuration;
+using Inscribe.Core;
 using Inscribe.Model;
 using Inscribe.Storage;
 using Inscribe.Subsystems;
@@ -310,7 +310,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         private void Exit()
         {
-            Application.Current.Shutdown();
+            KernelService.AppShutdown();
         }
         #endregion
       
@@ -520,7 +520,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             }
             else
             {
-                this.InputUserSelectorViewModel.LinkElements = accounts;
+                if (Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection)
+                    this.InputUserSelectorViewModel.LinkElements = accounts;
                 UpdateAccountImages();
                 UpdateCommand.RaiseCanExecuteChanged();
             }

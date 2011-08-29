@@ -6,9 +6,9 @@ using System.Net;
 using System.Security;
 using System.Security.Cryptography;
 using System.Threading;
-using System.Windows;
 using System.Xml.Linq;
 using Inscribe.Configuration;
+using Inscribe.Core;
 using Inscribe.Storage;
 
 namespace Inscribe.Common
@@ -162,7 +162,7 @@ namespace Inscribe.Common
                     Define.GetNumericVersion().ToString() + " " +
                     Setting.Instance.ExperienceProperty.UpdateKind.ToString() + " " +
                     Process.GetCurrentProcess().Id.ToString());
-                Application.Current.Shutdown();
+                KernelService.AppShutdown();
             }
         }
     }

@@ -203,6 +203,7 @@
     <Compile Include="ViewModels\Dialogs\SettingSub\MuteConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\NotifyConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\NotifyKindConfigViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SettingSub\PluginConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\TimelineConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\TweetViewConfigViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />

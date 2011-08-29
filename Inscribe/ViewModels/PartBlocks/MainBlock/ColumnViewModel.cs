@@ -379,7 +379,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 {
                     ExceptionStorage.Register(new Exception("クエリリッスンに失敗"),
                          ExceptionCategory.InternalError,
-                        "ストリーミングクエリ―の登録に失敗しました。");
+                        "追加受信キーワードの登録に失敗しました。");
                     tabViewModel.TabProperty.StreamingQueries =
                         tabViewModel.TabProperty.StreamingQueries.Except(new[] { query }).ToArray();
                 }

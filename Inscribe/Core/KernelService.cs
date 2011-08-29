@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Windows;
 using Inscribe.ViewModels;
 
 namespace Inscribe.Core
@@ -19,6 +17,18 @@ namespace Inscribe.Core
                 else
                     throw new FieldAccessException("Field is already initialized.");
             }
+        }
+
+        private static bool _isInShutdown = false;
+        public static void AppShutdown()
+        {
+            _isInShutdown = true;
+            Application.Current.Shutdown();
+        }
+
+        public static bool IsAppInShutdown
+        {
+            get { return _isInShutdown; }
         }
     }
 }

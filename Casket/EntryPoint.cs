@@ -23,5 +23,10 @@ namespace Casket
         {
             get { return 0.0; }
         }
+
+        public IConfigurator ConfigurationInterface
+        {
+            get { return null; }
+        }
     }
 }

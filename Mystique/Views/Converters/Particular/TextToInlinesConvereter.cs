@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -51,7 +52,8 @@ namespace Mystique.Views.Converters.Particular
         public static IEnumerable<Inline> Generate(this string text)
         {
             if (!Application.Current.Dispatcher.CheckAccess())
-                return Application.Current.Dispatcher.Invoke((Func<string, IEnumerable<Inline>>)GenerateSink, text) as IEnumerable<Inline>;
+                return Application.Current.Dispatcher.Invoke((Func<string, IEnumerable<Inline>>)(s => GenerateSink(s).ToArray()),
+                    text) as IEnumerable<Inline>;
             else
                 return GenerateSink(text);
         }
@@ -141,7 +143,8 @@ namespace Mystique.Views.Converters.Particular
         public static IEnumerable<Inline> GenerateDigest(this string text)
         {
             if (!Application.Current.Dispatcher.CheckAccess())
-                return Application.Current.Dispatcher.Invoke((Func<string, IEnumerable<Inline>>)GenerateDigestSink, text) as IEnumerable<Inline>;
+                return Application.Current.Dispatcher.Invoke((Func<string, IEnumerable<Inline>>)(s => GenerateDigestSink(s).ToArray()),
+                    text) as IEnumerable<Inline>;
             else
                 return GenerateDigestSink(text);
         }
