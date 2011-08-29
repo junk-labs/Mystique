@@ -359,8 +359,14 @@ namespace Inscribe.Storage
         {
             // Mention通知設定がないか、
             // 自分へのMentionでない場合にのみRegisterする
-            if (!Setting.Instance.NotificationProperty.NotifyMention ||
-                !TwitterHelper.IsMentionOfMe(added.Status))
+            // +
+            // Retweet通知設定がないか、
+            // 自分のTweetのRetweetでない場合にのみRegisterする
+            if ((!Setting.Instance.NotificationProperty.NotifyMention ||
+                !TwitterHelper.IsMentionOfMe(added.Status)) &&
+                (!Setting.Instance.NotificationProperty.NotifyRetweet ||
+                !(added.Status is TwitterStatus) || ((TwitterStatus)added.Status).RetweetedOriginal == null ||
+                !AccountStorage.Contains(((TwitterStatus)added.Status).RetweetedOriginal.User.ScreenName)))
                 NotificationCore.RegisterNotify(added);
             OnTweetStorageChanged(new TweetStorageChangedEventArgs(TweetActionKind.Added, added));
             NotificationCore.DispatchNotify(added);

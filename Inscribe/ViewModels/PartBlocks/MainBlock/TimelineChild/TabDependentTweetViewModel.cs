@@ -46,10 +46,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     _lightningColorCache = Setting.Instance.ColoringProperty.BaseHighlightColor.GetColor();
                     _foreColorCache = Setting.Instance.ColoringProperty.BaseColor.GetDarkColor();
                     _backColorCache = Setting.Instance.ColoringProperty.BaseColor.GetLightColor();
-                    _foreBrushCache = new SolidColorBrush(_foreColorCache);
-                    _foreBrushCache.Freeze();
-                    _backBrushCache = new SolidColorBrush(_backColorCache);
-                    _backBrushCache.Freeze();
+                    _foreBrushCache = new SolidColorBrush(_foreColorCache).GetAsFrozen() as Brush;
+                    _backBrushCache = new SolidColorBrush(_backColorCache).GetAsFrozen() as Brush;
                     break;
                 case ItemInitStrategy.Full:
                     CommitColorChanged(true);
@@ -355,8 +353,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             if (_backColorCache != bcc)
             {
                 _backColorCache = bcc;
-                _backBrushCache = new SolidColorBrush(_backColorCache);
-                _backBrushCache.Freeze();
+                _backBrushCache = new SolidColorBrush(_backColorCache).GetAsFrozen() as Brush;
                 bcf = true;
             }
 
@@ -365,8 +362,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             if (_foreColorCache != fcc)
             {
                 _foreColorCache = fcc;
-                _foreBrushCache = new SolidColorBrush(_foreColorCache);
-                _foreBrushCache.Freeze();
+                _foreBrushCache = new SolidColorBrush(_foreColorCache).GetAsFrozen() as Brush;
                 fcf = true;
             }
             if (nlf)

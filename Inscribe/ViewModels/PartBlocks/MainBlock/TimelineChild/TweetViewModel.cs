@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using Dulcet.Twitter;
 using Inscribe.Common;
 using Inscribe.Configuration;
@@ -9,7 +10,6 @@ using Inscribe.Data;
 using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
-using System.Windows;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -412,7 +412,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
         #endregion
 
-
         #region CopyScreenNameCommand
         ViewModelCommand _CopyScreenNameCommand;
 
@@ -483,5 +482,4 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             return (int)this.bindingId;
         }
     }
-
 }

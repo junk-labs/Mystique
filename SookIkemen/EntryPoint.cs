@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.Composition;
+using System.Linq;
 using Acuerdo.Plugin;
 using Inscribe.Communication.Posting;
 
 namespace SookIkemen
 {
+    [Export(typeof(IPlugin))]
     public class EntryPoint : IPlugin
     {
         public string Name
