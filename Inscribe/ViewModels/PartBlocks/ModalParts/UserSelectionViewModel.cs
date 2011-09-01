@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.ViewModels.Common;
 using Livet;
 using Livet.Commands;

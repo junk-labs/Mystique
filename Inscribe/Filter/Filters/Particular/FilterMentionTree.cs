@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
-using Inscribe.Communication;
 using Inscribe.Filter.Core;
+using Inscribe.Common;
 using Inscribe.Storage;
 
 namespace Inscribe.Filter.Filters.Particular

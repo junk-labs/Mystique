@@ -8,7 +8,7 @@ using Inscribe.Communication.CruiseControl.Lists;
 using Inscribe.Communication.UserStreams;
 using Inscribe.Filter;
 using Inscribe.Filter.Core;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.Storage;
 using Livet;
 

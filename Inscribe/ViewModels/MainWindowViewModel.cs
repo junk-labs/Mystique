@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Threading;
 using Inscribe.Configuration;
 using Inscribe.Core;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.BlockCommon;
 using Inscribe.ViewModels.PartBlocks.InputBlock;

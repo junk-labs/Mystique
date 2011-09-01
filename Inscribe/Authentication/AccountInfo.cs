@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Xml.Serialization;
 using Dulcet.Twitter;
 using Inscribe.Configuration.Elements;
 using Inscribe.Data;
-using Inscribe.ViewModels;
-using System.Collections.Concurrent;
-using Livet;
-using System.Threading;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Livet;
 
-namespace Inscribe.Model
+namespace Inscribe.Authentication
 {
     public enum ConnectionState
     {

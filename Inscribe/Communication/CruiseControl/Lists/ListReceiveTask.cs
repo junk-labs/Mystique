@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Dulcet.Twitter.Rest;
-using Inscribe.Model;
+using Inscribe.Authentication;
+using Inscribe.Common;
 
 namespace Inscribe.Communication.CruiseControl.Lists
 {

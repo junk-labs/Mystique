@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Livet;
 using Inscribe.Storage;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Livet.Commands;
 using System.Collections.ObjectModel;
 using System.Threading;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Livet;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.Configuration;
 using System.Threading;
 using Inscribe.Threading;

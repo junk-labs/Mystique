@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Dulcet.Twitter.Rest;
+using Inscribe.Authentication;
 using Inscribe.Commnuication.CruiseControl.Core;
+using Inscribe.Common;
 using Inscribe.Communication.CruiseControl.DefaultTasks;
-using Inscribe.Model;
 using Inscribe.Storage;
 using Inscribe.Threading;
 

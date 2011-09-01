@@ -53,7 +53,7 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
                     return StateImages.Error;
                 else if (PostOffice.IsExistsUnderControlledAccount())
                     return StateImages.Info;
-                else if (AccountStorage.Accounts.Where(a => a.AccoutProperty.UseUserStreams && a.ConnectionState != Model.ConnectionState.Connected).Count() > 0)
+                else if (AccountStorage.Accounts.Where(a => a.AccoutProperty.UseUserStreams && a.ConnectionState != Authentication.ConnectionState.Connected).Count() > 0)
                     return StateImages.Warning;
                 else
                     return StateImages.Ok;

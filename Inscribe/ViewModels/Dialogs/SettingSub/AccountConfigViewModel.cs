@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Inscribe.Communication;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.Storage;
 using Livet;
 using Livet.Commands;

@@ -5,8 +5,9 @@ using System.Net.NetworkInformation;
 using System.Threading;
 using Dulcet.Twitter.Rest;
 using Dulcet.Twitter.Streaming;
+using Inscribe.Authentication;
+using Inscribe.Common;
 using Inscribe.Configuration;
-using Inscribe.Model;
 using Inscribe.Storage;
 using Inscribe.Threading;
 

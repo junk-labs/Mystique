@@ -10,7 +10,7 @@ using Inscribe.Communication.Posting;
 using Inscribe.Communication.UserStreams;
 using Inscribe.Configuration;
 using Inscribe.Core;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.Storage;
 using Inscribe.Subsystems;
 using Inscribe.Text;

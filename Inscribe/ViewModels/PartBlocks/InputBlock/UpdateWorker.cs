@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Inscribe;
 using Inscribe.Communication.Posting;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.Plugin;
 using Inscribe.Storage;
 using Livet;

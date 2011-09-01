@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Inscribe.Data;
-using Inscribe.Model;
 using Inscribe.Storage;
 
 namespace Inscribe.Communication.CruiseControl.Lists
@@ -42,11 +41,9 @@ namespace Inscribe.Communication.CruiseControl.Lists
                     using (rvLocker.GetWriterLock())
                     {
                         referenceCount.Add(fullname, 1);
-                        AccountInfo target;
-                        if (AccountStorage.Contains(listUser))
-                            target = AccountStorage.Get(listUser);
-                        else
-                            target = AccountStorage.GetRandom();
+                        var target = AccountStorage.Get(listUser);
+                        if (target == null)
+                            target = AccountStorage.GetRandom(ai => ai.IsFollowingList(listUser, listName), true);
                         receivers.Add(fullname, new ListReceiveTask(target, listUser, listName));
                         Task.Factory.StartNew(() => ListStorage.Get(listUser, listName));
                     }

@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.ComponentModel;
-
+using System.Threading.Tasks;
+using Dulcet.Twitter.Rest;
+using Inscribe.Communication;
+using Inscribe.Common;
+using Inscribe.Authentication;
+using Inscribe.Storage;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
 using Livet.Commands;
-using Livet.Messaging;
-using Livet.Messaging.IO;
 using Livet.Messaging.Windows;
-using Inscribe.Model;
-using Inscribe.ViewModels.PartBlocks.MainBlock;
-using Dulcet.Twitter.Rest;
-using System.Threading.Tasks;
-using Inscribe.Storage;
-using Inscribe.Communication;
 
 namespace Inscribe.ViewModels.Dialogs.Common
 {

@@ -2,7 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Dulcet.Twitter.Rest;
-using Inscribe.Model;
+using Inscribe.Authentication;
+using Inscribe.Common;
 using Inscribe.Storage;
 using Inscribe.Threading;
 

@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.Storage;
 using Livet;
 

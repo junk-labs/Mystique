@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
 using Dulcet.Twitter.Credential;
 
-namespace Inscribe.Model
+namespace Inscribe.Authentication
 {
     /// <summary>
     /// アカウント情報の基本的な部分を保持します。<para />

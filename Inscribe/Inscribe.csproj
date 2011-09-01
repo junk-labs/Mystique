@@ -63,6 +63,7 @@
     <Compile Include="Communication\UserStreams\UserStreamsConnection.cs" />
     <Compile Include="Filter\Filters\Text\FilterHashtagText.cs" />
     <Compile Include="Filter\Filters\Text\FilterUrlText.cs" />
+    <Compile Include="Common\KeyAssignHelper.cs" />
     <Compile Include="Storage\ImageCacheStorage.cs" />
     <Compile Include="Storage\UrlResolveCacheStorage.cs" />
     <Compile Include="Common\EnumerableEx.cs" />
@@ -72,7 +73,7 @@
     <Compile Include="Common\TwitterHelper.cs" />
     <Compile Include="Common\UpdateReceiver.cs" />
     <Compile Include="Common\XMLSerializer.cs" />
-    <Compile Include="Communication\APIHelper.cs" />
+    <Compile Include="Common\ApiHelper.cs" />
     <Compile Include="Communication\CruiseControl\AccountScheduler.cs" />
     <Compile Include="Communication\CruiseControl\AutoCruiseSchedulerManager.cs" />
     <Compile Include="Communication\CruiseControl\Core\ScheduledTask.cs" />
@@ -161,8 +162,8 @@
     <Compile Include="Filter\Core\Escaping.cs" />
     <Compile Include="Filter\Core\IQueryConvertable.cs" />
     <Compile Include="Filter\Core\QueryCompiler.cs" />
-    <Compile Include="Model\AccountInfo.cs" />
-    <Compile Include="Model\CredentialCore.cs" />
+    <Compile Include="Authentication\AccountInfo.cs" />
+    <Compile Include="Authentication\CredentialCore.cs" />
     <Compile Include="Subsystems\NotificationCore.cs" />
     <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="Plugin\PluginManager.cs" />

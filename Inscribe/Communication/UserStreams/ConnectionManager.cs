@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.Storage;
 using Inscribe.Threading;
 using Livet;
@@ -246,7 +246,7 @@ namespace Inscribe.Communication.UserStreams
         {
             if (accountInfo == null)
                 throw new ArgumentException("accountInfo");
-            accountInfo.ConnectionState = Model.ConnectionState.Disconnected;
+            accountInfo.ConnectionState = Authentication.ConnectionState.Disconnected;
             OnConnectionStateChanged(EventArgs.Empty);
 
             if (ThreadHelper.IsHalted) // アプリケーションが終了中

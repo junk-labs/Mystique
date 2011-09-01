@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Inscribe.Storage;
 using System.ComponentModel;
 

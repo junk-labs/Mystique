@@ -3,16 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dulcet.Twitter.Rest;
 using Inscribe.Common;
-using Inscribe.Communication;
 using Inscribe.Configuration;
 using Inscribe.Filter;
 using Inscribe.Filter.Filters.Numeric;
+using Inscribe.Common;
 using Inscribe.Storage;
 using Inscribe.ViewModels.Behaviors.Messaging;
+using Inscribe.ViewModels.Dialogs.Common;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.ViewModels.Dialogs.Common;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {

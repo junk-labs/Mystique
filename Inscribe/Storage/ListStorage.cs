@@ -4,10 +4,12 @@ using System.Linq;
 using System.Net;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
-using Inscribe.Communication;
-using Inscribe.Data;
-using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Inscribe.Configuration;
+using Inscribe.Data;
+using Inscribe.Common;
+using Inscribe.Authentication;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
+
 namespace Inscribe.Storage
 {
     /// <summary>
@@ -21,6 +23,14 @@ namespace Inscribe.Storage
 
         private static ReaderWriterLockWrap memberLock = new ReaderWriterLockWrap();
         private static Dictionary<Tuple<string, string>, IEnumerable<UserViewModel>> listMemberDicts = new Dictionary<Tuple<string, string>, IEnumerable<UserViewModel>>();
+
+        private static AccountInfo GetSuitableAccount(string screenName, string listName)
+        {
+            var acInfo = AccountStorage.Get(screenName);
+            if (acInfo == null)
+                acInfo = AccountStorage.GetRandom(ai => ai.IsFollowingList(screenName, listName), true);
+            return acInfo;
+        }
 
         /// <summary>
         /// Twitter Listを登録、または更新します。
@@ -70,7 +80,7 @@ namespace Inscribe.Storage
             try
             {
                 if (!Setting.IsInitialized) return null;
-                var acInfo = AccountStorage.GetRandom(a => a.IsFollowingList(screenName, listName), true);
+                var acInfo = GetSuitableAccount(screenName, listName);
                 if (acInfo == null) return null;
                 var list = ApiHelper.ExecApi(() => acInfo.GetList(screenName, listName));
                 if (list == null)
@@ -119,7 +129,7 @@ namespace Inscribe.Storage
             }
             else
             {
-                var acInfo = AccountStorage.GetRandom(a => a.IsFollowingList(screenName, listName), true);
+                var acInfo = GetSuitableAccount(screenName, listName);
                 if (acInfo == null) return null;
                 IEnumerable<TwitterUser> members = null;
                 try

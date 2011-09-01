@@ -11,6 +11,7 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Messaging;
 using System.Threading.Tasks;
+using Inscribe.Common;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -314,17 +315,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void ExecTabAction(Action<TabViewModel> action)
         {
-            if (this.CurrentTab != null)
-                action(this.CurrentTab);
+            KeyAssignHelper.ExecuteTabAction(action);
         }
 
         private void ExecTVMAction(Action<TabDependentTweetViewModel> action)
         {
-            var cc = this.CurrentTab != null ? this.CurrentTab.CurrentForegroundTimeline : null;
-            if (cc == null) return;
-            var vm = cc.SelectedTweetViewModel;
-            if (vm == null) return;
-            action(vm);
+            KeyAssignHelper.ExecuteTVMAction(action);
         }
 
         private void CreateUserTab(TabDependentTweetViewModel tvm, bool newColumn)

@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using Inscribe.Common;
 using Inscribe.Communication;
 using Inscribe.Configuration;
-using Inscribe.Model;
+using Inscribe.Authentication;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 using Livet.Messaging.Windows;
+using Inscribe.Common;
 
 namespace Inscribe.ViewModels.Dialogs.Account
 {

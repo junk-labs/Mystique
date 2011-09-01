@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.Model;
-using Livet;
-using Inscribe.Storage;
 using System.Threading.Tasks;
 using Dulcet.Twitter.Rest;
-using Inscribe.Communication;
+using Inscribe.Common;
+using Inscribe.Authentication;
+using Inscribe.Storage;
+using Livet;
 
 namespace Inscribe.ViewModels.Common
 {

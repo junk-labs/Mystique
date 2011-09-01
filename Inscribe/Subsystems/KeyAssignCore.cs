@@ -10,6 +10,7 @@ using Inscribe.Configuration.Settings;
 using Inscribe.Storage;
 using Inscribe.Subsystems.KeyAssign;
 using Livet;
+using Inscribe.Common;
 
 namespace Inscribe.Subsystems
 {
@@ -50,26 +51,34 @@ namespace Inscribe.Subsystems
             callbacks = new Dictionary<string, Action>();
         }
 
+        /// <summary>
+        /// キーアサインの設定一覧を判別可能な形式で取得します。
+        /// </summary>
         public static string GetKeyAssignMaps()
         {
             return callbacks.Keys.Select(k => k + " : " + LookupKeyFromId(k))
                 .JoinString(Environment.NewLine);
         }
 
-        public static void RegisterOperation(string id, Action callback)
+        /// <summary>
+        /// キーアサイン オペレーションを登録します。
+        /// </summary>
+        /// <param name="id">キーアサインID</param>
+        /// <param name="action">コールバックアクション</param>
+        /// <exception cref="System.ArgumentNullException">同一のIDが登録済みです。</exception>
+        public static void RegisterOperation(string id, Action action)
         {
             if (id == null)
                 throw new ArgumentNullException("id");
             if (callbacks.ContainsKey(id))
                 throw new ArgumentException("すでにIDが登録されています。");
-            callbacks.Add(id, callback);
+            callbacks.Add(id, action);
         }
 
-        public static String GetPath(string fileName)
-        {
-            return Path.Combine(Path.GetDirectoryName(Define.ExeFilePath), Define.KeyAssignDirectory, fileName);
-        }
-
+        /// <summary>
+        /// キーアサインIDに関連付けられたキー一覧を取得します。
+        /// </summary>
+        /// <param name="id">キーアサインID</param>
         public static String LookupKeyFromId(string id)
         {
             if (assignDescription == null)
@@ -79,20 +88,9 @@ namespace Inscribe.Subsystems
                 .Select(s => KeyToString(s.Modifiers, s.Key)).JoinString(", ");
         }
 
-        public static String KeyToString(ModifierKeys modkeys, Key key)
-        {
-            String ret = key.ToString();
-            if (modkeys.HasFlag(ModifierKeys.Shift))
-                ret = "Shift+" + ret;
-            if(modkeys.HasFlag(ModifierKeys.Windows))
-                ret = "Win+" + ret;
-            if(modkeys.HasFlag(ModifierKeys.Alt))
-                ret = "Alt+" + ret;
-            if(modkeys.HasFlag(ModifierKeys.Control))
-                ret = "Control+" + ret;
-            return ret;
-        }
-
+        /// <summary>
+        /// 現在の設定に合わせて、キーアサイン一覧を更新します。
+        /// </summary>
         public static void ReloadAssign()
         {
             assignDescription = null;
@@ -101,7 +99,7 @@ namespace Inscribe.Subsystems
             {
                 try
                 {
-                    assignDescription = AssignLoader.LoadAssign(GetPath(Setting.Instance.KeyAssignProperty.KeyAssignFile));
+                    assignDescription = AssignLoader.LoadAssign(KeyAssignHelper.GetPath(Setting.Instance.KeyAssignProperty.KeyAssignFile));
                 }
                 catch (Exception e)
                 {
@@ -115,7 +113,7 @@ namespace Inscribe.Subsystems
             {
                 try
                 {
-                    assignDescription = AssignLoader.LoadAssign(GetPath(KeyAssignProperty.DefaultAssignFileName));
+                    assignDescription = AssignLoader.LoadAssign(KeyAssignHelper.GetPath(KeyAssignProperty.DefaultAssignFileName));
                 }
                 catch (Exception e)
                 {
@@ -127,12 +125,35 @@ namespace Inscribe.Subsystems
             OnKeyAssignUpdated(EventArgs.Empty);
         }
 
+        /// <summary>
+        /// キー表現を判別可能な文字列に変換します。
+        /// </summary>
+        public static String KeyToString(ModifierKeys modkeys, Key key)
+        {
+            String ret = key.ToString();
+            if (modkeys.HasFlag(ModifierKeys.Shift))
+                ret = "Shift+" + ret;
+            if (modkeys.HasFlag(ModifierKeys.Windows))
+                ret = "Win+" + ret;
+            if (modkeys.HasFlag(ModifierKeys.Alt))
+                ret = "Alt+" + ret;
+            if (modkeys.HasFlag(ModifierKeys.Control))
+                ret = "Control+" + ret;
+            return ret;
+        }
+
+        /// <summary>
+        /// KeyDown Eventを通知します。
+        /// </summary>
         public static void HandlePreviewEvent(KeyEventArgs e, AssignRegion region)
         {
             if (HandleEventSink(CheckIme(e), region, true, IsSourceFromTextBox(e)))
                 e.Handled = true;
         }
 
+        /// <summary>
+        /// PreviewKeyDown Eventを通知します。
+        /// </summary>
         public static void HandleEvent(KeyEventArgs e, AssignRegion region)
         {
             if (HandleEventSink(CheckIme(e), region, false, IsSourceFromTextBox(e)))
@@ -199,9 +220,13 @@ namespace Inscribe.Subsystems
             return dispatched;
         }
 
-        internal static bool ExistsAction(string action)
+        /// <summary>
+        /// 指定されたキーアサインIDを持つアクションが登録されているか確認します。
+        /// </summary>
+        /// <param name="id">キーアサインID</param>
+        public static bool ExistsAction(string id)
         {
-            return callbacks.ContainsKey(action);
+            return callbacks.ContainsKey(id);
         }
     }
 }

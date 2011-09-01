@@ -4,7 +4,7 @@ using System.Threading;
 using Inscribe.Configuration;
 using Inscribe.Storage;
 
-namespace Inscribe.Communication
+namespace Inscribe.Common
 {
     public static class ApiHelper
     {
