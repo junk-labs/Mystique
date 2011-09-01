@@ -90,6 +90,8 @@ namespace Inscribe.Core
             var call = OnStandbyApp;
             if (call != null)
                 call();
+            if (Environment.OSVersion.Version.Major < 6)
+                NotifyStorage.Notify("ご利用のオペレーティングシステムはKrileでサポートされていません。");
         }
 
         public static event Action OnStandbyApp;

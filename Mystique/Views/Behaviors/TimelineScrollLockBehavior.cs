@@ -9,6 +9,7 @@ using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Mystique.Views.PartBlocks.MainBlock;
+using System;
 
 namespace Mystique.Views.Behaviors
 {
@@ -104,6 +105,7 @@ namespace Mystique.Views.Behaviors
 
         private void SetScrollSynchronized()
         {
+            if (this.AssociatedObject == null || this.AssociatedObject.List == null) return;
             var sv = GetScrollViewer(this.AssociatedObject.List);
             var move = sv.VerticalOffset + Interlocked.Exchange(ref scrollWaitCount, 0);
             if (sv != null)
@@ -120,6 +122,8 @@ namespace Mystique.Views.Behaviors
         /// <returns>ScrollViewerインスタンス またはnull</returns>
         private ScrollViewer GetScrollViewer(DependencyObject o)
         {
+            if (o == null)
+                throw new ArgumentNullException("object is null.");
             // Return the DependencyObject if it is a ScrollViewer
             var sv = o as ScrollViewer;
             if (sv != null)

@@ -218,15 +218,8 @@ namespace Inscribe.Storage
                 // 全く初めて触れるステータス
                 viewModel = new TweetViewModel(statusBase);
             }
-            if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster == null ||
-                !Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(statusBase))
+            if (ValidateTweet(viewModel))
             {
-                if (Setting.Instance.TimelineFilteringProperty.MuteBlockedUsers)
-                {
-                    // 何か一つのBlockにでも引っかかったらダメ
-                    if (AccountStorage.Accounts.Any(a => a.IsBlocking(statusBase.User.NumericId)))
-                        return viewModel;
-                }
                 // プリプロセッシング
                 PreProcess(statusBase);
                 lock (__regCoreLock__)
@@ -247,6 +240,25 @@ namespace Inscribe.Storage
                 System.Diagnostics.Debug.WriteLine("*** trash: " + statusBase.ToString());
             }
             return viewModel;
+        }
+
+        /// <summary>
+        /// 登録可能なツイートか判定
+        /// </summary>
+        /// <returns></returns>
+        private static bool ValidateTweet(TweetViewModel viewModel)
+        {
+            if (viewModel.Status == null || viewModel.Status.User == null)
+                throw new ArgumentException("データが破損しています。");
+            // Local mute
+            if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster != null &&
+                Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(viewModel.Status))
+                return false;
+            // Block Sharing
+            if (Setting.Instance.TimelineFilteringProperty.MuteBlockedUsers &&
+                AccountStorage.Accounts.Any(a => a.IsBlocking(viewModel.Status.User.NumericId)))
+                return false;
+            return true;
         }
 
         /// <summary>

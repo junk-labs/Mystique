@@ -9,6 +9,7 @@ using Inscribe.Storage;
 using Inscribe.ViewModels;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using System.Linq;
 using Livet;
 using Livet.Messaging;
 
@@ -73,10 +74,30 @@ namespace Inscribe.Subsystems
 
         private static Dictionary<TweetViewModel, string> waitings = new Dictionary<TweetViewModel, string>();
 
+        /// <summary>
+        /// 対象ビューモデルが指し示すツイートがミュート対象でないことを確認します。
+        /// </summary>
+        private static bool CheckIsAllowed(TweetViewModel vm)
+        {
+            // データ破損
+            if (vm.Status == null || vm.Status.User == null)
+                return false;
+            // ミュート対象
+            if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster != null &&
+                Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(vm.Status))
+                return false;
+            // ブロック対象
+            if (Setting.Instance.TimelineFilteringProperty.MuteBlockedUsers &&
+                AccountStorage.Accounts.Any(a => a.IsBlocking(vm.Status.User.NumericId)))
+                return false;
+            return true;
+        }
+
         public static void RegisterNotify(TweetViewModel tweet)
         {
             if (!Setting.Instance.NotificationProperty.NotifyReceives ||
-                tweet.CreatedAt < DateTime.Now.Subtract(TimeSpan.FromMinutes(10)))
+                tweet.CreatedAt < DateTime.Now.Subtract(TimeSpan.FromMinutes(10)) ||
+                !CheckIsAllowed(tweet))
                 return;
             lock (waitingsLocker)
             {

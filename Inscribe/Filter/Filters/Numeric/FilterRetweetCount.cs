@@ -7,25 +7,25 @@ namespace Inscribe.Filter.Filters.Numeric
 {
     public class FilterRetweetCount : FilterBase
     {
-        private LongRange range;
+        private LongRange _range;
 
         [GuiVisible("Retweet数範囲")]
         public LongRange Range
         {
-            get { return range ?? LongRange.FromPivotValue(0); }
-            set { range = value; }
+            get { return _range ?? LongRange.FromPivotValue(0); }
+            set { _range = value; }
         }
 
         private FilterRetweetCount() { }
 
         public FilterRetweetCount(LongRange range)
         {
-            this.range = range;
+            this.Range = range;
         }
 
         public FilterRetweetCount(long pivot)
         {
-            this.range = LongRange.FromPivotValue(pivot);
+            this.Range = LongRange.FromPivotValue(pivot);
         }
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
@@ -40,7 +40,7 @@ namespace Inscribe.Filter.Filters.Numeric
 
         public override IEnumerable<object> GetArgumentsForQueryify()
         {
-            yield return this.range;
+            yield return this.Range;
         }
 
         public override string Description
