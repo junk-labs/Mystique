@@ -4,10 +4,10 @@ using System.Linq;
 using System.Net;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
+using Inscribe.Authentication;
+using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Data;
-using Inscribe.Common;
-using Inscribe.Authentication;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 
 namespace Inscribe.Storage

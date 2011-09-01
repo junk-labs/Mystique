@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Inscribe.Data;
-using Inscribe.Authentication;
-using Livet;
 using System.Threading;
 using System.Threading.Tasks;
+using Inscribe.Authentication;
+using Inscribe.Data;
+using Livet;
 
 namespace Inscribe.Storage
 {

@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
 using Inscribe.Storage;
 using Inscribe.Subsystems.KeyAssign;
 using Livet;
-using Inscribe.Common;
 
 namespace Inscribe.Subsystems
 {

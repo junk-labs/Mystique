@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Livet;
-using Inscribe.Authentication;
-using Inscribe.Configuration;
 using System.Threading;
-using Inscribe.Threading;
-using Inscribe.Communication.Posting;
-using Inscribe.Storage;
-using System.Windows.Media;
-using Livet.Commands;
 using System.Threading.Tasks;
-using Inscribe.ViewModels.Common;
 using System.Windows;
+using System.Windows.Media;
+using Inscribe.Authentication;
+using Inscribe.Common;
+using Inscribe.Communication.Posting;
+using Inscribe.Configuration;
+using Inscribe.Storage;
+using Inscribe.ViewModels.Common;
+using Livet;
+using Livet.Commands;
 
 namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 {

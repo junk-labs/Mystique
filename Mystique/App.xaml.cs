@@ -5,7 +5,6 @@ using System.Windows;
 using Inscribe;
 using Inscribe.Common;
 using Inscribe.Core;
-using Inscribe.Threading;
 using Livet;
 
 namespace Mystique

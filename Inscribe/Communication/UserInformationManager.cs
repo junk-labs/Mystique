@@ -5,7 +5,6 @@ using Dulcet.Twitter.Rest;
 using Inscribe.Authentication;
 using Inscribe.Common;
 using Inscribe.Storage;
-using Inscribe.Threading;
 
 namespace Inscribe.Communication
 {

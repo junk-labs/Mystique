@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.Configuration.Tabs;
+﻿using Inscribe.Configuration.Tabs;
 
 namespace Inscribe.Core
 {

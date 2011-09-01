@@ -4,11 +4,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Xml.Serialization;
+using Inscribe.Authentication;
 using Inscribe.Communication.CruiseControl.Lists;
 using Inscribe.Communication.UserStreams;
 using Inscribe.Filter;
 using Inscribe.Filter.Core;
-using Inscribe.Authentication;
 using Inscribe.Storage;
 using Livet;
 

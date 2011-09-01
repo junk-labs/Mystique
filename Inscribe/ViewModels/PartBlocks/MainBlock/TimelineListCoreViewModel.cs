@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Data;
+using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Data;
 using Inscribe.Filter;
 using Inscribe.Storage;
-using Inscribe.Threading;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;

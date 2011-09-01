@@ -3,12 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Dulcet.Network;
 using Inscribe.Common;
 using Inscribe.Configuration;
-using Inscribe.Storage;
-using System.Threading.Tasks;
 
 namespace Inscribe.Storage
 {

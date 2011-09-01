@@ -2,17 +2,14 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Dulcet.Twitter;
+using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Subsystems;
-using Inscribe.Text;
-using Inscribe.Threading;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
-using Inscribe.Common;
 
 namespace Inscribe.Storage
 {

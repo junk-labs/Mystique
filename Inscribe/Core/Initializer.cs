@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using System.Windows;
 using Inscribe.Common;
+using Inscribe.Communication.UserStreams;
 using Inscribe.Configuration;
 using Inscribe.Plugin;
-using Inscribe.Subsystems;
 using Inscribe.Storage;
-using Inscribe.Communication.UserStreams;
+using Inscribe.Subsystems;
 
 namespace Inscribe.Core
 {

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Inscribe.Configuration.Tabs;
-using System.Xml.Serialization;
-using Inscribe.Filter;
-using Inscribe.Filter.Filters.ScreenName;
 using System.Windows;
+using System.Xml.Serialization;
+using Inscribe.Configuration.Tabs;
+using Inscribe.Filter;
 using Inscribe.Filter.Filters.Attributes;
+using Inscribe.Filter.Filters.ScreenName;
 
 namespace Inscribe.Configuration.Settings
 {

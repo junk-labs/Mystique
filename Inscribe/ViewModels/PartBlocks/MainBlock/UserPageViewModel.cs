@@ -6,7 +6,6 @@ using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Filter;
 using Inscribe.Filter.Filters.Numeric;
-using Inscribe.Common;
 using Inscribe.Storage;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.Dialogs.Common;

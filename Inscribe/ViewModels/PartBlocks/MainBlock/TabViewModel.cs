@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Tabs;
 using Inscribe.Filter;
@@ -16,7 +17,6 @@ using Inscribe.Subsystems;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.Threading;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {

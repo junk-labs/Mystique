@@ -181,9 +181,9 @@
     <Compile Include="Storage\UserStorage.cs" />
     <Compile Include="Text\RegularExpressions.cs" />
     <Compile Include="Text\TweetTextCounter.cs" />
-    <Compile Include="Threading\DispatcherEx.cs" />
+    <Compile Include="Common\DispatcherEx.cs" />
     <Compile Include="Threading\RestrictedTask.cs" />
-    <Compile Include="Threading\ThreadHelper.cs" />
+    <Compile Include="Common\ThreadHelper.cs" />
     <Compile Include="TwitterDefine.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\SetListSelectionMessage.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\TextBoxSetCaretMessage.cs" />

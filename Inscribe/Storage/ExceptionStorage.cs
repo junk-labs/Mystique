@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.Data;
-using System.Collections.Concurrent;
-using Livet;
 using System.Threading;
+using Inscribe.Data;
+using Livet;
 
 namespace Inscribe.Storage
 {

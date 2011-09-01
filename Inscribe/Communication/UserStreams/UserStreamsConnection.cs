@@ -9,7 +9,6 @@ using Inscribe.Authentication;
 using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Storage;
-using Inscribe.Threading;
 
 namespace Inscribe.Communication.UserStreams
 {

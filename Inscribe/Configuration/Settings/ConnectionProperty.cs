@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using Inscribe.Authentication;
 using Inscribe.Storage;
-using System.ComponentModel;
 
 namespace Inscribe.Configuration.Settings
 {

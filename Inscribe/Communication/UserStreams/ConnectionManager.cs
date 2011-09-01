@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Inscribe.Authentication;
+using Inscribe.Common;
 using Inscribe.Storage;
-using Inscribe.Threading;
 using Livet;
 
 namespace Inscribe.Communication.UserStreams

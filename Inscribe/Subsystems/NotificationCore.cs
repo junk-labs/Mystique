@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
 using System.Windows;
@@ -9,7 +10,6 @@ using Inscribe.Storage;
 using Inscribe.ViewModels;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
-using System.Linq;
 using Livet;
 using Livet.Messaging;
 

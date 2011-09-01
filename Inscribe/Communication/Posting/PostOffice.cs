@@ -13,7 +13,6 @@ using Inscribe.Authentication;
 using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Storage;
-using Inscribe.Threading;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 

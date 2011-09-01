@@ -6,7 +6,6 @@ using Inscribe.Commnuication.CruiseControl.Core;
 using Inscribe.Common;
 using Inscribe.Communication.CruiseControl.DefaultTasks;
 using Inscribe.Storage;
-using Inscribe.Threading;
 
 namespace Inscribe.Communication.CruiseControl
 {

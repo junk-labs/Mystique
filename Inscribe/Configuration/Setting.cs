@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Windows;
 using Inscribe.Common;
 using Inscribe.Configuration.Settings;
 using Inscribe.Storage;
 using Livet;
-using System.Windows;
-using System.Diagnostics;
-using System.Collections.Generic;
 
 namespace Inscribe.Configuration
 {
