@@ -230,23 +230,22 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private Color GetCurrentCommonColor(bool dark)
         {
-            var pts = Parent.CurrentForegroundTimeline.SelectedTweetViewModel;
-            if ((Setting.Instance.ColoringProperty.Selected.IsDarkActivated ||
-                Setting.Instance.ColoringProperty.Selected.IsLightActivated) &&
-                pts != null && pts.Tweet.Status.User.NumericId == this.Tweet.Status.User.NumericId &&
-                pts.Tweet.Status.Id != this.Tweet.Status.Id)
+            try
             {
-                var dm = this.Tweet.Status as TwitterDirectMessage;
-                if (dm != null)
+                var pts = Parent.CurrentForegroundTimeline.SelectedTweetViewModel;
+                if ((Setting.Instance.ColoringProperty.Selected.IsDarkActivated ||
+                    Setting.Instance.ColoringProperty.Selected.IsLightActivated) &&
+                    pts != null && pts.Tweet.Status.User.NumericId == this.Tweet.Status.User.NumericId &&
+                    pts.Tweet.Status.Id != this.Tweet.Status.Id)
                 {
-                    return RoutePairColor(dark,
-                        Setting.Instance.ColoringProperty.Selected,
-                        Setting.Instance.ColoringProperty.DirectMessage,
-                        Setting.Instance.ColoringProperty.BaseColor);
-                }
-                else
-                {
-                    if (TwitterHelper.IsPublishedByRetweet(this.Tweet))
+                    if (this.Tweet.Status is TwitterDirectMessage)
+                    {
+                        return RoutePairColor(dark,
+                            Setting.Instance.ColoringProperty.Selected,
+                            Setting.Instance.ColoringProperty.DirectMessage,
+                            Setting.Instance.ColoringProperty.BaseColor);
+                    }
+                    else if (TwitterHelper.IsPublishedByRetweet(this.Tweet))
                     {
                         return RoutePairColor(dark,
                             Setting.Instance.ColoringProperty.Selected,
@@ -257,33 +256,36 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     {
                         return RoutePairColor(dark,
                             Setting.Instance.ColoringProperty.Selected,
+                            Setting.Instance.ColoringProperty.BaseColor);
+                    }
+                }
+                else
+                {
+                    if (this.Tweet.Status is TwitterDirectMessage)
+                    {
+                        return RoutePairColor(dark,
+                            Setting.Instance.ColoringProperty.DirectMessage,
+                            Setting.Instance.ColoringProperty.BaseColor);
+                    }
+                    else if (TwitterHelper.IsPublishedByRetweet(this.Tweet))
+                    {
+                        return RoutePairColor(dark,
+                            Setting.Instance.ColoringProperty.Retweeted,
+                            Setting.Instance.ColoringProperty.BaseColor);
+                    }
+                    else
+                    {
+                        return RoutePairColor(dark,
                             Setting.Instance.ColoringProperty.BaseColor);
                     }
                 }
             }
-            else
+            catch (Exception e)
             {
-                var dm = this.Tweet.Status as TwitterDirectMessage;
-                if (dm != null)
-                {
-                    return RoutePairColor(dark,
-                        Setting.Instance.ColoringProperty.DirectMessage,
-                        Setting.Instance.ColoringProperty.BaseColor);
-                }
-                else
-                {
-                    if (TwitterHelper.IsPublishedByRetweet(this.Tweet))
-                    {
-                        return RoutePairColor(dark,
-                            Setting.Instance.ColoringProperty.Retweeted,
-                            Setting.Instance.ColoringProperty.BaseColor);
-                    }
-                    else
-                    {
-                        return RoutePairColor(dark,
-                            Setting.Instance.ColoringProperty.BaseColor);
-                    }
-                }
+                ExceptionStorage.Register(e, ExceptionCategory.ConfigurationError,
+                    "色設定が破損しています。再試行を押すと、色設定を再作成します。",
+                    () => Setting.Instance.ColoringProperty = new ColoringProperty());
+                return Colors.Black;
             }
         }
 
