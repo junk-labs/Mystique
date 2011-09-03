@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Security;
 
 namespace Vanille.UpdateCore
 {

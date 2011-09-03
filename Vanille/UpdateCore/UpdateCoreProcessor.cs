@@ -13,7 +13,7 @@ namespace Vanille.UpdateCore
 {
     public class UpdateCoreProcessor
     {
-        public readonly double Version = 3.0;
+        public readonly double Version = 3.1;
 
         private Action<string> _writer;
 
@@ -138,9 +138,18 @@ namespace Vanille.UpdateCore
                 WriteLine("Downloaded.");
 
                 var xmldoc = XDocument.Load(xmlstream);
-                var version = double.Parse(xmldoc.Element("update").Element("latests").Elements("version")
-                    .Where(xe => int.Parse(xe.Attribute("kind").Value) <= target)
-                    .Select(xe => xe.Attribute("ver").Value).FirstOrDefault());
+                double version;
+                try
+                {
+                    version = double.Parse(xmldoc.Element("update").Element("latests").Elements("version")
+                        .Where(xe => int.Parse(xe.Attribute("kind").Value) <= target)
+                        .Select(xe => xe.Attribute("ver").Value).FirstOrDefault());
+                }
+                catch (Exception ex)
+                {
+                    WriteLine("Parse error:" + ex.Message);
+                    version = 0.0;
+                }
                 if (version == 0)
                 {
                     WriteLine("ERR: New version file is not found!");
