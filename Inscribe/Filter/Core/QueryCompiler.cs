@@ -19,18 +19,25 @@ namespace Inscribe.Filter.Core
         /// <exception cref="System.ArgumentException">コンバートに失敗しました。</exception>
         public static FilterCluster ToFilter(string queryString)
         {
-            // フィルタの構造解析
-            if (String.IsNullOrWhiteSpace(queryString)) // カ ラ
-                return new FilterCluster();
-            // トークン化
-            if (!queryString.StartsWith("(")) // 最外殻を追加
-                queryString = "(" + queryString + ")";
-            System.Diagnostics.Debug.WriteLine(queryString);
-            var tokens = Tokenize(queryString);
-            var syntaxes = MakeTuples(tokens);
-            var filter = GenerateFilter(syntaxes);
-            System.Diagnostics.Debug.WriteLine(filter.ToQuery());
-            return Optimize(filter);
+            try
+            {
+                // フィルタの構造解析
+                if (String.IsNullOrWhiteSpace(queryString)) // カ ラ
+                    return new FilterCluster();
+                // トークン化
+                if (!queryString.StartsWith("(")) // 最外殻を追加
+                    queryString = "(" + queryString + ")";
+                System.Diagnostics.Debug.WriteLine(queryString);
+                var tokens = Tokenize(queryString);
+                var syntaxes = MakeTuples(tokens);
+                var filter = GenerateFilter(syntaxes);
+                System.Diagnostics.Debug.WriteLine(filter.ToQuery());
+                return Optimize(filter);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("クエリの解析に失敗しました。エラー: " + ex.Message + " (クエリ:" + queryString + ")", ex);
+            }
         }
 
         #region Tokenize
