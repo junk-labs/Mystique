@@ -387,11 +387,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         private void ReturnToBox()
         {
+            parent.SetOpenText(true, true);
             if (this.inReplyToId != 0 && TweetStorage.Contains(this.inReplyToId) == TweetExistState.Exists)
             {
                 parent.SetInReplyTo(TweetStorage.Get(this.inReplyToId));
             }
-            parent.SetOpenText(true, true);
             parent.SetText(this.body);
             parent.OverrideTarget(new[] { this.accountInfo });
             Remove();
