@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Xml.Serialization;
 using Dulcet.Twitter;
-using Inscribe.Configuration.Elements;
+using Inscribe.Configuration.Accounts;
 using Inscribe.Data;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock;

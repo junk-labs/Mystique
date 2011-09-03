@@ -1,5 +1,5 @@
 ﻿
-namespace Inscribe.Configuration.Elements
+namespace Inscribe.Configuration.Accounts
 {
     /// <summary>
     /// アカウント情報に付随する設定
