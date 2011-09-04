@@ -31,6 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Livet, Version=0.982.2011.828, Culture=neutral, PublicKeyToken=b0b1d3f711ef38cb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Mystique\InfrastructureAssemblies\Livet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -48,14 +53,17 @@
     <ProjectReference Include="..\Acuerdo\Acuerdo.csproj">
       <Project>{B0E2A5B6-420C-4437-B995-9E31149078E6}</Project>
       <Name>Acuerdo</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Dulcet\Dulcet.csproj">
       <Project>{8D33449B-0BD8-4873-B872-0E91FA7EBC4B}</Project>
       <Name>Dulcet</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Inscribe\Inscribe.csproj">
       <Project>{FE3EC1D6-4A61-4E6D-915B-5EED8AE046D2}</Project>
       <Name>Inscribe</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
