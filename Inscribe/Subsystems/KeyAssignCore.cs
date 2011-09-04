@@ -48,6 +48,7 @@ namespace Inscribe.Subsystems
         static KeyAssignCore()
         {
             callbacks = new Dictionary<string, Action>();
+            Setting.SettingValueChanged += (o, e) => ReloadAssign();
         }
 
         /// <summary>
