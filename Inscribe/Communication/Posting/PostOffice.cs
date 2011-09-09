@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Acuerdo.Injection;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
 using Inscribe.Authentication;
@@ -218,18 +219,7 @@ namespace Inscribe.Communication.Posting
             }
             try
             {
-                var status = info.UpdateStatus(text, inReplyToId);
-                if (status == null)
-                    throw new InvalidOperationException("ツイートの成功を確認できませんでした。");
-                TweetStorage.Register(status);
-                NotifyStorage.Notify("ツイートしました:@" + info.ScreenName + ": " + text);
-
-                var chunk = GetUnderControlChunk(info);
-                if(chunk.Item2 > TwitterDefine.UnderControlWarningThreshold)
-                {
-                    throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.NearUnderControl);
-                }
-                return chunk.Item2;
+                return updateInjection.Execute(new Tuple<AccountInfo, string, long?>(info, text, inReplyToId));
             }
             catch (WebException wex)
             {
@@ -300,15 +290,55 @@ namespace Inscribe.Communication.Posting
             return -1;
         }
 
+        private static InjectionPort<Tuple<AccountInfo, string, long?>, int> updateInjection =
+            new InjectionPort<Tuple<AccountInfo, string, long?>, int>(a => UpdateTweetSink(a.Item1, a.Item2, a.Item3));
+
+        public static IInjectionPort<Tuple<AccountInfo, string, long?>, int> UpdateInjection
+        {
+            get { return updateInjection.GetInterface(); }
+        }
+
+        private static int UpdateTweetSink(AccountInfo info, string text, long? inReplyToId = null)
+        {
+            var status = info.UpdateStatus(text, inReplyToId);
+            if (status == null)
+                throw new InvalidOperationException("ツイートの成功を確認できませんでした。");
+            TweetStorage.Register(status);
+            NotifyStorage.Notify("ツイートしました:@" + info.ScreenName + ": " + text);
+
+            var chunk = GetUnderControlChunk(info);
+            if (chunk.Item2 > TwitterDefine.UnderControlWarningThreshold)
+            {
+                throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.NearUnderControl);
+            }
+            return chunk.Item2;
+        }
+
+        #region Favorite
+
         public static void FavTweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => FavTweetSink(infos, status), TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(() => FavTweetSink(infos, status));
+        }
+
+        private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> favoriteInjection =
+            new InjectionPort<Tuple<AccountInfo, TweetViewModel>>(a => FavTweetCore(a.Item1, a.Item2));
+
+        public static IInjectionPort<Tuple<AccountInfo, TweetViewModel>> FavoriteInjection
+        {
+            get { return favoriteInjection.GetInterface(); }
         }
 
         private static void FavTweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            if (((TwitterStatus)status.Status).RetweetedOriginal != null)
-                status = TweetStorage.Get(((TwitterStatus)status.Status).RetweetedOriginal.Id, true);
+            var ts = status.Status as TwitterStatus;
+            if (ts == null)
+            {
+                NotifyStorage.Notify("DirectMessageはFavできません。");
+                return;
+            }
+            if (ts.RetweetedOriginal != null)
+                status = TweetStorage.Get(ts.RetweetedOriginal.Id, true);
             if (status == null)
             {
                 NotifyStorage.Notify("Fav 対象ステータスが見つかりません。");
@@ -324,8 +354,7 @@ namespace Inscribe.Communication.Posting
                         status.RegisterFavored(ud);
                     try
                     {
-                        if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) == null)
-                            throw new ApplicationException();
+                        favoriteInjection.Execute(new Tuple<AccountInfo, TweetViewModel>(d, status));
                     }
                     catch (Exception ex)
                     {
@@ -344,15 +373,39 @@ namespace Inscribe.Communication.Posting
                 NotifyStorage.Notify("Favしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
         }
 
+        private static void FavTweetCore(AccountInfo d, TweetViewModel status)
+        {
+            if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) == null)
+                throw new ApplicationException();
+        }
+
+        #endregion
+
+        #region Unfavorite
+
         public static void UnfavTweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => UnfavTweetSink(infos, status), TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(() => UnfavTweetSink(infos, status));
+        }
+
+        private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> unfavoriteInjection =
+            new InjectionPort<Tuple<AccountInfo, TweetViewModel>>(a => UnfavTweetCore(a.Item1, a.Item2));
+
+        public static IInjectionPort<Tuple<AccountInfo, TweetViewModel>> UnfavoriteInjection
+        {
+            get { return unfavoriteInjection.GetInterface(); }
         }
 
         private static void UnfavTweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            if (((TwitterStatus)status.Status).RetweetedOriginal != null)
-                status = TweetStorage.Get(((TwitterStatus)status.Status).RetweetedOriginal.Id, true);
+            var ts = status.Status as TwitterStatus;
+            if (ts == null)
+            {
+                NotifyStorage.Notify("DirectMessageはFavできません。");
+                return;
+            }
+            if (ts.RetweetedOriginal != null)
+                status = TweetStorage.Get(ts.RetweetedOriginal.Id, true);
             if (status == null)
             {
                 NotifyStorage.Notify("Unfav 対象ステータスが見つかりません。");
@@ -368,8 +421,7 @@ namespace Inscribe.Communication.Posting
                         status.RemoveFavored(ud);
                     try
                     {
-                        if (ApiHelper.ExecApi(() => d.DestroyFavorites(status.Status.Id)) == null)
-                            throw new ApplicationException();
+                        unfavoriteInjection.Execute(new Tuple<AccountInfo, TweetViewModel>(d, status));
                     }
                     catch (Exception ex)
                     {
@@ -388,15 +440,39 @@ namespace Inscribe.Communication.Posting
                 NotifyStorage.Notify("Unfavしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
         }
 
+        private static void UnfavTweetCore(AccountInfo d, TweetViewModel status)
+        {
+            if (ApiHelper.ExecApi(() => d.DestroyFavorites(status.Status.Id)) == null)
+                throw new ApplicationException();
+        }
+
+        #endregion
+
+        #region Retweet
+
         public static void Retweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => RetweetSink(infos, status), TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(() => RetweetSink(infos, status));
+        }
+
+        private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> retweetInjection =
+            new InjectionPort<Tuple<AccountInfo, TweetViewModel>>(a => RetweetCore(a.Item1, a.Item2));
+
+        public static IInjectionPort<Tuple<AccountInfo, TweetViewModel>> RetweetInjection
+        {
+            get { return retweetInjection.GetInterface(); }
         }
 
         private static void RetweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            if (((TwitterStatus)status.Status).RetweetedOriginal != null)
-                status = TweetStorage.Get(((TwitterStatus)status.Status).RetweetedOriginal.Id);
+            var ts = status.Status as TwitterStatus;
+            if (ts == null)
+            {
+                NotifyStorage.Notify("DirectMessageはRetweetできません。");
+                return;
+            }
+            if (ts.RetweetedOriginal != null)
+                status = TweetStorage.Get(ts.RetweetedOriginal.Id, true);
             if (status == null)
             {
                 NotifyStorage.Notify("Retweet オリジナルデータが見つかりません。");
@@ -412,8 +488,7 @@ namespace Inscribe.Communication.Posting
                         status.RegisterRetweeted(ud);
                     try
                     {
-                        if (ApiHelper.ExecApi(() => d.Retweet(status.Status.Id)) == null)
-                            throw new ApplicationException();
+                        retweetInjection.Execute(new Tuple<AccountInfo, TweetViewModel>(d, status));
                     }
                     catch (Exception ex)
                     {
@@ -432,20 +507,45 @@ namespace Inscribe.Communication.Posting
                 NotifyStorage.Notify("Retweetしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
         }
 
+        private static void RetweetCore(AccountInfo d, TweetViewModel status)
+        {
+            if (ApiHelper.ExecApi(() => d.Retweet(status.Status.Id)) == null)
+                throw new ApplicationException();
+        }
+
+        #endregion
+
+        #region Unretweet
+
         public static void Unretweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => UnretweetSink(infos, status), TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(() => UnretweetSink(infos, status));
+        }
+
+        private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> unretweetInjection =
+            new InjectionPort<Tuple<AccountInfo, TweetViewModel>>(a => RemoveRetweetCore(a.Item1, a.Item2));
+
+        public static IInjectionPort<Tuple<AccountInfo, TweetViewModel>> UnretweetInjection
+        {
+            get { return unretweetInjection.GetInterface(); }
         }
 
         private static void UnretweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            if (((TwitterStatus)status.Status).RetweetedOriginal != null)
-                status = TweetStorage.Get(((TwitterStatus)status.Status).RetweetedOriginal.Id);
+            var ts = status.Status as TwitterStatus;
+            if (ts == null)
+            {
+                NotifyStorage.Notify("DirectMessageはUnretweetできません。");
+                return;
+            }
+            if (ts.RetweetedOriginal != null)
+                status = TweetStorage.Get(ts.RetweetedOriginal.Id, true);
             if (status == null)
             {
                 NotifyStorage.Notify("Retweet オリジナルデータが見つかりません。");
                 return;
             }
+
             bool success = true;
             Parallel.ForEach(infos,
                 d =>
@@ -456,12 +556,7 @@ namespace Inscribe.Communication.Posting
                         status.RegisterRetweeted(ud);
                     try
                     {
-                        // リツイートステータスの特定
-                        var rts = TweetStorage.GetAll(vm =>
-                            vm.Status.User.ScreenName == d.ScreenName && vm.Status is TwitterStatus &&
-                            ((TwitterStatus)vm.Status).RetweetedOriginal != null && ((TwitterStatus)vm.Status).RetweetedOriginal.Id == status.Status.Id).FirstOrDefault();
-                        if (rts == null || ApiHelper.ExecApi(() => d.DestroyStatus(rts.Status.Id) == null))
-                            throw new ApplicationException();
+                        unretweetInjection.Execute(new Tuple<AccountInfo, TweetViewModel>(d, status));
                     }
                     catch (Exception ex)
                     {
@@ -480,39 +575,63 @@ namespace Inscribe.Communication.Posting
                 NotifyStorage.Notify("Retweetをキャンセルしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
         }
 
-        public static void RemoveTweet(AccountInfo info, long tweetId)
+        private static void RemoveRetweetCore(AccountInfo d, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => RemoveTweetSink(info, tweetId), TaskCreationOptions.LongRunning);
+            // リツイートステータスの特定
+            var rts = TweetStorage.GetAll(vm =>
+                vm.Status.User.ScreenName == d.ScreenName && vm.Status is TwitterStatus &&
+                ((TwitterStatus)vm.Status).RetweetedOriginal != null &&
+                ((TwitterStatus)vm.Status).RetweetedOriginal.Id == status.Status.Id).FirstOrDefault();
+            if (rts == null || ApiHelper.ExecApi(() => d.DestroyStatus(rts.Status.Id) == null))
+                throw new ApplicationException();
         }
 
-        private static void RemoveTweetSink(AccountInfo info, long tweetId)
+        #endregion
+
+        #region Remove tweet
+
+        public static void RemoveTweet(AccountInfo info, long tweetId)
         {
-            try
-            {
-                var tweet = ApiHelper.ExecApi(() => info.DestroyStatus(tweetId));
-                if (tweet != null)
-                {
-                    if (tweet.Id != tweetId)
-                    {
-                        NotifyStorage.Notify("削除には成功しましたが、ツイートIDが一致しません。(" + tweetId.ToString() + " -> " + tweet.Id.ToString() + ")");
-                    }
-                    else
-                    {
-                        TweetStorage.Remove(tweetId);
-                        NotifyStorage.Notify("削除しました:" + tweet.ToString());
-                    }
-                }
-                else
-                {
-                    NotifyStorage.Notify("ツイートを削除できませんでした(@" + info.ScreenName + ")");
-                }
-            }
-            catch (Exception ex)
+            var result = Task.Factory.StartNew(() =>
+                        removeInjection.Execute(new Tuple<AccountInfo, long>(info, tweetId)));
+            var ex = result.Exception;
+            if (ex != null)
             {
                 NotifyStorage.Notify("ツイートを削除できませんでした(@" + info.ScreenName + ")");
                 ExceptionStorage.Register(ex, ExceptionCategory.TwitterError, "ツイート削除時にエラーが発生しました");
             }
         }
+
+        private static InjectionPort<Tuple<AccountInfo, long>> removeInjection =
+            new InjectionPort<Tuple<AccountInfo, long>>(a => RemoveTweetSink(a.Item1, a.Item2));
+
+        public static IInjectionPort<Tuple<AccountInfo, long>> RemoveInjection
+        {
+            get { return removeInjection.GetInterface(); }
+        }
+
+        private static void RemoveTweetSink(AccountInfo info, long tweetId)
+        {
+            var tweet = ApiHelper.ExecApi(() => info.DestroyStatus(tweetId));
+            if (tweet != null)
+            {
+                if (tweet.Id != tweetId)
+                {
+                    NotifyStorage.Notify("削除には成功しましたが、ツイートIDが一致しません。(" + tweetId.ToString() + " -> " + tweet.Id.ToString() + ")");
+                }
+                else
+                {
+                    TweetStorage.Remove(tweetId);
+                    NotifyStorage.Notify("削除しました:" + tweet.ToString());
+                }
+            }
+            else
+            {
+                NotifyStorage.Notify("ツイートを削除できませんでした(@" + info.ScreenName + ")");
+            }
+        }
+
+        #endregion
     }
 
     public class UnderControlEventArgs : EventArgs
