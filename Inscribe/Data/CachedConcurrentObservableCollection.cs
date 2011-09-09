@@ -92,6 +92,7 @@ namespace Inscribe.Data
             return add;
         }
 
+
         public bool AddLastSingle(T item)
         {
             bool add = true;
@@ -183,6 +184,22 @@ namespace Inscribe.Data
             if (add)
                 RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, addPoint));
             return add;
+        }
+
+        public bool AddVolatile(T item)
+        {
+            lock (syncRoot)
+            {
+                if (!this.BehindCollection.Contains(item))
+                {
+                    this.BehindCollection.AddFirst(item);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         public void Sort<TKey>(bool ascend, Func<T, TKey> keySelector)
