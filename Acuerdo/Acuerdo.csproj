@@ -48,6 +48,9 @@
     <Compile Include="External\Shortener\CommonExtractor.cs" />
     <Compile Include="External\Shortener\ShortenerBase.cs" />
     <Compile Include="External\Uploader\UploaderBase.cs" />
+    <Compile Include="Injection\IInjectionPort.cs" />
+    <Compile Include="Injection\InjectionPortAction.cs" />
+    <Compile Include="Injection\InjectionPortFunc.cs" />
     <Compile Include="Plugin\IConfigurator.cs" />
     <Compile Include="Plugin\IPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

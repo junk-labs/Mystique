@@ -34,11 +34,7 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
                 return;
             var para = rt.Document.Blocks.FirstBlock as Paragraph;
             if (para == null)
-            {
-                para = new Paragraph();
-                rt.Document.Blocks.Clear();
-                rt.Document.Blocks.Add(para);
-            }
+                return;
             para.Inlines.Clear();
             if (e.NewValue != null)
                 para.Inlines.AddRange(e.NewValue as IEnumerable<Inline>);

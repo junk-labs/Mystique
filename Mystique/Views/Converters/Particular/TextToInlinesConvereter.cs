@@ -35,11 +35,11 @@ namespace Mystique.Views.Converters.Particular
             switch (kind)
             {
                 case InlineConversionMode.Full:
-                    return TextToFlowConversionStatic.Generate(input);
+                    return TextToFlowConversionStatic.Generate(input).ToArray();
                 case InlineConversionMode.Digest:
-                    return TextToFlowConversionStatic.GenerateDigest(input);
+                    return TextToFlowConversionStatic.GenerateDigest(input).ToArray();
                 default:
-                    return TextToFlowConversionStatic.Generate(input);
+                    return TextToFlowConversionStatic.Generate(input).ToArray();
             }
         }
     }

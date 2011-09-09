@@ -245,7 +245,7 @@ namespace Inscribe.Storage
         /// <returns></returns>
         private static bool ValidateTweet(TweetViewModel viewModel)
         {
-            if (viewModel.Status == null || viewModel.Status.User == null)
+            if (viewModel.Status == null || viewModel.Status.User == null || String.IsNullOrEmpty(viewModel.Status.User.ScreenName))
                 throw new ArgumentException("データが破損しています。");
             // Local mute
             if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster != null &&

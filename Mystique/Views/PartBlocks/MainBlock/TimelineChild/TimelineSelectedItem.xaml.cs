@@ -5,8 +5,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Inscribe.Common;
 using Inscribe.Configuration;
-using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Inscribe.Storage;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
 {

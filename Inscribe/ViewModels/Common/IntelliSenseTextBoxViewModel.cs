@@ -104,8 +104,12 @@ namespace Inscribe.ViewModels.Common
                 {
                     return this._items;
                 }
-                else if(this._items
-                    .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText, 
+                else if (this._items == null)
+                {
+                    return new IntelliSenseItemViewModel[0];
+                }
+                else if (this._items
+                    .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
                         this.CurrentToken, this.SuggestTriggers))
                     .Count() == 0)
                 {
@@ -115,7 +119,7 @@ namespace Inscribe.ViewModels.Common
                 else
                 {
                     return this._items
-                        .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText, 
+                        .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
                             this.CurrentToken, this.SuggestTriggers));
                 }
             }

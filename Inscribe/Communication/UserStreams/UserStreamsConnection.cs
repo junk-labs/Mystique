@@ -115,13 +115,24 @@ namespace Inscribe.Communication.UserStreams
                 case ElementKind.Delete:
                     TweetStorage.Remove(elem.DeletedStatusId);
                     break;
+                    /*
+                     * TODO:Implements later?
                 case ElementKind.ListUpdated:
+                    break;
                 case ElementKind.ListMemberAdded:
+                    if (ListStorage.IsListMemberCached(elem.TargetList.User.ScreenName, elem.TargetList.Name))
+                    {
+                        var members = ListStorage.GetListMembers(elem.TargetList.User.ScreenName, elem.TargetList.Name);
+                    }
+                    break;
+
                 case ElementKind.ListMemberRemoved:
                 case ElementKind.ListSubscribed:
                 case ElementKind.ListUnsubscribed:
                     // TODO: do something
+
                     break;
+                    */
                 case ElementKind.Follow:
                 case ElementKind.Unfollow:
                     var affect = AccountStorage.Get(elem.SourceUser.ScreenName);

@@ -56,8 +56,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             {
                 if (!_referenced)
                 {
-                    this._tweetsSource.Commit(true);
                     _referenced = true;
+                    this._tweetsSource.Commit(true);
                 }
                 return this._tweetsSource;
             }
@@ -192,7 +192,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 .Select(tvm => new TabDependentTweetViewModel(tvm, this.Parent)).ToArray();
             foreach (var tvm in collection)
             {
-                this._tweetsSource.AddTopSingle(tvm);
+                this._tweetsSource.AddVolatile(tvm);
             }
             this.Commit();
         }

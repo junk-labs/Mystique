@@ -225,6 +225,11 @@ namespace Inscribe.ViewModels.Dialogs
                         lists.ForEach(l => acc.RegisterFollowingList(l));
                     RaisePropertyChanged(() => ListItems);
                 }
+                catch
+                {
+                    this.Messenger.Raise(new InformationMessage("リスト情報を取得できません。",
+                        "リストロードエラー", System.Windows.MessageBoxImage.Error, "WarningMessage"));
+                }
                 finally
                 {
                     IsListLoading = false;

@@ -57,6 +57,7 @@ namespace Inscribe.Filter.Filters.Particular
                         m.Value.Equals(user2, StringComparison.CurrentCultureIgnoreCase)))
                     return true;
                 if (vm.InReplyFroms.Select(id => TweetStorage.Get(id))
+                    .Where(irvm => irvm != null)
                     .Any(irvm => irvm.Status.User.ScreenName.Equals(user1, StringComparison.CurrentCultureIgnoreCase) ||
                         irvm.Status.User.ScreenName.Equals(user2, StringComparison.CurrentCultureIgnoreCase)))
                     return true;
