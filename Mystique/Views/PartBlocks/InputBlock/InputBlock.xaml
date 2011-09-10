@@ -34,6 +34,9 @@
         <l:InteractionMessageTrigger MessageKey="EditAutoBind" Messenger="{Binding Messenger}">
             <ma:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type bcd:AutoBindConfig}" />
         </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="Information" Messenger="{Binding Messenger}">
+            <l:InformationDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <UserControl.Resources>
         <BitmapImage x:Key="Delete" UriSource="/Resources/delete.png" />
@@ -221,7 +224,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="11" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
@@ -232,6 +235,26 @@
                                 <GradientStop Offset="1" Color="Gainsboro" />
                             </LinearGradientBrush>
                         </Grid.Background>
+                        <com:DropDownButton Grid.ColumnSpan="2"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            Focusable="False"
+                                            HorizontalContentAlignment="Right"
+                                            Style="{StaticResource FlatToggleButtonStyle}"
+                                            VerticalContentAlignment="Center">
+                            <Image Width="6"
+                                   Height="6"
+                                   Margin="1,0"
+                                   HorizontalAlignment="Right"
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                   Source="{StaticResource Chevron}" />
+                            <com:DropDownButton.DropDownMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding AttachFromClipboardCommand}" Header="クリップボードからアップロード(_C)" />
+                                </ContextMenu>
+                            </com:DropDownButton.DropDownMenu>
+                        </com:DropDownButton>
+
                         <Button Grid.Column="0"
                                 Command="{Binding AttachImageCommand}"
                                 Focusable="False"
@@ -252,7 +275,7 @@
                                                             Converter={StaticResource BoolVisibleConverter}}" />
                             </StackPanel>
                         </Button>
-                        <com:DropDownButton Grid.Column="1"
+                        <com:DropDownButton Grid.Column="2"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
                                             Focusable="False"
@@ -283,25 +306,14 @@
                                     <MenuItem Command="{Binding ClearBindCommand}" Header="全ての手動バインドを削除(_D)" />
                                     <Separator />
                                     <MenuItem Header="自動バインドを有効にする(_E)"
-                                              IsCheckable="True"
-                                              IsChecked="{Binding IsEnabledAutoBind}"
                                               InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                 ConverterParameter=ToggleAutoBind}" />
+                                                                         ConverterParameter=ToggleAutoBind}"
+                                              IsCheckable="True"
+                                              IsChecked="{Binding IsEnabledAutoBind}" />
                                     <MenuItem Command="{Binding EditAutoBindCommand}" Header="自動バインドの設定(_A)..." />
                                 </ContextMenu>
                             </com:DropDownButton.DropDownMenu>
                         </com:DropDownButton>
-                        <StackPanel Grid.Column="2"
-                                    Margin="2,1"
-                                    Opacity="0.5"
-                                    Orientation="Horizontal"
-                                    Visibility="{Binding IsUrlShortening,
-                                                         Converter={StaticResource BoolVisibleConverter}}">
-                            <com:Intermediate />
-                            <TextBlock Margin="2,0,0,0"
-                                       VerticalAlignment="Center"
-                                       Text="URL短縮中..." />
-                        </StackPanel>
 
                         <StackPanel Grid.Column="3" Orientation="Horizontal">
 

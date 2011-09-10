@@ -22,6 +22,5 @@ namespace Dulcet.Twitter.Rest
             var target = TwitterUri + (partial.EndsWith("/") ? partial.Substring(1) : partial);
             return provider.RequestAPI(target, method, param);
         }
-
     }
 }

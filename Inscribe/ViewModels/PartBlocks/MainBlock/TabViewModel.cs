@@ -35,9 +35,19 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return this._tabProperty; }
             set
             {
+                if (this._tabProperty == value) return;
+                if (this._tabProperty != null)
+                    this._tabProperty.LinkAccountInfoChanged -= new EventHandler<EventArgs>(tabpropLinkAccountInfoChanged);
                 this._tabProperty = value;
+                if (this._tabProperty != null)
+                    this._tabProperty.LinkAccountInfoChanged += new EventHandler<EventArgs>(tabpropLinkAccountInfoChanged);
                 RaisePropertyChanged(() => TabProperty);
             }
+        }
+
+        void tabpropLinkAccountInfoChanged(object sender, EventArgs e)
+        {
+            this.StackingTimelines.OfType<TimelineListViewModel>().SelectMany(vm => vm.TimelineListCoreViewModel.TweetsSource.ToArrayVolatile()).ForEach(t => t.PendingColorChanged(true));
         }
 
         /// <summary>
@@ -115,11 +125,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.Parent = parent;
 
             this.IsAlive = true;
-            this._tabProperty = property ?? new TabProperty();
-            ViewModelHelper.BindNotification(this._tabProperty.LinkAccountInfoChangedEvent, this, (o, e) =>
-                this.StackingTimelines.OfType<TimelineListViewModel>()
-                .SelectMany(vm => vm.TimelineListCoreViewModel.TweetsSource)
-                .ForEach(t => t.PendingColorChanged(true)));
+            this.TabProperty = property ?? new TabProperty();
 
             // 初期TLとしてnullを
             this.AddTopTimeline(null);

@@ -26,6 +26,7 @@ namespace Inscribe.Core
             // ネットワーク初期化
             Dulcet.Network.Http.Expect100Continue = false;
             Dulcet.Network.Http.MaxConnectionLimit = Int32.MaxValue;
+            Dulcet.Network.Http.TimeoutInterval = 8000;
 
             // 設定のロード
             Setting.Initialize();
@@ -33,7 +34,6 @@ namespace Inscribe.Core
             // サブシステムの初期化
             NotificationCore.Initialize();
             HashtagStorage.Initialize();
-            KeyAssignCore.ReloadAssign();
 
             var apppath = System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
             // アップデータの存在を確認
@@ -70,7 +70,6 @@ namespace Inscribe.Core
             // プラグインのロード
             PluginLoader.Load();
 
-
             UpdateReceiver.StartSchedule();
             Application.Current.Exit += new ExitEventHandler(AppExit);
         }
@@ -82,6 +81,7 @@ namespace Inscribe.Core
         /// </summary>
         public static void StandbyApp()
         {
+            KeyAssignCore.ReloadAssign();
             if (standby)
                 throw new InvalidOperationException("既にアプリケーションはスタンバイ状態を経ました。");
             standby = true;

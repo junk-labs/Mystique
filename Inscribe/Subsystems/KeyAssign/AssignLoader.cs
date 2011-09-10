@@ -31,7 +31,7 @@ namespace Inscribe.Subsystems.KeyAssign
             {
                 Name = name,
                 AssignDatas = assigns.Select(a => new Tuple<AssignRegion, IEnumerable<AssignItem>>(
-                    ConvertToRegion(a.Attribute("Region").Value), a.Elements("Assign").Select(ae => ConvertToAssignItem(ae)))).ToArray()
+                    ConvertToRegion(a.Attribute("Region").Value), a.Elements("Assign").Select(ae => ConvertToAssignItem(ae)).ToArray())).ToArray()
             };
         }
 

@@ -22,6 +22,10 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using System.Windows;
+using System.IO;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -812,22 +816,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
         #endregion
 
-        #region URL Shortening
-
-        private bool _isUrlShortening = false;
-        public bool IsUrlShortening
-        {
-            get { return this._isUrlShortening; }
-            set
-
-            {
-                this._isUrlShortening = value;
-                RaisePropertyChanged(() => IsUrlShortening);
-            }
-        }
-
-        #endregion
-
         #region AttachImageCommand
         ViewModelCommand _AttachImageCommand;
 
@@ -857,6 +845,46 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 {
                     this.CurrentInputDescription.AttachedImage = ret.Response;
                 }
+            }
+        }
+        #endregion
+
+        #region AttachFromClipboardCommand
+        ViewModelCommand _AttachFromClipboardCommand;
+
+        public ViewModelCommand AttachFromClipboardCommand
+        {
+            get
+            {
+                if (_AttachFromClipboardCommand == null)
+                    _AttachFromClipboardCommand = new ViewModelCommand(AttachFromClipboard);
+                return _AttachFromClipboardCommand;
+            }
+        }
+
+        private void AttachFromClipboard()
+        {
+            try
+            {
+                var img = Clipboard.GetImage();
+                if (img == null)
+                    throw new NullReferenceException();
+                // All pixels' alpha is 0 in img.
+                var bmp = new FormatConvertedBitmap(img, PixelFormats.Bgr32, null, 0);
+                var temppath = Path.GetTempFileName();
+                using (var fs = new FileStream(temppath, FileMode.Create, FileAccess.Write))
+                {
+                    var encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(bmp));
+                    encoder.Save(fs);
+                }
+                this.CurrentInputDescription.AttachedImage = temppath;
+            }
+            catch
+            {
+                    this.Messenger.Raise(new InformationMessage(
+                        "クリップボードの中身が無いか、画像ではありません。",
+                        "クリップボードエラー", "Information"));
             }
         }
         #endregion

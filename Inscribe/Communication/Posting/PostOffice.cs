@@ -301,7 +301,7 @@ namespace Inscribe.Communication.Posting
         private static int UpdateTweetSink(AccountInfo info, string text, long? inReplyToId = null)
         {
             var status = info.UpdateStatus(text, inReplyToId);
-            if (status == null)
+            if (status == null || status.Id == 0)
                 throw new InvalidOperationException("ツイートの成功を確認できませんでした。");
             TweetStorage.Register(status);
             NotifyStorage.Notify("ツイートしました:@" + info.ScreenName + ": " + text);

@@ -14,7 +14,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:my="clr-namespace:Mystique.Views.CustomPanels"
              xmlns:tc="clr-namespace:Mystique.Views.PartBlocks.MainBlock.TimelineChild"
-             d:DesignHeight="150"
+             d:DesignHeight="180"
              d:DesignWidth="500"
              InputMethod.IsInputMethodEnabled="False"
              mc:Ignorable="d">
