@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Dulcet.Twitter;
+using Inscribe.Authentication;
 using Inscribe.Communication.Posting;
 using Inscribe.Communication.UserStreams;
 using Inscribe.Configuration;
 using Inscribe.Core;
-using Inscribe.Authentication;
 using Inscribe.Storage;
 using Inscribe.Subsystems;
 using Inscribe.Text;
@@ -294,6 +295,31 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             }
         }
 
+        #region RestartCommand
+        ViewModelCommand _RestartCommand;
+
+        public ViewModelCommand RestartCommand
+        {
+            get
+            {
+                if (_RestartCommand == null)
+                    _RestartCommand = new ViewModelCommand(Restart);
+                return _RestartCommand;
+            }
+        }
+
+        private void Restart()
+        {
+            try
+            {
+                Setting.Instance.Save();
+                Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+                KernelService.AppShutdown();
+            }
+            catch { }
+        }
+        #endregion
+      
         
         #region ExitCommand
         ViewModelCommand _ExitCommand;

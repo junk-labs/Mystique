@@ -126,6 +126,7 @@
                         <MenuItem Command="{Binding FeedbackCommand}" Header="フィードバック(_F)..." />
                         <MenuItem Command="{Binding ShowAboutCommand}" Header="バージョン情報(_A)..." />
                         <Separator />
+                        <MenuItem Command="{Binding RestartCommand}" Header="Krileを再起動(_R)" />
                         <MenuItem Command="{Binding ExitCommand}" Header="Krileを終了(_X)" />
                     </ContextMenu>
                 </com:DropDownButton.DropDownMenu>
