@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using Dulcet.Twitter;
-using Inscribe.Commnuication.CruiseControl.Core;
+using Inscribe.Communication.CruiseControl.Core;
 using Inscribe.Storage;
 
 namespace Inscribe.Communication.CruiseControl

@@ -1,5 +1,5 @@
 ﻿
-namespace Inscribe.Commnuication.CruiseControl.Core
+namespace Inscribe.Communication.CruiseControl.Core
 {
     public abstract class ScheduledTask
     {

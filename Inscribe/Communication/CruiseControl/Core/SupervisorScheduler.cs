@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Inscribe.Random;
 
-namespace Inscribe.Commnuication.CruiseControl.Core
+namespace Inscribe.Communication.CruiseControl.Core
 {
     /// <summary>
     /// スーパーバイザスケジューラ
