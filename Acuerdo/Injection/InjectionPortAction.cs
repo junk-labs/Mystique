@@ -74,7 +74,8 @@ namespace Acuerdo.Injection
                 var prevCall = finalCallback;
                 foreach (var call in callChain)
                 {
-                    prevCall = arg => call(arg, prevCall, finalCallback);
+                    var ncall = prevCall;
+                    prevCall = arg => call(arg, ncall, finalCallback);
                 }
                 prevCall(argument);
             }
