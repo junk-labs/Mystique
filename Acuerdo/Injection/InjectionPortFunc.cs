@@ -75,10 +75,15 @@ namespace Acuerdo.Injection
                 foreach (var call in callChain)
                 {
                     var ncall = prevCall;
-                    prevCall = arg => call(arg, ncall, finalCallback);
+                    prevCall = MakeCallFunc(call, ncall, finalCallback);
                 }
                 return prevCall(argument);
             }
+        }
+
+        private Func<T, TResult> MakeCallFunc(InjectDelegate<T, TResult> call, Func<T, TResult> ncall, Func<T, TResult> finalCallback)
+        {
+            return arg => call(arg, ncall, finalCallback);
         }
     }
 }
