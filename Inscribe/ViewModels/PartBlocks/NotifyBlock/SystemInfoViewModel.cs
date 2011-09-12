@@ -306,7 +306,14 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
         private void Retry()
         {
             ExceptionStorage.Remove(desc);
-            Task.Factory.StartNew(() => desc.RetryAction());
+            Task.Factory.StartNew(() =>
+            {
+                try { desc.RetryAction(); }
+                catch (Exception e)
+                {
+                    ExceptionStorage.Register(e, ExceptionCategory.InternalError, "再試行中に問題が発生しました。");
+                }
+            });
         }
 
         #endregion
@@ -330,7 +337,6 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             NotifyStorage.Notify("コピーしました");
         }
         #endregion
-      
 
         #region RemoveCommand
 

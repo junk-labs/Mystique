@@ -8,7 +8,7 @@ namespace Inscribe.Text
         /// @userid用のregex
         /// </summary>
         public static Regex AtRegex = new Regex(@"@([A-Za-z0-9_]+(?:/[A-Za-z0-9_]*)?)",
-            RegexOptions.Singleline | RegexOptions.Compiled);
+            RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// URL用のregex
@@ -17,9 +17,9 @@ namespace Inscribe.Text
         public static Regex UrlRegex = new Regex(@"(https?:\/\/(?:[()]*[\w;/?:@&=+$,-_.!~*'%#]+)+)",
             RegexOptions.Singleline | RegexOptions.Compiled);
         */
-        // Regex from http://daringfireball.net/2010/07/improved_regex_for_matching_urls
-        public static Regex UrlRegex = new Regex(@"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))",
-            RegexOptions.Singleline | RegexOptions.Compiled);
+        // Regex from http://www.din.or.jp/~ohzaki/perl.htm#URI
+        public static Regex UrlRegex = new Regex(@"((?:https?|shttp)://(?:(?:[-_.!~*'()a-zA-Z0-9;:&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*@)?(?:(?:[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?\.)*[a-zA-Z](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?\.?|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)(?::[0-9]*)?(?:/(?:[-_.!~*'()a-zA-Z0-9:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*(?:;(?:[-_.!~*'()a-zA-Z0-9:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*)*(?:/(?:[-_.!~*'()a-zA-Z0-9:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*(?:;(?:[-_.!~*'()a-zA-Z0-9:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*)*)*)?(?:\?(?:[-_.!~*'()a-zA-Z0-9;/?:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*)?(?:#(?:[-_.!~*'()a-zA-Z0-9;/?:@&=+$,]|%[0-9A-Fa-f][0-9A-Fa-f])*)?)",
+            RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// ハッシュタグ用のregex

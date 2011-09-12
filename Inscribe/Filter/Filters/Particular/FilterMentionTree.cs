@@ -6,6 +6,7 @@ using Dulcet.Twitter.Rest;
 using Inscribe.Filter.Core;
 using Inscribe.Common;
 using Inscribe.Storage;
+using System.Linq;
 
 namespace Inscribe.Filter.Filters.Particular
 {
@@ -84,6 +85,9 @@ namespace Inscribe.Filter.Filters.Particular
                         {
                             var vm = TweetStorage.Register(status);
                             Task.Factory.StartNew(() => RecursiveCheckId(status.Id));
+                            Task.Factory.StartNew(() =>
+                                TweetStorage.GetAll(tvm => (tvm.Status is TwitterStatus) && ((TwitterStatus)tvm.Status).InReplyToStatusId == id)
+                                    .ForEach(tvm => tvm.RefreshInReplyToInfo()));
                         }
                         else
                         {
