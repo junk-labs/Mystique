@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Livet;
-using Inscribe.Configuration;
+﻿using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
+using Livet;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {

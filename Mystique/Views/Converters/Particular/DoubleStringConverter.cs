@@ -2,35 +2,34 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Mystique.Views.Converters
+namespace Mystique.Views.Converters.Particular
 {
-    public class LongStringConverter : TwoWayConverter<long, String>
+    public class DoubleStringConverter : TwoWayConverter<double, String>
     {
-        public override string ToTarget(long input, object parameter)
+        public override string ToTarget(double input, object parameter)
         {
             return input.ToString();
         }
 
-        public override long ToSource(string input, object parameter)
+        public override double ToSource(string input, object parameter)
         {
-            long value;
-            if (long.TryParse(input, out value))
+            double value;
+            if (double.TryParse(input, out value))
                 return value;
             else
                 return 0;
         }
     }
 
-    public class LongStringValidator : ValidationRule
+    public class DoubleStringValidator : ValidationRule
     {
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
         {
-            long conv;
-            if (long.TryParse(value as string, out conv))
+            double conv;
+            if (double.TryParse(value as string, out conv))
                 return new ValidationResult(true, null);
             else
                 return new ValidationResult(false, "数値に変換できません。");
         }
     }
-
 }

@@ -10,6 +10,8 @@ namespace Inscribe.Configuration.Settings
             this.TwitterActionNotifyShowLength = 5000;
             this.IsPowerUserMode = false;
             this.StatusMessageDefaultShowLengthSec = 5;
+            this.FontSize = 12;
+            this.FontFamily = null;
         }
 
         #region General experience
@@ -43,5 +45,9 @@ namespace Inscribe.Configuration.Settings
 
         #endregion
 
+
+        public string FontFamily { get; set; }
+
+        public double FontSize { get; set; }
     }
 }

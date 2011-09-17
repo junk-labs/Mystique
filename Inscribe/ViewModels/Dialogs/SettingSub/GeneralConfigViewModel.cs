@@ -1,4 +1,9 @@
-﻿using Inscribe.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Markup;
+using System.Windows.Media;
+using Inscribe.Configuration;
 using Livet;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
@@ -9,6 +14,12 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             this._powerUserMode = Setting.Instance.ExperienceProperty.IsPowerUserMode;
             this._updateKind = Setting.Instance.ExperienceProperty.UpdateKind;
+            this.FontFamilies = Fonts.SystemFontFamilies.ToArray();
+            var curFF = String.IsNullOrEmpty( Setting.Instance.ExperienceProperty.FontFamily) ?
+                new FontFamily() :
+                new FontFamily(Setting.Instance.ExperienceProperty.FontFamily);
+            this._fontFamilyIndex = Array.IndexOf(this.FontFamilies.ToArray(), curFF);
+            this.FontSize = Setting.Instance.ExperienceProperty.FontSize;
         }
 
         private bool _powerUserMode;
@@ -33,10 +44,44 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+        public IEnumerable<FontFamily> FontFamilies { get; set; }
+
+        public IEnumerable<String> DisplayFontFamilies
+        {
+            get
+            {
+                var jaJP = XmlLanguage.GetLanguage("ja-JP");
+                return FontFamilies.Select(ff => ff.FamilyNames.ContainsKey(jaJP) ?
+                    ff.FamilyNames[jaJP] : ff.FamilyNames.Select(xl => xl.Value).FirstOrDefault());
+            }
+        }
+
+        private int _fontFamilyIndex;
+        public int FontFamilyIndex
+        {
+            get { return _fontFamilyIndex; }
+            set
+            {
+                _fontFamilyIndex = value;
+                RaisePropertyChanged(() => FontFamilyIndex);
+            }
+        }
+
+        private double _fontSize;
+        public double FontSize
+        {
+            get { return _fontSize; }
+            set { _fontSize = value; }
+        }
+
         public void Apply()
         {
             Setting.Instance.ExperienceProperty.IsPowerUserMode = this._powerUserMode;
             Setting.Instance.ExperienceProperty.UpdateKind = this._updateKind;
+            Setting.Instance.ExperienceProperty.FontFamily =
+                FontFamilies.Select(ff => ff.FamilyNames.Select(fn => fn.Value).FirstOrDefault())
+                .ElementAtOrDefault(_fontFamilyIndex);
+            Setting.Instance.ExperienceProperty.FontSize = this.FontSize;
         }
     }
 }

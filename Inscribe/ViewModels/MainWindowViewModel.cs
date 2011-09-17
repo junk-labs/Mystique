@@ -13,6 +13,7 @@ using Inscribe.ViewModels.PartBlocks.ModalParts;
 using Inscribe.ViewModels.PartBlocks.NotifyBlock;
 using Livet;
 using Livet.Commands;
+using System.Windows.Media;
 
 namespace Inscribe.ViewModels
 {
@@ -44,6 +45,8 @@ namespace Inscribe.ViewModels
             ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (o, e) =>
             {
                 RaisePropertyChanged(() => IsNotifierBarBottom);
+                RaisePropertyChanged(() => FontFamily);
+                RaisePropertyChanged(() => FontSize);
             });
         }
 
@@ -52,6 +55,29 @@ namespace Inscribe.ViewModels
             get
             {
                 return Define.ApplicationName + " " + Define.GetFormattedVersion();
+            }
+        }
+
+        public FontFamily FontFamily
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(Setting.Instance.ExperienceProperty.FontFamily))
+                {
+                    return new FontFamily();
+                }
+                else
+                {
+                    return new FontFamily(Setting.Instance.ExperienceProperty.FontFamily);
+                }
+            }
+        }
+
+        public double FontSize
+        {
+            get
+            {
+                return Setting.Instance.ExperienceProperty.FontSize;
             }
         }
 

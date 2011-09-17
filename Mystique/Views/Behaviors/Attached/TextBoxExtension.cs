@@ -53,7 +53,7 @@ namespace Mystique.Views.Behaviors.Attached
 
             if ((Key.D0 <= e.Key && e.Key <= Key.D9) ||
                 (Key.NumPad0 <= e.Key && e.Key <= Key.NumPad9) ||
-                (Key.Delete == e.Key) || (Key.Back == e.Key) || (Key.Tab == e.Key))
+                (Key.Delete == e.Key) || (Key.Back == e.Key) || (Key.Tab == e.Key) || e.Key == Key.OemPeriod)
             {
                 e.Handled = false;
             }

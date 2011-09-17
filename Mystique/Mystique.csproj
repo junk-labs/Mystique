@@ -130,6 +130,7 @@
     <Compile Include="Views\Converters\KeyAssign\KeyAssignConverter.cs" />
     <Compile Include="Views\Converters\LongRangeStringConverter.cs" />
     <Compile Include="Views\Converters\LongStringConverter.cs" />
+    <Compile Include="Views\Converters\Particular\DoubleStringConverter.cs" />
     <Compile Include="Views\Converters\Particular\NotZeroToVisibleConverter.cs" />
     <Compile Include="Views\Converters\Particular\SourceToInlinesConverter.cs" />
     <Compile Include="Views\Converters\Particular\TweetStringToCountConverter.cs" />
