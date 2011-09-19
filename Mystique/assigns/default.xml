@@ -49,6 +49,11 @@
       <!-- <Assign Action="Post" Key="Enter" Preview="True" InTextBox="True" /> -->
 			<Assign Action="PostAndClose" Key="Ctrl+Shift+Enter" Preview="True" InTextBox="True" />
 			<Assign Action="CloseInput" Key="Escape" Preview="True" InTextBox="True" />
+      <!-- Changing account -->
+      <Assign Action="SelectNextAccount" Key="Ctrl+Alt+Down" Preview="True" InTextBox="True" />
+      <Assign Action="SelectPreviousAccount" Key="Ctrl+Alt+Up" Preview="True" InTextBox="True" />
+      <Assign Action="SelectFirstAccount" Key="Ctrl+Alt+Left" Preview="True" InTextBox="True" />
+      <Assign Action="SelectAllAccount" Key="Ctrl+Alt+Shift+A" Preview="True" InTextBox="True" />
 		</AssignGroup>
     <AssignGroup Region="SearchBar">
       <Assign Action="RemoveViewStackTop" Key="Esc" Preview="True" InTextBox="True" />

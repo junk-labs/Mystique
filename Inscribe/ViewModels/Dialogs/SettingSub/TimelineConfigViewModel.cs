@@ -14,13 +14,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public TimelineConfigViewModel()
         {
             this._timelineScrollLockIndex = (int)Setting.Instance.TimelineExperienceProperty.ScrollLockMode;
+            this._timelineStrictLock = Setting.Instance.TimelineExperienceProperty.TimelineStrictLock;
             this._useFastScrolling = Setting.Instance.TimelineExperienceProperty.UseFastScrolling;
             this._tweetInitStrategyIndex = (int)Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy;
             this._useIntelligentOrdering = Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering;
             this._intelligentOrderingThresholdSec = Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec;
         }
 
-        public int _timelineScrollLockIndex;
+        private int _timelineScrollLockIndex;
         public int TimelineScrollLockIndex
         {
             get { return this._timelineScrollLockIndex; }
@@ -28,6 +29,17 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             {
                 this._timelineScrollLockIndex = value;
                 RaisePropertyChanged(() => TimelineScrollLockIndex);
+            }
+        }
+
+        private bool _timelineStrictLock;
+        public bool TimelineStrictLock
+        {
+            get { return this._timelineStrictLock; }
+            set
+            {
+                this._timelineStrictLock = value;
+                RaisePropertyChanged(() => TimelineStrictLock);
             }
         }
 
@@ -76,6 +88,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public void Apply()
         {
             Setting.Instance.TimelineExperienceProperty.ScrollLockMode = (ScrollLock)this._timelineScrollLockIndex;
+            Setting.Instance.TimelineExperienceProperty.TimelineStrictLock = this._timelineStrictLock;
             Setting.Instance.TimelineExperienceProperty.UseFastScrolling = this._useFastScrolling;
             Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy = (ItemInitStrategy)this._tweetInitStrategyIndex;
             Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering = this._useIntelligentOrdering;

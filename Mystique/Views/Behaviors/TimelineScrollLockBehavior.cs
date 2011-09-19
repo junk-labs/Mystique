@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,7 +10,8 @@ using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Mystique.Views.PartBlocks.MainBlock;
-using System;
+using System.Linq;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Mystique.Views.Behaviors
 {
@@ -80,8 +82,15 @@ namespace Mystique.Views.Behaviors
                         // 常にスクロールロック
                         break;
                 }
-                // scroll down
-                SetScroll(e.NewItems.Count);
+                if (Setting.Instance.TimelineExperienceProperty.TimelineStrictLock && vm.SelectedTweetViewModel != null)
+                {
+                    SetScroll(e.NewItems.OfType<TabDependentTweetViewModel>()
+                        .Where(a => a.Tweet.CreatedAt > vm.SelectedTweetViewModel.Tweet.CreatedAt).Count());
+                }
+                else
+                {
+                    SetScroll(e.NewItems.Count);
+                }
             }
         }
 

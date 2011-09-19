@@ -14,18 +14,34 @@
     <StackPanel Orientation="Vertical">
         <CheckBox Margin="4,2"
                   Content="オートコンプリートを利用する(_A)"
-                  IsChecked="{Binding UseInputSuggesting}" />
+                  IsChecked="{Binding UseInputSuggesting}"
+                  ToolTip="@や#を入力した場合、入力候補を表示して簡単に入力ができるようにします。" />
         <CheckBox Margin="4,2"
                   Content="文頭の空白文字を削除する(_R)"
-                  IsChecked="{Binding TrimBeginSpace}" />
+                  IsChecked="{Binding TrimBeginSpace}"
+                  ToolTip=" RT @～のように、先頭が空白文字で始まるツイートを投稿するとき、先頭の空白を削除します。" />
         <CheckBox Margin="4,2"
                   Content="入力中のユーザー選択はその投稿にのみ使用する(_U)"
-                  IsChecked="{Binding EnableTemporarilyUserSelection}" 
-                  ToolTip="入力ボックスがオープンされている時のユーザー選択を、投稿時や入力キャンセル時に消去するようにします。" />
+                  IsChecked="{Binding EnableTemporarilyUserSelection}">
+            <CheckBox.ToolTip>
+                <TextBlock>
+                    <Run Text="新しいツイートを入力中に選択したユーザーを保持し続けないようにします。" />
+                    <LineBreak />
+                    <Run Text="頻繁にアカウントを切り替える方におすすめです。" />
+                </TextBlock>
+            </CheckBox.ToolTip>
+        </CheckBox>
         <CheckBox Margin="4,2"
                   Content="POST規制情報がある時はすぐにフォールバックする(_F)"
-                  IsChecked="{Binding UseActiveFallback}"
-                  ToolTip="POST規制されている情報がKrile内にあるとき、試験的に投稿を行うことなくフォールバックします。" />
+                  IsChecked="{Binding UseActiveFallback}">
+            <CheckBox.ToolTip>
+                <TextBlock>
+                    <Run Text="POST規制されているのが分かっている時は、本アカウントから投稿を試みず、フォールバック先でのみ投稿します。" />
+                    <LineBreak />
+                    <Run Text="頻繁に規制される方におすすめです。" />
+                </TextBlock>
+            </CheckBox.ToolTip>
+        </CheckBox>
         <Button Margin="4,2" Content="ハッシュタグ自動バインド設定(_A)...">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">

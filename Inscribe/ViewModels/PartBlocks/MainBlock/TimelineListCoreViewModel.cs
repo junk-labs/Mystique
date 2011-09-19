@@ -20,7 +20,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         private static QueueTaskDispatcher _updateDispatcher;
         static TimelineListCoreViewModel()
         {
-            _updateDispatcher = new QueueTaskDispatcher(6);
+            _updateDispatcher = new QueueTaskDispatcher(1);
             ThreadHelper.Halt += _updateDispatcher.Dispose;
         }
 
@@ -74,6 +74,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return _selectedTweetViewModel; }
             set
             {
+                if (this._selectedTweetViewModel == value) return;
                 this._selectedTweetViewModel = value;
                 RaisePropertyChanged(() => SelectedTweetViewModel);
                 Task.Factory.StartNew(() => this._tweetsSource.ToArrayVolatile()

@@ -10,7 +10,7 @@ namespace Inscribe.Configuration.Settings
             this.TwitterActionNotifyShowLength = 5000;
             this.IsPowerUserMode = false;
             this.StatusMessageDefaultShowLengthSec = 5;
-            this.FontSize = 12;
+            this.FontSize = 11.5;
             this.FontFamily = null;
         }
 

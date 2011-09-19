@@ -151,7 +151,7 @@
             <TextBlock Grid.Row="3"
                        Foreground="Red"
                        Padding="4"
-                       Text="アカウント設定は即座に反映されます。キャンセルはできません。" />
+                       Text="アカウント設定はすぐに反映されます。キャンセルはできません。" />
 
         </Border>
     </Grid>

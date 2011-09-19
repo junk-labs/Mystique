@@ -17,6 +17,7 @@ namespace Inscribe.Configuration.Settings
             MoveAboveTopToDeselect = true;
             UseIntelligentOrdering = false;
             IntelligentOrderingThresholdSec = 60 * 5;
+            TimelineStrictLock = true;
         }
 
         public bool UseFastScrolling { get; set; }
@@ -53,6 +54,8 @@ namespace Inscribe.Configuration.Settings
         public bool UseIntelligentOrdering { get; set; }
 
         public int IntelligentOrderingThresholdSec { get; set; }
+
+        public bool TimelineStrictLock { get; set; }
     }
 
     /// <summary>

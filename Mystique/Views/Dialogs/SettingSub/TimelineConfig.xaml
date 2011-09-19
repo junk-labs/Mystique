@@ -17,6 +17,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"
@@ -24,7 +25,7 @@
                    Margin="4,2"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Center"
-                   Text="スクロールロック" />
+                   Text="タイムラインのスクロールロック" />
         <ComboBox Grid.Row="0"
                   Grid.Column="1"
                   Margin="4,2"
@@ -38,12 +39,20 @@
         <CheckBox Grid.Row="1"
                   Grid.ColumnSpan="2"
                   Margin="4,2"
+                  IsChecked="{Binding TimelineStrictLock}">
+            <StackPanel Orientation="Horizontal">
+                <AccessText Text="スクロールロックを厳密に行う(_S)" />
+            </StackPanel>
+        </CheckBox>
+        <CheckBox Grid.Row="2"
+                  Grid.ColumnSpan="2"
+                  Margin="4,2"
                   IsChecked="{Binding UseFastScrolling}">
             <StackPanel Orientation="Horizontal">
                 <AccessText Text="高速スクロールを使う(_F)" />
             </StackPanel>
         </CheckBox>
-        <StackPanel Grid.Row="2"
+        <StackPanel Grid.Row="3"
                     Grid.ColumnSpan="2"
                     Margin="4,2"
                     Orientation="Horizontal">
@@ -60,12 +69,12 @@
                      bat:TextBoxExtension.IsNumeric="True"
                      Text="{Binding IntelligentOrderingThresholdSec}" />
         </StackPanel>
-        <TextBlock Grid.Row="3"
+        <TextBlock Grid.Row="4"
                    Grid.ColumnSpan="2"
                    Margin="4,2"
                    Foreground="Gray"
                    Text="タイムラインの並べ替えを、受信した順序も考慮して行います。" />
-        <GroupBox Grid.Row="4"
+        <GroupBox Grid.Row="5"
                   Grid.ColumnSpan="2"
                   Margin="4"
                   Header="高度な設定"

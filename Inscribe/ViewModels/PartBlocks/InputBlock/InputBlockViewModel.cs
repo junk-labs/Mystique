@@ -986,6 +986,53 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             });
             KeyAssignCore.RegisterOperation("ShowConfig", () => this.ShowConfig());
             KeyAssignCore.RegisterOperation("ShowAbout", () => this.ShowAbout());
+            KeyAssignCore.RegisterOperation("SelectNextAccount", () => SelectAccount(AccountSelection.Next));
+            KeyAssignCore.RegisterOperation("SelectPreviousAccount", () => SelectAccount(AccountSelection.Previous));
+            KeyAssignCore.RegisterOperation("SelectFirstAccount", () => SelectAccount(AccountSelection.First));
+            KeyAssignCore.RegisterOperation("SelectAllAccount", () => SelectAccount(AccountSelection.All));
+        }
+
+        private enum AccountSelection
+        {
+            Next,
+            Previous,
+            First,
+            All,
+        }
+
+        private void SelectAccount(AccountSelection selection)
+        {
+            var cselect = this.InputUserSelectorViewModel.LinkElements;
+            Action<IEnumerable<AccountInfo>> setAccount = aa =>
+                {
+                    if (this.IsOpenInput && Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection)
+                        this.OverrideTarget(aa);
+                    else
+                        this.LinkUserChanged(aa);
+                };
+            switch (selection)
+            {
+                case AccountSelection.Next:
+                    var last = AccountStorage.Accounts.LastOrDefault(i => cselect.Contains(i));
+                    if (last == null || AccountStorage.Accounts.LastOrDefault() == last)
+                        setAccount(new[] { AccountStorage.Accounts.FirstOrDefault() });
+                    else
+                        setAccount(new[] { AccountStorage.Accounts.SkipWhile(a => a != last).Take(2).Last() });
+                    break;
+                case AccountSelection.Previous:
+                    var first = AccountStorage.Accounts.FirstOrDefault(i => cselect.Contains(i));
+                    if (first == null || AccountStorage.Accounts.FirstOrDefault() == first)
+                        setAccount(new[] { AccountStorage.Accounts.LastOrDefault() });
+                    else
+                        setAccount(new[] { AccountStorage.Accounts.TakeWhile(a => a != first).Last() });
+                    break;
+                case AccountSelection.First:
+                    setAccount(new[] { AccountStorage.Accounts.FirstOrDefault() });
+                    break;
+                case AccountSelection.All:
+                    setAccount(AccountStorage.Accounts);
+                    break;
+            }
         }
 
         #endregion
