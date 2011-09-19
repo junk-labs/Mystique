@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Dulcet.Twitter.Rest;
 using Inscribe.Authentication;
-using Inscribe.Common;
 
 namespace Inscribe.Communication.CruiseControl.DefaultTasks
 {
@@ -20,7 +18,7 @@ namespace Inscribe.Communication.CruiseControl.DefaultTasks
 
         protected override IEnumerable<Dulcet.Twitter.TwitterStatusBase> GetTweets()
         {
-            return ApiHelper.ExecApi(() => this.AccountInfo.GetFavorites());
+            return InjectionPoint._GetFavoritesInjection.Execute(AccountInfo);
         }
 
         protected override int ReceiveCount

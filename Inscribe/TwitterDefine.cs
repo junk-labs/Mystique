@@ -17,7 +17,7 @@ namespace Inscribe
 
         public static readonly int UserStreamsQueryMaxCount = 200;
 
-        public static readonly int HomeReceiveMaxCount = 150;
+        public static readonly int HomeReceiveMaxCount = 200;
 
         public static readonly int MentionReceiveMaxCount = 100;
 

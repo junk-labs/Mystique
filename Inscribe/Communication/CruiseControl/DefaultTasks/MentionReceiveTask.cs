@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
 using Inscribe.Authentication;
 using Inscribe.Common;
@@ -18,9 +19,9 @@ namespace Inscribe.Communication.CruiseControl.DefaultTasks
             this._accountInfo = info;
         }
 
-        protected override IEnumerable<Dulcet.Twitter.TwitterStatusBase> GetTweets()
+        protected override IEnumerable<TwitterStatusBase> GetTweets()
         {
-            return ApiHelper.ExecApi(() => this.AccountInfo.GetMentions(count: TwitterDefine.MentionReceiveMaxCount));
+            return InjectionPoint._GetMentionsInjection.Execute(AccountInfo);
         }
 
         protected override int ReceiveCount

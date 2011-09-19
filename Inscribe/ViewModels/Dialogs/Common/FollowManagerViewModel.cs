@@ -145,7 +145,6 @@ namespace Inscribe.ViewModels.Dialogs.Common
       
     }
 
-
     public class Relation : ViewModel
     {
         public AccountInfo Info { get; private set; }

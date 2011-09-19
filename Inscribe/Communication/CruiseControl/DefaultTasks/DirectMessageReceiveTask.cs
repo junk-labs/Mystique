@@ -20,7 +20,7 @@ namespace Inscribe.Communication.CruiseControl.DefaultTasks
 
         protected override IEnumerable<Dulcet.Twitter.TwitterStatusBase> GetTweets()
         {
-            return ApiHelper.ExecApi(() => this.AccountInfo.GetDirectMessages(count: TwitterDefine.DmReceiveMaxCount));
+            return InjectionPoint._GetSentDirectMessagesInjection.Execute(AccountInfo);
         }
 
         protected override int ReceiveCount

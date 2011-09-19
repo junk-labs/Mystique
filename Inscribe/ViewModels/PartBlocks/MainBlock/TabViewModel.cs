@@ -155,7 +155,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             {
                 using (var n = NotifyStorage.NotifyManually(this.TabProperty.Name + " - タイムラインを構築しています..."))
                 {
-                    this.StackingTimelines.ForEach(f => f.InvalidateCache());
+                    this.StackingTimelines.ToArray().ForEach(f => f.InvalidateCache());
                 }
             });
         }
