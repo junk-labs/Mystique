@@ -202,7 +202,8 @@ namespace Inscribe.Communication.Posting
                 var initt = window.FirstOrDefault();
                 if (initt != null)
                 {
-                    return new Tuple<DateTime, int>(initt.Add(TwitterDefine.UnderControlTimespan), window.Count());
+                    return new Tuple<DateTime, int>(initt.Add(TwitterDefine.UnderControlTimespan),
+                        window.Count());
                 }
                 else
                 {
@@ -300,7 +301,7 @@ namespace Inscribe.Communication.Posting
 
         private static int UpdateTweetSink(AccountInfo info, string text, long? inReplyToId = null)
         {
-            var status = ApiHelper.ExecApi(() => info.UpdateStatus(text, inReplyToId));
+            var status = info.UpdateStatus(text, inReplyToId);
             if (status == null || status.Id == 0)
                 throw new InvalidOperationException("ツイートの成功を確認できませんでした。");
             TweetStorage.Register(status);
