@@ -11,7 +11,7 @@ namespace Inscribe.Configuration.Settings
             this.IsPowerUserMode = false;
             this.StatusMessageDefaultShowLengthSec = 5;
             this.FontSize = 11.5;
-            this.FontFamily = null;
+            this.FontFamily = "Meiryo";
         }
 
         #region General experience
