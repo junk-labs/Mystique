@@ -42,6 +42,15 @@
                 </TextBlock>
             </CheckBox.ToolTip>
         </CheckBox>
+        <CheckBox Margin="4,2"
+                  Content="公式RTもフォールバックする(_R)"
+                  IsChecked="{Binding UseOfficialRetweetFallback}">
+            <CheckBox.ToolTip>
+                <TextBlock>
+                    <Run Text="公式RTもフォールバックします。公式RTからは規制情報を取得できないため、Krile内に規制情報がある場合のみフォールバックします。" />
+                </TextBlock>
+            </CheckBox.ToolTip>
+        </CheckBox>
         <Button Margin="4,2" Content="ハッシュタグ自動バインド設定(_A)...">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">

@@ -457,7 +457,7 @@ namespace Inscribe.Communication.Posting
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> retweetInjection =
-            new InjectionPort<Tuple<AccountInfo, TweetViewModel>>(a => RetweetCore(a.Item1, a.Item2));
+            new InjectionPort<Tuple<AccountInfo, TweetViewModel>>(a => RetweetCore(a.Item1, a.Item1, a.Item2));
 
         public static IInjectionPort<Tuple<AccountInfo, TweetViewModel>> RetweetInjection
         {
@@ -508,8 +508,19 @@ namespace Inscribe.Communication.Posting
                 NotifyStorage.Notify("Retweetしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
         }
 
-        private static void RetweetCore(AccountInfo d, TweetViewModel status)
+        private static void RetweetCore(AccountInfo d, AccountInfo origin, TweetViewModel status)
         {
+            if (Setting.Instance.InputExperienceProperty.OfficialRetweetFallback &&
+                IsAccountUnderControlled(d) &&
+                !String.IsNullOrEmpty(d.AccoutProperty.FallbackAccount))
+            {
+                var fallbackTarget = AccountStorage.Get(d.AccoutProperty.FallbackAccount);
+                if (fallbackTarget != null && fallbackTarget != origin)
+                {
+                    RetweetCore(fallbackTarget, origin, status);
+                    return;
+                }
+            }
             if (ApiHelper.ExecApi(() => d.Retweet(status.Status.Id)) == null)
                 throw new ApplicationException();
         }

@@ -10,7 +10,8 @@ namespace Inscribe.Configuration.Settings
         {
             TrimBeginSpace = true;
             UseInputSuggesting = true;
-            this.UseActiveFallback = false;
+            UseActiveFallback = false;
+            OfficialRetweetFallback = false;
             this.IsEnabledTemporarilyUserSelection = false;
         }
 
@@ -26,6 +27,8 @@ namespace Inscribe.Configuration.Settings
         }
 
         public bool UseActiveFallback { get; set; }
+
+        public bool OfficialRetweetFallback { get; set; }
 
         public bool IsEnabledTemporarilyUserSelection { get; set; }
     }
