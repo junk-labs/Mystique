@@ -51,6 +51,7 @@ namespace Mystique.Views.Converters.Particular
         /// </summary>
         public static IEnumerable<Inline> Generate(this string text)
         {
+            System.Diagnostics.Debug.WriteLine("called");
             if (!Application.Current.Dispatcher.CheckAccess())
                 return Application.Current.Dispatcher.Invoke((Func<string, IEnumerable<Inline>>)(s => GenerateSink(s).ToArray()),
                     text) as IEnumerable<Inline>;

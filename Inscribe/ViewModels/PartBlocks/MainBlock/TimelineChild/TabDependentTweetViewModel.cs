@@ -313,7 +313,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         static TabDependentTweetViewModel()
         {
-            taskDispatcher = new StackTaskDispatcher(4);
+            taskDispatcher = new StackTaskDispatcher(1);
             ThreadHelper.Halt += () => taskDispatcher.Dispose();
         }
 
@@ -365,6 +365,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 _foreBrushCache = new SolidColorBrush(_foreColorCache).GetAsFrozen() as Brush;
                 fcf = true;
             }
+
             if (nlf)
             {
                 RaisePropertyChanged(() => LightningColor);

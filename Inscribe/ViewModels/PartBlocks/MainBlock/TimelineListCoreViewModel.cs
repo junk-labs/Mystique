@@ -18,13 +18,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
     {
         public TabViewModel Parent { get; private set; }
 
-        private static QueueTaskDispatcher _updateDispatcher;
-        static TimelineListCoreViewModel()
-        {
-            _updateDispatcher = new QueueTaskDispatcher(1);
-            ThreadHelper.Halt += _updateDispatcher.Dispose;
-        }
-
         public event EventHandler NewTweetReceived;
         private void OnNewTweetReceived()
         {
@@ -79,8 +72,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 this._selectedTweetViewModel = value;
                 RaisePropertyChanged(() => SelectedTweetViewModel);
                 Task.Factory.StartNew(() => this._tweetsSource.ToArrayVolatile()
-                    // .ForEach(vm => vm.PendingColorChanged()));
-                    .ForEach(vm => _updateDispatcher.Enqueue(() => vm.PendingColorChanged())));
+                    .ForEach(vm => vm.PendingColorChanged()));
             }
         }
 
