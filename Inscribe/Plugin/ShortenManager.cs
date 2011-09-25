@@ -9,26 +9,28 @@ namespace Inscribe.Plugin
 {
     public static class ShortenManager
     {
-        private static List<IURLShortener> shorteners = new List<IURLShortener>();
+        private static List<IUrlShortener> shorteners = new List<IUrlShortener>();
 
-        private static List<IURLExtractor> extractors = new List<IURLExtractor>();
+        private static List<IUriExtractor> extractors = new List<IUriExtractor>();
 
-        public static IEnumerable<IURLShortener> Shorteners
+        [Obsolete("Krile is no longer supported shortener services.")]
+        public static IEnumerable<IUrlShortener> Shorteners
         {
             get { return shorteners; }
         }
 
-        public static IEnumerable<IURLExtractor> Extractors
+        public static IEnumerable<IUriExtractor> Extractors
         {
             get { return extractors; }
         }
 
-        public static void RegisterShortener(IURLShortener shortener)
+        [Obsolete("Krile is no longer supported shortener services.")]
+        public static void RegisterShortener(IUrlShortener shortener)
         {
             shorteners.Add(shortener);
         }
 
-        public static void RegisterExtractor(IURLExtractor extractor)
+        public static void RegisterExtractor(IUriExtractor extractor)
         {
             extractors.Add(extractor);
         }
@@ -38,13 +40,13 @@ namespace Inscribe.Plugin
             foreach (var type in asm.GetTypes())
             {
                 var ifs = type.GetInterfaces();
-                if (ifs.Contains(typeof(IURLShortener)))
+                if (ifs.Contains(typeof(IUrlShortener)))
                 {
-                    RegisterShortener(Activator.CreateInstance(type) as IURLShortener);
+                    RegisterShortener(Activator.CreateInstance(type) as IUrlShortener);
                 }
-                else if (ifs.Contains(typeof(IURLExtractor)))
+                else if (ifs.Contains(typeof(IUriExtractor)))
                 {
-                    RegisterExtractor(Activator.CreateInstance(type) as IURLExtractor);
+                    RegisterExtractor(Activator.CreateInstance(type) as IUriExtractor);
                 }
             }
         }
@@ -79,6 +81,7 @@ namespace Inscribe.Plugin
         /// </summary>
         /// <param name="url">確認するURL</param>
         /// <returns>短縮されていればtrue</returns>
+        [Obsolete("Krile is no longer supported shortener services.")]
         public static bool IsShortedThis(string url)
         {
             foreach (var c in shorteners)
@@ -93,8 +96,11 @@ namespace Inscribe.Plugin
         /// URLの短縮を行うインスタンスを取得します。
         /// </summary>
         /// <returns>短縮サービスのインスタンス、指定がない場合はNULL</returns>
-        public static IURLShortener GetSuggestedShortener()
+        [Obsolete("Krile is no longer supported shortener services.")]
+        public static IUrlShortener GetSuggestedShortener()
         {
+            throw new NotSupportedException();
+            /*
             string sn = Setting.Instance.ExternalServiceProperty.ShortenerService;
             if (String.IsNullOrEmpty(sn)) return null;
             foreach (var ss in shorteners)
@@ -105,6 +111,7 @@ namespace Inscribe.Plugin
                 }
             }
             return null;
+            */
         }
     }
 }

@@ -68,10 +68,10 @@ namespace Inscribe.Plugin
             public List<IResolver> resolvers = null;
 
             [ImportMany()]
-            public List<IURLShortener> shorteners = null;
+            public List<IUrlShortener> shorteners = null;
 
             [ImportMany()]
-            public List<IURLExtractor> extractors = null;
+            public List<IUriExtractor> extractors = null;
 
             public PluginLoadExecuter()
             {

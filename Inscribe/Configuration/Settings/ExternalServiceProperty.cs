@@ -6,11 +6,8 @@ namespace Inscribe.Configuration.Settings
     {
         public ExternalServiceProperty()
         {
-            ShortenerService = String.Empty;
             UploaderService = String.Empty;
         }
-
-        public string ShortenerService { get; set; }
 
         public string UploaderService { get; set; }
     }

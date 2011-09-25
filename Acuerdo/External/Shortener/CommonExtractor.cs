@@ -6,7 +6,7 @@ using System.Net;
 
 namespace Acuerdo.External.Shortener
 {
-    public class CommonExtractor : IURLExtractor
+    public class CommonExtractor : IUriExtractor
     {
         public bool TryDecompress(string url, out string decompressed)
         {
@@ -25,7 +25,7 @@ namespace Acuerdo.External.Shortener
             catch { return false; }
         }
 
-        public Uri GetReturnedURL(Uri url)
+        public static Uri GetReturnedURL(Uri url)
         {
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
             req.Method = "HEAD";

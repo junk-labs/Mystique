@@ -9,7 +9,7 @@ namespace Casket.Shorteners
     /// <summary>
     /// ux.nu implementation
     /// </summary>
-    public class UxNu : IURLShortener, IURLExtractor
+    public class UxNu : IUrlShortener, IUriExtractor
     {
         public bool IsCompressed(string url)
         {
