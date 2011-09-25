@@ -230,6 +230,25 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
         #endregion
 
+        #region RefreshIndividualInfoCommand
+        ViewModelCommand _RefreshIndividualInfoCommand;
+
+        public ViewModelCommand RefreshIndividualInfoCommand
+        {
+            get
+            {
+                if (_RefreshIndividualInfoCommand == null)
+                    _RefreshIndividualInfoCommand = new ViewModelCommand(RefreshIndividualInfo);
+                return _RefreshIndividualInfoCommand;
+            }
+        }
+
+        private void RefreshIndividualInfo()
+        {
+            AccountStorage.Accounts.ForEach(i => Communication.UserInformationManager.ReceiveInidividualInfo(i));
+        }
+        #endregion
+
         #region ClearImageCachesCommand
         ViewModelCommand _ClearImageCachesCommand;
 

@@ -25,18 +25,18 @@ namespace Inscribe.Communication
         public static void ReceiveInidividualInfo(AccountInfo info)
         {
             // アカウント情報の受信
-            SafeExec(() => ApiHelper.ExecApi(() => UserStorage.Register(info.GetUserByScreenName(info.ScreenName))));
+            SafeExec(() => UserStorage.Register(info.GetUserByScreenName(info.ScreenName)));
             // フォロー/フォロワー/ブロックの受信
-            SafeExec(() => ApiHelper.ExecApi(() => info.GetFriendIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollowing(i))));
-            SafeExec(() => ApiHelper.ExecApi(() => info.GetFollowerIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollower(i))));
-            SafeExec(() => ApiHelper.ExecApi(() => info.GetBlockingIds().ForEach(i => info.RegisterBlocking(i))));
+            SafeExec(() => info.GetFriendIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollowing(i)));
+            SafeExec(() => info.GetFollowerIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollower(i)));
+            SafeExec(() => info.GetBlockingIds().ForEach(i => info.RegisterBlocking(i)));
         }
 
         private static void SafeExec(Action action)
         {
             try
             {
-                ApiHelper.ExecApi(() => action);
+                ApiHelper.ExecApi(action);
             }
             catch (Exception e)
             {

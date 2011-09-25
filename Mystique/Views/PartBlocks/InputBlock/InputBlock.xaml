@@ -115,6 +115,7 @@
                         </MenuItem>
                         <MenuItem Header="メンテナンス(_M)">
                             <MenuItem Command="{Binding ReconnectStreamsCommand}" Header="全てのアカウントを再接続(_U)" />
+                            <MenuItem Command="{Binding RefreshIndividualInfoCommand}" Header="全てのアカウント情報を更新(_U)" />
                             <MenuItem Header="キャッシュ(_C)">
                                 <MenuItem Command="{Binding ClearImageCachesCommand}" Header="画像キャッシュをクリア(_I)" />
                             </MenuItem>
