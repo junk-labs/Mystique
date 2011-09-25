@@ -343,7 +343,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
         #endregion
       
-        
         #region ExitCommand
         ViewModelCommand _ExitCommand;
 
@@ -362,7 +361,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             KernelService.AppShutdown();
         }
         #endregion
-      
 
         #endregion
 

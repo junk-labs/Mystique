@@ -180,7 +180,7 @@
                      InputMethod.IsInputMethodEnabled="False"
                      IsSynchronizedWithCurrentItem="True"
                      ItemContainerStyle="{StaticResource ContainerStyle}"
-                     ItemsSource="{Binding TabItems}"
+                     ItemsSource="{Binding TabItems, IsAsync=True}"
                      ItemTemplate="{DynamicResource ItemTemplate}"
                      Padding="0"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
