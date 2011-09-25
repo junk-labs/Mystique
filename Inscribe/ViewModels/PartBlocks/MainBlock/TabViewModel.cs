@@ -414,6 +414,25 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             RaisePropertyChanged(() => IsStackTopUserPage);
         }
 
+        #region MoveFocusToThisCommand
+        ViewModelCommand _MoveFocusToThisCommand;
+
+        public ViewModelCommand MoveFocusToThisCommand
+        {
+            get
+            {
+                if (_MoveFocusToThisCommand == null)
+                    _MoveFocusToThisCommand = new ViewModelCommand(MoveFocusToThis);
+                return _MoveFocusToThisCommand;
+            }
+        }
+
+        private void MoveFocusToThis()
+        {
+            OnGetFocus();
+        }
+        #endregion
+
         #region ClearNewTweetsCountCommand
         ViewModelCommand _ClearNewTweetsCountCommand;
 

@@ -82,7 +82,12 @@
                     </LinearGradientBrush>
                 </Border.Background>
                 <Grid>
-                    <Rectangle Height="5"
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <i:InvokeCommandAction Command="{Binding MoveFocusToThisCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                        <Rectangle Height="5"
                                VerticalAlignment="Top"
                                Visibility="{Binding IsCurrentFocused,
                                                     Converter={StaticResource BoolVisibleConverter}}">

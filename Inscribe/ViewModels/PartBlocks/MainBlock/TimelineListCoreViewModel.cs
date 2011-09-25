@@ -10,6 +10,7 @@ using Inscribe.Storage;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
+using Dulcet.Twitter;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -88,16 +89,31 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             if (filter != null)
             {
                 if (join)
+                {
                     filter.ForEach(f => f.RequireReaccept += f_RequireReaccept);
+                    filter.ForEach(f => f.RequirePartialReaccept += f_RequirePartialReaccept);
+                }
                 else
+                {
                     filter.ForEach(f => f.RequireReaccept -= f_RequireReaccept);
+                    filter.ForEach(f => f.RequirePartialReaccept -= f_RequirePartialReaccept);
+                }
             }
         }
 
         void f_RequireReaccept()
         {
-            System.Diagnostics.Debug.WriteLine("received reacception");
             Task.Factory.StartNew(() => this.InvalidateCache());
+        }
+
+        void f_RequirePartialReaccept(TwitterStatusBase tsb)
+        {
+            var tvm = TweetStorage.Register(tsb);
+            if (tvm == null || !TweetStorage.ValidateTweet(tvm)) return;
+            if (CheckFilters(tvm))
+                AddTweet(tvm);
+            else
+                RemoveTweet(tvm);
         }
 
         public TimelineListCoreViewModel(TabViewModel parent, IEnumerable<IFilter> sources)
@@ -128,21 +144,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 case TweetActionKind.Added:
                     if (CheckFilters(e.Tweet))
                     {
-                        var atdtvm = new TabDependentTweetViewModel(e.Tweet, this.Parent);
-                        if (Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering &&
-                            DateTime.Now.Subtract(e.Tweet.CreatedAt).TotalSeconds < Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec)
-                        {
-                            if (Setting.Instance.TimelineExperienceProperty.OrderByAscending)
-                                this._tweetsSource.AddLastSingle(atdtvm);
-                            else
-                                this._tweetsSource.AddTopSingle(atdtvm);
-                        }
-                        else
-                        {
-                            this._tweetsSource.AddOrderedSingle(
-                                atdtvm, Setting.Instance.TimelineExperienceProperty.OrderByAscending,
-                                t => t.Tweet.CreatedAt);
-                        }
+                        AddTweet(e.Tweet);
                         OnNewTweetReceived();
                         this.Parent.NotifyNewTweetReceived(this, e.Tweet);
                     }
@@ -162,9 +164,34 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     }
                     break;
                 case TweetActionKind.Removed:
-                    this._tweetsSource.Remove(new TabDependentTweetViewModel(e.Tweet, this.Parent));
+                    RemoveTweet(e.Tweet);
                     break;
             }
+        }
+
+        private void AddTweet(TweetViewModel tvm)
+        {
+            var atdtvm = new TabDependentTweetViewModel(tvm, this.Parent);
+            if (Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering &&
+                DateTime.Now.Subtract(tvm.CreatedAt).TotalSeconds < Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec)
+            {
+                if (Setting.Instance.TimelineExperienceProperty.OrderByAscending)
+                    this._tweetsSource.AddLastSingle(atdtvm);
+                else
+                    this._tweetsSource.AddTopSingle(atdtvm);
+            }
+            else
+            {
+                this._tweetsSource.AddOrderedSingle(
+                    atdtvm, Setting.Instance.TimelineExperienceProperty.OrderByAscending,
+                    t => t.Tweet.CreatedAt);
+            }
+            OnNewTweetReceived();
+        }
+
+        private void RemoveTweet(TweetViewModel tvm)
+        {
+            this._tweetsSource.Remove(new TabDependentTweetViewModel(tvm, this.Parent));
         }
 
         private void SettingValueChanged(object o, EventArgs e)

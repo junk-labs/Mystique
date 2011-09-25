@@ -243,7 +243,7 @@ namespace Inscribe.Storage
         /// 登録可能なツイートか判定
         /// </summary>
         /// <returns></returns>
-        private static bool ValidateTweet(TweetViewModel viewModel)
+        public static bool ValidateTweet(TweetViewModel viewModel)
         {
             if (viewModel.Status == null || viewModel.Status.User == null || String.IsNullOrEmpty(viewModel.Status.User.ScreenName))
                 throw new ArgumentException("データが破損しています。");
