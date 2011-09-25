@@ -15,6 +15,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             this._timelineScrollLockIndex = (int)Setting.Instance.TimelineExperienceProperty.ScrollLockMode;
             this._timelineStrictLock = Setting.Instance.TimelineExperienceProperty.TimelineStrictLock;
+            this._isTimelineAscending = Setting.Instance.TimelineExperienceProperty.OrderByAscending;
             this._useFastScrolling = Setting.Instance.TimelineExperienceProperty.UseFastScrolling;
             this._tweetInitStrategyIndex = (int)Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy;
             this._useIntelligentOrdering = Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering;
@@ -40,6 +41,15 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             {
                 this._timelineStrictLock = value;
                 RaisePropertyChanged(() => TimelineStrictLock);
+            }
+        }
+
+        private bool _isTimelineAscending;
+        public bool IsTimelineAscending
+        {
+            get { return _isTimelineAscending; }
+            set { _isTimelineAscending = value;
+            RaisePropertyChanged(() => IsTimelineAscending);
             }
         }
 
@@ -90,6 +100,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.TimelineExperienceProperty.ScrollLockMode = (ScrollLock)this._timelineScrollLockIndex;
             Setting.Instance.TimelineExperienceProperty.TimelineStrictLock = this._timelineStrictLock;
             Setting.Instance.TimelineExperienceProperty.UseFastScrolling = this._useFastScrolling;
+            Setting.Instance.TimelineExperienceProperty.OrderByAscending = this._isTimelineAscending;
             Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy = (ItemInitStrategy)this._tweetInitStrategyIndex;
             Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering = this._useIntelligentOrdering;
             Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec = this._intelligentOrderingThresholdSec;

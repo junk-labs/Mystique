@@ -113,7 +113,6 @@ namespace Inscribe.Data
         public bool AddOrderedSingle<TKey>(T item, bool ascend, Func<T, TKey> keySelector)
              where TKey : IComparable
         {
-            bool add = true;
             int addPoint = 0;
             lock (syncRoot)
             {
@@ -175,15 +174,14 @@ namespace Inscribe.Data
                                 addPoint = count;
                         }
                     }
+                    RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, addPoint));
+                    return true;
                 }
                 else
                 {
-                    add = false;
+                    return false;
                 }
             }
-            if (add)
-                RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, addPoint));
-            return add;
         }
 
         public bool AddVolatile(T item)

@@ -1,6 +1,6 @@
 ﻿using System;
-using Livet;
 using System.Linq;
+using Livet;
 
 namespace Inscribe.Filter
 {
@@ -13,7 +13,7 @@ namespace Inscribe.Filter
         public WeakEventBinder(params Notificator<T>[] notificator)
         {
             welistener = new WeakEventListenerHolder();
-            notificator.ForEach(n => NotificatorHelper.BindNotification(n, this, Notify));
+            notificator.ForEach(n => NotificatorHelper.BindNotification(n, this, (o, e) => Notify(o, e)));
         }
 
         public event EventHandler<T> Notify = (o, e) => { };

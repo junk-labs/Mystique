@@ -23,7 +23,7 @@ namespace Inscribe.Filter.Filters.Numeric
             web = new WeakEventBinder<EventDescriptionEventArgs>(EventStorage.EventRegisteredEvent);
             web.Notify += (_, edev) =>
                 {
-                    if(edev.EventDescription.Kind == EventKind.Favorite || edev.EventDescription.Kind == EventKind.Unfavorite)
+                    if (edev.EventDescription.Kind == EventKind.Favorite || edev.EventDescription.Kind == EventKind.Unfavorite)
                     {
                         this.RaisePartialRequireReaccept(edev.EventDescription.TargetTweet.Status);
                     }

@@ -145,16 +145,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     Task.Factory.StartNew(() => InvalidateCache());
                     break;
                 case TweetActionKind.Changed:
-                    var ctdtvm = new TabDependentTweetViewModel(e.Tweet, this.Parent);
-                    var contains = this._tweetsSource.Contains(ctdtvm);
-                    if (CheckFilters(e.Tweet) != contains)
-                    {
-                        if (contains)
-                            this._tweetsSource.Remove(ctdtvm);
-                        else
-                            this._tweetsSource.Add(ctdtvm);
-                    }
-                    break;
+                    if (CheckFilters(e.Tweet))
+                        AddTweet(e.Tweet);
+                    else
+                        RemoveTweet(e.Tweet);
+                        break;
                 case TweetActionKind.Removed:
                     RemoveTweet(e.Tweet);
                     break;
@@ -164,6 +159,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         private void AddTweet(TweetViewModel tvm)
         {
             var atdtvm = new TabDependentTweetViewModel(tvm, this.Parent);
+            if (this._tweetsSource.Contains(atdtvm)) return;
             if (Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering &&
                 DateTime.Now.Subtract(tvm.CreatedAt).TotalSeconds < Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec)
             {
@@ -194,9 +190,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public bool CheckFilters(TweetViewModel viewModel)
         {
-            if (!viewModel.IsStatusInfoContains) return false;
-            return (this.sources ?? this.Parent.TabProperty.TweetSources ?? new IFilter[0])
-                .Any(f => f.Filter(viewModel.Status));
+            try
+            {
+                if (!viewModel.IsStatusInfoContains) return false;
+                return (this.sources ?? this.Parent.TabProperty.TweetSources ?? new IFilter[0])
+                    .Any(f => f.Filter(viewModel.Status));
+            }
+            catch (Exception ex)
+            {
+                ExceptionStorage.Register(ex, ExceptionCategory.InternalError, "フィルタ処理中に内部エラーが発生しました。");
+                return false;
+            }
         }
 
         public void InvalidateCache()
