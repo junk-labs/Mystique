@@ -43,12 +43,25 @@ namespace Inscribe.Storage
             Parallel.ForEach(imageDataDictionary
                 .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds > Setting.Instance.KernelProperty.ImageLifetime)
                 .Select(d => d.Key).ToArray(),
-                d => imageDataDictionary.Remove(d));
+                d => RemoveCache(d));
         }
 
         public static void ClearAllCache()
         {
-            imageDataDictionary.Clear();
+            Parallel.ForEach(imageDataDictionary, d => RemoveCache(d.Key));
+        }
+
+        private static void RemoveCache(Uri key)
+        {
+            KeyValuePair<BitmapImage, DateTime> kv;
+            if (imageDataDictionary.TryRemove(key, out kv))
+            {
+                if (kv.Key.StreamSource != null)
+                {
+                    kv.Key.StreamSource.Close();
+                    kv.Key.StreamSource.Dispose();
+                }
+            }
         }
 
         /// <summary>
@@ -120,7 +133,13 @@ namespace Inscribe.Storage
                 }
                 bi.EndInit();
                 bi.Freeze();
-                imageDataDictionary.AddOrUpdate(uri, new KeyValuePair<BitmapImage, DateTime>(bi, DateTime.Now));
+                var newv = new KeyValuePair<BitmapImage, DateTime>(bi, DateTime.Now);
+                imageDataDictionary.AddOrUpdate(uri, newv, (k, o) =>
+                {
+                    o.Key.StreamSource.Close();
+                    o.Key.StreamSource.Dispose();
+                    return newv;
+                });
                 return bi;
             }
             catch (Exception e)

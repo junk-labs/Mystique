@@ -234,32 +234,30 @@ namespace Inscribe.Communication.Posting
                         {
                             // 規制？
                             using (var strm = hrw.GetResponseStream())
+                            using (var json = JsonReaderWriterFactory.CreateJsonReader(strm,
+                                System.Xml.XmlDictionaryReaderQuotas.Max))
                             {
-                                using (var json = JsonReaderWriterFactory.CreateJsonReader(strm,
-                                    System.Xml.XmlDictionaryReaderQuotas.Max))
+                                var xdoc = XDocument.Load(json);
+                                System.Diagnostics.Debug.WriteLine(xdoc);
+                                var eel = xdoc.Root.Element("error");
+                                if (eel != null)
                                 {
-                                    var xdoc = XDocument.Load(json);
-                                    System.Diagnostics.Debug.WriteLine(xdoc);
-                                    var eel = xdoc.Root.Element("error");
-                                    if (eel != null)
+                                    if (eel.Value.IndexOf("update limit", StringComparison.CurrentCultureIgnoreCase) >= 0)
                                     {
-                                        if (eel.Value.IndexOf("update limit", StringComparison.CurrentCultureIgnoreCase) >= 0)
-                                        {
-                                            // User is over daily status update limit.
-                                            // POST規制
-                                            AddUnderControlled(info);
-                                            throw new TweetFailedException(TweetFailedException.TweetErrorKind.Controlled);
-                                        }
-                                        else if (eel.Value.IndexOf("duplicate", StringComparison.CurrentCultureIgnoreCase) >= 0)
-                                        {
-                                            // 同じツイートをしようとした
-                                            throw new TweetFailedException(TweetFailedException.TweetErrorKind.Duplicated);
-                                        }
-                                        else
-                                        {
-                                            // 何かよくわからない
-                                            throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, eel.Value);
-                                        }
+                                        // User is over daily status update limit.
+                                        // POST規制
+                                        AddUnderControlled(info);
+                                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.Controlled);
+                                    }
+                                    else if (eel.Value.IndexOf("duplicate", StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                    {
+                                        // 同じツイートをしようとした
+                                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.Duplicated);
+                                    }
+                                    else
+                                    {
+                                        // 何かよくわからない
+                                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, eel.Value);
                                     }
                                 }
                             }

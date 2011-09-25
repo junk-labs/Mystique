@@ -123,11 +123,11 @@ namespace Inscribe.Common
         {
             try
             {
-                WebRequest request = HttpWebRequest.Create(uri);
+                var request = HttpWebRequest.Create(uri);
                 var ret = request.GetResponse();
                 if (ret != null)
                 {
-                    MemoryStream memoryStream = new MemoryStream();
+                    var memoryStream = new MemoryStream();
                     using (var stream = ret.GetResponseStream())
                     {
                         byte[] buf = new byte[2048];

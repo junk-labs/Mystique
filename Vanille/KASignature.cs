@@ -15,7 +15,7 @@ namespace Vanille
             using (var rsa = new RSACryptoServiceProvider())
             {
                 // Compute hash
-                var buffer = ReadAllBytes(input).ToArray();
+                var buffer = ReadAllBytes(input);
                 var hash = sha.ComputeHash(buffer);
                 // RSA Initialize
                 rsa.FromXmlString(privateKey);
@@ -51,7 +51,7 @@ namespace Vanille
             var sigbuf = new byte[siglen];
             if (input.Read(sigbuf, 0, siglen) < siglen)
                 throw new Exception("File is corrupted.(KSIG: Invalid Signature)");
-            var data = ReadAllBytes(input).ToArray();
+            var data = ReadAllBytes(input);
 
             using (var sha = new SHA256Managed())
             using (var rsa = new RSACryptoServiceProvider())
@@ -79,14 +79,16 @@ namespace Vanille
             }
         }
 
-        private static MemoryStream ReadAllBytes(Stream stream)
+        private static byte[] ReadAllBytes(Stream stream)
         {
-            var ms = new MemoryStream();
-            int bytes = 0;
-            byte[] temp = new byte[4096];
-            while ((bytes = stream.Read(temp, 0, temp.Length)) > 0)
-                ms.Write(temp, 0, bytes);
-            return ms;
+            using (var ms = new MemoryStream())
+            {
+                int bytes = 0;
+                byte[] temp = new byte[4096];
+                while ((bytes = stream.Read(temp, 0, temp.Length)) > 0)
+                    ms.Write(temp, 0, bytes);
+                return ms.ToArray();
+            }
         }
     }
 }
