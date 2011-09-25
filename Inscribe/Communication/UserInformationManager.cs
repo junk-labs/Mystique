@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Dulcet.Twitter.Rest;
 using Inscribe.Authentication;
 using Inscribe.Common;
@@ -25,11 +25,23 @@ namespace Inscribe.Communication
         public static void ReceiveInidividualInfo(AccountInfo info)
         {
             // アカウント情報の受信
-            Task.Factory.StartNew(() => ApiHelper.ExecApi(() => UserStorage.Register(info.GetUserByScreenName(info.ScreenName))));
+            SafeExec(() => ApiHelper.ExecApi(() => UserStorage.Register(info.GetUserByScreenName(info.ScreenName))));
             // フォロー/フォロワー/ブロックの受信
-            Task.Factory.StartNew(() => ApiHelper.ExecApi(() => info.GetFriendIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollowing(i))));
-            Task.Factory.StartNew(() => ApiHelper.ExecApi(() => info.GetFollowerIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollower(i))));
-            Task.Factory.StartNew(() => ApiHelper.ExecApi(() => info.GetBlockingIds().ForEach(i => info.RegisterBlocking(i))));
+            SafeExec(() => ApiHelper.ExecApi(() => info.GetFriendIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollowing(i))));
+            SafeExec(() => ApiHelper.ExecApi(() => info.GetFollowerIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollower(i))));
+            SafeExec(() => ApiHelper.ExecApi(() => info.GetBlockingIds().ForEach(i => info.RegisterBlocking(i))));
+        }
+
+        private static void SafeExec(Action action)
+        {
+            try
+            {
+                ApiHelper.ExecApi(() => action);
+            }
+            catch (Exception e)
+            {
+                ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "アカウント情報の受信中にエラーが発生しました", () => SafeExec(action));
+            }
         }
     }
 }
