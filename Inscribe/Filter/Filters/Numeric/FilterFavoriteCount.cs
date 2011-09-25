@@ -42,7 +42,9 @@ namespace Inscribe.Filter.Filters.Numeric
         
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
-            return this.Range.Check(TweetStorage.Get(status.Id).FavoredUsers.Count());
+            var ts = TweetStorage.Get(status.Id);
+            if (ts == null) return false;
+            return this.Range.Check(ts.FavoredUsers.Count());
         }
 
         public override string Identifier
