@@ -22,5 +22,10 @@ namespace Inscribe.Filter
         /// 現在適用中のフィルタを破棄し、フィルタを再適用するように要求されました。
         /// </summary>
         event Action RequireReaccept;
+
+        /// <summary>
+        /// 特定のステータスについてフィルタに再度通すように要求されました。
+        /// </summary>
+        event Action<TwitterStatusBase> RequirePartialReaccept;
     }
 }

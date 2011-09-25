@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dulcet.Twitter;
 using Inscribe.Filter.Core;
+using Livet;
 
 namespace Inscribe.Filter
 {
@@ -27,13 +28,23 @@ namespace Inscribe.Filter
         /// </summary>
         public event Action RequireReaccept = () => { };
 
+        public event Action<TwitterStatusBase> RequirePartialReaccept = _ => { };
+
         /// <summary>
         /// フィルタの再適用要求を発行します。
         /// </summary>
         protected void RaiseRequireReaccept()
         {
-            System.Diagnostics.Debug.WriteLine("raising reacception");
             RequireReaccept();
+        }
+
+        /// <summary>
+        /// 指定したツイートをこのフィルタを保持しているクラスタに再度通します。<para />
+        /// 存在していないツイートがフィルタを通れば追加され、存在しているツイートがフィルタを通らなくなれば除去されます。
+        /// </summary>
+        protected void RaisePartialRequireReaccept(TwitterStatusBase tsb)
+        {
+            RequirePartialReaccept(tsb);
         }
 
         /// <summary>

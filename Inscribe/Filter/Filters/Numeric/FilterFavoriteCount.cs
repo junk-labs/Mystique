@@ -7,6 +7,8 @@ namespace Inscribe.Filter.Filters.Numeric
 {
     public class FilterFavoriteCount : FilterBase
     {
+        private WeakEventBinder<EventDescriptionEventArgs> web;
+
         private LongRange _range;
 
         [GuiVisible("Fav数範囲")]
@@ -16,14 +18,24 @@ namespace Inscribe.Filter.Filters.Numeric
             set { _range = value; }
         }
 
-        private FilterFavoriteCount() { }
+        private FilterFavoriteCount()
+        {
+            web = new WeakEventBinder<EventDescriptionEventArgs>(EventStorage.EventRegisteredEvent);
+            web.Notify += (_, edev) =>
+                {
+                    if(edev.EventDescription.Kind == EventKind.Favorite || edev.EventDescription.Kind == EventKind.Unfavorite)
+                    {
+                        this.RaisePartialRequireReaccept(edev.EventDescription.TargetTweet.Status);
+                    }
+                };
+        }
 
-        public FilterFavoriteCount(LongRange range)
+        public FilterFavoriteCount(LongRange range) : this()
         {
             this.Range = range;
         }
 
-        public FilterFavoriteCount(long pivot)
+        public FilterFavoriteCount(long pivot) : this()
         {
             this.Range = LongRange.FromPivotValue(pivot);
         }

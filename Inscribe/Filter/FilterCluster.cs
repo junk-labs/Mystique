@@ -44,9 +44,15 @@ namespace Inscribe.Filter
             if (filter != null)
             {
                 if (attach)
+                {
                     filter.ForEach(f => f.RequireReaccept += filter_RequireReaccept);
+                    filter.ForEach(f => f.RequirePartialReaccept += filter_RequirePartialReaccept);
+                }
                 else
+                {
                     filter.ForEach(f => f.RequireReaccept -= filter_RequireReaccept);
+                    filter.ForEach(f => f.RequirePartialReaccept -= filter_RequirePartialReaccept);
+                }
             }
         }
 
@@ -55,6 +61,11 @@ namespace Inscribe.Filter
             System.Diagnostics.Debug.WriteLine("chainning reacception");
             // 再適用の伝播
             this.RequireReaccept();
+        }
+
+        void filter_RequirePartialReaccept(TwitterStatusBase tsb)
+        {
+            this.RequirePartialReaccept(tsb);
         }
 
         #endregion
@@ -90,6 +101,8 @@ namespace Inscribe.Filter
         }
 
         public event Action RequireReaccept = () => { };
+
+        public event Action<TwitterStatusBase> RequirePartialReaccept = _ => { };
 
         /// <summary>
         /// 否定フィルタであるか
