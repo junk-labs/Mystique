@@ -95,6 +95,17 @@
                             </TextBlock>
                         </CheckBox.ToolTip>
                     </CheckBox>
+                    <CheckBox Grid.Row="3"
+                              Grid.Column="1"
+                              Margin="4"
+                              IsChecked="{Binding IsUnreadCountEnabled}">
+                        <AccessText Text="このタブに新着カウンターを表示する(_U)" />
+                        <CheckBox.ToolTip>
+                            <TextBlock>
+                                <Run Text="タブの右側に新着ツイート数を表示します。" />
+                            </TextBlock>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
                 </Grid>
             </TabItem>
             <TabItem Header="フィルタ設定">

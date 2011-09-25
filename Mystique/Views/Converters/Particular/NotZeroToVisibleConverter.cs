@@ -3,7 +3,7 @@ using System.Windows.Data;
 
 namespace Mystique.Views.Converters.Particular
 {
-    class NotZeroToVisibleConverter : OneWayConverter<int, Visibility>
+    public class NotZeroToVisibleConverter : OneWayConverter<int, Visibility>
     {
         public override Visibility ToTarget(int input, object parameter)
         {

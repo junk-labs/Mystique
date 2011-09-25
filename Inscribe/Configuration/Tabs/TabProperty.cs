@@ -25,6 +25,7 @@ namespace Inscribe.Configuration.Tabs
                 this.LinkAccountInfos = AccountStorage.Accounts.Where(i => i.AccoutProperty.IsSelectedDefault).ToArray();
             this.Name = "Untitled";
             this.IsNotifyEnabled = Setting.IsInitialized ? Setting.Instance.NotificationProperty.IsTabNotifyEnabledAsDefault : false;
+            this.IsUnreadCountEnabled = true;
         }
 
         #region LinkAccountInfoChangedイベント
@@ -59,6 +60,11 @@ namespace Inscribe.Configuration.Tabs
         /// タブの通知が有効か
         /// </summary>
         public bool IsNotifyEnabled { get; set; }
+
+        /// <summary>
+        /// 未読カウンタを表示するか
+        /// </summary>
+        public bool IsUnreadCountEnabled { get; set; }
 
         /// <summary>
         /// タブ通知の際に利用する音

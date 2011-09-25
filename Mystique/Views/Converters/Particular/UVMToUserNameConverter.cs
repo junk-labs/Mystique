@@ -50,12 +50,12 @@ namespace Mystique.Views.Converters.Particular
             }
         }
 
-        private string UserName(UserViewModel user)
+        private static string UserName(UserViewModel user)
         {
             return user.TwitterUser.UserName;
         }
 
-        private string ScreenName(UserViewModel user)
+        private static string ScreenName(UserViewModel user)
         {
             return user.TwitterUser.ScreenName;
         }

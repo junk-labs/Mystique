@@ -37,7 +37,7 @@ namespace System.Windows.Data
 
     public abstract class ConvertBase
     {
-        protected TTarget ConvertSink<TSource, TTarget>(object value, object parameter, Func<TSource, object, TTarget> converter)
+        protected static TTarget ConvertSink<TSource, TTarget>(object value, object parameter, Func<TSource, object, TTarget> converter)
         {
             if (IsInDesignTime)
             {

@@ -42,6 +42,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 if (this._tabProperty != null)
                     this._tabProperty.LinkAccountInfoChanged += new EventHandler<EventArgs>(tabpropLinkAccountInfoChanged);
                 RaisePropertyChanged(() => TabProperty);
+                RaisePropertyChanged(() => NewTweetsCount);
             }
         }
 
@@ -93,7 +94,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         private int _newTweetsCount = 0;
         public int NewTweetsCount
         {
-            get { return this._newTweetsCount; }
+            get { return this.TabProperty.IsUnreadCountEnabled ? this._newTweetsCount : 0; }
             protected set
             {
                 if (IsSelected)

@@ -80,6 +80,16 @@ namespace Inscribe.ViewModels.Dialogs
             }
         }
 
+        public bool IsUnreadCountEnabled
+        {
+            get { return this.property.IsUnreadCountEnabled; }
+            set
+            {
+                this.property.IsUnreadCountEnabled = value;
+                RaisePropertyChanged(() => IsUnreadCountEnabled);
+            }
+        }
+
         private FilterEditorViewModel _filterEditorViewModel;
         public FilterEditorViewModel FilterEditorViewModel
         {
