@@ -71,6 +71,8 @@ namespace Inscribe.Communication.CruiseControl
 
         public static AccountScheduler GetScheduler(AccountInfo info)
         {
+            if (info == null)
+                throw new ArgumentNullException("info");
             AccountScheduler sched;
             if (schedulers.TryGetValue(info, out sched))
                 return sched;

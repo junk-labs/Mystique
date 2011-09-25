@@ -49,6 +49,13 @@ namespace Inscribe.Communication.CruiseControl
                     if (timesPerTweet > TwitterDefine.TimesPerTweetMaximumValue)
                         timesPerTweet = TwitterDefine.TimesPerTweetMaximumValue;
                 }
+                else
+                {
+                    // 受信すべきタイムラインが無い
+                    // 受信レートを最小にして様子を見る
+                    newbiesRate = TwitterDefine.MinNewbiesRate;
+                    timesPerTweet = TwitterDefine.TimesPerTweetMaximumValue;
+                }
             }
             catch (WebException ex)
             {

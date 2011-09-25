@@ -140,7 +140,6 @@ namespace Dulcet.Twitter.Streaming
         protected StreamingEvent(XElement node)
         {
             Kind = ElementKind.Undefined;
-            RawXElement = node;
             var eventstr = node.Element("event").ParseString();
             if (String.IsNullOrWhiteSpace(eventstr))
             {
@@ -346,11 +345,6 @@ namespace Dulcet.Twitter.Streaming
 
         #endregion
         
-        /// <summary>
-        /// Raw XElement object
-        /// </summary>
-        public XElement RawXElement { get; private set; }
-
         /// <summary>
         /// Kind of this element
         /// </summary>

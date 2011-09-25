@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Inscribe.Filter.Core;
+using Inscribe.Storage;
 
 namespace Inscribe.Filter.Filters.Text
 {
@@ -36,10 +37,18 @@ namespace Inscribe.Filter.Filters.Text
             if (needle.StartsWith("/"))
             {
                 // regular expressions
-                if (isCaseSensitive)
-                    return Regex.IsMatch(haystack, needle.Substring(1));
-                else
-                    return Regex.IsMatch(haystack, needle.Substring(1), RegexOptions.IgnoreCase);
+                try
+                {
+                    if (isCaseSensitive)
+                        return Regex.IsMatch(haystack, needle.Substring(1));
+                    else
+                        return Regex.IsMatch(haystack, needle.Substring(1), RegexOptions.IgnoreCase);
+                }
+                catch (ArgumentException ex)
+                {
+                    ExceptionStorage.Register(ex, ExceptionCategory.UserError, "正規表現に問題があります");
+                    return false;
+                }
             }
             else
             {

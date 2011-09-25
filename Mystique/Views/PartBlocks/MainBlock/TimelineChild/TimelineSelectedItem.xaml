@@ -355,7 +355,8 @@
                                    DocumentMouseMove="ItemMouseMove"
                                    DocumentMouseUp="ItemMouseButtonUp"
                                    DynamicInline="{Binding Path=Tweet.TweetText,
-                                                           Converter={StaticResource TextFlowDocumentConverter}}"
+                                                           Converter={StaticResource TextFlowDocumentConverter},
+                                                           IsAsync=True}"
                                    InputMethod.IsInputMethodEnabled="False"
                                    IsDocumentEnabled="True"
                                    IsReadOnly="True"
@@ -572,7 +573,8 @@
                                      VerticalAlignment="Center"
                                      DynamicInline="{Binding Tweet,
                                                              Converter={StaticResource SourceInlinesConverter},
-                                                             ConverterParameter=Source}"
+                                                             ConverterParameter=Source,
+                                                             IsAsync=True}"
                                      FontSize="11"
                                      Foreground="DimGray"
                                      Visibility="{Binding Path=Tweet.IsStatus,
