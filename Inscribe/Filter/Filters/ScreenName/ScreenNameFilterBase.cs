@@ -15,6 +15,7 @@ namespace Inscribe.Filter.Filters.ScreenName
             get { return this.needle; }
             set
             {
+                if (this.needle == value) return;
                 this.needle = value;
                 RaiseRequireReaccept();
             }
