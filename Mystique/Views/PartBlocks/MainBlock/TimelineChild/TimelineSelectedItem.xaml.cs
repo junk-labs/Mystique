@@ -118,7 +118,8 @@ namespace Mystique.Views.PartBlocks.MainBlock.TimelineChild
             {
                 Browser.Start(
                     "http://www.google.co.jp/search?ie=UTF-8&q=" +
-                    Dulcet.Util.HttpUtility.UrlEncode(BodyText.Selection.Text));
+                    BodyText.Selection.Text);
+                    // Dulcet.Util.HttpUtility.UrlEncode(BodyText.Selection.Text));
             }
             catch { }
         }

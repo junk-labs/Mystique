@@ -68,8 +68,8 @@
                              Style="{StaticResource FlatToggleButtonStyle}">
                 <com:ImageStackingView DataContext="{Binding ImageStackingViewViewModel}" />
                 <com:PopupButton.DropDownPopup>
-                    <Popup>
-                        <com:UserSelector Background="White" DataContext="{Binding UserSelectorViewModel}" />
+                    <Popup AllowsTransparency="True">
+                        <com:UserSelector Background="Transparent" DataContext="{Binding UserSelectorViewModel}" />
                     </Popup>
                 </com:PopupButton.DropDownPopup>
             </com:PopupButton>
@@ -149,8 +149,8 @@
                              Style="{StaticResource FlatToggleButtonStyle}">
                 <com:ImageStackingView DataContext="{Binding ImageStackingViewViewModel}" />
                 <com:PopupButton.DropDownPopup>
-                    <Popup>
-                        <com:UserSelector Background="White" DataContext="{Binding InputUserSelectorViewModel}" />
+                    <Popup AllowsTransparency="True">
+                        <com:UserSelector Background="Transparent" DataContext="{Binding InputUserSelectorViewModel}" />
                     </Popup>
                 </com:PopupButton.DropDownPopup>
             </com:PopupButton>

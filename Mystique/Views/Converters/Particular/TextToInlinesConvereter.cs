@@ -82,6 +82,7 @@ namespace Mystique.Views.Converters.Particular
                             e.Handled = true;
                             InternalLinkClicked(InternalLinkKind.Hash, ctt);
                         };
+                        hashlink.ToolTip = new TextBlock(new Run("Ctrlキーを押しながらクリックすると、ブラウザを開いて検索します..."));
                         yield return hashlink;
                         break;
                     case TokenKind.Url:
@@ -226,9 +227,10 @@ namespace Mystique.Views.Converters.Particular
                     break;
                 case InternalLinkKind.Hash:
                     System.Diagnostics.Debug.WriteLine("Extracting hash:" + source);
-                    if (Keyboard.GetKeyStates(Key.LeftCtrl) == KeyStates.Down || Keyboard.GetKeyStates(Key.RightCtrl) == KeyStates.Down)
+                    if (Keyboard.GetKeyStates(Key.LeftCtrl) != KeyStates.None || Keyboard.GetKeyStates(Key.RightCtrl) != KeyStates.None)
                     {
-                        Browser.Start("http://twitter.com/#search?q=" + source);
+                        // Browser.Start("http://twitter.com/#search?q=" + source);
+                        Browser.Start("http://twitter.com/search/" + source);
                     }
                     else
                     {
