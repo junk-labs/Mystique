@@ -102,7 +102,7 @@
                         <TextBlock VerticalAlignment="Center"
                                    Foreground="Black"
                                    Padding="4"
-                                   Text="{Binding Path=TabProperty.Name}" />
+                                   Text="{Binding Path=Name}" />
                         <Button Margin="1"
                                 Command="{Binding ClearNewTweetsCountCommand}"
                                 Style="{DynamicResource FlatButtonStyle}"

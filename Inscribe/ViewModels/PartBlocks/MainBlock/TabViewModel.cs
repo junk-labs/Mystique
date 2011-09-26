@@ -43,7 +43,13 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     this._tabProperty.LinkAccountInfoChanged += new EventHandler<EventArgs>(tabpropLinkAccountInfoChanged);
                 RaisePropertyChanged(() => TabProperty);
                 RaisePropertyChanged(() => NewTweetsCount);
+                RaisePropertyChanged(() => Name);
             }
+        }
+
+        public string Name
+        {
+            get { return this.TabProperty.Name; }
         }
 
         void tabpropLinkAccountInfoChanged(object sender, EventArgs e)
