@@ -227,7 +227,7 @@ namespace Mystique.Views.Converters.Particular
                     break;
                 case InternalLinkKind.Hash:
                     System.Diagnostics.Debug.WriteLine("Extracting hash:" + source);
-                    if (Keyboard.GetKeyStates(Key.LeftCtrl) != KeyStates.None || Keyboard.GetKeyStates(Key.RightCtrl) != KeyStates.None)
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
                         // Browser.Start("http://twitter.com/#search?q=" + source);
                         Browser.Start("http://twitter.com/search/" + source);
