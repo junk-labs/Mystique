@@ -245,7 +245,13 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         private void RefreshIndividualInfo()
         {
-            AccountStorage.Accounts.ForEach(i => Communication.UserInformationManager.ReceiveInidividualInfo(i));
+            Task.Factory.StartNew(() =>
+            {
+                using (var n = NotifyStorage.NotifyManually("アカウント情報を取得、更新しています..."))
+                {
+                    AccountStorage.Accounts.ForEach(i => Communication.UserInformationManager.ReceiveInidividualInfo(i));
+                }
+            });
         }
         #endregion
 
