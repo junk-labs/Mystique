@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,14 +7,16 @@ using System.Windows.Media.Imaging;
 using Dulcet.Network;
 using Inscribe.Common;
 using Inscribe.Configuration;
+using Inscribe.Data;
 
 namespace Inscribe.Storage
 {
     public static class ImageCacheStorage
     {
-        private static ConcurrentDictionary<Uri, KeyValuePair<BitmapImage, DateTime>> imageDataDictionary;
+        private static ReaderWriterLockWrap lockWrap;
+        private static Dictionary<Uri, KeyValuePair<BitmapImage, DateTime>> imageDataDictionary;
         private static object semaphoreAccessLocker = new object();
-        private static ConcurrentDictionary<Uri, ManualResetEvent> semaphores;
+        private static Dictionary<Uri, ManualResetEvent> semaphores;
 
         public static event Action DownloadingChanged = () => { };
         private static bool _downloading = false;
@@ -33,33 +34,69 @@ namespace Inscribe.Storage
 
         static ImageCacheStorage()
         {
-            imageDataDictionary = new ConcurrentDictionary<Uri, KeyValuePair<BitmapImage, DateTime>>();
-            semaphores = new ConcurrentDictionary<Uri, ManualResetEvent>();
+            lockWrap = new ReaderWriterLockWrap();
+            imageDataDictionary = new Dictionary<Uri, KeyValuePair<BitmapImage, DateTime>>();
+            semaphores = new Dictionary<Uri, ManualResetEvent>();
             gcTimer = new Timer(GC, null, Setting.Instance.KernelProperty.ImageGCInitialDelay, Setting.Instance.KernelProperty.ImageGCInterval);
         }
 
         private static void GC(object o)
         {
-            Parallel.ForEach(imageDataDictionary
-                .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds > Setting.Instance.KernelProperty.ImageLifetime)
-                .Select(d => d.Key).ToArray(),
-                d => RemoveCache(d));
+            BitmapImage[] releases = null;
+            using (lockWrap.GetWriterLock())
+            {
+                releases = imageDataDictionary
+                    .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds > Setting.Instance.KernelProperty.ImageLifetime)
+                    .ToArray()
+                    .Select(d =>
+                    {
+                        imageDataDictionary.Remove(d.Key);
+                        return d.Value.Key;
+                    }).ToArray();
+            }
+            releases.ForEach(img =>
+            {
+                if (img.StreamSource != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("finalize(gc)");
+                    img.StreamSource.Close();
+                    img.StreamSource.Dispose();
+                }
+            });
         }
 
         public static void ClearAllCache()
         {
-            Parallel.ForEach(imageDataDictionary, d => RemoveCache(d.Key));
+            KeyValuePair<BitmapImage, DateTime>[] idds;
+            using (lockWrap.GetWriterLock())
+            {
+                idds = imageDataDictionary.Values.ToArray();
+                imageDataDictionary.Clear();
+            }
+            idds.ForEach(kv =>
+            {
+                if (kv.Key.StreamSource != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("finalize(cac)");
+                    kv.Key.StreamSource.Close();
+                    kv.Key.StreamSource.Dispose();
+                }
+            });
         }
 
         private static void RemoveCache(Uri key)
         {
             KeyValuePair<BitmapImage, DateTime> kv;
-            if (imageDataDictionary.TryRemove(key, out kv))
+            using(lockWrap.GetWriterLock())
             {
-                if (kv.Key.StreamSource != null)
+                if (imageDataDictionary.TryGetValue(key, out kv) && imageDataDictionary.Remove(key))
                 {
-                    kv.Key.StreamSource.Close();
-                    kv.Key.StreamSource.Dispose();
+                    if (kv.Key.StreamSource != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("finalize(rc)");
+                        kv.Key.StreamSource.Close();
+                        kv.Key.StreamSource.Dispose();
+                    }
                 }
             }
         }
@@ -71,12 +108,15 @@ namespace Inscribe.Storage
         public static BitmapImage GetImageCache(Uri uri)
         {
             KeyValuePair<BitmapImage, DateTime> cdata;
-            if (imageDataDictionary.TryGetValue(uri, out cdata))
+            bool hot = false;
+            using (lockWrap.GetReaderLock())
             {
-                if (DateTime.Now.Subtract(cdata.Value).TotalMilliseconds <= Setting.Instance.KernelProperty.ImageLifetime)
-                    return cdata.Key;
+                hot = imageDataDictionary.TryGetValue(uri, out cdata);
             }
-            return null;
+            if (hot && DateTime.Now.Subtract(cdata.Value).TotalMilliseconds <= Setting.Instance.KernelProperty.ImageLifetime)
+                return cdata.Key;
+            else
+                return null;
         }
 
         /// <summary>
@@ -103,7 +143,7 @@ namespace Inscribe.Storage
                 if (!semaphores.TryGetValue(uri, out mre))
                 {
                     if (semaphores.Count == 0) Downloading = true;
-                    semaphores.AddOrUpdate(uri, new ManualResetEvent(false));
+                    semaphores.Add(uri, new ManualResetEvent(false));
                 }
             }
             if (mre != null)
@@ -134,12 +174,24 @@ namespace Inscribe.Storage
                 bi.EndInit();
                 bi.Freeze();
                 var newv = new KeyValuePair<BitmapImage, DateTime>(bi, DateTime.Now);
-                imageDataDictionary.AddOrUpdate(uri, newv, (k, o) =>
+                using (lockWrap.GetWriterLock())
                 {
-                    o.Key.StreamSource.Close();
-                    o.Key.StreamSource.Dispose();
-                    return newv;
-                });
+                    KeyValuePair<BitmapImage, DateTime> oldValue;
+                    if (imageDataDictionary.TryGetValue(uri, out oldValue))
+                    {
+                        imageDataDictionary[uri] = newv;
+                        if (oldValue.Key.StreamSource != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("release(overwrite)");
+                            oldValue.Key.StreamSource.Close();
+                            oldValue.Key.StreamSource.Dispose();
+                        }
+                    }
+                    else
+                    {
+                        imageDataDictionary.Add(uri, newv);
+                    }
+                }
                 return bi;
             }
             catch (Exception e)

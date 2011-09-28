@@ -101,7 +101,7 @@ namespace Inscribe.Data
             get
             {
                 using (AcquireReaderLock(readerWriterLock))
-                    return index >= this.Count ? default(T) : internalList[index];
+                    return index >= internalList.Count ? default(T) : internalList[index];
             }
             set
             {
@@ -117,14 +117,17 @@ namespace Inscribe.Data
                         index
                     ));
 
+                    T oldItem = default(T);
                     using (AcquireWriterLock(readerWriterLock))
-                        OnCollectionChanged(new NotifyCollectionChangedEventArgs
-                        (
-                            NotifyCollectionChangedAction.Replace,
-                            internalList[index],
-                            internalList[index] = value,
-                            index
-                        ));
+                    {
+                        oldItem = internalList[index];
+                        internalList[index] = value;
+                    }
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs
+                    (
+                        NotifyCollectionChangedAction.Replace,
+                        value, oldItem, index
+                    ));
                 }
             }
         }

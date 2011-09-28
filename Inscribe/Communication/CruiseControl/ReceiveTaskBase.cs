@@ -35,14 +35,14 @@ namespace Inscribe.Communication.CruiseControl
             {
                 var received = (GetTweets() ?? new TwitterStatusBase[0]).ToArray();
                 previousReceived = DateTime.Now;
-                var newbiesCount = received.Count(s => TweetStorage.Contains(s.Id) == TweetExistState.Unreceived);
+                // var newbiesCount = received.Count(s => TweetStorage.Contains(s.Id) == TweetExistState.Unreceived);
                 received.ForEach(s => TweetStorage.Register(s));
                 var pivotarray = received.Take(TwitterDefine.IntervalLookPrevious).ToArray();
                 var pivot = pivotarray.LastOrDefault();
                 var newest = received.FirstOrDefault();
                 if (pivot != null && newest != null)
                 {
-                    newbiesRate = (double)newbiesCount / received.Length;
+                    // newbiesRate = (double)newbiesCount / received.Length;
                     if (newbiesRate < TwitterDefine.MinNewbiesRate)
                         newbiesRate = TwitterDefine.MinNewbiesRate;
                     timesPerTweet = (double)(newest.CreatedAt.Subtract(pivot.CreatedAt)).TotalMilliseconds / pivotarray.Length;

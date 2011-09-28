@@ -260,17 +260,28 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("CloseTab", () => ExecTabAction(vm => vm.Parent.CloseTab(vm)));
         }
 
-        private void MoveHorizontal(bool directionRight, bool moveInColumn)
+        private void MoveHorizontal(bool directionRight, bool moveBetweenColumn)
         {
             var cc = this.CurrentFocusColumn;
             if (cc == null) return;
             int idxofc = this.Columns.IndexOf(cc);
             int idx = cc.TabItems.IndexOf(cc.SelectedTabViewModel);
-            if (directionRight)
+            if (moveBetweenColumn)
+            {
+                if (directionRight)
+                {
+                    this.CurrentFocusColumn = this.Columns[(idxofc + 1) % this.Columns.Count];
+                }
+                else
+                {
+                    this.CurrentFocusColumn = this.Columns[(idxofc + this.Columns.Count - 1) % this.Columns.Count];
+                }
+            }
+            else if (directionRight)
             {
                 idx++;
                 // →
-                if (idx >= cc.TabItems.Count || moveInColumn)
+                if (idx >= cc.TabItems.Count)
                 {
                     // move column
                     idx = 0;
@@ -288,7 +299,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             {
                 // ←
                 idx--;
-                if (idx < 0 || moveInColumn)
+                if (idx < 0)
                 {
                     idx = 0;
                     idxofc--;

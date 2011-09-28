@@ -116,14 +116,15 @@ namespace Inscribe.Storage
         /// <returns>条件にマッチするステータス、または登録されているすべてのステータス</returns>
         public static IEnumerable<TweetViewModel> GetAll(Func<TweetViewModel, bool> predicate = null)
         {
+            IEnumerable<TweetViewModel> dav;
             using (lockWrap.GetReaderLock())
             {
-                System.Diagnostics.Debug.WriteLine("gall");
-                if (predicate == null)
-                    return dictionary.Values.ToArray();
-                else
-                    return dictionary.Values.AsParallel().Where(predicate).ToArray();
+                dav = dictionary.Values.ToArray();
             }
+            if (predicate == null)
+                return dav;
+            else
+                return dav.AsParallel().Where(predicate).ToArray();
         }
 
         /// <summary>

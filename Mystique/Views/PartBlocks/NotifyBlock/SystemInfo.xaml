@@ -32,7 +32,15 @@
                       MinHeight="10"
                       MaxHeight="360"
                       VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Accounts}">
+            <ItemsControl ItemsSource="{Binding Accounts}"
+                          ScrollViewer.CanContentScroll="False"
+                          VirtualizingStackPanel.IsVirtualizing="True"
+                          VirtualizingStackPanel.VirtualizationMode="Recycling">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -112,7 +120,16 @@
                       VerticalScrollBarVisibility="Auto"
                       Visibility="{Binding Exceptions,
                                            Converter={StaticResource CollectionExistToVisibleConverter}}">
-            <ItemsControl HorizontalContentAlignment="Stretch" ItemsSource="{Binding Exceptions}">
+            <ItemsControl HorizontalContentAlignment="Stretch"
+                          ItemsSource="{Binding Exceptions}"
+                          ScrollViewer.CanContentScroll="False"
+                          VirtualizingStackPanel.IsVirtualizing="True"
+                          VirtualizingStackPanel.VirtualizationMode="Recycling">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Red" BorderThickness="1">
