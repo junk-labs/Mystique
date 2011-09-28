@@ -8,12 +8,15 @@ namespace Inscribe.Configuration.Settings
     {
         public InputExperienceProperty()
         {
+            OfficialRetweetInReplyToRetweeter = false;
             TrimBeginSpace = true;
             UseInputSuggesting = true;
             UseActiveFallback = false;
             OfficialRetweetFallback = false;
-            this.IsEnabledTemporarilyUserSelection = false;
+            IsEnabledTemporarilyUserSelection = false;
         }
+
+        public bool OfficialRetweetInReplyToRetweeter { get; set; }
 
         public bool TrimBeginSpace { get; set; }
 

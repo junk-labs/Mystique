@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Dulcet.Twitter;
 using Inscribe.Authentication;
+using Inscribe.Common;
 using Inscribe.Communication.Posting;
 using Inscribe.Communication.UserStreams;
 using Inscribe.Configuration;
@@ -22,10 +27,6 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using System.Windows;
-using System.IO;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -308,9 +309,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         private void Feedback()
         {
-            this.SetOpenText(true, true);
-            this.SetText(" #krile");
-            this.SetInputCaretIndex(0);
+            Browser.Start("https://github.com/karno/Mystique/issues");
         }
         #endregion
 
@@ -430,16 +429,26 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             }
             else
             {
+                // スクリーン名の取得
+                var screen = tweet.Status.User.ScreenName;
+                var sid = tweet.Status.Id;
+                var ts = tweet.Status as TwitterStatus;
+                if (!Setting.Instance.InputExperienceProperty.OfficialRetweetInReplyToRetweeter && 
+                    ts != null && ts.RetweetedOriginal != null)
+                {
+                    screen = ts.RetweetedOriginal.User.ScreenName;
+                    sid = ts.RetweetedOriginal.Id;
+                }
                 if (this.CurrentInputDescription.InputText.StartsWith(".@"))
                 {
                     // multi reply mode
                     string remain;
                     var screens = SplitTweet(this.CurrentInputDescription.InputText, out remain);
-                    if (screens.FirstOrDefault(s => s.Equals(tweet.Status.User.ScreenName, StringComparison.CurrentCultureIgnoreCase)) != null)
+                    if (screens.FirstOrDefault(s => s.Equals(screen, StringComparison.CurrentCultureIgnoreCase)) != null)
                     {
                         // 選択ユーザーのスクリーン名だけ抜く
                         this.CurrentInputDescription.InputText = "." +
-                            screens.Where(s => !s.Equals(tweet.Status.User.ScreenName, StringComparison.CurrentCultureIgnoreCase))
+                            screens.Where(s => !s.Equals(screen, StringComparison.CurrentCultureIgnoreCase))
                             .Select(s => "@" + s)
                             .JoinString(" ") + " " +
                             remain;
@@ -448,7 +457,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     {
                         this.CurrentInputDescription.InputText = "." +
                             screens.Select(s => "@" + s).JoinString(" ") + " " +
-                            "@" + tweet.Status.User.ScreenName + " " +
+                            "@" + screen + " " +
                             remain;
                         this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                     }
@@ -457,7 +466,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 else if (this.CurrentInputDescription.InReplyToId != 0 && this.CurrentInputDescription.InputText.StartsWith("@"))
                 {
                     // single reply mode -> muliti reply mode
-                    if (this.CurrentInputDescription.InReplyToId == tweet.Status.Id)
+                    if (this.CurrentInputDescription.InReplyToId == sid)
                     {
                         this.CurrentInputDescription.InputText = "." + this.CurrentInputDescription.InputText;
                         this.CurrentInputDescription.InReplyToId = 0;
@@ -468,7 +477,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         var screens = SplitTweet(this.CurrentInputDescription.InputText, out remain);
                         this.CurrentInputDescription.InputText = "." +
                             screens.Select(s => "@" + s).JoinString(" ") + " " +
-                            "@" + tweet.Status.User.ScreenName +  " " +
+                            "@" + screen +  " " +
                             remain;
                         this.CurrentInputDescription.InReplyToId = 0;
                         this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
@@ -478,17 +487,17 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 else
                 {
                     // single reply mode
-                    this.CurrentInputDescription.InReplyToId = tweet.Status.Id;
+                    this.CurrentInputDescription.InReplyToId = sid;
                     if (tweet.Status is TwitterDirectMessage)
                     {
                         this.OverrideTarget(new[] { AccountStorage.Get(((TwitterDirectMessage)tweet.Status).Recipient.ScreenName) });
-                        this.CurrentInputDescription.InputText = "d @" + tweet.Status.User.ScreenName + " ";
+                        this.CurrentInputDescription.InputText = "d @" + screen + " ";
                         this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                     }
                     else
                     {
                         var mentions = RegularExpressions.AtRegex.Matches(tweet.TweetText);
-                        var sns = new[] { "@" + tweet.Status.User.ScreenName }.Concat(mentions.Cast<Match>().Select(m => m.Value))
+                        var sns = new[] { "@" + screen }.Concat(mentions.Cast<Match>().Select(m => m.Value))
                             .Distinct().Where(s => !AccountStorage.Contains(s)).ToArray();
                         /*
                         if (tweet.Status is TwitterStatus && AccountStorage.Contains(((TwitterStatus)tweet.Status).InReplyToUserScreenName))
@@ -501,7 +510,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         }
                         else 
                         {
-                            this.CurrentInputDescription.InputText = "@" + tweet.Status.User.ScreenName + " ";
+                            this.CurrentInputDescription.InputText = "@" + screen + " ";
                             this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                         }
                         if (tweet.Status is TwitterStatus && AccountStorage.Contains(((TwitterStatus)tweet.Status).InReplyToUserScreenName))
