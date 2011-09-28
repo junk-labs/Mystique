@@ -46,13 +46,12 @@ namespace Inscribe.Common
                 if (xmlstream != null)
                 {
                     var xmldoc = XDocument.Load(xmlstream);
-                    var versionstr = xmldoc.Element("update").Element("latests").Elements("version")
+                    var version = xmldoc.Element("update").Element("latests").Elements("version")
                         .Where(xe => int.Parse(xe.Attribute("kind").Value) <= Setting.Instance.ExperienceProperty.UpdateKind)
-                        .Select(xe => xe.Attribute("ver").Value).FirstOrDefault();
+                        .Select(xe => xe.Attribute("ver").Value).Select(double.Parse).Max();
                     // NO RECORD
-                    if (versionstr == null)
+                    if(version == 0)
                         return false;
-                    var version = double.Parse(versionstr);
                     var bin = xmldoc.Element("update").Element("bin").Value;
                     var sig = xmldoc.Element("update").Element("sig").Value;
                     if (version != 0 && version > Define.GetNumericVersion())
