@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,6 +6,7 @@ using System.Threading.Tasks;
 using Dulcet.Twitter;
 using Inscribe.Common;
 using Inscribe.Configuration;
+using Inscribe.Data;
 using Inscribe.Subsystems;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
@@ -30,19 +30,24 @@ namespace Inscribe.Storage
     public static class TweetStorage
     {
         /// <summary>
+        /// ディクショナリのロック
+        /// </summary>
+        static ReaderWriterLockWrap lockWrap = new ReaderWriterLockWrap(LockRecursionPolicy.NoRecursion);
+
+        /// <summary>
         /// 登録済みステータスディクショナリ
         /// </summary>
-        static ConcurrentDictionary<long, TweetViewModel> dictionary = new ConcurrentDictionary<long, TweetViewModel>();
+        static Dictionary<long, TweetViewModel> dictionary = new Dictionary<long, TweetViewModel>();
 
         /// <summary>
         /// 仮登録ステータスディクショナリ
         /// </summary>
-        static ConcurrentDictionary<long, TweetViewModel> empties = new ConcurrentDictionary<long, TweetViewModel>();
+        static Dictionary<long, TweetViewModel> empties = new Dictionary<long, TweetViewModel>();
 
         /// <summary>
         /// 削除予約されたツイートIDリスト
         /// </summary>
-        static ConcurrentBag<long> deleteReserveds = new ConcurrentBag<long>();
+        static LinkedList<long> deleteReserveds = new LinkedList<long>();
 
         /// <summary>
         /// ツイートストレージの作業用スレッドディスパッチャ
@@ -60,14 +65,18 @@ namespace Inscribe.Storage
         /// </summary>
         public static TweetExistState Contains(long id)
         {
-            if (dictionary.ContainsKey(id))
-                return TweetExistState.Exists;
-            else if (deleteReserveds.Contains(id))
-                return TweetExistState.ServerDeleted;
-            else if (empties.ContainsKey(id))
-                return TweetExistState.EmptyExists;
-            else
-                return TweetExistState.Unreceived;
+            using (lockWrap.GetReaderLock())
+            {
+                System.Diagnostics.Debug.WriteLine("contains");
+                if (dictionary.ContainsKey(id))
+                    return TweetExistState.Exists;
+                else if (deleteReserveds.Contains(id))
+                    return TweetExistState.ServerDeleted;
+                else if (empties.ContainsKey(id))
+                    return TweetExistState.EmptyExists;
+                else
+                    return TweetExistState.Unreceived;
+            }
         }
 
         /// <summary>
@@ -77,20 +86,26 @@ namespace Inscribe.Storage
         /// <param name="createEmpty">存在しないとき、空のViewModelを作って登録して返す</param>
         public static TweetViewModel Get(long id, bool createEmpty = false)
         {
-            TweetViewModel ret;
-            if (dictionary.TryGetValue(id, out ret))
-                return ret;
-            if (empties.TryGetValue(id, out ret))
-                return ret;
-            if (createEmpty)
+            using (createEmpty ? lockWrap.GetUpgradableReaderLock() : lockWrap.GetReaderLock())
             {
-                var nvm = new TweetViewModel(id);
-                empties.AddOrUpdate(id, nvm);
-                return nvm;
-            }
-            else
-            {
-                return null;
+                TweetViewModel ret;
+                if (dictionary.TryGetValue(id, out ret))
+                    return ret;
+                if (empties.TryGetValue(id, out ret))
+                    return ret;
+                if (createEmpty)
+                {
+                    using(lockWrap.GetWriterLock())
+                    {
+                        var nvm = new TweetViewModel(id);
+                        empties.Add(id, nvm);
+                        return nvm;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -101,10 +116,14 @@ namespace Inscribe.Storage
         /// <returns>条件にマッチするステータス、または登録されているすべてのステータス</returns>
         public static IEnumerable<TweetViewModel> GetAll(Func<TweetViewModel, bool> predicate = null)
         {
-            if (predicate == null)
-                return dictionary.Values.ToArray();
-            else
-                return dictionary.Values.Where(predicate).ToArray();
+            using (lockWrap.GetReaderLock())
+            {
+                System.Diagnostics.Debug.WriteLine("gall");
+                if (predicate == null)
+                    return dictionary.Values.ToArray();
+                else
+                    return dictionary.Values.AsParallel().Where(predicate).ToArray();
+            }
         }
 
         /// <summary>
@@ -112,7 +131,11 @@ namespace Inscribe.Storage
         /// </summary>
         public static int Count()
         {
-            return dictionary.Count;
+            using (lockWrap.GetReaderLock())
+            {
+                System.Diagnostics.Debug.WriteLine("cnt");
+                return dictionary.Count;
+            }
         }
 
         /// <summary>
@@ -121,8 +144,12 @@ namespace Inscribe.Storage
         /// </summary>
         public static TweetViewModel Register(TwitterStatusBase statusBase)
         {
-            if (dictionary.ContainsKey(statusBase.Id))
-                return dictionary[statusBase.Id];
+            TweetViewModel robj;
+            using (lockWrap.GetReaderLock())
+            {
+                if (dictionary.TryGetValue(statusBase.Id, out robj))
+                    return robj;
+            }
             var status = statusBase as TwitterStatus;
             if (status != null)
             {
@@ -194,43 +221,53 @@ namespace Inscribe.Storage
             return vm;
         }
 
-        private static object __regCoreLock__ = new object();
-
         /// <summary>
         /// ステータスベースの登録処理
         /// </summary>
         private static TweetViewModel RegisterCore(TwitterStatusBase statusBase)
         {
             TweetViewModel viewModel;
-            if (empties.ContainsKey(statusBase.Id))
+            using (lockWrap.GetUpgradableReaderLock())
             {
-                // 既にViewModelが生成済み
-                viewModel = empties[statusBase.Id];
-                if (!viewModel.IsStatusInfoContains)
-                    viewModel.SetStatus(statusBase);
-                empties.Remove(statusBase.Id);
-            }
-            else
-            {
-                // 全く初めて触れるステータス
-                viewModel = new TweetViewModel(statusBase);
+                if(empties.TryGetValue(statusBase.Id, out viewModel))
+                {
+                    // 既にViewModelが生成済み
+                    if (!viewModel.IsStatusInfoContains)
+                        viewModel.SetStatus(statusBase);
+                    using (lockWrap.GetWriterLock())
+                    {
+                        empties.Remove(statusBase.Id);
+                    }
+                }
+                else
+                {
+                    // 全く初めて触れるステータス
+                    viewModel = new TweetViewModel(statusBase);
+                }
             }
             if (ValidateTweet(viewModel))
             {
                 // プリプロセッシング
                 PreProcess(statusBase);
-                lock (__regCoreLock__)
+                using (lockWrap.GetUpgradableReaderLock())
                 {
                     if (!deleteReserveds.Contains(statusBase.Id))
                     {
                         if (dictionary.ContainsKey(statusBase.Id))
+                        {
                             return viewModel; // すでにKrile内に存在する
+                        }
                         else
-                            dictionary.AddOrUpdate(statusBase.Id, viewModel);
+                        {
+                            using (lockWrap.GetWriterLock())
+                            {
+                                dictionary.Add(statusBase.Id, viewModel);
+                            }
+                        }
                     }
+                    if (!deleteReserveds.Contains(statusBase.Id))
+                        Task.Factory.StartNew(() => RaiseStatusAdded(viewModel));
                 }
-                if (!deleteReserveds.Contains(statusBase.Id))
-                    Task.Factory.StartNew(() => RaiseStatusAdded(viewModel));
             }
             else
             {
@@ -305,15 +342,15 @@ namespace Inscribe.Storage
         /// <param name="id">削除するツイートID</param>
         public static void Remove(long id)
         {
-            // 削除する
             TweetViewModel remobj = null;
-            deleteReserveds.Add(id);
-            lock (__regCoreLock__)
+            using (lockWrap.GetWriterLock())
             {
+                System.Diagnostics.Debug.WriteLine("rmv");
+                // 削除する
+                deleteReserveds.AddLast(id);
                 empties.Remove(id);
-                if (dictionary.ContainsKey(id))
+                if (dictionary.TryGetValue(id, out remobj))
                 {
-                    remobj = dictionary[id];
                     dictionary.Remove(id);
                     Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
                 }

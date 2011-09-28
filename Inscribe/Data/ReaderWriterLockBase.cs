@@ -5,7 +5,14 @@ namespace Inscribe.Data
 {
     public abstract class ReaderWriterLockBase
     {
-        protected ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        public ReaderWriterLockBase() : this(LockRecursionPolicy.NoRecursion) { }
+
+        public ReaderWriterLockBase(LockRecursionPolicy lrp)
+        {
+            this.readerWriterLock = new ReaderWriterLockSlim(lrp);
+        }
+
+        protected ReaderWriterLockSlim readerWriterLock;
 
         protected IDisposable ReaderLock()
         {
@@ -17,6 +24,11 @@ namespace Inscribe.Data
             return AcquireWriterLock(readerWriterLock);
         }
 
+        protected IDisposable UpgradableReaderLock()
+        {
+            return AcquireUpgradableReaderLock(readerWriterLock);
+        }
+
         protected static IDisposable AcquireReaderLock(ReaderWriterLockSlim self)
         {
             return FinallyBlock.Create(() => self.EnterReadLock(), () => self.ExitReadLock());
@@ -25,6 +37,11 @@ namespace Inscribe.Data
         protected static IDisposable AcquireWriterLock(ReaderWriterLockSlim self)
         {
             return FinallyBlock.Create(() => self.EnterWriteLock(), () => self.ExitWriteLock());
+        }
+
+        protected static IDisposable AcquireUpgradableReaderLock(ReaderWriterLockSlim self)
+        {
+            return FinallyBlock.Create(() => self.EnterUpgradeableReadLock(), () => self.ExitUpgradeableReadLock());
         }
 
         protected static class FinallyBlock

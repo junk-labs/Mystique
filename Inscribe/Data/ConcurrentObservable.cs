@@ -27,7 +27,7 @@ namespace Inscribe.Data
             private set;
         }
 
-        public ConcurrentObservable()
+        public ConcurrentObservable() : base(LockRecursionPolicy.NoRecursion)
         {
             this.NotifyChanges = true;
         }

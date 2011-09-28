@@ -213,7 +213,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
             this._tweetsSource.Clear();
             var collection = TweetStorage.GetAll(vm => CheckFilters(vm))
-                .Select(tvm => new TabDependentTweetViewModel(tvm, this.Parent)).ToArray();
+                .Select(tvm => new TabDependentTweetViewModel(tvm, this.Parent));
             foreach (var tvm in collection)
             {
                 this._tweetsSource.AddVolatile(tvm);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Inscribe.Data
 {
@@ -8,6 +9,9 @@ namespace Inscribe.Data
     /// </summary>
     public class ReaderWriterLockWrap : ReaderWriterLockBase
     {
+        public ReaderWriterLockWrap() : this(LockRecursionPolicy.SupportsRecursion) { }
+        public ReaderWriterLockWrap(LockRecursionPolicy lrp) : base(lrp) { }
+
         public IDisposable GetReaderLock()
         {
             return ReaderLock();
@@ -16,6 +20,11 @@ namespace Inscribe.Data
         public IDisposable GetWriterLock()
         {
             return WriterLock();
+        }
+
+        public IDisposable GetUpgradableReaderLock()
+        {
+            return UpgradableReaderLock();
         }
     }
 }

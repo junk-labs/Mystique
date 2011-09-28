@@ -109,7 +109,11 @@
                                                         Converter={StaticResource BoolVisibleConverter}}" />
                         <TextBlock Margin="3, 1"
                                    VerticalAlignment="Center"
-                                   Text="{Binding FilterDescription}" />
+                                   Text="{Binding FilterDescription}" >
+<i:Interaction.Triggers>
+    <i:EventTrigger EventName="Click" />
+</i:Interaction.Triggers>
+                        </TextBlock>
                     </DockPanel>
                 </DataTemplate>
                 <!--  追加ボタン用テンプレート  -->
