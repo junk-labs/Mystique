@@ -47,6 +47,8 @@ namespace Inscribe.Storage
             {
                 releases = imageDataDictionary
                     .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds > Setting.Instance.KernelProperty.ImageLifetime)
+                    .Concat(imageDataDictionary.OrderByDescending(v => v.Value.Value)
+                    .Skip((int)(Setting.Instance.KernelProperty.ImageCacheMaxCount * Setting.Instance.KernelProperty.ImageCacheSurviveDensity)))
                     .ToArray()
                     .Select(d =>
                     {
@@ -190,6 +192,8 @@ namespace Inscribe.Storage
                     else
                     {
                         imageDataDictionary.Add(uri, newv);
+                        if (imageDataDictionary.Count() > Setting.Instance.KernelProperty.ImageCacheMaxCount)
+                            Task.Factory.StartNew(() => GC(null));
                     }
                 }
                 return bi;

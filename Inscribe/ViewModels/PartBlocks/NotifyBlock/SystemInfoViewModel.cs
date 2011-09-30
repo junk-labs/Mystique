@@ -82,10 +82,9 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 
         public AccountViewModel(AccountInfo info)
         {
-
             this.Info = info;
             this._profileImageProvider = new Common.ProfileImageProvider(info);
-            UpdatePostChunk();
+            Task.Factory.StartNew(() => UpdatePostChunk());
             ViewModelHelper.BindNotification(info.ConnectionStateChangedEvent, this,
                 (o, e) => RaisePropertyChanged(() => ConnectState));
             ViewModelHelper.BindNotification(TimeTickCall, this, (o, e) =>
@@ -169,7 +168,7 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             PostCount = chunk.Item2.ToString();
         }
 
-        private string _postCount = "0";
+        private string _postCount = "取得中...";
         public string PostCount
         {
             get { return _postCount; }
