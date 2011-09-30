@@ -12,6 +12,7 @@ using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
 using Inscribe.Text;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -84,7 +85,19 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     }
 
                     if (TweetTextCounter.Count(body) > TwitterDefine.TweetMaxLength)
-                        throw new Exception("ツイートが140文字を超えました。");
+                    {
+                        if (Setting.Instance.InputExperienceProperty.TrimExceedChars)
+                        {
+                            while (TweetTextCounter.Count(body) > TwitterDefine.TweetMaxLength)
+                            {
+                                body = body.Substring(0, body.Length - 1);
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("ツイートが140文字を超えました。");
+                        }
+                    }
 
                     // is Unoffocial RT
                     bool isQuoting = false;

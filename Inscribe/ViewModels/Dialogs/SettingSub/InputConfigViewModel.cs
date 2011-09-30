@@ -13,6 +13,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this.UseActiveFallback = Setting.Instance.InputExperienceProperty.UseActiveFallback;
             this.EnableTemporarilyUserSelection = Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection;
             this.UseOfficialRetweetFallback = Setting.Instance.InputExperienceProperty.OfficialRetweetFallback;
+            this.TrimExceedChars = Setting.Instance.InputExperienceProperty.TrimExceedChars;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -27,6 +28,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public bool UseOfficialRetweetFallback { get; set; }
 
+        public bool TrimExceedChars { get; set; }
+
         public void Apply()
         {
             Setting.Instance.InputExperienceProperty.OfficialRetweetInReplyToRetweeter = this.OfficialRetweetInReplyToRetweeter;
@@ -35,6 +38,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.InputExperienceProperty.UseActiveFallback = this.UseActiveFallback;
             Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection = this.EnableTemporarilyUserSelection;
             Setting.Instance.InputExperienceProperty.OfficialRetweetFallback = this.UseOfficialRetweetFallback;
+            Setting.Instance.InputExperienceProperty.TrimExceedChars = this.TrimExceedChars;
         }
     }
 }

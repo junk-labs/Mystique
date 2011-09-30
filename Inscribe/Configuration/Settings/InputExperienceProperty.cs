@@ -14,6 +14,7 @@ namespace Inscribe.Configuration.Settings
             UseActiveFallback = false;
             OfficialRetweetFallback = false;
             IsEnabledTemporarilyUserSelection = false;
+            TrimExceedChars = false;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -34,6 +35,8 @@ namespace Inscribe.Configuration.Settings
         public bool OfficialRetweetFallback { get; set; }
 
         public bool IsEnabledTemporarilyUserSelection { get; set; }
+
+        public bool TrimExceedChars { get; set; }
     }
 
     public class HashtagAutoBindDescription

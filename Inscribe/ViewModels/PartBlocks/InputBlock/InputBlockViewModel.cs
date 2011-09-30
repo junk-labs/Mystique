@@ -937,7 +937,10 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         private bool CanUpdate()
         {
             return !String.IsNullOrEmpty(this.CurrentInputDescription.InputText)
-                && TweetTextCounter.Count(this.CurrentInputDescription.InputText) <= TwitterDefine.TweetMaxLength &&
+                && (
+                    TweetTextCounter.Count(this.CurrentInputDescription.InputText) <= TwitterDefine.TweetMaxLength ||
+                    Setting.Instance.InputExperienceProperty.TrimExceedChars
+                ) &&
                 (this.overrideTargets != null || this.UserSelectorViewModel.LinkElements.Count() > 0);
         }
 

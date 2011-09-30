@@ -21,9 +21,22 @@
                   IsChecked="{Binding TrimBeginSpace}"
                   ToolTip=" RT @～のように、先頭が空白文字で始まるツイートを投稿するとき、先頭の空白を削除します。" />
         <CheckBox Margin="4,2"
+                  Content="文字数制限を超えた分はトリムする(_T)"
+                  IsChecked="{Binding TrimExceedChars}">
+            <CheckBox.ToolTip>
+                <TextBlock>
+                    <Run Text="ツイート時、ツイート上限(140文字)を超えた部分を自動でカットします。" />
+                    <LineBreak />
+                    <Run Text="ただ機械的に削除を行うため、URLなどが破壊されることがあります。" />
+                    <LineBreak />
+                    <Run Text="URLを破壊しないようにするには、このオプションをオフにして自分でトリムすることをお勧めします。" />
+                </TextBlock>
+            </CheckBox.ToolTip>
+        </CheckBox>
+        <CheckBox Margin="4,2"
                   Content="公式RTへの返信をRTした人にする(_I)"
                   IsChecked="{Binding OfficialRetweetInReplyToRetweeter}" />
-            <CheckBox Margin="4,2"
+        <CheckBox Margin="4,2"
                   Content="入力中のユーザー選択はその投稿にのみ使用する(_U)"
                   IsChecked="{Binding EnableTemporarilyUserSelection}">
             <CheckBox.ToolTip>
