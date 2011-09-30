@@ -34,6 +34,7 @@ namespace Inscribe.Communication.CruiseControl.Lists
             {
                 receivers.Select(l => l.Value)
                     .Where(l => AutoCruiseSchedulerManager.GetScheduler(l.AccountInfo) == null)
+                    .ToArray()
                     .ForEach(l =>
                     {
                         RemoveReceive(l.ListUserScreenName, l.ListName);
