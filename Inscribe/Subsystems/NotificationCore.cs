@@ -202,9 +202,17 @@ namespace Inscribe.Subsystems
                 {
                     if (isPlaying) return;
                     isPlaying = true;
-                    using (var soundplayer = new SoundPlayer(path))
+                    try
                     {
-                        soundplayer.PlaySync();
+                        using (var soundplayer = new SoundPlayer(path))
+                        {
+                            soundplayer.PlaySync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionStorage.Register(ex, ExceptionCategory.InternalError,
+                            "通知音の再生ができませんでした。");
                     }
                     isPlaying = false;
                 });
