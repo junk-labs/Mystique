@@ -369,6 +369,72 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         #endregion
 
+        #region Debug menus
+
+        #region FullGCCommand
+        ViewModelCommand _FullGCCommand;
+
+        public ViewModelCommand FullGCCommand
+        {
+            get
+            {
+                if (_FullGCCommand == null)
+                    _FullGCCommand = new ViewModelCommand(FullGC);
+                return _FullGCCommand;
+            }
+        }
+
+        private void FullGC()
+        {
+            GC.Collect();
+        }
+        #endregion
+
+        #region RemoveOldTweetsCommand
+        ViewModelCommand _RemoveOldTweetsCommand;
+
+        public ViewModelCommand RemoveOldTweetsCommand
+        {
+            get
+            {
+                if (_RemoveOldTweetsCommand == null)
+                    _RemoveOldTweetsCommand = new ViewModelCommand(RemoveOldTweets);
+                return _RemoveOldTweetsCommand;
+            }
+        }
+
+        private void RemoveOldTweets()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                TweetStorage.GetAll(tvm => (DateTime.Now - tvm.CreatedAt).TotalHours > 12).ForEach(t => TweetStorage.Remove(t.bindingId));
+            });
+
+        }
+        #endregion
+
+        #region ShowMemoryCommand
+        ViewModelCommand _ShowMemoryCommand;
+
+        public ViewModelCommand ShowMemoryCommand
+        {
+            get
+            {
+                if (_ShowMemoryCommand == null)
+                    _ShowMemoryCommand = new ViewModelCommand(ShowMemory);
+                return _ShowMemoryCommand;
+            }
+        }
+
+        private void ShowMemory()
+        {
+            NotifyStorage.Notify("Memory: " + GC.GetTotalMemory(false).ToString());
+        }
+        #endregion
+      
+
+        #endregion
+
         #region Input control
 
         private InputDescription _currentInputDescription = null;

@@ -120,6 +120,11 @@
                                 <MenuItem Command="{Binding ClearImageCachesCommand}" Header="画像キャッシュをクリア(_I)" />
                             </MenuItem>
                         </MenuItem>
+                        <MenuItem Header="デバッグ(_D)">
+                            <MenuItem Command="{Binding FullGCCommand}" Header="Full _GC" />
+                            <MenuItem Command="{Binding RemoveOldTweetsCommand}" Header="半日以上前のツイートを全saku(_D)" />
+                            <MenuItem Command="{Binding ShowMemoryCommand}" Header="メモリ使用量チェック(_C)" />
+                        </MenuItem>
                         <Separator />
                         <MenuItem Header="サイレントモード(_S)"
                                   IsCheckable="True"

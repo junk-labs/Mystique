@@ -32,7 +32,7 @@ namespace Inscribe.Storage
         /// <summary>
         /// ディクショナリのロック
         /// </summary>
-        static ReaderWriterLockWrap lockWrap = new ReaderWriterLockWrap(LockRecursionPolicy.NoRecursion);
+        static ReaderWriterLockWrap lockWrap = new ReaderWriterLockWrap(LockRecursionPolicy.SupportsRecursion);
 
         /// <summary>
         /// 登録済みステータスディクショナリ
@@ -336,6 +336,24 @@ namespace Inscribe.Storage
         }
 
         /// <summary>
+        /// ツイートをツイートストレージから除去
+        /// </summary>
+        /// <param name="id">ツイートID</param>
+        public static void Trim(long id)
+        {
+            TweetViewModel remobj = null;
+            using (lockWrap.GetWriterLock())
+            {
+                empties.Remove(id);
+                if (dictionary.TryGetValue(id, out remobj))
+                {
+                    dictionary.Remove(id);
+                    Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
+                }
+            }
+        }
+
+        /// <summary>
         /// ツイートの削除
         /// </summary>
         /// <param name="id">削除するツイートID</param>
@@ -443,7 +461,7 @@ namespace Inscribe.Storage
             }
         }
     }
-    
+
 
     public class TweetStorageChangedEventArgs : EventArgs
     {
