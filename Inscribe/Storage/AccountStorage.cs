@@ -119,34 +119,31 @@ namespace Inscribe.Storage
         /// </summary>
         public static void MoveAccount(string id, MoveDirection direction)
         {
-            accounts.LockOperate(() =>
+            var info = Get(id);
+            if (info == null)
+                throw new ArgumentException("アカウント @" + id + " は存在しません。");
+            var idx = accounts.IndexOf(info);
+            if (idx < 0)
+                throw new InvalidOperationException();
+            switch (direction)
             {
-                var info = Get(id);
-                if (info == null)
-                    throw new ArgumentException("アカウント @" + id + " は存在しません。");
-                var idx = accounts.IndexOf(info);
-                if (idx < 0)
-                    throw new InvalidOperationException();
-                switch (direction)
-                {
-                    case MoveDirection.Up:
-                        if (idx > 0)
-                        {
-                            accounts.RemoveAt(idx);
-                            accounts.Insert(idx - 1, info);
-                        }
-                        break;
-                    case MoveDirection.Down:
-                        if (idx < accounts.Count - 1)
-                        {
-                            accounts.RemoveAt(idx);
-                            accounts.Insert(idx + 1, info);
-                        }
-                        break;
-                    default:
-                        throw new ArgumentException("移動方向指定がちゃんちゃらおかしい :" + direction.ToString());
-                }
-            });
+                case MoveDirection.Up:
+                    if (idx > 0)
+                    {
+                        accounts.RemoveAt(idx);
+                        accounts.Insert(idx - 1, info);
+                    }
+                    break;
+                case MoveDirection.Down:
+                    if (idx < accounts.Count - 1)
+                    {
+                        accounts.RemoveAt(idx);
+                        accounts.Insert(idx + 1, info);
+                    }
+                    break;
+                default:
+                    throw new ArgumentException("移動方向指定がちゃんちゃらおかしい :" + direction.ToString());
+            }
             OnAccountsChanged(EventArgs.Empty);
         }
 
