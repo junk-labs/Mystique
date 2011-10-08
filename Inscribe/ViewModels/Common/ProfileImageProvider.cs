@@ -26,11 +26,19 @@ namespace Inscribe.ViewModels.Common
                 else
                 {
                     Task.Factory.StartNew(() => {
-                        var info = ApiHelper.ExecApi(() => this._info.GetUserByScreenName(this._info.ScreenName));
-                        if (info != null)
+                        try
                         {
-                            UserStorage.Register(info);
-                            RaisePropertyChanged(() => ProfileImage);
+                            var info = ApiHelper.ExecApi(() => this._info.GetUserByScreenName(this._info.ScreenName));
+                            if (info != null)
+                            {
+                                UserStorage.Register(info);
+                                RaisePropertyChanged(() => ProfileImage);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            ExceptionStorage.Register(e, ExceptionCategory.TwitterError, 
+                                "ユーザー情報を取得できません。", () => RaisePropertyChanged(() => ProfileImage));
                         }
                     });
                     return null;
