@@ -16,7 +16,7 @@ namespace Inscribe.Filter.Filters.Particular
         [GuiVisible("ユーザー1")]
         public string User1
         {
-            get { return user1; }
+            get { return user1 ?? String.Empty; }
             set { user1 = value; }
         }
 
@@ -25,7 +25,7 @@ namespace Inscribe.Filter.Filters.Particular
         [GuiVisible("ユーザー2")]
         public string User2
         {
-            get { return user2; }
+            get { return user2 ?? String.Empty; }
             set { user2 = value; }
         }
 
@@ -73,8 +73,8 @@ namespace Inscribe.Filter.Filters.Particular
 
         public override IEnumerable<object> GetArgumentsForQueryify()
         {
-            yield return this.user1;
-            yield return this.user2;
+            yield return this.User1;
+            yield return this.User2;
         }
 
         public override string Description
