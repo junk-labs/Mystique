@@ -131,7 +131,7 @@ namespace Inscribe.Filter.Filters.Particular
 
         public override IEnumerable<object> GetArgumentsForQueryify()
         {
-            yield return this.origTracePoint;
+            yield return this.OrigTracePoint;
         }
 
         public override string Description
