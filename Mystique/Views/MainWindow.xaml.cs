@@ -23,10 +23,13 @@ namespace Mystique.Views
             System.Diagnostics.Debug.WriteLine("IME:" + this.IsInputMethodEnabled);
             if (!Setting.Instance.StateProperty.WindowPosition.IsEmpty)
             {
+                /*
                 this.Left = Setting.Instance.StateProperty.WindowPosition.Left;
                 this.Top = Setting.Instance.StateProperty.WindowPosition.Top;
                 this.Width = Setting.Instance.StateProperty.WindowPosition.Width;
                 this.Height = Setting.Instance.StateProperty.WindowPosition.Height;
+                */
+                Nightmare.WinAPI.NativeWindowControl.SetWindowPlacement(this, Setting.Instance.StateProperty.WindowPosition);
                 this.WindowState = Setting.Instance.StateProperty.WindowState;
             }
         }

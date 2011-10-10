@@ -46,6 +46,9 @@ namespace Nightmare.WinAPI
         [DllImport("user32.dll")]
         extern static bool GetWindowPlacement(int hWnd, ref WINDOWPLACEMENT lpwndpl);
 
+        [DllImport("user32.dll")]
+        extern static bool SetWindowPlacement(int hWnd, ref WINDOWPLACEMENT lpwndpl);
+
         public static Rect GetWindowPlacement(Window window)
         {
             var helper = new WindowInteropHelper(window);
@@ -55,6 +58,18 @@ namespace Nightmare.WinAPI
             return new Rect(wpl.rcNormalPosition.left, wpl.rcNormalPosition.top,
                 wpl.rcNormalPosition.right - wpl.rcNormalPosition.left,
                 wpl.rcNormalPosition.bottom - wpl.rcNormalPosition.top);
+        }
+
+        public static void SetWindowPlacement(Window window, Rect placement)
+        {
+             var helper = new WindowInteropHelper(window);
+            WINDOWPLACEMENT wpl = new WINDOWPLACEMENT();
+            wpl.Length = Marshal.SizeOf(wpl);
+            wpl.rcNormalPosition.left = (int)placement.Left;
+            wpl.rcNormalPosition.right = (int)placement.Right;
+            wpl.rcNormalPosition.top = (int)placement.Top;
+            wpl.rcNormalPosition.bottom = (int)placement.Bottom;
+            SetWindowPlacement((int)helper.Handle, ref wpl);
         }
     }
 }
