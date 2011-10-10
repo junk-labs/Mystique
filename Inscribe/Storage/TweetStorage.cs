@@ -283,14 +283,6 @@ namespace Inscribe.Storage
         {
             if (viewModel.Status == null || viewModel.Status.User == null || String.IsNullOrEmpty(viewModel.Status.User.ScreenName))
                 throw new ArgumentException("データが破損しています。");
-            // Local mute
-            if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster != null &&
-                Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(viewModel.Status))
-                return false;
-            // Block Sharing
-            if (Setting.Instance.TimelineFilteringProperty.MuteBlockedUsers &&
-                AccountStorage.Accounts.Any(a => a.IsBlocking(viewModel.Status.User.NumericId)))
-                return false;
             return true;
         }
 

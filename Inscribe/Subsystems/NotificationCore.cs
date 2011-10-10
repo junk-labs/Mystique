@@ -12,6 +12,7 @@ using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Messaging;
+using Inscribe.Common;
 
 namespace Inscribe.Subsystems
 {
@@ -79,18 +80,7 @@ namespace Inscribe.Subsystems
         /// </summary>
         private static bool CheckIsAllowed(TweetViewModel vm)
         {
-            // データ破損
-            if (vm.Status == null || vm.Status.User == null)
-                return false;
-            // ミュート対象
-            if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster != null &&
-                Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(vm.Status))
-                return false;
-            // ブロック対象
-            if (Setting.Instance.TimelineFilteringProperty.MuteBlockedUsers &&
-                AccountStorage.Accounts.Any(a => a.IsBlocking(vm.Status.User.NumericId)))
-                return false;
-            return true;
+            return vm.Status != null && vm.Status.User != null && !FilterHelper.IsMuted(vm.Status);
         }
 
         public static void RegisterNotify(TweetViewModel tweet)

@@ -192,7 +192,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             try
             {
-                if (!viewModel.IsStatusInfoContains) return false;
+                if (!viewModel.IsStatusInfoContains || FilterHelper.IsMuted(viewModel.Status)) return false;
                 return (this.sources ?? this.Parent.TabProperty.TweetSources ?? new IFilter[0])
                     .Any(f => f.Filter(viewModel.Status));
             }
