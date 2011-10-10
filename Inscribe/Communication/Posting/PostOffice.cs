@@ -299,9 +299,63 @@ namespace Inscribe.Communication.Posting
 
         private static int UpdateTweetSink(AccountInfo info, string text, long? inReplyToId = null)
         {
+            /*
             var status = info.UpdateStatus(text, inReplyToId);
+            */
+
+            TwitterStatus status = null;
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    status = info.UpdateStatus(text, inReplyToId);
+                    break;
+                }
+                catch (WebException wex)
+                {
+                    if (wex.Status == WebExceptionStatus.ProtocolError)
+                    {
+                        var hrw = wex.Response as HttpWebResponse;
+                        if (hrw != null && hrw.StatusCode == HttpStatusCode.Forbidden)
+                        {
+                            // 重複した?
+                            using (var strm = hrw.GetResponseStream())
+                            using (var json = JsonReaderWriterFactory.CreateJsonReader(strm,
+                                System.Xml.XmlDictionaryReaderQuotas.Max))
+                            {
+                                var xdoc = XDocument.Load(json);
+                                System.Diagnostics.Debug.WriteLine(xdoc);
+                                var eel = xdoc.Root.Element("error");
+                                if (eel != null &&
+                                    eel.Value.IndexOf("duplicate", StringComparison.CurrentCultureIgnoreCase) >= 0)
+                                {
+                                    // 同じツイートをしようとした
+                                    if (i == 0) // 初回でこのエラーならアウト
+                                    {
+                                        throw;
+                                    }
+                                    else
+                                    {
+                                        NotifyStorage.Notify("ツイートしました:@" + info.ScreenName + ": " + text);
+                                        var ucchunk = GetUnderControlChunk(info);
+                                        if (ucchunk.Item2 > TwitterDefine.UnderControlWarningThreshold)
+                                        {
+                                            throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.NearUnderControl);
+                                        }
+                                        return ucchunk.Item2;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (wex.Status == WebExceptionStatus.Timeout)
+                        continue;
+                    else
+                        throw;
+                }
+            }
             if (status == null || status.Id == 0)
-                throw new InvalidOperationException("ツイートの成功を確認できませんでした。");
+                throw new InvalidOperationException("ツイートの成功を確認できませんでした。タイムアウトした可能性があります。");
             TweetStorage.Register(status);
             NotifyStorage.Notify("ツイートしました:@" + info.ScreenName + ": " + text);
 
