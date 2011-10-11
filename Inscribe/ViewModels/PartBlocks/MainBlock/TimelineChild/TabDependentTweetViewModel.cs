@@ -473,7 +473,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         private void OpenConversation()
         {
             var s = this.Tweet.Status as TwitterStatus;
-            if (s == null || s.InReplyToStatusId == 0) return;
+            if (s == null)
+                return;
+            if (s.InReplyToStatusId == 0)
+                s = s.RetweetedOriginal;
+            if (s == null || s.InReplyToStatusId == 0)
+                return;
             IEnumerable<IFilter> filter = null;
             string description = String.Empty;
             if (Setting.Instance.TimelineExperienceProperty.IsShowConversationAsTree)
@@ -550,6 +555,28 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
         #endregion
+
+        #region ShowRetweetedOriginalCommand
+        ViewModelCommand _ShowRetweetedOriginalCommand;
+
+        public ViewModelCommand ShowRetweetedOriginalCommand
+        {
+            get
+            {
+                if (_ShowRetweetedOriginalCommand == null)
+                    _ShowRetweetedOriginalCommand = new ViewModelCommand(ShowRetweetedOriginal);
+                return _ShowRetweetedOriginalCommand;
+            }
+        }
+
+        private void ShowRetweetedOriginal()
+        {
+            this.Parent.AddTopTimeline(new[]{ 
+                new Filter.Filters.Numeric.FilterStatusId(((TwitterStatus)this.Tweet.Status).RetweetedOriginal.Id)
+            });
+        }
+        #endregion
+      
       
         #endregion
 

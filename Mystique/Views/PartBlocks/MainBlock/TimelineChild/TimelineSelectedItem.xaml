@@ -327,15 +327,6 @@
             </TextBlock>
             <TextBlock Margin="4,2"
                        Foreground="Gray"
-                       Visibility="{Binding Path=Tweet.IsPublishedByRetweet,
-                                            Converter={StaticResource BoolVisibleConverter}}">
-                <Run Text="retweeted: " />
-                <Hyperlink Command="{Binding Path=RetweetedUserDetailCommand}" Foreground="Gray">
-                    <Run Text="{Binding Path=Tweet, Converter={StaticResource TweetUserNameConverter}, ConverterParameter=RetweetedScreenName, Mode=OneWay, StringFormat=@{0}}" />
-                </Hyperlink>
-            </TextBlock>
-            <TextBlock Margin="4,2"
-                       Foreground="Gray"
                        Visibility="{Binding Path=Tweet.IsDirectMessage,
                                             Converter={StaticResource BoolVisibleConverter}}">
                 <Run Text="direct message to: " />
@@ -554,31 +545,86 @@
                     <Button.ToolTip>ツイートを削除...</Button.ToolTip>
                 </Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="4,5"
-                           VerticalAlignment="Center"
-                           FontSize="11">
-                    <Hyperlink Command="{Binding Path=Tweet.ShowTweetCommand}" Foreground="DodgerBlue">
-                        <Run Text="{Binding Path=Tweet.CreatedAt, Mode=OneWay, StringFormat=yy/MM/dd HH:mm:ss}" />
-                    </Hyperlink>
-                </TextBlock>
-                <TextBlock Margin="4,5"
-                           VerticalAlignment="Center"
-                           FontSize="11"
-                           Foreground="DimGray"
-                           Text="via"
-                           Visibility="{Binding Path=Tweet.IsStatus,
-                                                Converter={StaticResource BoolVisibleConverter}}" />
-                <tc:DynamicTextBlock Margin="4,5"
-                                     VerticalAlignment="Center"
-                                     DynamicInline="{Binding Tweet,
-                                                             Converter={StaticResource SourceInlinesConverter},
-                                                             ConverterParameter=Source,
-                                                             IsAsync=True}"
-                                     FontSize="11"
-                                     Foreground="DimGray"
-                                     Visibility="{Binding Path=Tweet.IsStatus,
-                                                          Converter={StaticResource BoolVisibleConverter}}" />
+            <StackPanel Margin="3" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="2"
+                               VerticalAlignment="Center"
+                               FontSize="11">
+                        <Hyperlink Command="{Binding Path=Tweet.ShowOriginalTweetCommand}">
+                            <Run Text="{Binding Path=Tweet.OriginalCreatedAt, Mode=OneWay, StringFormat=yy/MM/dd HH:mm:ss}" />
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock Margin="4,2"
+                               VerticalAlignment="Center"
+                               FontSize="11"
+                               Foreground="DimGray"
+                               Text="via" />
+                    <tc:DynamicTextBlock Margin="2"
+                                         VerticalAlignment="Center"
+                                         DynamicInline="{Binding Tweet,
+                                                                 Converter={StaticResource SourceInlinesConverter},
+                                                                 IsAsync=True}"
+                                         FontSize="11"
+                                         Foreground="DimGray" />
+
+                </StackPanel>
+                <Border Background="#3C9ACD32"
+                        CornerRadius="2"
+                        Visibility="{Binding Path=Tweet.IsPublishedByRetweet,
+                                             Converter={StaticResource BoolVisibleConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="2"
+                                   VerticalAlignment="Center"
+                                   FontSize="11">
+                            <Hyperlink Command="{Binding Path=RetweetedUserDetailCommand}">
+                                <Run Text="{Binding Path=Tweet, Converter={StaticResource TweetUserNameConverter}, ConverterParameter=RetweetedScreenName, Mode=OneWay, StringFormat=@{0}}" />
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock Margin="4,2"
+                                   VerticalAlignment="Center"
+                                   FontSize="11"
+                                   Foreground="OliveDrab"
+                                   Text="retweeted" />
+                        <TextBlock Margin="2"
+                                   VerticalAlignment="Center"
+                                   DockPanel.Dock="Right"
+                                   FontSize="11">
+                            <Hyperlink Command="{Binding Path=ShowRetweetedOriginalCommand}">
+                                <Run Text="this" />
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock Margin="2"
+                                   VerticalAlignment="Center"
+                                   FontSize="11"
+                                   Foreground="OliveDrab"
+                                   Text=":" />
+                        <TextBlock Margin="2"
+                                   VerticalAlignment="Center"
+                                   FontSize="11">
+                            <Hyperlink Command="{Binding Path=Tweet.ShowTweetCommand}">
+                                <Run Text="{Binding Path=Tweet.CreatedAt, Mode=OneWay, StringFormat=yy/MM/dd HH:mm:ss}" />
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock Margin="4,2"
+                                   VerticalAlignment="Center"
+                                   FontSize="11"
+                                   Foreground="OliveDrab"
+                                   Text="via"
+                                   Visibility="{Binding Path=Tweet.IsStatus,
+                                                        Converter={StaticResource BoolVisibleConverter}}" />
+                        <tc:DynamicTextBlock Margin="2"
+                                             VerticalAlignment="Center"
+                                             DynamicInline="{Binding Tweet,
+                                                                     Converter={StaticResource SourceInlinesConverter},
+                                                                     ConverterParameter=True,
+                                                                     IsAsync=True}"
+                                             FontSize="11"
+                                             Foreground="DimGray"
+                                             Visibility="{Binding Path=Tweet.IsStatus,
+                                                                  Converter={StaticResource BoolVisibleConverter}}" />
+
+                    </StackPanel>
+                </Border>
             </StackPanel>
         </DockPanel>
         <Rectangle Grid.RowSpan="3"

@@ -294,7 +294,7 @@
                        VerticalAlignment="Center"
                        FontSize="10"
                        Foreground="Gray"
-                       Text="{Binding Path=Tweet.CreatedAt,
+                       Text="{Binding Path=Tweet.OriginalCreatedAt,
                                       Mode=OneTime,
                                       StringFormat=HH:mm:ss}" />
         </StackPanel>

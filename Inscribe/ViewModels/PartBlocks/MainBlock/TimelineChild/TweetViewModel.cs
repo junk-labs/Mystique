@@ -108,6 +108,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
 
+        public string OriginalPermalink
+        {
+            get
+            {
+                TwitterStatus stat;
+                return (stat = this.Status as TwitterStatus) != null &&
+                    stat.RetweetedOriginal != null ?
+                    "http://twitter.com/" + stat.User.ScreenName + "/status/" + stat.Id.ToString() :
+                    "http://twitter.com/" + this.Status.User.ScreenName + "/status/" + this.Status.Id.ToString();
+            }
+        }
+
         #endregion
 
         #region Retweeteds Control
@@ -272,7 +284,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 var status = this.Status as TwitterStatus;
-                return status != null && status.InReplyToStatusId != 0;
+                return status != null && status.InReplyToStatusId != 0 ||
+                    status.RetweetedOriginal != null && status.RetweetedOriginal.InReplyToStatusId != 0;
             }
         }
 
@@ -308,6 +321,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 if (status != null && status.InReplyToStatusId != 0)
                 {
                     var tweet = TweetStorage.Get(status.InReplyToStatusId);
+                    if (tweet == null || !tweet.IsStatusInfoContains)
+                        return "受信していません";
+                    else
+                        return "@" + tweet.Status.User.ScreenName + ": " + tweet.Status.Text;
+                }
+                else if (status.RetweetedOriginal != null && status.RetweetedOriginal.InReplyToStatusId != 0)
+                {
+                    var tweet = TweetStorage.Get(status.RetweetedOriginal.InReplyToStatusId);
                     if (tweet == null || !tweet.IsStatusInfoContains)
                         return "受信していません";
                     else
@@ -365,6 +386,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     return DateTime.MinValue;
                 else
                     return this.Status.CreatedAt;
+            }
+        }
+
+        public DateTime OriginalCreatedAt
+        {
+            get
+            {
+                TwitterStatus stat;
+                return (stat = this.Status as TwitterStatus) != null &&
+                    stat.RetweetedOriginal != null ?
+                    stat.RetweetedOriginal.CreatedAt :
+                    this.CreatedAt;
             }
         }
 
@@ -463,6 +496,27 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             Browser.Start(this.Permalink);
         }
+
+
+        #region ShowOriginalTweetCommand
+        ViewModelCommand _ShowOriginalTweetCommand;
+
+        public ViewModelCommand ShowOriginalTweetCommand
+        {
+            get
+            {
+                if (_ShowOriginalTweetCommand == null)
+                    _ShowOriginalTweetCommand = new ViewModelCommand(ShowOriginalTweet);
+                return _ShowOriginalTweetCommand;
+            }
+        }
+
+        private void ShowOriginalTweet()
+        {
+            Browser.Start(this.OriginalPermalink);
+        }
+        #endregion
+      
 
         #endregion
 

@@ -20,7 +20,10 @@ namespace Mystique.Views.Converters.Particular
             if (!Application.Current.Dispatcher.CheckAccess())
                 return Application.Current.Dispatcher.Invoke(new Action(() => ToTarget(input, parameter)), null) as IEnumerable<Inline>;
 
+            bool referenceOriginal = parameter as string != null ? bool.Parse(parameter as string) : false;
             var status = input.Status as TwitterStatus;
+            if (referenceOriginal && status.RetweetedOriginal != null)
+                status = status.RetweetedOriginal;
             if (status != null)
             {
                 var src = status.Source;

@@ -5,6 +5,7 @@ using Inscribe.Data;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
+using Inscribe.Common;
 
 namespace Inscribe.Storage
 {
@@ -27,6 +28,11 @@ namespace Inscribe.Storage
 
         private static void Register(EventDescription description)
         {
+            // check is muted
+            if ((description.TargetTweet != null && FilterHelper.IsMuted(description.TargetTweet.Status)) ||
+                (description.SourceUser != null && FilterHelper.IsMuted(description.SourceUser.TwitterUser)) ||
+                (description.TargetUser != null && FilterHelper.IsMuted(description.TargetUser.TwitterUser)))
+                return;
             events.AddLast(description);
             OnEventChanged(EventArgs.Empty);
             OnEventRegistered(new EventDescriptionEventArgs(description));
