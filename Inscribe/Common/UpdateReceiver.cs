@@ -154,14 +154,21 @@ namespace Inscribe.Common
             var path = Path.Combine(Path.GetDirectoryName(Define.ExeFilePath), Define.UpdateFileName);
             if (File.Exists(path))
             {
-                // .completeファイルを作成する
-                System.IO.File.Create(path + ".completed");
-                Process.Start(
-                    path,
-                    Define.GetNumericVersion().ToString() + " " +
-                    Setting.Instance.ExperienceProperty.UpdateKind.ToString() + " " +
-                    Process.GetCurrentProcess().Id.ToString());
-                KernelService.AppShutdown();
+                try
+                {
+                    // .completeファイルを作成する
+                    System.IO.File.Create(path + ".completed");
+                    Process.Start(
+                        path,
+                        Define.GetNumericVersion().ToString() + " " +
+                        Setting.Instance.ExperienceProperty.UpdateKind.ToString() + " " +
+                        Process.GetCurrentProcess().Id.ToString());
+                    KernelService.AppShutdown();
+                }
+                catch (Exception ex)
+                {
+                    ExceptionStorage.Register(ex, ExceptionCategory.InternalError, "アップデーターを開始できませんでした。更新確認ファイルがロックされている可能性があります。Windowsを再起動してください。");
+                }
             }
         }
     }
