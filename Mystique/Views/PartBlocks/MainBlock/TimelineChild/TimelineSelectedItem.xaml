@@ -563,6 +563,7 @@
                                          VerticalAlignment="Center"
                                          DynamicInline="{Binding Tweet,
                                                                  Converter={StaticResource SourceInlinesConverter},
+                                                                 ConverterParameter=True,
                                                                  IsAsync=True}"
                                          FontSize="11"
                                          Foreground="DimGray" />
@@ -616,7 +617,6 @@
                                              VerticalAlignment="Center"
                                              DynamicInline="{Binding Tweet,
                                                                      Converter={StaticResource SourceInlinesConverter},
-                                                                     ConverterParameter=True,
                                                                      IsAsync=True}"
                                              FontSize="11"
                                              Foreground="DimGray"
