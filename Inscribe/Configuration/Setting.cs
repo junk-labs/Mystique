@@ -167,6 +167,7 @@ namespace Inscribe.Configuration
 
         public void Save()
         {
+            Instance.KernelProperty.LastWriteVersion = Define.GetNumericVersion();
             var temp = Path.GetTempFileName();
             try
             {

@@ -125,16 +125,14 @@ namespace Inscribe.Storage
             }
         }
 
+        private static volatile int _count;
+
         /// <summary>
         /// 登録されているツイートの個数を取得します。
         /// </summary>
         public static int Count()
         {
-            using (lockWrap.GetReaderLock())
-            {
-                System.Diagnostics.Debug.WriteLine("cnt");
-                return dictionary.Count;
-            }
+            return _count;
         }
 
         /// <summary>
@@ -262,15 +260,12 @@ namespace Inscribe.Storage
                             {
                                 dictionary.Add(statusBase.Id, viewModel);
                             }
+                            _count++;
                         }
                     }
-                    if (!deleteReserveds.Contains(statusBase.Id))
-                        Task.Factory.StartNew(() => RaiseStatusAdded(viewModel));
                 }
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("*** trash: " + statusBase.ToString());
+                if (!deleteReserveds.Contains(statusBase.Id))
+                    Task.Factory.StartNew(() => RaiseStatusAdded(viewModel));
             }
             return viewModel;
         }

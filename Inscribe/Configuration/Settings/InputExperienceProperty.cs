@@ -15,6 +15,8 @@ namespace Inscribe.Configuration.Settings
             OfficialRetweetFallback = false;
             IsEnabledTemporarilyUserSelection = false;
             TrimExceedChars = false;
+            AutoRetryOnTimeout = true;
+            AutoRetryMaxCount = 5;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -37,6 +39,10 @@ namespace Inscribe.Configuration.Settings
         public bool IsEnabledTemporarilyUserSelection { get; set; }
 
         public bool TrimExceedChars { get; set; }
+
+        public bool AutoRetryOnTimeout { get; set; }
+
+        public int AutoRetryMaxCount { get; set; }
     }
 
     public class HashtagAutoBindDescription

@@ -309,7 +309,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         private void Feedback()
         {
-            Browser.Start("https://github.com/karno/Mystique/issues");
+            Browser.Start(Define.FeedbackUrl);
         }
         #endregion
 

@@ -284,8 +284,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 var status = this.Status as TwitterStatus;
-                return status != null && status.InReplyToStatusId != 0 ||
-                    status.RetweetedOriginal != null && status.RetweetedOriginal.InReplyToStatusId != 0;
+                return status != null && 
+                    (status.InReplyToStatusId != 0 ||
+                    (status.RetweetedOriginal != null && status.RetweetedOriginal.InReplyToStatusId != 0));
             }
         }
 
@@ -326,7 +327,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     else
                         return "@" + tweet.Status.User.ScreenName + ": " + tweet.Status.Text;
                 }
-                else if (status.RetweetedOriginal != null && status.RetweetedOriginal.InReplyToStatusId != 0)
+                else if (status != null && status.RetweetedOriginal != null && status.RetweetedOriginal.InReplyToStatusId != 0)
                 {
                     var tweet = TweetStorage.Get(status.RetweetedOriginal.InReplyToStatusId);
                     if (tweet == null || !tweet.IsStatusInfoContains)

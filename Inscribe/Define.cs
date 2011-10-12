@@ -80,5 +80,8 @@ namespace Inscribe
 
         public static readonly string EventWavFile = "event.wav";
 
+        public static readonly string ReleaseNoteUrl = "http://krile.starwing.net/updates.html";
+
+        public static readonly string FeedbackUrl = "https://github.com/karno/Mystique/issues";
     }
 }

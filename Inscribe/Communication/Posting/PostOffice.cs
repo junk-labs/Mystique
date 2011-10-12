@@ -214,23 +214,24 @@ namespace Inscribe.Communication.Posting
 
         public static int UpdateTweet(AccountInfo info, string text, long? inReplyToId = null)
         {
-            if (Setting.Instance.InputExperienceProperty.TrimBeginSpace)
+            int retryCount = 0;
+            do
             {
-                text = text.TrimStart(' ', '\t', '　');
-            }
-            try
-            {
-                return updateInjection.Execute(new Tuple<AccountInfo, string, long?>(info, text, inReplyToId));
-            }
-            catch (WebException wex)
-            {
-                if (wex.Status == WebExceptionStatus.ProtocolError)
+                if (Setting.Instance.InputExperienceProperty.TrimBeginSpace)
                 {
-                    var hrw = wex.Response as HttpWebResponse;
-                    if (hrw != null)
+                    text = text.TrimStart(' ', '\t', '　');
+                }
+                try
+                {
+                    updateInjection.Execute(new Tuple<AccountInfo, string, long?>(info, text, inReplyToId));
+                    break; // break roop on succeeded
+                }
+                catch (WebException wex)
+                {
+                    if (wex.Status == WebExceptionStatus.ProtocolError)
                     {
-
-                        if (hrw.StatusCode == HttpStatusCode.Forbidden)
+                        var hrw = wex.Response as HttpWebResponse;
+                        if (hrw != null && hrw.StatusCode == HttpStatusCode.Forbidden)
                         {
                             // 規制？
                             using (var strm = hrw.GetResponseStream())
@@ -252,7 +253,10 @@ namespace Inscribe.Communication.Posting
                                     else if (eel.Value.IndexOf("duplicate", StringComparison.CurrentCultureIgnoreCase) >= 0)
                                     {
                                         // 同じツイートをしようとした
-                                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.Duplicated);
+                                        if (retryCount == 0) // 複数回投稿している場合はサスペンドする
+                                            throw new TweetFailedException(TweetFailedException.TweetErrorKind.Duplicated);
+                                        else
+                                            break; // 成功
                                     }
                                     else
                                     {
@@ -262,109 +266,57 @@ namespace Inscribe.Communication.Posting
                                 }
                             }
                         }
-                    }
-                }
-                else
-                {
-                    if (wex.Status == WebExceptionStatus.Timeout)
-                    {
-                        // タイムアウト
-                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.Timeout, "ツイートに失敗しました(タイムアウトしました。Twitterが不調かも)", wex);
+                        // 何かよくわからない
+                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, wex.Message);
                     }
                     else
                     {
-                        // 何かがおかしい
-                        throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, "ツイートに失敗しました(" + (int)wex.Status + ")", wex);
+                        if (wex.Status == WebExceptionStatus.Timeout)
+                        {
+                            // タイムアウト
+                            if (!Setting.Instance.InputExperienceProperty.AutoRetryOnTimeout)
+                                throw new TweetFailedException(TweetFailedException.TweetErrorKind.Timeout, "ツイートに失敗しました(タイムアウトしました。Twitterが不調かも)", wex);
+                        }
+                        else
+                        {
+                            // 何かがおかしい
+                            throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, "ツイートに失敗しました(" + (int)wex.Status + ")", wex);
+                        }
                     }
                 }
-            }
-            catch (TweetAnnotationException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, "ツイートに失敗しました(" + ex.Message + ")", ex);
-            }
-            return -1;
+                catch (TweetAnnotationException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, "ツイートに失敗しました(" + ex.Message + ")", ex);
+                }
+            } while (Setting.Instance.InputExperienceProperty.AutoRetryOnTimeout && retryCount++ < Setting.Instance.InputExperienceProperty.AutoRetryMaxCount);
+
+            var chunk = GetUnderControlChunk(info);
+            if (chunk.Item2 > TwitterDefine.UnderControlWarningThreshold)
+                throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.NearUnderControl);
+
+            return chunk.Item2;
         }
 
-        private static InjectionPort<Tuple<AccountInfo, string, long?>, int> updateInjection =
-            new InjectionPort<Tuple<AccountInfo, string, long?>, int>(a => UpdateTweetSink(a.Item1, a.Item2, a.Item3));
+        private static InjectionPort<Tuple<AccountInfo, string, long?>> updateInjection =
+            new InjectionPort<Tuple<AccountInfo, string, long?>>(a => UpdateTweetSink(a.Item1, a.Item2, a.Item3));
 
-        public static IInjectionPort<Tuple<AccountInfo, string, long?>, int> UpdateInjection
+        public static IInjectionPort<Tuple<AccountInfo, string, long?>> UpdateInjection
         {
             get { return updateInjection.GetInterface(); }
         }
 
-        private static int UpdateTweetSink(AccountInfo info, string text, long? inReplyToId = null)
+        private static void UpdateTweetSink(AccountInfo info, string text, long? inReplyToId = null)
         {
-            /*
             var status = info.UpdateStatus(text, inReplyToId);
-            */
-
-            TwitterStatus status = null;
-            for (int i = 0; i < 5; i++)
-            {
-                try
-                {
-                    status = info.UpdateStatus(text, inReplyToId);
-                    break;
-                }
-                catch (WebException wex)
-                {
-                    if (wex.Status == WebExceptionStatus.ProtocolError)
-                    {
-                        var hrw = wex.Response as HttpWebResponse;
-                        if (hrw != null && hrw.StatusCode == HttpStatusCode.Forbidden)
-                        {
-                            // 重複した?
-                            using (var strm = hrw.GetResponseStream())
-                            using (var json = JsonReaderWriterFactory.CreateJsonReader(strm,
-                                System.Xml.XmlDictionaryReaderQuotas.Max))
-                            {
-                                var xdoc = XDocument.Load(json);
-                                System.Diagnostics.Debug.WriteLine(xdoc);
-                                var eel = xdoc.Root.Element("error");
-                                if (eel != null &&
-                                    eel.Value.IndexOf("duplicate", StringComparison.CurrentCultureIgnoreCase) >= 0)
-                                {
-                                    // 同じツイートをしようとした
-                                    if (i == 0) // 初回でこのエラーならアウト
-                                    {
-                                        throw;
-                                    }
-                                    else
-                                    {
-                                        NotifyStorage.Notify("ツイートしました:@" + info.ScreenName + ": " + text);
-                                        var ucchunk = GetUnderControlChunk(info);
-                                        if (ucchunk.Item2 > TwitterDefine.UnderControlWarningThreshold)
-                                        {
-                                            throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.NearUnderControl);
-                                        }
-                                        return ucchunk.Item2;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (wex.Status == WebExceptionStatus.Timeout)
-                        continue;
-                    else
-                        throw;
-                }
-            }
             if (status == null || status.Id == 0)
-                throw new InvalidOperationException("ツイートの成功を確認できませんでした。タイムアウトした可能性があります。");
+                throw new WebException("Timeout or failure sending tweet.", WebExceptionStatus.Timeout);
+
             TweetStorage.Register(status);
             NotifyStorage.Notify("ツイートしました:@" + info.ScreenName + ": " + text);
-
-            var chunk = GetUnderControlChunk(info);
-            if (chunk.Item2 > TwitterDefine.UnderControlWarningThreshold)
-            {
-                throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.NearUnderControl);
-            }
-            return chunk.Item2;
         }
 
         #region Favorite

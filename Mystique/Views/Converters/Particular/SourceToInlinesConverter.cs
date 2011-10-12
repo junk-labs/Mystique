@@ -22,7 +22,7 @@ namespace Mystique.Views.Converters.Particular
 
             bool referenceOriginal = parameter as string != null ? bool.Parse(parameter as string) : false;
             var status = input.Status as TwitterStatus;
-            if (referenceOriginal && status.RetweetedOriginal != null)
+            if (referenceOriginal && status != null && status.RetweetedOriginal != null)
                 status = status.RetweetedOriginal;
             if (status != null)
             {

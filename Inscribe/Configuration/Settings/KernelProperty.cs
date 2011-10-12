@@ -12,5 +12,7 @@ namespace Inscribe.Configuration.Settings
         public int ImageCacheMaxCount = 200;
 
         public double ImageCacheSurviveDensity = 0.5;
+
+        public double LastWriteVersion = 0;
     }
 }
