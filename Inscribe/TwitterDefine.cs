@@ -56,5 +56,11 @@ namespace Inscribe
         public static readonly int UrlMaxLength = 19;
 
         #endregion
+
+        #region その他
+
+        public static readonly string TwitterApiStatusUrl = "https://dev.twitter.com/status";
+
+        #endregion
     }
 }
