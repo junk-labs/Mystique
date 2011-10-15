@@ -132,6 +132,7 @@
                         <MenuItem Command="{Binding ShowAssignViewerCommand}" Header="キーアサイン ビューア(_K)..." />
                         <MenuItem Command="{Binding ShowConfigCommand}" Header="設定(_C)..." />
                         <Separator />
+                        <MenuItem Command="{Binding ShowTwitterStatusCommand}" Header="Twitter APIステータス(_S)..." />
                         <MenuItem Command="{Binding FeedbackCommand}" Header="フィードバック(_F)..." />
                         <MenuItem Command="{Binding ShowAboutCommand}" Header="バージョン情報(_A)..." />
                         <Separator />

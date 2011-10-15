@@ -294,6 +294,27 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
         #endregion
 
+
+        #region ShowTwitterStatusCommand
+        ViewModelCommand _ShowTwitterStatusCommand;
+
+        public ViewModelCommand ShowTwitterStatusCommand
+        {
+            get
+            {
+                if (_ShowTwitterStatusCommand == null)
+                    _ShowTwitterStatusCommand = new ViewModelCommand(ShowTwitterStatus);
+                return _ShowTwitterStatusCommand;
+            }
+        }
+
+        private void ShowTwitterStatus()
+        {
+            Browser.Start(TwitterDefine.TwitterApiStatusUrl);
+        }
+        #endregion
+      
+
         #region FeedbackCommand
         ViewModelCommand _FeedbackCommand;
 
