@@ -72,7 +72,7 @@ namespace Mystique.Views
                         if (offsetIndex == -1)
                         {
                             // overflow
-                            offsetIndex = Enumerable.Range(0, notifications.Count)
+                            offsetIndex = Enumerable.Range(0, (int)(screen.WorkingArea.Height / 58))
                                 .OrderBy(i => notifications[i].CreateDateTime).First();
                             notifications[offsetIndex].Close();
                         }
