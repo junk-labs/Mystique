@@ -14,5 +14,7 @@ namespace Inscribe.Configuration.Settings
         public double ImageCacheSurviveDensity = 0.5;
 
         public double LastWriteVersion = 0;
+
+        public string TwitterApiEndpoint = null;
     }
 }

@@ -31,6 +31,20 @@ namespace Inscribe.Core
             // 設定のロード
             Setting.Initialize();
 
+            // APIエンドポイントのオーバーライト
+            if (!String.IsNullOrEmpty(Setting.Instance.KernelProperty.TwitterApiEndpoint))
+            {
+                try
+                {
+                    Dulcet.Twitter.Rest.Api.TwitterUri = Setting.Instance.KernelProperty.TwitterApiEndpoint;
+                }
+                catch (Exception ex)
+                {
+                    ExceptionStorage.Register(ex, ExceptionCategory.ConfigurationError,
+                        "Twitter API エンドポイントの設定を行えませんでした。");
+                }
+            }
+
             // サブシステムの初期化
             NotificationCore.Initialize();
             HashtagStorage.Initialize();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using Dulcet.Twitter.Credential;
 
@@ -9,7 +10,23 @@ namespace Dulcet.Twitter.Rest
         /// <summary>
         /// Twitter api uri (v1)
         /// </summary>
-        private static string TwitterUri { get { return "http://api.twitter.com/1/"; } }
+        private static string _TwitterUri  = "http://api.twitter.com/1/"; 
+
+        /// <summary>
+        /// Twitter URI エンドポイント
+        /// </summary>
+        public static string TwitterUri
+        {
+            get { return _TwitterUri; }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException();
+                if (!value.EndsWith("/"))
+                    throw new FormatException("Twitter Uri must end with \"/\".");
+                _TwitterUri = value;
+            }
+        }
 
         /// <summary>
         /// Formatting target uri and request api
