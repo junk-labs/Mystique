@@ -117,6 +117,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return Setting.Instance.TweetExperienceProperty.UseFullLineView; }
         }
 
+        public bool IsSearchBarBottom
+        {
+            get { return Setting.Instance.TimelineExperienceProperty.ShowSearchBarInBottom; }
+        }
+
         public Dock SearchBarDock
         {
             get { return Setting.Instance.TimelineExperienceProperty.ShowSearchBarInBottom ? Dock.Bottom : Dock.Top; }
@@ -149,6 +154,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             // FullLineViewが変わったかどうか見るだけ
             RaisePropertyChanged(() => IsFullLineView);
+            RaisePropertyChanged(() => IsSearchBarBottom);
             RaisePropertyChanged(() => SearchBarDock);
         }
 

@@ -40,8 +40,10 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public bool ShowTabInBottom
         {
             get { return _showTabInBottom; }
-            set { _showTabInBottom = value;
-            RaisePropertyChanged(() => ShowTabInBottom);
+            set
+            {
+                _showTabInBottom = value;
+                RaisePropertyChanged(() => ShowTabInBottom);
             }
         }
 
@@ -49,8 +51,10 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public bool ShowSearchBarInBottom
         {
             get { return _showSearchBarInBottom; }
-            set { _showSearchBarInBottom = value;
-            RaisePropertyChanged(() => ShowSearchBarInBottom);
+            set
+            {
+                _showSearchBarInBottom = value;
+                RaisePropertyChanged(() => ShowSearchBarInBottom);
             }
         }
 
