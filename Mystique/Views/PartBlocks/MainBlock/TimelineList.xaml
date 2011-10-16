@@ -24,9 +24,9 @@
     <Border Background="White"
             BorderBrush="Gray"
             BorderThickness="1">
-        <DockPanel>
+        <DockPanel LastChildFill="True">
             <!--  This stacking view contains only one timeline.  -->
-            <DockPanel DockPanel.Dock="Top" Visibility="{Binding IsContainsSingle, Converter={StaticResource BoolVisibleConverter}}">
+            <DockPanel DockPanel.Dock="{Binding SearchBarDock}" Visibility="{Binding IsContainsSingle, Converter={StaticResource BoolVisibleConverter}}">
                 <Image Width="16"
                        Height="16"
                        Margin="2"
@@ -48,7 +48,7 @@
                     </TextBlock>
                 </Border>
             </DockPanel>
-            <Grid DockPanel.Dock="Top" Visibility="{Binding IsContainsSingle, Converter={StaticResource BoolInvisibleConverter}}">
+            <Grid DockPanel.Dock="{Binding SearchBarDock}" Visibility="{Binding IsContainsSingle, Converter={StaticResource BoolInvisibleConverter}}">
                 <!--  This stacking view contains two or more timelines.  -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -86,11 +86,13 @@
                         CornerRadius="1">
                     <Grid>
                         <TextBox BorderThickness="0"
+                                 KeyDown="TextBox_KeyDown"
                                  Padding="2"
+                                 PreviewKeyDown="TextBox_PreviewKeyDown"
                                  Text="{Binding QueryText,
                                                 UpdateSourceTrigger=PropertyChanged}"
                                  Visibility="{Binding IsStackTopUserPage,
-                                                      Converter={StaticResource BoolInvisibleConverter}}" KeyDown="TextBox_KeyDown" PreviewKeyDown="TextBox_PreviewKeyDown">
+                                                      Converter={StaticResource BoolInvisibleConverter}}">
                             <i:Interaction.Triggers>
                                 <l:InteractionMessageTrigger MessageKey="FocusToSearch" Messenger="{Binding Messenger}">
                                     <ba:FrameworkSetFocusAction />

@@ -134,8 +134,9 @@
     </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="20" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!--  For design reasons, Timeline list comes before Tabs list.  -->
         <!--  Timeline  -->
@@ -162,7 +163,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <!--  Tab  -->
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="{Binding TabColumn}" MinHeight="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />

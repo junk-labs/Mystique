@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using Inscribe.Configuration;
-using Inscribe.Data;
+﻿using System.Collections.Generic;
 using Inscribe.Filter;
-using Inscribe.Storage;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
-using Livet;
 using Livet.Commands;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
@@ -33,6 +24,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             this.Parent = parent;
             this._timelineListCoreViewModel = new TimelineListCoreViewModel(parent, sources);
+
         }
 
         private TimelineListCoreViewModel _timelineListCoreViewModel;

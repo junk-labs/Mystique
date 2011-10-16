@@ -61,7 +61,6 @@ namespace Dulcet.Twitter.Streaming
             if (timeoutCount >= timeoutValue && !isTimeout)
             {
                 isTimeout = true;
-                parentCore.RaiseOnExceptionThrown(new Exception("User Streams接続がタイムアウトしました。"));
                 this.Dispose();
             }
         }

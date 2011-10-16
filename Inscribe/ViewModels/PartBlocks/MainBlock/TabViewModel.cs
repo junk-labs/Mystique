@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Inscribe.Common;
 using Inscribe.Configuration;
@@ -116,6 +117,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return Setting.Instance.TweetExperienceProperty.UseFullLineView; }
         }
 
+        public Dock SearchBarDock
+        {
+            get { return Setting.Instance.TimelineExperienceProperty.ShowSearchBarInBottom ? Dock.Bottom : Dock.Top; }
+        }
+
         /// <summary>
         /// キャッシュを色んなところで更新するとカオスになるので
         /// </summary>
@@ -143,6 +149,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             // FullLineViewが変わったかどうか見るだけ
             RaisePropertyChanged(() => IsFullLineView);
+            RaisePropertyChanged(() => SearchBarDock);
         }
 
         /// <summary>

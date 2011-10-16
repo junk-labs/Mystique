@@ -18,6 +18,8 @@ namespace Inscribe.Configuration.Settings
             UseIntelligentOrdering = false;
             IntelligentOrderingThresholdSec = 60 * 5;
             TimelineStrictLock = true;
+            ShowTabInBottom = false;
+            ShowTabInBottom = false;
         }
 
         public bool UseFastScrolling { get; set; }
@@ -56,6 +58,10 @@ namespace Inscribe.Configuration.Settings
         public int IntelligentOrderingThresholdSec { get; set; }
 
         public bool TimelineStrictLock { get; set; }
+
+        public bool ShowTabInBottom { get; set; }
+
+        public bool ShowSearchBarInBottom { get; set; }
     }
 
     /// <summary>

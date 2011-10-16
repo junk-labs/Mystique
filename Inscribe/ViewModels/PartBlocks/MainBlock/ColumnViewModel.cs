@@ -12,6 +12,7 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -22,6 +23,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public ColumnViewModel(ColumnOwnerViewModel parent)
         {
             this.Parent = parent;
+            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (o, e) =>
+            {
+                RaisePropertyChanged(() => TabColumn);
+            });
         }
 
         /// <summary>
@@ -76,6 +81,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 OnSelectedTabChanged(value);
                 RaisePropertyChanged(() => SelectedTabViewModel);
             }
+        }
+
+        public int TabColumn
+        {
+            get { return Setting.Instance.TimelineExperienceProperty.ShowTabInBottom ? 2 : 0; }
         }
 
         /// <summary>
