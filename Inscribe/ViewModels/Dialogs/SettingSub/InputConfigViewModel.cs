@@ -15,7 +15,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this.UseOfficialRetweetFallback = Setting.Instance.InputExperienceProperty.OfficialRetweetFallback;
             this.TrimExceedChars = Setting.Instance.InputExperienceProperty.TrimExceedChars;
             this.AutoRetryOnTimeout = Setting.Instance.InputExperienceProperty.AutoRetryOnTimeout;
-            this.ShowInputBlockInBottom = Setting.Instance.InputExperienceProperty.ShowInputBlockInBottom;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -34,7 +33,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public bool AutoRetryOnTimeout { get; set; }
 
-        public bool ShowInputBlockInBottom { get; set; }
 
         public void Apply()
         {
@@ -46,7 +44,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.InputExperienceProperty.OfficialRetweetFallback = this.UseOfficialRetweetFallback;
             Setting.Instance.InputExperienceProperty.TrimExceedChars = this.TrimExceedChars;
             Setting.Instance.InputExperienceProperty.AutoRetryOnTimeout = this.AutoRetryOnTimeout;
-            Setting.Instance.InputExperienceProperty.ShowInputBlockInBottom = this.ShowInputBlockInBottom;
         }
     }
 }

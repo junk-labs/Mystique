@@ -33,6 +33,7 @@
                  SelectedIndex="0">
             <ListBoxItem Content="アカウント" />
             <ListBoxItem Content="一般" />
+            <ListBoxItem Content="レイアウト" />
             <ListBoxItem Content="タイムライン" />
             <ListBoxItem Content="ツイートの表示" />
             <ListBoxItem Content="ツイートの色" />
@@ -51,16 +52,17 @@
               VerticalAlignment="Stretch">
             <my:AccountConfig DataContext="{Binding AccountConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=0}" />
             <my:GeneralConfig DataContext="{Binding GeneralConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=1}" />
-            <my:TimelineConfig DataContext="{Binding TimelineConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=2}" />
-            <my:TweetViewConfig DataContext="{Binding TweetViewConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=3}" />
-            <my:ColoringConfig DataContext="{Binding ColoringConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=4}" />
-            <my:NotifyConfig DataContext="{Binding NotifyConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=5}" />
-            <my:NotifyKindConfig DataContext="{Binding NotifyKindConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=6}" />
-            <my:InputConfig DataContext="{Binding InputConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=7}" />
-            <my:MuteConfig DataContext="{Binding MuteConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=8}" />
-            <my:KeyAssignConfig DataContext="{Binding KeyAssignConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=9}" />
-            <my:ExtServiceConfig DataContext="{Binding ExtServiceConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=10}" />
-            <my:PluginConfig DataContext="{Binding PluginConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=11}" />
+            <my:LayoutConfig DataContext="{Binding LayoutConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=2}" />
+            <my:TimelineConfig DataContext="{Binding TimelineConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=3}" />
+            <my:TweetViewConfig DataContext="{Binding TweetViewConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=4}" />
+            <my:ColoringConfig DataContext="{Binding ColoringConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=5}" />
+            <my:NotifyConfig DataContext="{Binding NotifyConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=6}" />
+            <my:NotifyKindConfig DataContext="{Binding NotifyKindConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=7}" />
+            <my:InputConfig DataContext="{Binding InputConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=8}" />
+            <my:MuteConfig DataContext="{Binding MuteConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=9}" />
+            <my:KeyAssignConfig DataContext="{Binding KeyAssignConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=10}" />
+            <my:ExtServiceConfig DataContext="{Binding ExtServiceConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=11}" />
+            <my:PluginConfig DataContext="{Binding PluginConfigViewModel}" Visibility="{Binding Converter={StaticResource StringEqualVisibleConverter}, Path=SelectedIndex, ElementName=ItemList, ConverterParameter=12}" />
         </Grid>
         <Button Grid.Row="1"
                 Grid.Column="1"

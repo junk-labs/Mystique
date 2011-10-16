@@ -120,7 +120,8 @@ namespace Inscribe.Storage
                 hot = imageDataDictionary.TryGetValue(uri, out cdata);
             }
             if (hot && DateTime.Now.Subtract(cdata.Value).TotalMilliseconds <= Setting.Instance.KernelProperty.ImageLifetime)
-                return cdata.Key.CloneFreezeNew();
+                return cdata.Key;
+            // return cdata.Key.CloneFreeze();
             else
                 return null;
         }
@@ -204,7 +205,8 @@ namespace Inscribe.Storage
                             Task.Factory.StartNew(() => GC(null));
                     }
                 }
-                return bi.CloneFreezeNew();
+                return bi;
+                // return bi.CloneFreeze();
             }
             catch (Exception e)
             {

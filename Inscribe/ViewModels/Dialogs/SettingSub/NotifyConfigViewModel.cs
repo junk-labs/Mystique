@@ -16,7 +16,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._tabNotifyEnabledAsDefault = Setting.Instance.NotificationProperty.IsTabNotifyEnabledAsDefault;
             this._isEnabledNotificationBar = Setting.Instance.NotificationProperty.IsEnabledNotificationBar;
             this._isShowMultiple = Setting.Instance.NotificationProperty.ShowMultiple;
-            this._isNotifierBarBottom = Setting.Instance.NotificationProperty.ShowNotifierBarInBottom;
 
             this._notifyLocationIndex = (int)Setting.Instance.NotificationProperty.NotifyLocation;
             this._windowNotificationStrategyIndex = (int)Setting.Instance.NotificationProperty.WindowNotificationStrategy;
@@ -89,23 +88,12 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
-        private bool _isNotifierBarBottom;
-        public bool IsNotifierBarBottom
-        {
-            get { return _isNotifierBarBottom; }
-            set
-            {
-                _isNotifierBarBottom = value;
-                RaisePropertyChanged(() => IsNotifierBarBottom);
-            }
-        }
 
         public void Apply()
         {
             Setting.Instance.NotificationProperty.IsTabNotifyEnabledAsDefault = this._tabNotifyEnabledAsDefault;
             Setting.Instance.NotificationProperty.IsEnabledNotificationBar = this._isEnabledNotificationBar;
             Setting.Instance.NotificationProperty.ShowMultiple = this._isShowMultiple;
-            Setting.Instance.NotificationProperty.ShowNotifierBarInBottom = this._isNotifierBarBottom;
 
             Setting.Instance.NotificationProperty.NotifyLocation = (NotifyLocation)this._notifyLocationIndex;
             Setting.Instance.NotificationProperty.WindowNotificationStrategy = (NotificationStrategy)this._windowNotificationStrategyIndex;

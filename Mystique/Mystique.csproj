@@ -176,6 +176,9 @@
     <Compile Include="Views\Dialogs\SettingSub\KeyAssignConfig.xaml.cs">
       <DependentUpon>KeyAssignConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\SettingSub\LayoutConfig.xaml.cs">
+      <DependentUpon>LayoutConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\SettingSub\MuteConfig.xaml.cs">
       <DependentUpon>MuteConfig.xaml</DependentUpon>
     </Compile>
@@ -358,6 +361,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\SettingSub\KeyAssignConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\SettingSub\LayoutConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

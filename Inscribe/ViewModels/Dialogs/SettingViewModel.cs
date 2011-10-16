@@ -22,6 +22,12 @@ namespace Inscribe.ViewModels.Dialogs
             get { return _generalConfigViewModel; }
         }
 
+        private LayoutConfigViewModel _layoutConfigViewModel = new LayoutConfigViewModel();
+        public LayoutConfigViewModel LayoutConfigViewModel
+        {
+            get { return _layoutConfigViewModel; }
+        }
+
         private TimelineConfigViewModel _timelineConfigViewModel = new TimelineConfigViewModel();
         public TimelineConfigViewModel TimelineConfigViewModel
         {
@@ -100,6 +106,7 @@ namespace Inscribe.ViewModels.Dialogs
             // Apply
             this.AccountConfigViewModel.Apply();
             this.GeneralConfigViewModel.Apply();
+            this.LayoutConfigViewModel.Apply();
             this.TimelineConfigViewModel.Apply();
             this.TweetViewConfigViewModel.Apply();
             this.ColoringConfigViewModel.Apply();
