@@ -14,5 +14,10 @@ namespace System.Windows
         {
             return (T)freezee.GetAsFrozen();
         }
+
+        public static T CloneFreezeNew<T>(this T freezee) where T : Freezable
+        {
+            return (T)freezee.Clone().AsFreeze();
+        }
     }
 }
