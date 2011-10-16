@@ -68,7 +68,6 @@
     <Compile Include="Filter\Filters\Text\FilterUrlText.cs" />
     <Compile Include="Common\KeyAssignHelper.cs" />
     <Compile Include="Filter\WeakEventBinder.cs" />
-    <Compile Include="Storage\CommonLazyImage.cs" />
     <Compile Include="Storage\ImageCacheStorage.cs" />
     <Compile Include="Storage\UrlResolveCacheStorage.cs" />
     <Compile Include="Common\EnumerableEx.cs" />
