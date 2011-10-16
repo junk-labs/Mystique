@@ -555,7 +555,7 @@ namespace Mystique.Views.Chrome
                     {
                         if (_commonDisabledBackgroundOverlay == null)
                         {
-                            _commonDisabledBackgroundOverlay = new SolidColorBrush(Color.FromRgb(0xf4, 0xf4, 0xf4)).GetAsFrozen() as SolidColorBrush;
+                            _commonDisabledBackgroundOverlay = new SolidColorBrush(Color.FromRgb(0xf4, 0xf4, 0xf4)).CloneFreeze();
                         }
                     }
                 }

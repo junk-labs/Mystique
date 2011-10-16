@@ -89,5 +89,13 @@
                      Text="{Binding FontSize,
                                     Converter={StaticResource DoubleStringConverter}}" />
         </Grid>
+        <CheckBox Grid.Row="3"
+                  Grid.ColumnSpan="2"
+                  Margin="4"
+                  VerticalAlignment="Top"
+                  Content="タイムアウトエラーを通知しない(_N)"
+                  IsChecked="{Binding IgnoreTimeoutError}"
+                  Visibility="{Binding PowerUserMode,
+                                       Converter={StaticResource BoolVisibleConverter}}" />
     </Grid>
 </UserControl>

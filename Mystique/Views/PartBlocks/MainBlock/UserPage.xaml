@@ -51,8 +51,8 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid Margin="4" VerticalAlignment="Top">
-                    <my:LazyImage Width="50"
-                                  Height="50"
+                    <my:LazyImage Width="48"
+                                  Height="48"
                                   UriSource="{Binding UserProfileImageUrl}" />
                     <StackPanel HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
@@ -243,6 +243,14 @@
                                     <Hyperlink Command="{Binding OpenLinkCommand}">
                                         <Run Text="{Binding Tweets, Mode=OneWay}" />
                                         <Run FontSize="10" Text="tweets" />
+                                    </Hyperlink>
+                                    <Run Text=":" />
+                                    <Hyperlink Command="{Binding OpenUserTwilogCommand}">
+                                        <Run FontSize="10" Text="twilog" />
+                                    </Hyperlink>
+                                    <Run Text="/" />
+                                    <Hyperlink Command="{Binding OpenUserFavstarCommand}">
+                                        <Run FontSize="10" Text="favstar" />
                                     </Hyperlink>
                                 </TextBlock>
                             </DockPanel>

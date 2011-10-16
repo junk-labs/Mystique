@@ -12,6 +12,7 @@ namespace Inscribe.Configuration.Settings
             this.StatusMessageDefaultShowLengthSec = 5;
             this.FontSize = 11.5;
             this.FontFamily = "Meiryo";
+            this.IgnoreTimeoutError = true;
         }
 
         #region General experience
@@ -45,9 +46,10 @@ namespace Inscribe.Configuration.Settings
 
         #endregion
 
-
         public string FontFamily { get; set; }
 
         public double FontSize { get; set; }
+
+        public bool IgnoreTimeoutError { get; set; }
     }
 }

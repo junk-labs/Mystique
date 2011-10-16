@@ -62,7 +62,7 @@
             </Grid.RowDefinitions>
             <!--  INPUT BLOCK  -->
             <ib:InputBlock Grid.Row="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.InputBlockColumn}" DataContext="{Binding InputBlockViewModel}" />
-            <!--  NOTIFIER (BOTTOM)  -->
+            <!--  NOTIFIER -->
             <bc:Notifier Grid.Row="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NotifierBarColumn}" DataContext="{Binding NotifierViewModel}" />
             <!--  TIMELINE CORE  -->
             <main:ColumnOwner Grid.Row="2" DataContext="{Binding ColumnOwnerViewModel}" />

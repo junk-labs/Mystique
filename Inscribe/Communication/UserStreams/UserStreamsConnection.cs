@@ -50,6 +50,8 @@ namespace Inscribe.Communication.UserStreams
 
         private static void streamingCore_OnExceptionThrown(Exception ex)
         {
+            // WebExceptionなら握りつぶす、どうせ再接続試行する
+            if (ex is WebException) return;
             ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
                 "User Streams接続にエラーが発生しました。");
         }

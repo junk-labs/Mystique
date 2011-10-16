@@ -132,7 +132,7 @@ namespace Inscribe.ViewModels
 
         public int NotifierBarColumn
         {
-            get { return IsInputBlockBottom ? 3 : 1; }
+            get { return IsNotifierBarBottom ? 3 : 1; }
         }
 
         public bool IsInputBlockBottom

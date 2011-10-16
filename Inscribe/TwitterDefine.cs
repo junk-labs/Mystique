@@ -61,6 +61,10 @@ namespace Inscribe
 
         public static readonly string TwitterApiStatusUrl = "https://dev.twitter.com/status";
 
+        public static readonly string FavstarUrl = "http://favstar.fm/users/";
+
+        public static readonly string TwilogUrl = "http://twilog.org/";
+
         #endregion
     }
 }

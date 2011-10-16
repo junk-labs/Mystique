@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using Dulcet.Network;
 using Inscribe.Common;
@@ -13,6 +14,9 @@ namespace Inscribe.Storage
 {
     public static class ImageCacheStorage
     {
+        public const int ImageMaxWidth = 48;
+
+
         private static ReaderWriterLockWrap lockWrap;
         private static Dictionary<Uri, KeyValuePair<BitmapImage, DateTime>> imageDataDictionary;
         private static object semaphoreAccessLocker = new object();
@@ -116,7 +120,7 @@ namespace Inscribe.Storage
                 hot = imageDataDictionary.TryGetValue(uri, out cdata);
             }
             if (hot && DateTime.Now.Subtract(cdata.Value).TotalMilliseconds <= Setting.Instance.KernelProperty.ImageLifetime)
-                return cdata.Key;
+                return cdata.Key.CloneFreeze();
             else
                 return null;
         }
@@ -173,6 +177,8 @@ namespace Inscribe.Storage
                         NotifyStorage.Notify(condata.ThrownException.Message);
                     bi.UriSource = "Resources/failed.png".ToPackUri();
                 }
+                // Save the memory.
+                bi.DecodePixelWidth = ImageMaxWidth;
                 bi.EndInit();
                 bi.Freeze();
                 var newv = new KeyValuePair<BitmapImage, DateTime>(bi, DateTime.Now);
@@ -196,7 +202,7 @@ namespace Inscribe.Storage
                             Task.Factory.StartNew(() => GC(null));
                     }
                 }
-                return bi;
+                return bi.CloneFreeze();
             }
             catch (Exception e)
             {

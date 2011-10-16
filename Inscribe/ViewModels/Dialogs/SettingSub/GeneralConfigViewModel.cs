@@ -15,11 +15,12 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._powerUserMode = Setting.Instance.ExperienceProperty.IsPowerUserMode;
             this._updateKind = Setting.Instance.ExperienceProperty.UpdateKind;
             this.FontFamilies = Fonts.SystemFontFamilies.ToArray();
-            var curFF = String.IsNullOrEmpty( Setting.Instance.ExperienceProperty.FontFamily) ?
+            var curFF = String.IsNullOrEmpty(Setting.Instance.ExperienceProperty.FontFamily) ?
                 new FontFamily() :
                 new FontFamily(Setting.Instance.ExperienceProperty.FontFamily);
             this._fontFamilyIndex = Array.IndexOf(this.FontFamilies.ToArray(), curFF);
             this.FontSize = Setting.Instance.ExperienceProperty.FontSize;
+            this.IgnoreTimeoutError = Setting.Instance.ExperienceProperty.IgnoreTimeoutError;
         }
 
         private bool _powerUserMode;
@@ -71,7 +72,23 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public double FontSize
         {
             get { return _fontSize; }
-            set { _fontSize = value; }
+            set
+            {
+                _fontSize = value;
+                RaisePropertyChanged(() => FontSize);
+            }
+        }
+
+        private bool _ignoreTimeoutError;
+
+        public bool IgnoreTimeoutError
+        {
+            get { return _ignoreTimeoutError; }
+            set
+            {
+                _ignoreTimeoutError = value;
+                RaisePropertyChanged(() => IgnoreTimeoutError);
+            }
         }
 
         public void Apply()
@@ -82,6 +99,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 FontFamilies.Select(ff => ff.FamilyNames.Select(fn => fn.Value).FirstOrDefault())
                 .ElementAtOrDefault(_fontFamilyIndex);
             Setting.Instance.ExperienceProperty.FontSize = this.FontSize;
+            Setting.Instance.ExperienceProperty.IgnoreTimeoutError = this.IgnoreTimeoutError;
         }
     }
 }

@@ -166,6 +166,45 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
 
+        #region OpenUserTwilogCommand
+        ViewModelCommand _OpenUserTwilogCommand;
+
+        public ViewModelCommand OpenUserTwilogCommand
+        {
+            get
+            {
+                if (_OpenUserTwilogCommand == null)
+                    _OpenUserTwilogCommand = new ViewModelCommand(OpenUserTwilog);
+                return _OpenUserTwilogCommand;
+            }
+        }
+
+        private void OpenUserTwilog()
+        {
+            Browser.Start(TwitterDefine.TwilogUrl + User.TwitterUser.ScreenName);
+        }
+        #endregion
+
+        #region OpenUserFavstarCommand
+        ViewModelCommand _OpenUserFavstarCommand;
+
+        public ViewModelCommand OpenUserFavstarCommand
+        {
+            get
+            {
+                if (_OpenUserFavstarCommand == null)
+                    _OpenUserFavstarCommand = new ViewModelCommand(OpenUserFavstar);
+                return _OpenUserFavstarCommand;
+            }
+        }
+
+        private void OpenUserFavstar()
+        {
+            Browser.Start(TwitterDefine.FavstarUrl + User.TwitterUser.ScreenName);
+        }
+        #endregion
+      
+
         #region OpenUserWebCommand
         ViewModelCommand _OpenUserWebCommand;
 

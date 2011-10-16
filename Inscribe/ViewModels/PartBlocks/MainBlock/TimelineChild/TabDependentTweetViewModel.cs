@@ -18,6 +18,7 @@ using Inscribe.ViewModels.Dialogs;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using System.Windows;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -44,8 +45,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     _lightningColorCache = Setting.Instance.ColoringProperty.BaseHighlightColor.GetColor();
                     _foreColorCache = Setting.Instance.ColoringProperty.BaseColor.GetDarkColor();
                     _backColorCache = Setting.Instance.ColoringProperty.BaseColor.GetLightColor();
-                    _foreBrushCache = new SolidColorBrush(_foreColorCache).GetAsFrozen() as Brush;
-                    _backBrushCache = new SolidColorBrush(_backColorCache).GetAsFrozen() as Brush;
+                    _foreBrushCache = new SolidColorBrush(_foreColorCache).CloneFreeze();
+                    _backBrushCache = new SolidColorBrush(_backColorCache).CloneFreeze();
                     break;
                 case ItemInitStrategy.Full:
                     CommitColorChanged(true);
@@ -353,7 +354,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             if (_backColorCache != bcc)
             {
                 _backColorCache = bcc;
-                _backBrushCache = new SolidColorBrush(_backColorCache).GetAsFrozen() as Brush;
+                _backBrushCache = new SolidColorBrush(_backColorCache).CloneFreeze();
                 bcf = true;
             }
 
@@ -362,7 +363,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             if (_foreColorCache != fcc)
             {
                 _foreColorCache = fcc;
-                _foreBrushCache = new SolidColorBrush(_foreColorCache).GetAsFrozen() as Brush;
+                _foreBrushCache = new SolidColorBrush(_foreColorCache).CloneFreeze();
                 fcf = true;
             }
 

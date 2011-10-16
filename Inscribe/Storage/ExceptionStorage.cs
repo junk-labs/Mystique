@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
+using Inscribe.Configuration;
 using Inscribe.Data;
 using Livet;
 
@@ -42,6 +44,10 @@ namespace Inscribe.Storage
         {
             if (excp == null)
                 throw new ArgumentNullException("excp");
+            WebException wex;
+            if (Setting.IsInitialized && Setting.Instance.ExperienceProperty.IgnoreTimeoutError &&
+                (wex = excp as WebException) != null && wex.Status == WebExceptionStatus.Timeout)
+                return;
             exceptions.AddLast(new ExceptionDescription(excp, category, message ?? excp.Message, retry));
             OnExceptionUpdated(EventArgs.Empty);
         }
