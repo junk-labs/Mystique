@@ -85,12 +85,7 @@ namespace Dulcet.Network
             public static MemoryStream ReadStream(Stream stream)
             {
                 var ms = new MemoryStream();
-                var buf = new byte[2048];
-                int load = 0;
-                while ((load = stream.Read(buf, 0, buf.Length)) > 0)
-                {
-                    ms.Write(buf, 0, load);
-                }
+                stream.CopyTo(ms);
                 ms.Seek(0, SeekOrigin.Begin);
                 return ms;
             }

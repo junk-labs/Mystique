@@ -159,12 +159,13 @@ namespace Inscribe.Storage
             }
             try
             {
-                var bi = new BitmapImage();
                 var condata =
                     Http.WebConnect(
                     Http.CreateRequest(uri, contentType: null),
                     Http.StreamConverters.ReadStream);
+                var bi = new BitmapImage();
                 bi.BeginInit();
+                bi.CacheOption = BitmapCacheOption.OnLoad;
                 if (condata.Succeeded && condata.Data != null)
                 {
                     bi.StreamSource = condata.Data;
@@ -181,6 +182,7 @@ namespace Inscribe.Storage
                 bi.DecodePixelWidth = ImageMaxWidth;
                 bi.EndInit();
                 bi.Freeze();
+
                 var newv = new KeyValuePair<BitmapImage, DateTime>(bi, DateTime.Now);
                 using (lockWrap.GetWriterLock())
                 {

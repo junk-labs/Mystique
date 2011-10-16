@@ -73,10 +73,14 @@ namespace Mystique.Views.Common
                                         {
                                             try
                                             {
-                                                if (img.DefaultImage != null &&
-                                                    !img.DefaultImage.IsFrozen && img.DefaultImage.CanFreeze)
-                                                    img.DefaultImage.Freeze();
-                                                img.Source = img.DefaultImage;
+                                                if (img.DefaultImage == null)
+                                                {
+                                                    img.Source = null;
+                                                }
+                                                else
+                                                {
+                                                    img.Source = img.DefaultImage.CloneFreezeNew();
+                                                }
                                             }
                                             catch { }
                                         }, DispatcherPriority.Render);
@@ -108,6 +112,10 @@ namespace Mystique.Views.Common
                 {
                     if (checkUri == null || image.UriSource == checkUri)
                     {
+                        if (!bitmap.IsFrozen)
+                        {
+                            System.Diagnostics.Debug.WriteLine("unfreezed. source type is:" + bitmap.GetType());
+                        }
                         image.Source = bitmap;
                     }
                 }
