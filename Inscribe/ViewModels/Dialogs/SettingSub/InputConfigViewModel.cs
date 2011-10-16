@@ -14,6 +14,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this.EnableTemporarilyUserSelection = Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection;
             this.UseOfficialRetweetFallback = Setting.Instance.InputExperienceProperty.OfficialRetweetFallback;
             this.TrimExceedChars = Setting.Instance.InputExperienceProperty.TrimExceedChars;
+            this.AutoRetryOnTimeout = Setting.Instance.InputExperienceProperty.AutoRetryOnTimeout;
+            this.ShowInputBlockInBottom = Setting.Instance.InputExperienceProperty.ShowInputBlockInBottom;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -30,6 +32,10 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public bool TrimExceedChars { get; set; }
 
+        public bool AutoRetryOnTimeout { get; set; }
+
+        public bool ShowInputBlockInBottom { get; set; }
+
         public void Apply()
         {
             Setting.Instance.InputExperienceProperty.OfficialRetweetInReplyToRetweeter = this.OfficialRetweetInReplyToRetweeter;
@@ -39,6 +45,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection = this.EnableTemporarilyUserSelection;
             Setting.Instance.InputExperienceProperty.OfficialRetweetFallback = this.UseOfficialRetweetFallback;
             Setting.Instance.InputExperienceProperty.TrimExceedChars = this.TrimExceedChars;
+            Setting.Instance.InputExperienceProperty.AutoRetryOnTimeout = this.AutoRetryOnTimeout;
+            Setting.Instance.InputExperienceProperty.ShowInputBlockInBottom = this.ShowInputBlockInBottom;
         }
     }
 }

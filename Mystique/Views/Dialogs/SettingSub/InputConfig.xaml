@@ -17,6 +17,22 @@
                   IsChecked="{Binding UseInputSuggesting}"
                   ToolTip="@や#を入力した場合、入力候補を表示して簡単に入力ができるようにします。" />
         <CheckBox Margin="4,2"
+                  Content="入力ブロックを下側に表示する(_B)"
+                  IsChecked="{Binding ShowInputBlockInBottom}" />
+        <CheckBox Margin="4,2"
+                  Content="入力中のユーザー選択はその投稿にのみ使用する(_U)"
+                  IsChecked="{Binding EnableTemporarilyUserSelection}">
+            <CheckBox.ToolTip>
+                <TextBlock>
+                    <Run Text="新しいツイートを入力中に選択したユーザーを保持し続けないようにします。" />
+                    <LineBreak />
+                    <Run Text="頻繁にアカウントを切り替える方におすすめです。" /></TextBlock>
+            </CheckBox.ToolTip>
+        </CheckBox>
+        <CheckBox Margin="4,2"
+                  Content="公式RTへの返信をRTした人にする(_I)"
+                  IsChecked="{Binding OfficialRetweetInReplyToRetweeter}" />
+        <CheckBox Margin="4,2"
                   Content="文頭の空白文字を削除する(_R)"
                   IsChecked="{Binding TrimBeginSpace}"
                   ToolTip=" RT @～のように、先頭が空白文字で始まるツイートを投稿するとき、先頭の空白を削除します。" />
@@ -34,20 +50,6 @@
             </CheckBox.ToolTip>
         </CheckBox>
         <CheckBox Margin="4,2"
-                  Content="公式RTへの返信をRTした人にする(_I)"
-                  IsChecked="{Binding OfficialRetweetInReplyToRetweeter}" />
-        <CheckBox Margin="4,2"
-                  Content="入力中のユーザー選択はその投稿にのみ使用する(_U)"
-                  IsChecked="{Binding EnableTemporarilyUserSelection}">
-            <CheckBox.ToolTip>
-                <TextBlock>
-                    <Run Text="新しいツイートを入力中に選択したユーザーを保持し続けないようにします。" />
-                    <LineBreak />
-                    <Run Text="頻繁にアカウントを切り替える方におすすめです。" />
-                </TextBlock>
-            </CheckBox.ToolTip>
-        </CheckBox>
-        <CheckBox Margin="4,2"
                   Content="POST規制情報がある時はすぐにフォールバックする(_F)"
                   IsChecked="{Binding UseActiveFallback}">
             <CheckBox.ToolTip>
@@ -59,7 +61,7 @@
             </CheckBox.ToolTip>
         </CheckBox>
         <CheckBox Margin="4,2"
-                  Content="公式RTもフォールバックする(_R)"
+                  Content="公式RTもフォールバックする(_O)"
                   IsChecked="{Binding UseOfficialRetweetFallback}">
             <CheckBox.ToolTip>
                 <TextBlock>
@@ -67,6 +69,9 @@
                 </TextBlock>
             </CheckBox.ToolTip>
         </CheckBox>
+        <CheckBox Margin="4,2"
+                  Content="ツイートがタイムアウトした時に再試行する(_N)"
+                  IsChecked="{Binding AutoRetryOnTimeout}" />
         <Button Margin="4,2" Content="ハッシュタグ自動バインド設定(_A)...">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">

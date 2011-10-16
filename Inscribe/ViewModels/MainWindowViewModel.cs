@@ -45,6 +45,9 @@ namespace Inscribe.ViewModels
             ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (o, e) =>
             {
                 RaisePropertyChanged(() => IsNotifierBarBottom);
+                RaisePropertyChanged(() => NotifierBarColumn);
+                RaisePropertyChanged(() => IsInputBlockBottom);
+                RaisePropertyChanged(() => InputBlockColumn);
                 RaisePropertyChanged(() => FontFamily);
                 RaisePropertyChanged(() => FontSize);
             });
@@ -125,6 +128,21 @@ namespace Inscribe.ViewModels
         public bool IsNotifierBarBottom
         {
             get { return Setting.Instance.NotificationProperty.ShowNotifierBarInBottom; }
+        }
+
+        public int NotifierBarColumn
+        {
+            get { return IsInputBlockBottom ? 3 : 1; }
+        }
+
+        public bool IsInputBlockBottom
+        {
+            get { return Setting.Instance.InputExperienceProperty.ShowInputBlockInBottom; }
+        }
+
+        public int InputBlockColumn
+        {
+            get { return IsInputBlockBottom ? 4 : 0; }
         }
 
         public void SelectUser(SelectionKind kind, IEnumerable<AccountInfo> defaultSelect, Action<IEnumerable<AccountInfo>> returning)

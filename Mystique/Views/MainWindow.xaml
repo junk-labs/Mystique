@@ -18,6 +18,10 @@
         Width="800"
         Height="500"
         Closing="Window_Closing"
+        FontFamily="{Binding FontFamily,
+                             Mode=OneWay}"
+        FontSize="{Binding FontSize,
+                           Mode=OneWay}"
         Icon="/krile;component/Resources/krile.ico"
         InputMethod.IsInputMethodEnabled="False"
         KeyDown="Window_KeyDown"
@@ -25,8 +29,6 @@
         PreviewKeyDown="Window_PreviewKeyDown"
         ResizeMode="CanResizeWithGrip"
         SnapsToDevicePixels="True"
-        FontFamily="{Binding FontFamily, Mode=OneWay}"
-        FontSize="{Binding FontSize, Mode=OneWay}"
         UseLayoutRounding="True">
     <Window.DataContext>
         <vm:MainWindowViewModel />
@@ -56,27 +58,16 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--  INPUT BLOCK  -->
-            <ib:InputBlock DataContext="{Binding InputBlockViewModel}" />
-            <!--  NOTIFIER (TOP)  -->
-            <bc:Notifier Grid.Row="1"
-                         DataContext="{Binding NotifierViewModel}"
-                         Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                             AncestorType={x:Type Window}},
-                                              Path=DataContext.IsNotifierBarBottom,
-                                              Converter={StaticResource BoolInvisibleConverter}}" />
+            <ib:InputBlock Grid.Row="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.InputBlockColumn}" DataContext="{Binding InputBlockViewModel}" />
+            <!--  NOTIFIER (BOTTOM)  -->
+            <bc:Notifier Grid.Row="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NotifierBarColumn}" DataContext="{Binding NotifierViewModel}" />
             <!--  TIMELINE CORE  -->
             <main:ColumnOwner Grid.Row="2" DataContext="{Binding ColumnOwnerViewModel}" />
-            <!--  NOTIFIER (BOTTOM)  -->
-            <bc:Notifier Grid.Row="3"
-                         DataContext="{Binding NotifierViewModel}"
-                         Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                             AncestorType={x:Type Window}},
-                                              Path=DataContext.IsNotifierBarBottom,
-                                              Converter={StaticResource BoolVisibleConverter}}" />
             <!--  STATUS BAR AREA  -->
-            <nb:NotifyBlock Grid.Row="4" DataContext="{Binding NotifyBlockViewModel}" />
+            <nb:NotifyBlock Grid.Row="5" DataContext="{Binding NotifyBlockViewModel}" />
         </Grid>
         <Grid Visibility="{Binding IsVisibleUserSelection, Converter={StaticResource BoolVisibleConverter}}">
             <my:UserSelection DataContext="{Binding UserSelectionViewModel}" />

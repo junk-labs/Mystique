@@ -27,6 +27,7 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using System.Windows.Controls;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -48,6 +49,10 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             // Listen changing tab
             this.Parent.ColumnOwnerViewModel.CurrentTabChanged += new Action<TabViewModel>(CurrentTabChanged);
             RegisterKeyAssign();
+            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (o, e) =>
+            {
+                RaisePropertyChanged(() => WorkerViewDockOrientation);
+            });
         }
 
         void CurrentTabChanged(TabViewModel tab)
@@ -84,7 +89,16 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         {
             get { return _imageStackingViewViewModel; }
         }
-      
+
+        #region View layout
+
+        public Dock WorkerViewDockOrientation
+        {
+            get { return Setting.Instance.InputExperienceProperty.ShowInputBlockInBottom ? Dock.Top : Dock.Bottom; }
+        }
+
+        #endregion
+
         #region MenuItems
 
         #region ShowConfigCommand

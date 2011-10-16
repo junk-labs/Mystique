@@ -54,386 +54,27 @@
         <BitmapImage x:Key="Warning" UriSource="/Resources/warning.png" />
         <cp:TweetStringToCountConverter x:Key="StringCountConverter" />
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical">
-        <Grid Visibility="{Binding IsOpenInput, Converter={StaticResource BoolInvisibleConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <com:PopupButton Grid.Column="0"
-                             Width="30"
-                             Height="30"
-                             Focusable="False"
-                             Style="{StaticResource FlatToggleButtonStyle}">
-                <com:ImageStackingView DataContext="{Binding ImageStackingViewViewModel}" />
-                <com:PopupButton.DropDownPopup>
-                    <Popup AllowsTransparency="True">
-                        <com:UserSelector Background="Transparent" DataContext="{Binding UserSelectorViewModel}" />
-                    </Popup>
-                </com:PopupButton.DropDownPopup>
-            </com:PopupButton>
-            <Border Grid.Column="1"
-                    Margin="2"
-                    VerticalAlignment="Center"
-                    BorderBrush="Gray"
-                    BorderThickness="1"
-                    CornerRadius="1">
-                <TextBlock Cursor="IBeam"
-                           Foreground="Gray"
-                           Padding="2"
-                           Text="What's happening?">
-                    <TextBlock.InputBindings>
-                        <MouseBinding Command="{Binding OpenInputCommand}" MouseAction="LeftClick" />
-                    </TextBlock.InputBindings>
-                </TextBlock>
-            </Border>
-            <com:DropDownButton Grid.Column="2"
-                                Width="35"
-                                Height="30"
-                                Focusable="False"
-                                Style="{StaticResource FlatToggleButtonStyle}">
-                <StackPanel Orientation="Horizontal">
-                    <Image Width="20"
-                           Height="20"
-                           VerticalAlignment="Center"
-                           Source="{StaticResource Krile}" />
-                    <Image Width="6"
-                           Height="6"
-                           Margin="2,0,0,0"
-                           VerticalAlignment="Center"
-                           Source="{StaticResource Chevron}" />
-                </StackPanel>
-                <com:DropDownButton.DropDownMenu>
-                    <ContextMenu>
-                        <MenuItem Header="タブの管理(_T)">
-                            <MenuItem Command="{Binding CreateNewColumnCommand}" Header="新しいカラム(_C)..." />
-                            <MenuItem Command="{Binding CreateNewTabCommand}" Header="新しいタブ(_T)..." />
-                            <Separator />
-                            <MenuItem Command="{Binding CollectTabsCommand}" Header="全てのカラムをまとめる(_C)" />
-                            <MenuItem Command="{Binding ClearClosedTabStackCommand}" Header="閉じたタブの履歴をクリア(_C)" />
-                        </MenuItem>
-                        <MenuItem Header="メンテナンス(_M)">
-                            <MenuItem Command="{Binding ReconnectStreamsCommand}" Header="全てのアカウントを再接続(_U)" />
-                            <MenuItem Command="{Binding RefreshIndividualInfoCommand}" Header="全てのアカウント情報を更新(_U)" />
-                            <MenuItem Header="キャッシュ(_C)">
-                                <MenuItem Command="{Binding ClearImageCachesCommand}" Header="画像キャッシュをクリア(_I)" />
-                            </MenuItem>
-                        </MenuItem>
-                        <MenuItem Header="デバッグ(_D)">
-                            <MenuItem Command="{Binding FullGCCommand}" Header="Full _GC" />
-                            <MenuItem Command="{Binding RemoveOldTweetsCommand}" Header="半日以上前のツイートを全saku(_D)" />
-                            <MenuItem Command="{Binding ShowMemoryCommand}" Header="メモリ使用量チェック(_C)" />
-                        </MenuItem>
-                        <Separator />
-                        <MenuItem Header="サイレントモード(_S)"
-                                  IsCheckable="True"
-                                  IsChecked="{Binding IsSilentMode}" />
-                        <MenuItem Command="{Binding ShowAssignViewerCommand}" Header="キーアサイン ビューア(_K)..." />
-                        <MenuItem Command="{Binding ShowConfigCommand}" Header="設定(_C)..." />
-                        <Separator />
-                        <MenuItem Command="{Binding ShowTwitterStatusCommand}" Header="Twitter APIステータス(_S)..." />
-                        <MenuItem Command="{Binding FeedbackCommand}" Header="フィードバック(_F)..." />
-                        <MenuItem Command="{Binding ShowAboutCommand}" Header="バージョン情報(_A)..." />
-                        <Separator />
-                        <MenuItem Command="{Binding RestartCommand}" Header="Krileを再起動(_R)" />
-                        <MenuItem Command="{Binding ExitCommand}" Header="Krileを終了(_X)" />
-                    </ContextMenu>
-                </com:DropDownButton.DropDownMenu>
-            </com:DropDownButton>
-        </Grid>
-        <Grid Visibility="{Binding IsOpenInput, Converter={StaticResource BoolVisibleConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <com:PopupButton Grid.Column="0"
-                             Width="40"
-                             Height="40"
-                             VerticalAlignment="Top"
-                             Focusable="False"
-                             Style="{StaticResource FlatToggleButtonStyle}">
-                <com:ImageStackingView DataContext="{Binding ImageStackingViewViewModel}" />
-                <com:PopupButton.DropDownPopup>
-                    <Popup AllowsTransparency="True">
-                        <com:UserSelector Background="Transparent" DataContext="{Binding InputUserSelectorViewModel}" />
-                    </Popup>
-                </com:PopupButton.DropDownPopup>
-            </com:PopupButton>
-            <Border Grid.Column="1"
-                    Margin="2"
-                    VerticalAlignment="Center"
-                    Background="OldLace"
-                    BorderBrush="Gray"
-                    BorderThickness="1"
-                    CornerRadius="1">
-                <StackPanel Orientation="Vertical">
-                    <Border BorderBrush="Gray"
-                            BorderThickness="0,0,0,1"
-                            Visibility="{Binding Path=CurrentInputDescription.IsInReplyToEnabled,
-                                                 Converter={StaticResource BoolVisibleConverter}}">
-                        <DockPanel>
-                            <Button Command="{Binding RemoveInReplyToCommand}"
-                                    DockPanel.Dock="Right"
-                                    Focusable="False"
-                                    Style="{StaticResource FlatButtonStyle}"
-                                    ToolTip="返信を解除">
-                                <Image Width="16"
-                                       Height="16"
-                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                       Source="{StaticResource Delete}" />
-                            </Button>
-                            <Image Width="16"
-                                   Height="16"
-                                   DockPanel.Dock="Left"
-                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                   Source="{StaticResource Reply}"
-                                   ToolTip="投稿の返信先" />
-                            <TextBlock Margin="4,0"
-                                       VerticalAlignment="Center"
-                                       Foreground="#FFE66400"
-                                       Text="{Binding Path=CurrentInputDescription.InReplyToIdStatus,
-                                                      Mode=OneWay}" />
-                        </DockPanel>
-                    </Border>
-                    <Grid Background="White" Cursor="IBeam">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <com:IntelliSenseTextBox MinHeight="38"
-                                                 BorderThickness="0"
-                                                 DataContext="{Binding IntelliSenseTextBoxViewModel}"
-                                                 Padding="2" />
-                        <Button Grid.Column="1"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Top"
-                                Command="{Binding CloseInputCommand}"
-                                Cursor="Arrow"
-                                Focusable="False"
-                                Style="{StaticResource FlatButtonStyle}"
-                                ToolTip="入力内容を削除して閉じる">
-                            <Image Width="14"
-                                   Height="14"
-                                   Source="{StaticResource Close}" />
-                        </Button>
-                        <TextBlock Grid.Column="1"
-                                   Margin="4,1"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Bottom"
-                                   FontSize="12"
-                                   FontWeight="Bold"
-                                   Foreground="Gray"
-                                   Text="{Binding Path=CurrentInputDescription.InputText,
-                                                  Mode=OneWay,
-                                                  Converter={StaticResource StringCountConverter}}" />
-                    </Grid>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="11" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Offset="0" Color="White" />
-                                <GradientStop Offset="1" Color="Gainsboro" />
-                            </LinearGradientBrush>
-                        </Grid.Background>
-                        <com:DropDownButton Grid.ColumnSpan="2"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch"
-                                            Focusable="False"
-                                            HorizontalContentAlignment="Right"
-                                            Style="{StaticResource FlatToggleButtonStyle}"
-                                            VerticalContentAlignment="Center">
-                            <Image Width="6"
-                                   Height="6"
-                                   Margin="1,0"
-                                   HorizontalAlignment="Right"
-                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                   Source="{StaticResource Chevron}" />
-                            <com:DropDownButton.DropDownMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="{Binding AttachFromClipboardCommand}" Header="クリップボードからアップロード(_C)" />
-                                </ContextMenu>
-                            </com:DropDownButton.DropDownMenu>
-                        </com:DropDownButton>
-
-                        <Button Grid.Column="0"
-                                Command="{Binding AttachImageCommand}"
-                                Focusable="False"
-                                Style="{StaticResource FlatButtonStyle}"
-                                ToolTip="画像を添付します。添付した状態でクリックすると、添付を解除します。">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Width="16"
-                                       Height="16"
-                                       Margin="2,1"
-                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                       Source="{StaticResource Attach}" />
-                                <Image Width="16"
-                                       Height="16"
-                                       Margin="2,1"
-                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                       Source="{StaticResource Checked}"
-                                       Visibility="{Binding Path=CurrentInputDescription.IsAttachedImage,
-                                                            Converter={StaticResource BoolVisibleConverter}}" />
-                            </StackPanel>
-                        </Button>
-                        <com:DropDownButton Grid.Column="2"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch"
-                                            Focusable="False"
-                                            HorizontalContentAlignment="Right"
-                                            Style="{StaticResource FlatToggleButtonStyle}"
-                                            VerticalContentAlignment="Center">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Width="16"
-                                       Height="16"
-                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                       Source="{StaticResource TagBind}"
-                                       Visibility="{Binding IsEnabledAutoBind,
-                                                            Converter={StaticResource BoolVisibleConverter}}" />
-                                <Image Width="16"
-                                       Height="16"
-                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                       Source="{StaticResource TagUnbind}"
-                                       Visibility="{Binding IsEnabledAutoBind,
-                                                            Converter={StaticResource BoolInvisibleConverter}}" />
-                                <Image Width="6"
-                                       Height="6"
-                                       Margin="2,0"
-                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                       Source="{StaticResource Chevron}" />
-                            </StackPanel>
-                            <com:DropDownButton.DropDownMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="{Binding ClearBindCommand}" Header="全ての手動バインドを削除(_D)" />
-                                    <Separator />
-                                    <MenuItem Header="自動バインドを有効にする(_E)"
-                                              InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                                         ConverterParameter=ToggleAutoBind}"
-                                              IsCheckable="True"
-                                              IsChecked="{Binding IsEnabledAutoBind}" />
-                                    <MenuItem Command="{Binding EditAutoBindCommand}" Header="自動バインドの設定(_A)..." />
-                                </ContextMenu>
-                            </com:DropDownButton.DropDownMenu>
-                        </com:DropDownButton>
-
-                        <StackPanel Grid.Column="3" Orientation="Horizontal">
-
-                            <ItemsControl ItemsSource="{Binding AutomaticBoundTags}" ToolTip="自動バインドされたタグです。">
-                                <ItemsControl.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Offset="0" Color="Transparent" />
-                                        <GradientStop Offset="1" Color="#6487CEEB" />
-                                    </LinearGradientBrush>
-                                </ItemsControl.Background>
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Margin="4,2" Orientation="Horizontal">
-                                            <Image Margin="1"
-                                                   VerticalAlignment="Center"
-                                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                                   Source="{StaticResource TagBind}"
-                                                   Stretch="Uniform" />
-                                            <TextBlock Margin="2"
-                                                       Foreground="RoyalBlue"
-                                                       Text="{Binding}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                            <ItemsControl ItemsSource="{Binding BindingTags}" ToolTip="手動バインドされたタグです。">
-                                <ItemsControl.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Offset="0" Color="Transparent" />
-                                        <GradientStop Offset="1" Color="#64FF4500" />
-                                    </LinearGradientBrush>
-                                </ItemsControl.Background>
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type StackPanel}},
-                                                                  Path=DataContext.RemoveBindCommand}"
-                                                CommandParameter="{Binding}"
-                                                Style="{StaticResource FlatButtonStyle}"
-                                                ToolTip="クリックすると、このタグのバインドを解除します。">
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image Margin="1"
-                                                       VerticalAlignment="Center"
-                                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                                       Source="{StaticResource TagHandBind}"
-                                                       Stretch="Uniform" />
-                                                <TextBlock Margin="2" Text="{Binding}" />
-                                            </StackPanel>
-                                        </Button>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                            <ItemsControl ItemsSource="{Binding BindCandidateTags}" ToolTip="手動バインド候補のタグです。">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type StackPanel}},
-                                                                  Path=DataContext.AddBindCommand}"
-                                                CommandParameter="{Binding}"
-                                                Style="{StaticResource FlatButtonStyle}"
-                                                ToolTip="クリックすると、このタグをバインドします。">
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image Margin="1"
-                                                       VerticalAlignment="Center"
-                                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                                       Source="{StaticResource TagAddHandBind}"
-                                                       Stretch="Uniform" />
-                                                <TextBlock Margin="2"
-                                                           Foreground="Gray"
-                                                           Text="{Binding}" />
-                                            </StackPanel>
-                                        </Button>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-
-                        <Button Grid.Column="4"
-                                Command="{Binding UpdateCommand}"
-                                Focusable="False"
-                                Style="{StaticResource FlatButtonStyle}">
-                            <TextBlock Margin="16,0" Text="Tweet" />
-                        </Button>
-                    </Grid>
-                </StackPanel>
-            </Border>
-        </Grid>
-        <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
-            <ItemsControl Margin="4, 0" ItemsSource="{Binding UpdateWorkers}">
+    <DockPanel LastChildFill="True">
+        <!-- Workers View -->
+        <ScrollViewer MaxHeight="300"
+                      VerticalScrollBarVisibility="Auto" DockPanel.Dock="{Binding WorkerViewDockOrientation}">
+            <ItemsControl Margin="4, 0"
+                          ItemsSource="{Binding UpdateWorkers}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <DataTemplate.Resources>
                             <Storyboard x:Key="LoadAnimation">
-                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="grid" Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
-                                    <EasingDoubleKeyFrame KeyTime="0" Value="0" />
-                                    <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1" />
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="grid"
+                                                               Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                    <EasingDoubleKeyFrame KeyTime="0"
+                                                          Value="0" />
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.3"
+                                                          Value="1" />
                                 </DoubleAnimationUsingKeyFrames>
                             </Storyboard>
                         </DataTemplate.Resources>
-                        <Grid x:Name="grid" RenderTransformOrigin="0.5,0.5">
+                        <Grid x:Name="grid"
+                              RenderTransformOrigin="0.5,0.5">
                             <Grid.LayoutTransform>
                                 <TransformGroup>
                                     <ScaleTransform />
@@ -503,8 +144,10 @@
                                     </StackPanel>
                                     <com:PopupButton.DropDownPopup>
                                         <Popup>
-                                            <Border BorderBrush="Black" BorderThickness="1">
-                                                <Grid MinWidth="350" Background="White">
+                                            <Border BorderBrush="Black"
+                                                    BorderThickness="1">
+                                                <Grid MinWidth="350"
+                                                      Background="White">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto" />
                                                         <RowDefinition Height="Auto" />
@@ -585,12 +228,417 @@
                         </Grid>
                         <DataTemplate.Triggers>
                             <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                <BeginStoryboard x:Name="LoadAnimation_BeginStoryboard" Storyboard="{StaticResource LoadAnimation}" />
+                                <BeginStoryboard x:Name="LoadAnimation_BeginStoryboard"
+                                                 Storyboard="{StaticResource LoadAnimation}" />
                             </EventTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-    </StackPanel>
+
+        <!-- Input Core -->
+        <Grid Visibility="{Binding IsOpenInput, Converter={StaticResource BoolInvisibleConverter}}" DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <com:PopupButton Grid.Column="0"
+                             Width="30"
+                             Height="30"
+                             Focusable="False"
+                             Style="{StaticResource FlatToggleButtonStyle}">
+                <com:ImageStackingView DataContext="{Binding ImageStackingViewViewModel}" />
+                <com:PopupButton.DropDownPopup>
+                    <Popup AllowsTransparency="True">
+                        <com:UserSelector Background="Transparent"
+                                          DataContext="{Binding UserSelectorViewModel}" />
+                    </Popup>
+                </com:PopupButton.DropDownPopup>
+            </com:PopupButton>
+            <Border Grid.Column="1"
+                    Margin="2"
+                    VerticalAlignment="Center"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    CornerRadius="1">
+                <TextBlock Cursor="IBeam"
+                           Foreground="Gray"
+                           Padding="2"
+                           Text="What's happening?">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="{Binding OpenInputCommand}"
+                                      MouseAction="LeftClick" />
+                    </TextBlock.InputBindings></TextBlock>
+            </Border>
+            <com:DropDownButton Grid.Column="2"
+                                Width="35"
+                                Height="30"
+                                Focusable="False"
+                                Style="{StaticResource FlatToggleButtonStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="20"
+                           Height="20"
+                           VerticalAlignment="Center"
+                           Source="{StaticResource Krile}" />
+                    <Image Width="6"
+                           Height="6"
+                           Margin="2,0,0,0"
+                           VerticalAlignment="Center"
+                           Source="{StaticResource Chevron}" />
+                </StackPanel>
+                <com:DropDownButton.DropDownMenu>
+                    <ContextMenu>
+                        <MenuItem Header="タブの管理(_T)">
+                            <MenuItem Command="{Binding CreateNewColumnCommand}"
+                                      Header="新しいカラム(_C)..." />
+                            <MenuItem Command="{Binding CreateNewTabCommand}"
+                                      Header="新しいタブ(_T)..." />
+                            <Separator />
+                            <MenuItem Command="{Binding CollectTabsCommand}"
+                                      Header="全てのカラムをまとめる(_C)" />
+                            <MenuItem Command="{Binding ClearClosedTabStackCommand}"
+                                      Header="閉じたタブの履歴をクリア(_C)" />
+                        </MenuItem>
+                        <MenuItem Header="メンテナンス(_M)">
+                            <MenuItem Command="{Binding ReconnectStreamsCommand}"
+                                      Header="全てのアカウントを再接続(_U)" />
+                            <MenuItem Command="{Binding RefreshIndividualInfoCommand}"
+                                      Header="全てのアカウント情報を更新(_U)" />
+                            <MenuItem Header="キャッシュ(_C)">
+                                <MenuItem Command="{Binding ClearImageCachesCommand}"
+                                          Header="画像キャッシュをクリア(_I)" />
+                            </MenuItem>
+                        </MenuItem>
+                        <MenuItem Header="デバッグ(_D)">
+                            <MenuItem Command="{Binding FullGCCommand}"
+                                      Header="Full _GC" />
+                            <MenuItem Command="{Binding RemoveOldTweetsCommand}"
+                                      Header="半日以上前のツイートを全saku(_D)" />
+                            <MenuItem Command="{Binding ShowMemoryCommand}"
+                                      Header="メモリ使用量チェック(_C)" />
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem Header="サイレントモード(_S)"
+                                  IsCheckable="True"
+                                  IsChecked="{Binding IsSilentMode}" />
+                        <MenuItem Command="{Binding ShowAssignViewerCommand}"
+                                  Header="キーアサイン ビューア(_K)..." />
+                        <MenuItem Command="{Binding ShowConfigCommand}"
+                                  Header="設定(_C)..." />
+                        <Separator />
+                        <MenuItem Command="{Binding ShowTwitterStatusCommand}"
+                                  Header="Twitter APIステータス(_S)..." />
+                        <MenuItem Command="{Binding FeedbackCommand}"
+                                  Header="フィードバック(_F)..." />
+                        <MenuItem Command="{Binding ShowAboutCommand}"
+                                  Header="バージョン情報(_A)..." />
+                        <Separator />
+                        <MenuItem Command="{Binding RestartCommand}"
+                                  Header="Krileを再起動(_R)" />
+                        <MenuItem Command="{Binding ExitCommand}"
+                                  Header="Krileを終了(_X)" />
+                    </ContextMenu>
+                </com:DropDownButton.DropDownMenu>
+            </com:DropDownButton>
+        </Grid>
+        <Grid Visibility="{Binding IsOpenInput, Converter={StaticResource BoolVisibleConverter}}" DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <com:PopupButton Grid.Column="0"
+                             Width="40"
+                             Height="40"
+                             VerticalAlignment="Top"
+                             Focusable="False"
+                             Style="{StaticResource FlatToggleButtonStyle}">
+                <com:ImageStackingView DataContext="{Binding ImageStackingViewViewModel}" />
+                <com:PopupButton.DropDownPopup>
+                    <Popup AllowsTransparency="True">
+                        <com:UserSelector Background="Transparent"
+                                          DataContext="{Binding InputUserSelectorViewModel}" />
+                    </Popup>
+                </com:PopupButton.DropDownPopup>
+            </com:PopupButton>
+            <Border Grid.Column="1"
+                    Margin="2"
+                    VerticalAlignment="Center"
+                    Background="OldLace"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    CornerRadius="1">
+                <StackPanel Orientation="Vertical">
+                    <Border BorderBrush="Gray"
+                            BorderThickness="0,0,0,1"
+                            Visibility="{Binding Path=CurrentInputDescription.IsInReplyToEnabled,
+                                                 Converter={StaticResource BoolVisibleConverter}}">
+                        <DockPanel>
+                            <Button Command="{Binding RemoveInReplyToCommand}"
+                                    DockPanel.Dock="Right"
+                                    Focusable="False"
+                                    Style="{StaticResource FlatButtonStyle}"
+                                    ToolTip="返信を解除">
+                                <Image Width="16"
+                                       Height="16"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       Source="{StaticResource Delete}" />
+                            </Button>
+                            <Image Width="16"
+                                   Height="16"
+                                   DockPanel.Dock="Left"
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                   Source="{StaticResource Reply}"
+                                   ToolTip="投稿の返信先" />
+                            <TextBlock Margin="4,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="#FFE66400"
+                                       Text="{Binding Path=CurrentInputDescription.InReplyToIdStatus,
+                                                      Mode=OneWay}" />
+                        </DockPanel>
+                    </Border>
+                    <Grid Background="White"
+                          Cursor="IBeam">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <com:IntelliSenseTextBox MinHeight="38"
+                                                 BorderThickness="0"
+                                                 DataContext="{Binding IntelliSenseTextBoxViewModel}"
+                                                 Padding="2" />
+                        <Button Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Command="{Binding CloseInputCommand}"
+                                Cursor="Arrow"
+                                Focusable="False"
+                                Style="{StaticResource FlatButtonStyle}"
+                                ToolTip="入力内容を削除して閉じる">
+                            <Image Width="14"
+                                   Height="14"
+                                   Source="{StaticResource Close}" />
+                        </Button>
+                        <TextBlock Grid.Column="1"
+                                   Margin="4,1"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="Gray"
+                                   Text="{Binding Path=CurrentInputDescription.InputText,
+                                                  Mode=OneWay,
+                                                  Converter={StaticResource StringCountConverter}}" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="11" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0"
+                                                 EndPoint="0,1">
+                                <GradientStop Offset="0"
+                                              Color="White" />
+                                <GradientStop Offset="1"
+                                              Color="Gainsboro" />
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <com:DropDownButton Grid.ColumnSpan="2"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            Focusable="False"
+                                            HorizontalContentAlignment="Right"
+                                            Style="{StaticResource FlatToggleButtonStyle}"
+                                            VerticalContentAlignment="Center">
+                            <Image Width="6"
+                                   Height="6"
+                                   Margin="1,0"
+                                   HorizontalAlignment="Right"
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                   Source="{StaticResource Chevron}" />
+                            <com:DropDownButton.DropDownMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding AttachFromClipboardCommand}"
+                                              Header="クリップボードからアップロード(_C)" />
+                                </ContextMenu>
+                            </com:DropDownButton.DropDownMenu>
+                        </com:DropDownButton>
+                        <Button Grid.Column="0"
+                                Command="{Binding AttachImageCommand}"
+                                Focusable="False"
+                                Style="{StaticResource FlatButtonStyle}"
+                                ToolTip="画像を添付します。添付した状態でクリックすると、添付を解除します。">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="16"
+                                       Height="16"
+                                       Margin="2,1"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       Source="{StaticResource Attach}" />
+                                <Image Width="16"
+                                       Height="16"
+                                       Margin="2,1"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       Source="{StaticResource Checked}"
+                                       Visibility="{Binding Path=CurrentInputDescription.IsAttachedImage,
+                                                            Converter={StaticResource BoolVisibleConverter}}" />
+                            </StackPanel>
+                        </Button>
+                        <com:DropDownButton Grid.Column="2"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            Focusable="False"
+                                            HorizontalContentAlignment="Right"
+                                            Style="{StaticResource FlatToggleButtonStyle}"
+                                            VerticalContentAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="16"
+                                       Height="16"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       Source="{StaticResource TagBind}"
+                                       Visibility="{Binding IsEnabledAutoBind,
+                                                            Converter={StaticResource BoolVisibleConverter}}" />
+                                <Image Width="16"
+                                       Height="16"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       Source="{StaticResource TagUnbind}"
+                                       Visibility="{Binding IsEnabledAutoBind,
+                                                            Converter={StaticResource BoolInvisibleConverter}}" />
+                                <Image Width="6"
+                                       Height="6"
+                                       Margin="2,0"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       Source="{StaticResource Chevron}" />
+                            </StackPanel>
+                            <com:DropDownButton.DropDownMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding ClearBindCommand}"
+                                              Header="全ての手動バインドを削除(_D)" />
+                                    <Separator />
+                                    <MenuItem Header="自動バインドを有効にする(_E)"
+                                              InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                                         ConverterParameter=ToggleAutoBind}"
+                                              IsCheckable="True"
+                                              IsChecked="{Binding IsEnabledAutoBind}" />
+                                    <MenuItem Command="{Binding EditAutoBindCommand}"
+                                              Header="自動バインドの設定(_A)..." />
+                                </ContextMenu>
+                            </com:DropDownButton.DropDownMenu>
+                        </com:DropDownButton>
+                        <StackPanel Grid.Column="3"
+                                    Orientation="Horizontal">
+                            <ItemsControl ItemsSource="{Binding AutomaticBoundTags}"
+                                          ToolTip="自動バインドされたタグです。">
+                                <ItemsControl.Background>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                                         EndPoint="0,1">
+                                        <GradientStop Offset="0"
+                                                      Color="Transparent" />
+                                        <GradientStop Offset="1"
+                                                      Color="#6487CEEB" />
+                                    </LinearGradientBrush>
+                                </ItemsControl.Background>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="4,2"
+                                                    Orientation="Horizontal">
+                                            <Image Margin="1"
+                                                   VerticalAlignment="Center"
+                                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                   Source="{StaticResource TagBind}"
+                                                   Stretch="Uniform" />
+                                            <TextBlock Margin="2"
+                                                       Foreground="RoyalBlue"
+                                                       Text="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl ItemsSource="{Binding BindingTags}"
+                                          ToolTip="手動バインドされたタグです。">
+                                <ItemsControl.Background>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                                         EndPoint="0,1">
+                                        <GradientStop Offset="0"
+                                                      Color="Transparent" />
+                                        <GradientStop Offset="1"
+                                                      Color="#64FF4500" />
+                                    </LinearGradientBrush>
+                                </ItemsControl.Background>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type StackPanel}},
+                                                                  Path=DataContext.RemoveBindCommand}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource FlatButtonStyle}"
+                                                ToolTip="クリックすると、このタグのバインドを解除します。">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Margin="1"
+                                                       VerticalAlignment="Center"
+                                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                       Source="{StaticResource TagHandBind}"
+                                                       Stretch="Uniform" />
+                                                <TextBlock Margin="2"
+                                                           Text="{Binding}" />
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl ItemsSource="{Binding BindCandidateTags}"
+                                          ToolTip="手動バインド候補のタグです。">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type StackPanel}},
+                                                                  Path=DataContext.AddBindCommand}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource FlatButtonStyle}"
+                                                ToolTip="クリックすると、このタグをバインドします。">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Margin="1"
+                                                       VerticalAlignment="Center"
+                                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                                       Source="{StaticResource TagAddHandBind}"
+                                                       Stretch="Uniform" />
+                                                <TextBlock Margin="2"
+                                                           Foreground="Gray"
+                                                           Text="{Binding}" />
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <Button Grid.Column="4"
+                                Command="{Binding UpdateCommand}"
+                                Focusable="False"
+                                Style="{StaticResource FlatButtonStyle}">
+                            <TextBlock Margin="16,0"
+                                       Text="Tweet" />
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+    </DockPanel>
 </UserControl>

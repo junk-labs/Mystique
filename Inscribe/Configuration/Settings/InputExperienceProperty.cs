@@ -17,6 +17,7 @@ namespace Inscribe.Configuration.Settings
             TrimExceedChars = false;
             AutoRetryOnTimeout = true;
             AutoRetryMaxCount = 5;
+            ShowInputBlockInBottom = false;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -43,6 +44,8 @@ namespace Inscribe.Configuration.Settings
         public bool AutoRetryOnTimeout { get; set; }
 
         public int AutoRetryMaxCount { get; set; }
+
+        public bool ShowInputBlockInBottom { get; set; }
     }
 
     public class HashtagAutoBindDescription
