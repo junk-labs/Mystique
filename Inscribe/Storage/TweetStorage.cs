@@ -39,6 +39,12 @@ namespace Inscribe.Storage
         /// </summary>
         static Dictionary<long, TweetViewModel> dictionary = new Dictionary<long, TweetViewModel>();
 
+        static ReaderWriterLockWrap vmLockWrap = new ReaderWriterLockWrap(LockRecursionPolicy.NoRecursion);
+        /// <summary>
+        /// ViewModel一覧の参照の高速化のためのリスト
+        /// </summary>
+        static List<TweetViewModel> viewmodels = new List<TweetViewModel>();
+
         static ReaderWriterLockWrap elockWrap = new ReaderWriterLockWrap(LockRecursionPolicy.NoRecursion);
 
         /// <summary>
@@ -121,9 +127,9 @@ namespace Inscribe.Storage
         public static IEnumerable<TweetViewModel> GetAll(Func<TweetViewModel, bool> predicate = null)
         {
             IEnumerable<TweetViewModel> tvms;
-            using (lockWrap.GetReaderLock())
+            using (vmLockWrap.GetReaderLock())
             {
-                tvms = dictionary.Values.ToArray();
+                tvms = viewmodels.ToArray();
             }
             if (predicate == null)
                 return tvms;
@@ -276,7 +282,16 @@ namespace Inscribe.Storage
                     }
                 }
                 if (!delr)
-                    Task.Factory.StartNew(() => RaiseStatusAdded(viewModel));
+                {
+                    Task.Factory.StartNew(() => RaiseStatusAdded(viewModel)).ContinueWith(_ =>
+                    {
+                        // delay add
+                        using (vmLockWrap.GetWriterLock())
+                        {
+                            viewmodels.Add(viewModel);
+                        }
+                    });
+                }
             }
             return viewModel;
         }
@@ -341,12 +356,14 @@ namespace Inscribe.Storage
         {
             TweetViewModel remobj = null;
             using (elockWrap.GetWriterLock())
+            using (vmLockWrap.GetWriterLock())
             using (lockWrap.GetWriterLock())
             {
                 empties.Remove(id);
                 if (dictionary.TryGetValue(id, out remobj))
                 {
                     dictionary.Remove(id);
+                    viewmodels.Remove(remobj);
                     _count--;
                     Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
                 }
@@ -361,6 +378,7 @@ namespace Inscribe.Storage
         {
             TweetViewModel remobj = null;
             using (elockWrap.GetWriterLock())
+            using (vmLockWrap.GetWriterLock())
             using (lockWrap.GetWriterLock())
             {
                 System.Diagnostics.Debug.WriteLine("rmv");
@@ -370,6 +388,7 @@ namespace Inscribe.Storage
                 if (dictionary.TryGetValue(id, out remobj))
                 {
                     dictionary.Remove(id);
+                    viewmodels.Remove(remobj);
                     _count--;
                     Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
                 }

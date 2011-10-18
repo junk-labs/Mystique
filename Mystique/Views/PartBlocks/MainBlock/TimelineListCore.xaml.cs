@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
 
 namespace Mystique.Views.PartBlocks.MainBlock
 {
@@ -22,6 +23,41 @@ namespace Mystique.Views.PartBlocks.MainBlock
         public TimelineListCore()
         {
             InitializeComponent();
+        }
+
+        private void List_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            var vm = this.DataContext as TimelineListCoreViewModel;
+            if (vm == null) return;
+            var sv = GetScrollViewer(this.List);
+            if (sv != null)
+                vm.ScrollIndex = (int)sv.VerticalOffset;
+        }
+
+        private ScrollViewer GetScrollViewer(DependencyObject o)
+        {
+            if (o == null)
+                throw new ArgumentNullException("object is null.");
+            // Return the DependencyObject if it is a ScrollViewer
+            var sv = o as ScrollViewer;
+            if (sv != null)
+                return sv;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(o); i++)
+            {
+                var child = VisualTreeHelper.GetChild(o, i);
+
+                var result = GetScrollViewer(child);
+                if (result == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    return result;
+                }
+            }
+            return null;
         }
     }
 }

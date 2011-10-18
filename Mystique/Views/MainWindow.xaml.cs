@@ -19,11 +19,9 @@ namespace Mystique.Views
             InitializeComponent();
         }
 
-        // ウィンドウ設定の読み込みと保存
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("IME:" + this.IsInputMethodEnabled);
+            // 設定のロード
             if (!Setting.Instance.StateProperty.WindowPosition.IsEmpty)
             {
                 /*
@@ -35,7 +33,26 @@ namespace Mystique.Views
                 Nightmare.WinAPI.NativeWindowControl.SetWindowPlacement(this, Setting.Instance.StateProperty.WindowPosition);
                 this.WindowState = Setting.Instance.StateProperty.WindowState;
             }
-            if (Setting.Instance.KernelProperty.LastWriteVersion != 0 && Define.GetNumericVersion() > Setting.Instance.KernelProperty.LastWriteVersion)
+
+        }
+
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            // コンテントロード完了
+            if(Setting.Instance.KernelProperty.LastWriteVersion == 0)
+            {
+                var result = MessageBox.Show(this,
+                    "Twitterクライアント \"Krile\"(クルル) をダウンロードしていただき、ありがとうございます。" + Environment.NewLine +
+                    "ご利用になる前に、FAQに目を通していただくことをお勧めします。" + Environment.NewLine +
+                    "(" + Define.FaqUrl + ")" + Environment.NewLine +
+                    "今すぐFAQを参照しますか？", "Welcome to Krile",
+                    MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Browser.Start(Define.FaqUrl);
+                }
+            }
+            else if (Define.GetNumericVersion() > Setting.Instance.KernelProperty.LastWriteVersion)
             {
                 var result = MessageBox.Show(this,
                     "ご利用中のKrileの v" + Define.GetFormattedVersion() + " への更新が完了しました。" + Environment.NewLine +
@@ -47,10 +64,20 @@ namespace Mystique.Views
                     Browser.Start(Define.ReleaseNoteUrl);
                 }
             }
+            else if (Setting.IsSafeMode)
+            {
+                MessageBox.Show(this,
+                    "Krileが連続して異常終了していることを検知しました。" + Environment.NewLine +
+                    "確認のため、プラグインをロードせずに起動しています。" + Environment.NewLine +
+                    "もしもこれによって異常終了しなくなった場合は、プラグインに原因があります。" + Environment.NewLine +
+                    "導入したプラグインを削除するか、最新版に更新してください。",
+                    "セーフモードでの起動", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            // シャットダウン
             if (KernelService.IsAppInShutdown ||
                 MessageBox.Show(this, "Krileを終了してもよろしいですか？", "Krileの終了", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
             {
@@ -76,5 +103,7 @@ namespace Mystique.Views
         {
             KeyAssignCore.HandlePreviewEvent(e, AssignRegion.General);
         }
+
+
     }
 }

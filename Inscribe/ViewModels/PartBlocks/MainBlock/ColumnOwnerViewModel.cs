@@ -202,6 +202,51 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("MoveBottom", () => MoveVertical(ListSelectionKind.SelectLast));
             KeyAssignCore.RegisterOperation("Deselect", () => MoveVertical(ListSelectionKind.Deselect));
 
+            // Moving focus (additional)
+            KeyAssignCore.RegisterOperation("Select1stTab", () => SelectIndexOfTab(0));
+            KeyAssignCore.RegisterOperation("Select2ndTab", () => SelectIndexOfTab(1));
+            KeyAssignCore.RegisterOperation("Select3rdTab", () => SelectIndexOfTab(2));
+            KeyAssignCore.RegisterOperation("Select4thTab", () => SelectIndexOfTab(3));
+            KeyAssignCore.RegisterOperation("Select5thTab", () => SelectIndexOfTab(4));
+            KeyAssignCore.RegisterOperation("Select6thTab", () => SelectIndexOfTab(5));
+            KeyAssignCore.RegisterOperation("Select7thTab", () => SelectIndexOfTab(6));
+            KeyAssignCore.RegisterOperation("Select8thTab", () => SelectIndexOfTab(7));
+            KeyAssignCore.RegisterOperation("Select9thTab", () => SelectIndexOfTab(8));
+            KeyAssignCore.RegisterOperation("Select10thTab", () => SelectIndexOfTab(9));
+
+            KeyAssignCore.RegisterOperation("Select1stColumn", () => SelectIndexOfColumn(0));
+            KeyAssignCore.RegisterOperation("Select2ndColumn", () => SelectIndexOfColumn(1));
+            KeyAssignCore.RegisterOperation("Select3rdColumn", () => SelectIndexOfColumn(2));
+            KeyAssignCore.RegisterOperation("Select4thColumn", () => SelectIndexOfColumn(3));
+            KeyAssignCore.RegisterOperation("Select5thColumn", () => SelectIndexOfColumn(4));
+            KeyAssignCore.RegisterOperation("Select6thColumn", () => SelectIndexOfColumn(5));
+            KeyAssignCore.RegisterOperation("Select7thColumn", () => SelectIndexOfColumn(6));
+            KeyAssignCore.RegisterOperation("Select8thColumn", () => SelectIndexOfColumn(7));
+            KeyAssignCore.RegisterOperation("Select9thColumn", () => SelectIndexOfColumn(8));
+            KeyAssignCore.RegisterOperation("Select10thColumn", () => SelectIndexOfColumn(9));
+
+            KeyAssignCore.RegisterOperation("Select1stTweet", () => SelectIndexOfTimeline(0));
+            KeyAssignCore.RegisterOperation("Select2ndTweet", () => SelectIndexOfTimeline(1));
+            KeyAssignCore.RegisterOperation("Select3rdTweet", () => SelectIndexOfTimeline(2));
+            KeyAssignCore.RegisterOperation("Select4thTweet", () => SelectIndexOfTimeline(3));
+            KeyAssignCore.RegisterOperation("Select5thTweet", () => SelectIndexOfTimeline(4));
+            KeyAssignCore.RegisterOperation("Select6thTweet", () => SelectIndexOfTimeline(5));
+            KeyAssignCore.RegisterOperation("Select7thTweet", () => SelectIndexOfTimeline(6));
+            KeyAssignCore.RegisterOperation("Select8thTweet", () => SelectIndexOfTimeline(7));
+            KeyAssignCore.RegisterOperation("Select9thTweet", () => SelectIndexOfTimeline(8));
+            KeyAssignCore.RegisterOperation("Select10thTweet", () => SelectIndexOfTimeline(9));
+
+            KeyAssignCore.RegisterOperation("Open1stUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(0)));
+            KeyAssignCore.RegisterOperation("Open2ndUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(1)));
+            KeyAssignCore.RegisterOperation("Open3rdUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(2)));
+            KeyAssignCore.RegisterOperation("Open4thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(3)));
+            KeyAssignCore.RegisterOperation("Open5thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(4)));
+            KeyAssignCore.RegisterOperation("Open6thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(5)));
+            KeyAssignCore.RegisterOperation("Open7thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(6)));
+            KeyAssignCore.RegisterOperation("Open8thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(7)));
+            KeyAssignCore.RegisterOperation("Open9thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(8)));
+            KeyAssignCore.RegisterOperation("Open10thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(9)));
+
             // Timeline action
             KeyAssignCore.RegisterOperation("Mention", () => ExecTVMAction(vm => vm.MentionCommand.Execute()));
             KeyAssignCore.RegisterOperation("MentionMulti", () => ExecTVMAction(vm =>
@@ -247,6 +292,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("CopySTOT", () => ExecTVMAction(vm => vm.Tweet.CopySTOTCommand.Execute()));
             KeyAssignCore.RegisterOperation("CopyWebUrl", () => ExecTVMAction(vm => vm.Tweet.CopyWebUrlCommand.Execute()));
             KeyAssignCore.RegisterOperation("CopyScreenName", () => ExecTVMAction(vm => vm.Tweet.CopyScreenNameCommand.Execute()));
+
+            // Selection
 
             // Tab Action
             KeyAssignCore.RegisterOperation("Search", () => ExecTabAction(vm =>
@@ -313,6 +360,27 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     cc.SelectedTabViewModel = cc.TabItems[idx];
                 }
             }
+        }
+
+        private void SelectIndexOfColumn(int column)
+        {
+            if (column >= this.Columns.Count) return;
+            this.CurrentFocusColumn = this.Columns[column];
+        }
+
+        private void SelectIndexOfTab(int tab)
+        {
+            var cc = this.CurrentFocusColumn;
+            if (cc == null) return;
+            if (tab >= cc.TabItems.Count) return;
+            cc.SelectedTabViewModel = cc.TabItems[tab];
+        }
+
+        private void SelectIndexOfTimeline(int tweet)
+        {
+            var tb = this.CurrentTab;
+            if (tb == null) return;
+            tb.CurrentForegroundTimeline.CoreViewModel.SetSelect(tb.CurrentForegroundTimeline.CoreViewModel.ScrollIndex + tweet);
         }
 
         private void MoveVertical(ListSelectionKind selectKind)

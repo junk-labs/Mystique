@@ -26,6 +26,35 @@
 			<Assign Action="MoveRightColumn" Key="Shift+Right" Preview="True" />
 			<Assign Action="Deselect" Key="Escape" />
 			<Assign Action="MoveTop" Key="0" />
+			<!-- Move (Ex) -->
+      <Assign Action="Select1stTab" Key="Shift+F1" Preview="True" />
+      <Assign Action="Select2ndTab" Key="Shift+F2" Preview="True" />
+      <Assign Action="Select3rdTab" Key="Shift+F3" Preview="True" />
+      <Assign Action="Select4thTab" Key="Shift+F4" Preview="True" />
+      <Assign Action="Select5thTab" Key="Shift+F5" Preview="True" />
+      <Assign Action="Select6thTab" Key="Shift+F6" Preview="True" />
+      <Assign Action="Select7thTab" Key="Shift+F7" Preview="True" />
+      <Assign Action="Select8thTab" Key="Shift+F8" Preview="True" />
+      <Assign Action="Select9thTab" Key="Shift+F9" Preview="True" />
+      <Assign Action="Select10thTab" Key="Shift+F10" Preview="True" />
+      <!---->
+      <Assign Action="Select1stColumn" Key="Ctrl+F1" Preview="True" />
+      <Assign Action="Select2ndColumn" Key="Ctrl+F2" Preview="True" />
+      <Assign Action="Select3rdColumn" Key="Ctrl+F3" Preview="True" />
+      <!---->
+      <Assign Action="Select1stTweet" Key="1" Preview="True" />
+      <Assign Action="Select2ndTweet" Key="2" Preview="True" />
+      <Assign Action="Select3rdTweet" Key="3" Preview="True" />
+      <Assign Action="Select4thTweet" Key="4" Preview="True" />
+      <Assign Action="Select5thTweet" Key="5" Preview="True" />
+      <Assign Action="Select6thTweet" Key="6" Preview="True" />
+      <Assign Action="Select7thTweet" Key="7" Preview="True" />
+      <Assign Action="Select8thTweet" Key="8" Preview="True" />
+      <Assign Action="Select9thTweet" Key="9" Preview="True" />
+      <!---->
+      <Assign Action="Open1stUrl" Key="Shift+1" Preview="True" />
+      <Assign Action="Open2ndUrl" Key="Shift+2" Preview="True" />
+      <Assign Action="Open3rdUrl" Key="Shift+3" Preview="True" />
 			<!-- Action -->
 			<Assign Action="Mention" Key="R" />
 			<Assign Action="MentionMulti" Key="Shift+R" />

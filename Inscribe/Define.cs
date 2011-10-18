@@ -82,6 +82,13 @@ namespace Inscribe
 
         public static readonly string ReleaseNoteUrl = "http://krile.starwing.net/updates.html";
 
+        public static readonly string FaqUrl = "http://krile.starwing.net/faq.html";
+
         public static readonly string FeedbackUrl = "https://github.com/karno/Mystique/issues";
+
+        public static string KampaUrl = "http://krile.starwing.net/kampa.html";
+
+        public static readonly int SafeModeThreshold = 3;
+
     }
 }

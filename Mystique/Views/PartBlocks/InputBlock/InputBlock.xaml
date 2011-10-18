@@ -55,26 +55,22 @@
         <cp:TweetStringToCountConverter x:Key="StringCountConverter" />
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
-        <!-- Workers View -->
+        <!--  Workers View  -->
         <ScrollViewer MaxHeight="300"
-                      VerticalScrollBarVisibility="Auto" DockPanel.Dock="{Binding WorkerViewDockOrientation}">
-            <ItemsControl Margin="4, 0"
-                          ItemsSource="{Binding UpdateWorkers}">
+                      DockPanel.Dock="{Binding WorkerViewDockOrientation}"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl Margin="4, 0" ItemsSource="{Binding UpdateWorkers}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <DataTemplate.Resources>
                             <Storyboard x:Key="LoadAnimation">
-                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="grid"
-                                                               Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
-                                    <EasingDoubleKeyFrame KeyTime="0"
-                                                          Value="0" />
-                                    <EasingDoubleKeyFrame KeyTime="0:0:0.3"
-                                                          Value="1" />
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="grid" Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                    <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1" />
                                 </DoubleAnimationUsingKeyFrames>
                             </Storyboard>
                         </DataTemplate.Resources>
-                        <Grid x:Name="grid"
-                              RenderTransformOrigin="0.5,0.5">
+                        <Grid x:Name="grid" RenderTransformOrigin="0.5,0.5">
                             <Grid.LayoutTransform>
                                 <TransformGroup>
                                     <ScaleTransform />
@@ -144,10 +140,8 @@
                                     </StackPanel>
                                     <com:PopupButton.DropDownPopup>
                                         <Popup>
-                                            <Border BorderBrush="Black"
-                                                    BorderThickness="1">
-                                                <Grid MinWidth="350"
-                                                      Background="White">
+                                            <Border BorderBrush="Black" BorderThickness="1">
+                                                <Grid MinWidth="350" Background="White">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto" />
                                                         <RowDefinition Height="Auto" />
@@ -228,8 +222,7 @@
                         </Grid>
                         <DataTemplate.Triggers>
                             <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                <BeginStoryboard x:Name="LoadAnimation_BeginStoryboard"
-                                                 Storyboard="{StaticResource LoadAnimation}" />
+                                <BeginStoryboard x:Name="LoadAnimation_BeginStoryboard" Storyboard="{StaticResource LoadAnimation}" />
                             </EventTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
@@ -237,8 +230,8 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <!-- Input Core -->
-        <Grid Visibility="{Binding IsOpenInput, Converter={StaticResource BoolInvisibleConverter}}" DockPanel.Dock="Top">
+        <!--  Input Core  -->
+        <Grid DockPanel.Dock="Top" Visibility="{Binding IsOpenInput, Converter={StaticResource BoolInvisibleConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
@@ -252,8 +245,7 @@
                 <com:ImageStackingView DataContext="{Binding ImageStackingViewViewModel}" />
                 <com:PopupButton.DropDownPopup>
                     <Popup AllowsTransparency="True">
-                        <com:UserSelector Background="Transparent"
-                                          DataContext="{Binding UserSelectorViewModel}" />
+                        <com:UserSelector Background="Transparent" DataContext="{Binding UserSelectorViewModel}" />
                     </Popup>
                 </com:PopupButton.DropDownPopup>
             </com:PopupButton>
@@ -268,9 +260,9 @@
                            Padding="2"
                            Text="What's happening?">
                     <TextBlock.InputBindings>
-                        <MouseBinding Command="{Binding OpenInputCommand}"
-                                      MouseAction="LeftClick" />
-                    </TextBlock.InputBindings></TextBlock>
+                        <MouseBinding Command="{Binding OpenInputCommand}" MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
             </Border>
             <com:DropDownButton Grid.Column="2"
                                 Width="35"
@@ -291,59 +283,48 @@
                 <com:DropDownButton.DropDownMenu>
                     <ContextMenu>
                         <MenuItem Header="タブの管理(_T)">
-                            <MenuItem Command="{Binding CreateNewColumnCommand}"
-                                      Header="新しいカラム(_C)..." />
-                            <MenuItem Command="{Binding CreateNewTabCommand}"
-                                      Header="新しいタブ(_T)..." />
+                            <MenuItem Command="{Binding CreateNewColumnCommand}" Header="新しいカラム(_C)..." />
+                            <MenuItem Command="{Binding CreateNewTabCommand}" Header="新しいタブ(_T)..." />
                             <Separator />
-                            <MenuItem Command="{Binding CollectTabsCommand}"
-                                      Header="全てのカラムをまとめる(_C)" />
-                            <MenuItem Command="{Binding ClearClosedTabStackCommand}"
-                                      Header="閉じたタブの履歴をクリア(_C)" />
+                            <MenuItem Command="{Binding CollectTabsCommand}" Header="全てのカラムをまとめる(_C)" />
+                            <MenuItem Command="{Binding ClearClosedTabStackCommand}" Header="閉じたタブの履歴をクリア(_C)" />
                         </MenuItem>
                         <MenuItem Header="メンテナンス(_M)">
-                            <MenuItem Command="{Binding ReconnectStreamsCommand}"
-                                      Header="全てのアカウントを再接続(_U)" />
-                            <MenuItem Command="{Binding RefreshIndividualInfoCommand}"
-                                      Header="全てのアカウント情報を更新(_U)" />
+                            <MenuItem Command="{Binding ReconnectStreamsCommand}" Header="全てのアカウントを再接続(_U)" />
+                            <MenuItem Command="{Binding RefreshIndividualInfoCommand}" Header="全てのアカウント情報を更新(_U)" />
                             <MenuItem Header="キャッシュ(_C)">
-                                <MenuItem Command="{Binding ClearImageCachesCommand}"
-                                          Header="画像キャッシュをクリア(_I)" />
+                                <MenuItem Command="{Binding ClearImageCachesCommand}" Header="画像キャッシュをクリア(_I)" />
                             </MenuItem>
                         </MenuItem>
-                        <MenuItem Header="デバッグ(_D)">
-                            <MenuItem Command="{Binding FullGCCommand}"
-                                      Header="Full _GC" />
-                            <MenuItem Command="{Binding RemoveOldTweetsCommand}"
-                                      Header="半日以上前のツイートを全saku(_D)" />
-                            <MenuItem Command="{Binding ShowMemoryCommand}"
-                                      Header="メモリ使用量チェック(_C)" />
-                        </MenuItem>
+
                         <Separator />
                         <MenuItem Header="サイレントモード(_S)"
                                   IsCheckable="True"
                                   IsChecked="{Binding IsSilentMode}" />
-                        <MenuItem Command="{Binding ShowAssignViewerCommand}"
-                                  Header="キーアサイン ビューア(_K)..." />
-                        <MenuItem Command="{Binding ShowConfigCommand}"
-                                  Header="設定(_C)..." />
+                        <MenuItem Command="{Binding ShowAssignViewerCommand}" Header="キーアサイン ビューア(_K)..." />
+                        <MenuItem Command="{Binding ShowConfigCommand}" Header="設定(_C)..." />
                         <Separator />
-                        <MenuItem Command="{Binding ShowTwitterStatusCommand}"
-                                  Header="Twitter APIステータス(_S)..." />
-                        <MenuItem Command="{Binding FeedbackCommand}"
-                                  Header="フィードバック(_F)..." />
-                        <MenuItem Command="{Binding ShowAboutCommand}"
-                                  Header="バージョン情報(_A)..." />
+                        <MenuItem Header="その他(_O)">
+                            <MenuItem Command="{Binding ShowTwitterStatusCommand}" Header="Twitter APIステータス(_S)..." />
+                            <Separator />
+                            <MenuItem Command="{Binding FeedbackCommand}" Header="フィードバック(_F)..." />
+                            <MenuItem Command="{Binding AboutKampaCommand}" Header="カンパのお願い(_C)..." />
+                            <Separator />
+                            <MenuItem Header="デバッグ(_D)">
+                                <MenuItem Command="{Binding FullGCCommand}" Header="Full _GC" />
+                                <MenuItem Command="{Binding RemoveOldTweetsCommand}" Header="半日以上前のツイートを全saku(_D)" />
+                                <MenuItem Command="{Binding ShowMemoryCommand}" Header="メモリ使用量チェック(_C)" />
+                            </MenuItem>
+                        </MenuItem>
+                        <MenuItem Command="{Binding ShowAboutCommand}" Header="バージョン情報(_A)..." />
                         <Separator />
-                        <MenuItem Command="{Binding RestartCommand}"
-                                  Header="Krileを再起動(_R)" />
-                        <MenuItem Command="{Binding ExitCommand}"
-                                  Header="Krileを終了(_X)" />
+                        <MenuItem Command="{Binding RestartCommand}" Header="Krileを再起動(_R)" />
+                        <MenuItem Command="{Binding ExitCommand}" Header="Krileを終了(_X)" />
                     </ContextMenu>
                 </com:DropDownButton.DropDownMenu>
             </com:DropDownButton>
         </Grid>
-        <Grid Visibility="{Binding IsOpenInput, Converter={StaticResource BoolVisibleConverter}}" DockPanel.Dock="Top">
+        <Grid DockPanel.Dock="Top" Visibility="{Binding IsOpenInput, Converter={StaticResource BoolVisibleConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
@@ -357,8 +338,7 @@
                 <com:ImageStackingView DataContext="{Binding ImageStackingViewViewModel}" />
                 <com:PopupButton.DropDownPopup>
                     <Popup AllowsTransparency="True">
-                        <com:UserSelector Background="Transparent"
-                                          DataContext="{Binding InputUserSelectorViewModel}" />
+                        <com:UserSelector Background="Transparent" DataContext="{Binding InputUserSelectorViewModel}" />
                     </Popup>
                 </com:PopupButton.DropDownPopup>
             </com:PopupButton>
@@ -398,8 +378,7 @@
                                                       Mode=OneWay}" />
                         </DockPanel>
                     </Border>
-                    <Grid Background="White"
-                          Cursor="IBeam">
+                    <Grid Background="White" Cursor="IBeam">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
@@ -440,12 +419,9 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.Background>
-                            <LinearGradientBrush StartPoint="0,0"
-                                                 EndPoint="0,1">
-                                <GradientStop Offset="0"
-                                              Color="White" />
-                                <GradientStop Offset="1"
-                                              Color="Gainsboro" />
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="White" />
+                                <GradientStop Offset="1" Color="Gainsboro" />
                             </LinearGradientBrush>
                         </Grid.Background>
                         <com:DropDownButton Grid.ColumnSpan="2"
@@ -463,8 +439,7 @@
                                    Source="{StaticResource Chevron}" />
                             <com:DropDownButton.DropDownMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding AttachFromClipboardCommand}"
-                                              Header="クリップボードからアップロード(_C)" />
+                                    <MenuItem Command="{Binding AttachFromClipboardCommand}" Header="クリップボードからアップロード(_C)" />
                                 </ContextMenu>
                             </com:DropDownButton.DropDownMenu>
                         </com:DropDownButton>
@@ -516,30 +491,23 @@
                             </StackPanel>
                             <com:DropDownButton.DropDownMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ClearBindCommand}"
-                                              Header="全ての手動バインドを削除(_D)" />
+                                    <MenuItem Command="{Binding ClearBindCommand}" Header="全ての手動バインドを削除(_D)" />
                                     <Separator />
                                     <MenuItem Header="自動バインドを有効にする(_E)"
                                               InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                                          ConverterParameter=ToggleAutoBind}"
                                               IsCheckable="True"
                                               IsChecked="{Binding IsEnabledAutoBind}" />
-                                    <MenuItem Command="{Binding EditAutoBindCommand}"
-                                              Header="自動バインドの設定(_A)..." />
+                                    <MenuItem Command="{Binding EditAutoBindCommand}" Header="自動バインドの設定(_A)..." />
                                 </ContextMenu>
                             </com:DropDownButton.DropDownMenu>
                         </com:DropDownButton>
-                        <StackPanel Grid.Column="3"
-                                    Orientation="Horizontal">
-                            <ItemsControl ItemsSource="{Binding AutomaticBoundTags}"
-                                          ToolTip="自動バインドされたタグです。">
+                        <StackPanel Grid.Column="3" Orientation="Horizontal">
+                            <ItemsControl ItemsSource="{Binding AutomaticBoundTags}" ToolTip="自動バインドされたタグです。">
                                 <ItemsControl.Background>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                                         EndPoint="0,1">
-                                        <GradientStop Offset="0"
-                                                      Color="Transparent" />
-                                        <GradientStop Offset="1"
-                                                      Color="#6487CEEB" />
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Offset="0" Color="Transparent" />
+                                        <GradientStop Offset="1" Color="#6487CEEB" />
                                     </LinearGradientBrush>
                                 </ItemsControl.Background>
                                 <ItemsControl.ItemsPanel>
@@ -549,8 +517,7 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Margin="4,2"
-                                                    Orientation="Horizontal">
+                                        <StackPanel Margin="4,2" Orientation="Horizontal">
                                             <Image Margin="1"
                                                    VerticalAlignment="Center"
                                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
@@ -563,15 +530,11 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <ItemsControl ItemsSource="{Binding BindingTags}"
-                                          ToolTip="手動バインドされたタグです。">
+                            <ItemsControl ItemsSource="{Binding BindingTags}" ToolTip="手動バインドされたタグです。">
                                 <ItemsControl.Background>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                                         EndPoint="0,1">
-                                        <GradientStop Offset="0"
-                                                      Color="Transparent" />
-                                        <GradientStop Offset="1"
-                                                      Color="#64FF4500" />
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Offset="0" Color="Transparent" />
+                                        <GradientStop Offset="1" Color="#64FF4500" />
                                     </LinearGradientBrush>
                                 </ItemsControl.Background>
                                 <ItemsControl.ItemsPanel>
@@ -592,15 +555,13 @@
                                                        RenderOptions.BitmapScalingMode="NearestNeighbor"
                                                        Source="{StaticResource TagHandBind}"
                                                        Stretch="Uniform" />
-                                                <TextBlock Margin="2"
-                                                           Text="{Binding}" />
+                                                <TextBlock Margin="2" Text="{Binding}" />
                                             </StackPanel>
                                         </Button>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <ItemsControl ItemsSource="{Binding BindCandidateTags}"
-                                          ToolTip="手動バインド候補のタグです。">
+                            <ItemsControl ItemsSource="{Binding BindCandidateTags}" ToolTip="手動バインド候補のタグです。">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" />
@@ -632,8 +593,7 @@
                                 Command="{Binding UpdateCommand}"
                                 Focusable="False"
                                 Style="{StaticResource FlatButtonStyle}">
-                            <TextBlock Margin="16,0"
-                                       Text="Tweet" />
+                            <TextBlock Margin="16,0" Text="Tweet" />
                         </Button>
                     </Grid>
                 </StackPanel>

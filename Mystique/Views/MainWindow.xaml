@@ -18,6 +18,7 @@
         Width="800"
         Height="500"
         Closing="Window_Closing"
+        ContentRendered="Window_ContentRendered"
         FontFamily="{Binding FontFamily,
                              Mode=OneWay}"
         FontSize="{Binding FontSize,
@@ -62,7 +63,7 @@
             </Grid.RowDefinitions>
             <!--  INPUT BLOCK  -->
             <ib:InputBlock Grid.Row="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.InputBlockColumn}" DataContext="{Binding InputBlockViewModel}" />
-            <!--  NOTIFIER -->
+            <!--  NOTIFIER  -->
             <bc:Notifier Grid.Row="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NotifierBarColumn}" DataContext="{Binding NotifierViewModel}" />
             <!--  TIMELINE CORE  -->
             <main:ColumnOwner Grid.Row="2" DataContext="{Binding ColumnOwnerViewModel}" />

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using System.Windows;
 using Livet.Messaging;
-using System.Windows;
 
 namespace Inscribe.ViewModels.Behaviors.Messaging
 {

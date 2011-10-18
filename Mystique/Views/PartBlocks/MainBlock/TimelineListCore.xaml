@@ -43,9 +43,11 @@
              HorizontalContentAlignment="Stretch"
              InputMethod.IsInputMethodEnabled="False"
              ItemContainerStyle="{StaticResource ContainerStyle}"
-             ItemsSource="{Binding TweetsSource, IsAsync=True}"
+             ItemsSource="{Binding TweetsSource,
+                                   IsAsync=True}"
              Padding="0"
              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+             ScrollViewer.ScrollChanged="List_ScrollChanged"
              ScrollViewer.VerticalScrollBarVisibility="Visible"
              SelectedItem="{Binding SelectedTweetViewModel}"
              VirtualizingStackPanel.IsVirtualizing="True"

@@ -308,7 +308,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
         #endregion
 
-
         #region ShowTwitterStatusCommand
         ViewModelCommand _ShowTwitterStatusCommand;
 
@@ -327,7 +326,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             Browser.Start(TwitterDefine.TwitterApiStatusUrl);
         }
         #endregion
-      
 
         #region FeedbackCommand
         ViewModelCommand _FeedbackCommand;
@@ -348,6 +346,25 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         }
         #endregion
 
+        #region AboutKampaCommand
+        ViewModelCommand _AboutKampaCommand;
+
+        public ViewModelCommand AboutKampaCommand
+        {
+            get
+            {
+                if (_AboutKampaCommand == null)
+                    _AboutKampaCommand = new ViewModelCommand(AboutKampa);
+                return _AboutKampaCommand;
+            }
+        }
+
+        private void AboutKampa()
+        {
+            Browser.Start(Define.KampaUrl);
+        }
+        #endregion
+      
         public bool IsSilentMode
         {
             get { return Setting.Instance.StateProperty.IsInSilentMode; }
