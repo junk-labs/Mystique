@@ -189,6 +189,7 @@
     <Compile Include="Threading\RestrictedTask.cs" />
     <Compile Include="Common\ThreadHelper.cs" />
     <Compile Include="TwitterDefine.cs" />
+    <Compile Include="ViewModels\Behaviors\Messaging\SetListSelectionFromIndexMessage.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\SetListSelectionMessage.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\TextBoxSetCaretMessage.cs" />
     <Compile Include="ViewModels\Behaviors\Messaging\TransitionExMessage.cs" />

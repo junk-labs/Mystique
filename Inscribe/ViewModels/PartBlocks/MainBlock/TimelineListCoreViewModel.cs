@@ -93,6 +93,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
+        private int scrollIndex = -1;
+        public int ScrollIndex
+        {
+            get { return scrollIndex; }
+            set
+            {
+                scrollIndex = value;
+                System.Diagnostics.Debug.WriteLine(value);
+            }
+        }
+
         void f_RequireReaccept()
         {
             Task.Factory.StartNew(() => this.InvalidateCache());
@@ -224,6 +235,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public void SetSelect(ListSelectionKind kind)
         {
             Messenger.Raise(new SetListSelectionMessage("SetListSelection", kind, this.SelectedTweetViewModel));
+        }
+
+        public void SetSelect(int index)
+        {
+            Messenger.Raise(new SetListSelectionFromIndexMessage("SetListSelection", index, this.SelectedTweetViewModel));
         }
     }
 }

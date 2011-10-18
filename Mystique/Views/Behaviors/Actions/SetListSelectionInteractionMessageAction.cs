@@ -10,34 +10,46 @@ namespace Mystique.Views.Behaviors.Actions
         protected override void InvokeAction(Livet.Messaging.InteractionMessage m)
         {
             var listmsg = m as SetListSelectionMessage;
-            if (listmsg == null) return;
-            if (this.AssociatedObject.SelectedItem != listmsg.InitialSelectedItem) return;
-            switch (listmsg.ListSelectionKind)
+            if (listmsg != null)
             {
-                case ListSelectionKind.Deselect:
-                    this.AssociatedObject.SelectedIndex = -1;
-                    break;
-                case ListSelectionKind.SelectAbove:
-                    if (this.AssociatedObject.SelectedIndex > 0)
-                        this.AssociatedObject.SelectedIndex--;
-                    break;
-                case ListSelectionKind.SelectAboveAndNull:
-                    if (this.AssociatedObject.SelectedIndex >= 0)
-                        this.AssociatedObject.SelectedIndex--;
-                    break;
-                case ListSelectionKind.SelectBelow:
-                    if (this.AssociatedObject.SelectedIndex < this.AssociatedObject.Items.Count - 1)
-                        this.AssociatedObject.SelectedIndex++;
-                    break;
-                case ListSelectionKind.SelectFirst:
-                    if (this.AssociatedObject.Items.Count > 0)
-                        this.AssociatedObject.SelectedIndex = 0;
-                    break;
-                case ListSelectionKind.SelectLast:
-                    this.AssociatedObject.SelectedIndex = this.AssociatedObject.Items.Count - 1;
-                    break;
+                if (this.AssociatedObject.SelectedItem != listmsg.InitialSelectedItem) return;
+                switch (listmsg.ListSelectionKind)
+                {
+                    case ListSelectionKind.Deselect:
+                        this.AssociatedObject.SelectedIndex = -1;
+                        break;
+                    case ListSelectionKind.SelectAbove:
+                        if (this.AssociatedObject.SelectedIndex > 0)
+                            this.AssociatedObject.SelectedIndex--;
+                        break;
+                    case ListSelectionKind.SelectAboveAndNull:
+                        if (this.AssociatedObject.SelectedIndex >= 0)
+                            this.AssociatedObject.SelectedIndex--;
+                        break;
+                    case ListSelectionKind.SelectBelow:
+                        if (this.AssociatedObject.SelectedIndex < this.AssociatedObject.Items.Count - 1)
+                            this.AssociatedObject.SelectedIndex++;
+                        break;
+                    case ListSelectionKind.SelectFirst:
+                        if (this.AssociatedObject.Items.Count > 0)
+                            this.AssociatedObject.SelectedIndex = 0;
+                        break;
+                    case ListSelectionKind.SelectLast:
+                        this.AssociatedObject.SelectedIndex = this.AssociatedObject.Items.Count - 1;
+                        break;
+                }
+                this.AssociatedObject.ScrollIntoView(this.AssociatedObject.SelectedItem);
             }
-            this.AssociatedObject.ScrollIntoView(this.AssociatedObject.SelectedItem);
+            else
+            {
+                var nms = m as SetListSelectionFromIndexMessage;
+                if (nms != null)
+                {
+                    if (this.AssociatedObject.SelectedItem != nms.InitialSelectedItem) return;
+                    if (nms.Index < this.AssociatedObject.Items.Count)
+                        this.AssociatedObject.SelectedIndex = nms.Index;
+                }
+            }
         }
     }
 }

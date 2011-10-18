@@ -15,6 +15,8 @@ namespace Inscribe.Configuration.Settings
 
         public double LastWriteVersion = 0;
 
+        public int KillByErrorCount = 0;
+
         public string TwitterApiEndpoint = null;
     }
 }

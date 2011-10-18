@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Dulcet.Twitter;
@@ -18,7 +19,8 @@ using Inscribe.ViewModels.Dialogs;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using System.Windows;
+using Inscribe.Text;
+using System.Text.RegularExpressions;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -998,6 +1000,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
 
         #endregion
+
+        #endregion
+
+        #region Key assign helper
+
+        public void OpenIndexOfUrl(int index)
+        {
+            var m = RegularExpressions.UrlRegex.Matches(this.Tweet.TweetText)
+                .Cast<Match>().Skip(index).FirstOrDefault();
+            if (m == null) return;
+            Browser.Start(m.Value);
+        }
 
         #endregion
     }
