@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Dulcet.Twitter;
@@ -27,7 +28,6 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using System.Windows.Controls;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -719,6 +719,22 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             UpdateCommand.RaiseCanExecuteChanged();
         }
 
+        public bool IsSelectedAccountEmpty
+        {
+            get
+            {
+                IEnumerable<AccountInfo> currentTarget = null;
+                if (this.overrideTargets != null)
+                    currentTarget = this.overrideTargets;
+                else
+                    currentTarget = this.UserSelectorViewModel.LinkElements;
+                if (currentTarget != null)
+                    return currentTarget.Count() == 0;
+                else
+                    return false;
+            }
+        }
+
         private void UpdateAccountImages()
         {
             IEnumerable<AccountInfo> currentTarget = null;
@@ -730,6 +746,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 currentTarget = AccountStorage.Accounts.Where(i => currentTarget.Contains(i)).ToArray();
             Task.Factory.StartNew(() => currentTarget.Select(ai => ai.ProfileImage).ToArray())
                 .ContinueWith(r => DispatcherHelper.BeginInvoke(() => ImageStackingViewViewModel.ImageUrls = r.Result));
+            RaisePropertyChanged(() => IsSelectedAccountEmpty);
         }
 
         #endregion
@@ -1093,7 +1110,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         #region Posing control
 
-        private void AddUpdateWorker(TweetWorker w)
+        public void AddUpdateWorker(TweetWorker w)
         {
             DispatcherHelper.BeginInvoke(() => this._updateWorkers.Add(w));
             w.RemoveRequired += () => DispatcherHelper.BeginInvoke(() => this._updateWorkers.Remove(w));

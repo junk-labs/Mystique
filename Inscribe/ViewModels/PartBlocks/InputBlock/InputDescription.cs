@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Inscribe.Authentication;
 using Inscribe.Storage;
+using Inscribe.Text;
 using Inscribe.ViewModels.Common;
 using Livet;
-using Inscribe.Text;
-using System.Text.RegularExpressions;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {

@@ -45,6 +45,10 @@ namespace Inscribe.Core
                 }
             }
 
+            Uri uri = new Uri("https://xn--bckgakc6gsa3c6z.jp");
+            var decoded = System.Web.Punycode.PunyDecode(uri);
+            System.Diagnostics.Debug.WriteLine(decoded.OriginalString);
+
             // サブシステムの初期化
             NotificationCore.Initialize();
             HashtagStorage.Initialize();

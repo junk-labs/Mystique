@@ -4,15 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
-using Inscribe;
-using Inscribe.Communication.Posting;
 using Inscribe.Authentication;
+using Inscribe.Communication.Posting;
+using Inscribe.Configuration;
 using Inscribe.Plugin;
 using Inscribe.Storage;
+using Inscribe.Text;
 using Livet;
 using Livet.Commands;
-using Inscribe.Text;
-using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {

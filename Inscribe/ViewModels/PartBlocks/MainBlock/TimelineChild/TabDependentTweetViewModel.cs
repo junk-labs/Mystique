@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -15,12 +16,11 @@ using Inscribe.Filter;
 using Inscribe.Filter.Filters.Numeric;
 using Inscribe.Filter.Filters.Particular;
 using Inscribe.Storage;
+using Inscribe.Text;
 using Inscribe.ViewModels.Dialogs;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.Text;
-using System.Text.RegularExpressions;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {

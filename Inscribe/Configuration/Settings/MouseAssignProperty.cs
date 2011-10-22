@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Inscribe.Configuration.Settings
 {
     /// <summary>
@@ -72,11 +68,12 @@ namespace Inscribe.Configuration.Settings
         FavToggle,
         FavAdd,
         FavRemove,
+        FavSelect,
         FavToggleWithSpecificAccount,
         FavAddWithSpecificAccount,
         FavRemoveWithSpecificAccount,
-        FavAddAll,
-        FavRemoveAll,
+        FavAddWithAllAccount,
+        FavRemoveWithAllAccount,
     }
 
     public enum RetweetMouseActionCandidates
@@ -84,11 +81,12 @@ namespace Inscribe.Configuration.Settings
         RetweetToggle,
         RetweetAdd,
         RetweetRemove,
+        RetweetSelect,
         RetweetToggleWithSpecificAccount,
         RetweetAddWithSpecificAccount,
         RetweetRemoveWithSpecificAccount,
-        RetweetAddAll,
-        RetweetRemoveAll,
+        RetweetAddWithAllAccount,
+        RetweetRemoveWithAllAccount,
     }
 
     public enum UnofficialRetweetQuoteMouseActionCandidates
@@ -100,5 +98,4 @@ namespace Inscribe.Configuration.Settings
         CustomUnofficialRetweetImmediately,
         CustomQuoteTweetImmediately,
     }
-
 }

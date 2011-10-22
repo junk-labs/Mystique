@@ -15,6 +15,7 @@ using Inscribe.Plugin;
 using Inscribe.Storage;
 using Mystique.Views.Common;
 using Mystique.Views.Text;
+using System.Web;
 
 namespace Mystique.Views.Converters.Particular
 {
@@ -91,7 +92,14 @@ namespace Mystique.Views.Converters.Particular
                         {
                             case UrlResolve.OnPointed:
                             case UrlResolve.Never:
-                                urllink.Inlines.Add(new Run(ctt));
+                                try
+                                {
+                                    urllink.Inlines.Add(new Run(new Uri(ctt).PunyDecode().OriginalString));
+                                }
+                                catch (UriFormatException)
+                                {
+                                    urllink.Inlines.Add(new Run(ctt));
+                                }
                                 urllink.ToolTip = new UrlTooltip(ctt);
                                 break;
                             case UrlResolve.OnReceived:

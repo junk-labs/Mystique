@@ -345,12 +345,12 @@
             <Border Grid.Column="1"
                     Margin="2"
                     VerticalAlignment="Center"
-                    Background="OldLace"
                     BorderBrush="Gray"
                     BorderThickness="1"
                     CornerRadius="1">
                 <StackPanel Orientation="Vertical">
-                    <Border BorderBrush="Gray"
+                    <Border Background="OldLace"
+                            BorderBrush="Gray"
                             BorderThickness="0,0,0,1"
                             Visibility="{Binding Path=CurrentInputDescription.IsInReplyToEnabled,
                                                  Converter={StaticResource BoolVisibleConverter}}">
@@ -367,6 +367,7 @@
                             </Button>
                             <Image Width="16"
                                    Height="16"
+                                   Margin="0, 2"
                                    DockPanel.Dock="Left"
                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                                    Source="{StaticResource Reply}"
@@ -376,6 +377,26 @@
                                        Foreground="#FFE66400"
                                        Text="{Binding Path=CurrentInputDescription.InReplyToIdStatus,
                                                       Mode=OneWay}" />
+                        </DockPanel>
+                    </Border>
+                    <Border Background="#FFFFE6F0"
+                            BorderBrush="Gray"
+                            BorderThickness="0,0,0,1"
+                            Visibility="{Binding Path=IsSelectedAccountEmpty,
+                                                 Converter={StaticResource BoolVisibleConverter}}">
+                        <DockPanel>
+                            <Image Width="16"
+                                   Height="16"
+                                   Margin="2"
+                                   DockPanel.Dock="Left"
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                   Source="{StaticResource Warning}" />
+                            <TextBlock Margin="0, 2"
+                                       VerticalAlignment="Center"
+                                       FontSize="10.5"
+                                       Foreground="Tomato"
+                                       Text="投稿アカウントが選択されていません。左の×をクリックして、アカウントを選択してください。"
+                                       TextTrimming="CharacterEllipsis" />
                         </DockPanel>
                     </Border>
                     <Grid Background="White" Cursor="IBeam">

@@ -60,10 +60,12 @@
   <ItemGroup>
     <Compile Include="Common\FreezableEx.cs" />
     <Compile Include="Common\FilterHelper.cs" />
+    <Compile Include="Common\Punycode.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\MyTweetsTask.cs" />
     <Compile Include="Communication\InjectionPoint.cs" />
     <Compile Include="Communication\UserStreams\ConnectionManager.cs" />
     <Compile Include="Communication\UserStreams\UserStreamsConnection.cs" />
+    <Compile Include="Configuration\Settings\MouseAssignProperty.cs" />
     <Compile Include="Filter\Filters\Text\FilterHashtagText.cs" />
     <Compile Include="Filter\Filters\Text\FilterUrlText.cs" />
     <Compile Include="Common\KeyAssignHelper.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="Filter\Core\QueryCompiler.cs" />
     <Compile Include="Authentication\AccountInfo.cs" />
     <Compile Include="Authentication\CredentialCore.cs" />
+    <Compile Include="Subsystems\MouseAssignCore.cs" />
     <Compile Include="Subsystems\NotificationCore.cs" />
     <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="Plugin\PluginManager.cs" />
