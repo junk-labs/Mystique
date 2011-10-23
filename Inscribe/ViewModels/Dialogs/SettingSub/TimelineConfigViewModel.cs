@@ -6,9 +6,9 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
     public class TimelineConfigViewModel : ViewModel, IApplyable
     {
-        public bool PowerUserMode
+        public bool IsAloofUserMode
         {
-            get { return Setting.Instance.ExperienceProperty.IsPowerUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsAloofUserMode; }
         }
 
         public TimelineConfigViewModel()

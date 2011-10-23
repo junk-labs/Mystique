@@ -6,16 +6,17 @@ namespace Inscribe.Subsystems.KeyAssign
 {
     public class AssignItem
     {
-        public AssignItem(Key key, ModifierKeys modifiers, string action, bool preview, bool handleInTextBox)
+        public AssignItem(Key key, ModifierKeys modifiers, string action, bool preview, bool handleInTextBox, string argument)
         {
             this.Key = key;
             this.Modifiers = modifiers;
             this.ActionId = action;
             this.LookInPreview = preview;
             this.HandleInTextBox = handleInTextBox;
+            this.Argument = argument;
         }
 
-        public AssignItem(string key, string action, bool preview, bool handleInTextBox)
+        public AssignItem(string key, string action, bool preview, bool handleInTextBox, string argument)
         {
             try
             {
@@ -34,6 +35,7 @@ namespace Inscribe.Subsystems.KeyAssign
                 this.ActionId = action;
                 this.LookInPreview = preview;
                 this.HandleInTextBox = handleInTextBox;
+                this.Argument = argument;
             }
             catch (Exception e)
             {
@@ -82,5 +84,7 @@ namespace Inscribe.Subsystems.KeyAssign
         public bool LookInPreview { get; private set; }
 
         public bool HandleInTextBox { get; private set; }
+
+        public string Argument { get; private set; }
     }
 }

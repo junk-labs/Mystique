@@ -367,12 +367,13 @@
                             </Button>
                             <Image Width="16"
                                    Height="16"
-                                   Margin="0, 2"
+                                   Margin="2"
+                                   VerticalAlignment="Center"
                                    DockPanel.Dock="Left"
                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                                    Source="{StaticResource Reply}"
                                    ToolTip="投稿の返信先" />
-                            <TextBlock Margin="4,0"
+                            <TextBlock Margin="0, 2"
                                        VerticalAlignment="Center"
                                        Foreground="#FFE66400"
                                        Text="{Binding Path=CurrentInputDescription.InReplyToIdStatus,
@@ -388,6 +389,7 @@
                             <Image Width="16"
                                    Height="16"
                                    Margin="2"
+                                   VerticalAlignment="Center"
                                    DockPanel.Dock="Left"
                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                                    Source="{StaticResource Warning}" />

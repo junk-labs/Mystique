@@ -1,0 +1,874 @@
+﻿<UserControl x:Class="Mystique.Views.Dialogs.SettingSub.MouseAssignConfig"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="300"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
+    <Grid>
+        <TabControl>
+            <TabItem Header="一般">
+                <Grid>
+                    <CheckBox Margin="4"
+                              VerticalAlignment="Top"
+                              Content="マウスアサインを有効にする(_A)"
+                              IsChecked="{Binding IsMouseAssignEnabled}"
+                              IsEnabled="{Binding IsAllofUserMode}" />
+                </Grid>
+            </TabItem>
+            <TabItem DataContext="{Binding ReplyActionSetViewModel}" Header="返信">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--  None  -->
+                    <TextBlock Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:None" />
+                    <TextBlock Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=NoneKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>返信(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウントを指定して返信(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>すぐに返信(引数:本文({0}:@ID))</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="1"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=NoneKeyActionViewModel.Argument}" />
+                    <!--  Control  -->
+                    <TextBlock Grid.Row="2"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Control" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="2"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ControlKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>返信(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウントを指定して返信(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>すぐに返信(引数:本文({0}:@ID))</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="3"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ControlKeyActionViewModel.Argument}" />
+                    <!--  Alt  -->
+                    <TextBlock Grid.Row="4"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Alt" />
+                    <TextBlock Grid.Row="4"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="4"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=AltKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>返信(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウントを指定して返信(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>すぐに返信(引数:本文({0}:@ID))</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="5"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="5"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=AltKeyActionViewModel.Argument}" />
+                    <!--  Shift  -->
+                    <TextBlock Grid.Row="6"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Shift" />
+                    <TextBlock Grid.Row="6"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="6"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ShiftKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>返信(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウントを指定して返信(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>すぐに返信(引数:本文({0}:@ID))</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="7"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="7"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ShiftKeyActionViewModel.Argument}" />
+                </Grid>
+            </TabItem>
+            <TabItem DataContext="{Binding FavActionSetViewModel}" Header="Fav">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--  None  -->
+                    <TextBlock Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:None" />
+                    <TextBlock Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=NoneKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Favトグル(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav追加(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav削除(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav選択(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Favトグル(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Fav追加(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Fav削除(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>全アカウントFav追加(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>全アカウントFav削除(引数:無し)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="1"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=NoneKeyActionViewModel.Argument}" />
+                    <!--  Control  -->
+                    <TextBlock Grid.Row="2"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Control" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="2"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ControlKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Favトグル(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav追加(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav削除(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav選択(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Favトグル(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Fav追加(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Fav削除(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>全アカウントFav追加(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>全アカウントFav削除(引数:無し)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="3"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ControlKeyActionViewModel.Argument}" />
+                    <!--  Alt  -->
+                    <TextBlock Grid.Row="4"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Alt" />
+                    <TextBlock Grid.Row="4"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="4"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=AltKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Favトグル(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav追加(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav削除(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav選択(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Favトグル(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Fav追加(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Fav削除(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>全アカウントFav追加(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>全アカウントFav削除(引数:無し)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="5"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="5"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=AltKeyActionViewModel.Argument}" />
+                    <!--  Shift  -->
+                    <TextBlock Grid.Row="6"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Shift" />
+                    <TextBlock Grid.Row="6"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="6"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ShiftKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Favトグル(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav追加(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav削除(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>Fav選択(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Favトグル(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Fav追加(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定Fav削除(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>全アカウントFav追加(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>全アカウントFav削除(引数:無し)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="7"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="7"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ShiftKeyActionViewModel.Argument}" />
+                </Grid>
+            </TabItem>
+            <TabItem DataContext="{Binding RetweetActionSetViewModel}" Header="RT">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--  None  -->
+                    <TextBlock Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:None" />
+                    <TextBlock Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=NoneKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RTトグル(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT選択(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RTトグル(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RT(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RT削除(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>全アカウントRT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>全アカウントRT削除(引数:無し)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="1"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=NoneKeyActionViewModel.Argument}" />
+                    <!--  Control  -->
+                    <TextBlock Grid.Row="2"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Control" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="2"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ControlKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RTトグル(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT選択(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RTトグル(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RT(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RT削除(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>全アカウントRT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>全アカウントRT削除(引数:無し)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="3"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ControlKeyActionViewModel.Argument}" />
+                    <!--  Alt  -->
+                    <TextBlock Grid.Row="4"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Alt" />
+                    <TextBlock Grid.Row="4"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="4"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=AltKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RTトグル(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT選択(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RTトグル(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RT(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RT削除(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>全アカウントRT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>全アカウントRT削除(引数:無し)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="5"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="5"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=AltKeyActionViewModel.Argument}" />
+                    <!--  Shift  -->
+                    <TextBlock Grid.Row="6"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Shift" />
+                    <TextBlock Grid.Row="6"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="6"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ShiftKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RTトグル(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>RT選択(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RTトグル(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RT(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>アカウント指定RT削除(引数:アカウントID(,区切り))</ComboBoxItem>
+                        <ComboBoxItem>全アカウントRT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>全アカウントRT削除(引数:無し)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="7"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="7"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ShiftKeyActionViewModel.Argument}" />
+                </Grid>
+            </TabItem>
+            <TabItem DataContext="{Binding UnofficialRetweetActionSetViewModel}" Header="非公式RT">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--  None  -->
+                    <TextBlock Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:None" />
+                    <TextBlock Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=NoneKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>非公式RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>QT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>カスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>カスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="1"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=NoneKeyActionViewModel.Argument}" />
+                    <!--  Control  -->
+                    <TextBlock Grid.Row="2"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Control" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="2"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ControlKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>非公式RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>QT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>カスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>カスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="3"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ControlKeyActionViewModel.Argument}" />
+                    <!--  Alt  -->
+                    <TextBlock Grid.Row="4"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Alt" />
+                    <TextBlock Grid.Row="4"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="4"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=AltKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>非公式RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>QT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>カスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>カスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="5"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="5"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=AltKeyActionViewModel.Argument}" />
+                    <!--  Shift  -->
+                    <TextBlock Grid.Row="6"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Shift" />
+                    <TextBlock Grid.Row="6"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="6"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ShiftKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>非公式RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>QT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>カスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>カスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="7"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="7"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ShiftKeyActionViewModel.Argument}" />
+                </Grid>
+            </TabItem>
+            <TabItem DataContext="{Binding QuoteTweetActionSetViewModel}" Header="QT">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--  None  -->
+                    <TextBlock Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:None" />
+                    <TextBlock Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=NoneKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>非公式RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>QT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>カスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>カスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="1"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=NoneKeyActionViewModel.Argument}" />
+                    <!--  Control  -->
+                    <TextBlock Grid.Row="2"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Control" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="2"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ControlKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>非公式RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>QT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>カスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>カスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="3"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ControlKeyActionViewModel.Argument}" />
+                    <!--  Alt  -->
+                    <TextBlock Grid.Row="4"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Alt" />
+                    <TextBlock Grid.Row="4"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="4"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=AltKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>非公式RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>QT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>カスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>カスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="5"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="5"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=AltKeyActionViewModel.Argument}" />
+                    <!--  Shift  -->
+                    <TextBlock Grid.Row="6"
+                               Margin="4,2"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Key:Shift" />
+                    <TextBlock Grid.Row="6"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="動作:" />
+                    <ComboBox Grid.Row="6"
+                              Grid.Column="2"
+                              Margin="4,2"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding Path=ShiftKeyActionViewModel.ActionDescriptionIndex}">
+                        <ComboBoxItem>無し(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>非公式RT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>QT(引数:無し)</ComboBoxItem>
+                        <ComboBoxItem>カスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>カスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムRT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                        <ComboBoxItem>すぐにカスタムQT(引数:本文({0}:@ID, {1}:本文)</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Grid.Row="7"
+                               Grid.Column="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="引数:" />
+                    <TextBox Grid.Row="7"
+                             Grid.Column="2"
+                             Margin="4,2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Text="{Binding Path=ShiftKeyActionViewModel.Argument}" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

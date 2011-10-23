@@ -323,7 +323,7 @@ namespace Inscribe.Communication.Posting
 
         public static void FavTweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => FavTweetSink(infos, status));
+            Task.Factory.StartNew(() => FavTweetSync(infos, status));
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> favoriteInjection =
@@ -334,7 +334,7 @@ namespace Inscribe.Communication.Posting
             get { return favoriteInjection.GetInterface(); }
         }
 
-        private static void FavTweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
+        public static void FavTweetSync(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
             var ts = status.Status as TwitterStatus;
             if (ts == null)
@@ -457,7 +457,7 @@ namespace Inscribe.Communication.Posting
 
         public static void Retweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => RetweetSink(infos, status));
+            Task.Factory.StartNew(() => RetweetSync(infos, status));
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> retweetInjection =
@@ -468,7 +468,7 @@ namespace Inscribe.Communication.Posting
             get { return retweetInjection.GetInterface(); }
         }
 
-        private static void RetweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
+        public static void RetweetSync(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
             var ts = status.Status as TwitterStatus;
             if (ts == null)

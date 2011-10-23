@@ -18,7 +18,7 @@ namespace Inscribe.Subsystems
     /// </summary>
     public static class KeyAssignCore
     {
-        private static Dictionary<string, Action> callbacks;
+        private static Dictionary<string, Action<string>> callbacks;
 
         private static AssignDescription assignDescription = null;
 
@@ -47,7 +47,7 @@ namespace Inscribe.Subsystems
 
         static KeyAssignCore()
         {
-            callbacks = new Dictionary<string, Action>();
+            callbacks = new Dictionary<string, Action<string>>();
             Setting.SettingValueChanged += (o, e) => ReloadAssign();
         }
 
@@ -67,6 +67,17 @@ namespace Inscribe.Subsystems
         /// <param name="action">コールバックアクション</param>
         /// <exception cref="System.ArgumentNullException">同一のIDが登録済みです。</exception>
         public static void RegisterOperation(string id, Action action)
+        {
+            RegisterOperation(id, _ => action());
+        }
+
+        /// <summary>
+        /// キーアサイン オペレーションを登録します。
+        /// </summary>
+        /// <param name="id">キーアサインID</param>
+        /// <param name="action">コールバックアクション</param>
+        /// <exception cref="System.ArgumentNullException">同一のIDが登録済みです。</exception>
+        public static void RegisterOperation(string id, Action<string> action)
         {
             if (id == null)
                 throw new ArgumentNullException("id");
@@ -194,7 +205,7 @@ namespace Inscribe.Subsystems
                     .Item2
                     .Where(a => a.Key == key && a.Modifiers == modifier &&
                         (!preview || a.LookInPreview) && (!isSourceFromTextBox || a.HandleInTextBox))
-                    .Select(a => a.ActionId)
+                    .Select(a => new Tuple<string, string>(a.ActionId, a.Argument))
                     .Dispatch();
             }
             catch (Exception ex)
@@ -205,16 +216,16 @@ namespace Inscribe.Subsystems
             }
         }
 
-        private static bool Dispatch(this IEnumerable<string> actionIds)
+        private static bool Dispatch(this IEnumerable<Tuple<string, string>> actions)
         {
             bool dispatched = false;
-            foreach (var id in actionIds)
+            foreach (var ad in actions)
             {
-                Action action;
-                if (callbacks.TryGetValue(id, out action))
-                    action();
+                Action<string> action;
+                if (callbacks.TryGetValue(ad.Item1, out action))
+                    action(ad.Item2);
                 else
-                    throw new ArgumentException("オペレーションID \"" + id + "\" は見つかりませんでした。");
+                    throw new ArgumentException("オペレーションID \"" + ad + "\" は見つかりませんでした。");
                 dispatched = true;
             }
             return dispatched;

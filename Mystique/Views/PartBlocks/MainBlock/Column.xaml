@@ -56,16 +56,18 @@
                         <ba:InvokePassThruCommandAction Command="{Binding TabMouseDownCommand}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-                    <Border.ContextMenu>
+                <Border.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding Path=EditTabCommand}"
-                                  Header="このタブを編集(_E)..." />
+                        <MenuItem Command="{Binding Path=EditTabCommand}" Header="このタブを編集(_E)..." />
+                        <MenuItem Header="このタブについて(_T)" Visibility="{Binding IsAloofUserMode, Converter={StaticResource BoolVisibleConverter}}">
+                            <MenuItem Command="{Binding FavoriteThisTabAllCommand}" Header="全てFavorite(_F)" />
+                            <MenuItem Command="{Binding RetweetThisTabAllCommand}" Header="全てRetweet(_R)" />
+                        </MenuItem>
                         <Separator />
                         <MenuItem Command="{Binding Path=Parent.AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
                         <MenuItem Command="{Binding Path=Parent.RebirthTabCommand}" Header="最後に閉じたタブを元に戻す(_R)" />
                         <Separator />
-                        <MenuItem Command="{Binding Path=CloseCommand}"
-                                  Header="タブを閉じる(_C)" />
+                        <MenuItem Command="{Binding Path=CloseCommand}" Header="タブを閉じる(_C)" />
                     </ContextMenu>
                 </Border.ContextMenu>
                 <i:Interaction.Behaviors>
@@ -87,7 +89,7 @@
                             <i:InvokeCommandAction Command="{Binding MoveFocusToThisCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                        <Rectangle Height="5"
+                    <Rectangle Height="5"
                                VerticalAlignment="Top"
                                Visibility="{Binding IsCurrentFocused,
                                                     Converter={StaticResource BoolVisibleConverter}}">
@@ -130,6 +132,9 @@
     <i:Interaction.Triggers>
         <l:InteractionMessageTrigger MessageKey="EditTab" Messenger="{Binding Messenger}">
             <ba:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type dlg:TabEditor}" />
+        </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
+            <l:ConfirmationDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid>
@@ -181,7 +186,8 @@
                      InputMethod.IsInputMethodEnabled="False"
                      IsSynchronizedWithCurrentItem="True"
                      ItemContainerStyle="{StaticResource ContainerStyle}"
-                     ItemsSource="{Binding TabItems, IsAsync=True}"
+                     ItemsSource="{Binding TabItems,
+                                           IsAsync=True}"
                      ItemTemplate="{DynamicResource ItemTemplate}"
                      Padding="0"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"

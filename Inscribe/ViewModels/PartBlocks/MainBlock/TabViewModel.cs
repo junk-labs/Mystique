@@ -18,6 +18,8 @@ using Inscribe.Subsystems;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Inscribe.Communication.Posting;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -152,10 +154,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void UpdateSettingValue()
         {
-            // FullLineViewが変わったかどうか見るだけ
             RaisePropertyChanged(() => IsFullLineView);
             RaisePropertyChanged(() => IsSearchBarBottom);
             RaisePropertyChanged(() => SearchBarDock);
+            RaisePropertyChanged(() => IsAloofUserMode);
         }
 
         /// <summary>
@@ -178,6 +180,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     this.StackingTimelines.ToArray().ForEach(f => f.InvalidateCache());
                 }
             });
+        }
+
+        public bool IsAloofUserMode
+        {
+            get { return Setting.Instance.ExperienceProperty.IsAloofUserMode; }
         }
 
         public bool IsCurrentFocused
@@ -540,6 +547,88 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.RemoveTopTimeline(false);
         }
         #endregion
+
+
+        #region FavoriteThisTabAllCommand
+        private Livet.Commands.ViewModelCommand _FavoriteThisTabAllCommand;
+
+        public Livet.Commands.ViewModelCommand FavoriteThisTabAllCommand
+        {
+            get
+            {
+                if (_FavoriteThisTabAllCommand == null)
+                {
+                    _FavoriteThisTabAllCommand = new Livet.Commands.ViewModelCommand(FavoriteThisTabAll);
+                }
+                return _FavoriteThisTabAllCommand;
+            }
+        }
+
+        public void FavoriteThisTabAll()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                IEnumerable<TabDependentTweetViewModel> tweets;
+                using (NotifyStorage.NotifyManually("タイムラインの内容を取得しています..."))
+                {
+                    tweets = this.CurrentForegroundTimeline.CoreViewModel.TweetsSource.ToArrayVolatile();
+                }
+                var msg = new ConfirmationMessage(
+                    "このタブに含まれるすべてのツイートをFavoriteします。" + Environment.NewLine +
+                    "(対象ツイート: " + tweets.Count() + "件)" + Environment.NewLine +
+                    "よろしいですか？", "全てFavorite",
+                    System.Windows.MessageBoxImage.Warning,
+                    System.Windows.MessageBoxButton.OKCancel,
+                    "Confirm");
+                this.Parent.Messenger.Raise(msg);
+                if (msg.Response.GetValueOrDefault())
+                    tweets.ForEach(t => t.Favorite());
+            });
+        }
+        #endregion
+
+        #region RetweetThisTabAllCommand
+        private ViewModelCommand _RetweetThisTabAllCommand;
+
+        public ViewModelCommand RetweetThisTabAllCommand
+        {
+            get
+            {
+                if (_RetweetThisTabAllCommand == null)
+                {
+                    _RetweetThisTabAllCommand = new ViewModelCommand(RetweetThisTabAll);
+                }
+                return _RetweetThisTabAllCommand;
+            }
+        }
+
+        public void RetweetThisTabAll()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                IEnumerable<TabDependentTweetViewModel> tweets;
+                using (NotifyStorage.NotifyManually("タイムラインの内容を取得しています..."))
+                {
+                    tweets = this.CurrentForegroundTimeline.CoreViewModel.TweetsSource.ToArrayVolatile();
+                }
+                var msg = new ConfirmationMessage(
+                    "このタブに含まれるすべてのツイートをRetweetします。" + Environment.NewLine +
+                    "(対象ツイート: " + tweets.Count() + "件)" + Environment.NewLine +
+                    "よろしいですか？", "全てFavorite",
+                    System.Windows.MessageBoxImage.Warning,
+                    System.Windows.MessageBoxButton.OKCancel,
+                    "Confirm");
+                this.Parent.Messenger.Raise(msg);
+                if (msg.Response.GetValueOrDefault())
+                {
+                    var lai = this.TabProperty.LinkAccountInfos.ToArray();
+                    tweets.OrderBy(t => t.Tweet.CreatedAt)
+                        .ForEach(t => PostOffice.Retweet(lai, t.Tweet));
+                }
+            });
+        }
+        #endregion
+
 
         #region EditTabCommand
         ViewModelCommand _EditTabCommand;

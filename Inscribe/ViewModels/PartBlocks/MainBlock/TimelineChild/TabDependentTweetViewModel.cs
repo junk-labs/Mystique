@@ -21,6 +21,7 @@ using Inscribe.ViewModels.Dialogs;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using Inscribe.Subsystems;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -600,8 +601,22 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Mention()
         {
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(this.Tweet);
+            if (Setting.Instance.MouseAssignProperty.IsMouseAssignEnabled)
+            {
+                if(Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.ReplyActionSet.ControlKeyAction);
+                else if(Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.ReplyActionSet.AltKeyAction);
+                else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.ReplyActionSet.ShiftKeyAction);
+                else
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.ReplyActionSet.NoneKeyAction);
+            }
+            else
+            {
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(this.Tweet);
+            }
         }
         #endregion
 
@@ -620,14 +635,23 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void FavoriteInternal()
         {
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+            if (Setting.Instance.MouseAssignProperty.IsMouseAssignEnabled)
             {
-                FavoriteMultiUser();
+                if(Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.FavActionSet.ControlKeyAction);
+                else if(Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.FavActionSet.AltKeyAction);
+                else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.FavActionSet.ShiftKeyAction);
+                else
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.FavActionSet.NoneKeyAction);
             }
             else
             {
-                ToggleFavorite();
-
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                    FavoriteMultiUser();
+                else
+                    ToggleFavorite();
             }
         }
         #endregion
@@ -700,13 +724,23 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void RetweetInternal()
         {
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+            if (Setting.Instance.MouseAssignProperty.IsMouseAssignEnabled)
             {
-                RetweetMultiUser();
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.RetweetActionSet.ControlKeyAction);
+                else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.RetweetActionSet.AltKeyAction);
+                else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.RetweetActionSet.ShiftKeyAction);
+                else
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.RetweetActionSet.NoneKeyAction);
             }
             else
             {
-                ToggleRetweet();
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                    RetweetMultiUser();
+                else
+                    ToggleRetweet();
             }
         }
         #endregion
@@ -779,13 +813,27 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void UnofficialRetweet()
         {
-            if (this.Tweet.Status is TwitterDirectMessage) return;
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
-            var status = this.Tweet.Status;
-            if(status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
-                status = ((TwitterStatus)status).RetweetedOriginal;
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" RT @" + status.User.ScreenName + ": " + status.Text);
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInputCaretIndex(0);
+            if (Setting.Instance.MouseAssignProperty.IsMouseAssignEnabled)
+            {
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.UnofficialRetweetActionSet.ControlKeyAction);
+                else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.UnofficialRetweetActionSet.AltKeyAction);
+                else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.UnofficialRetweetActionSet.ShiftKeyAction);
+                else
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.UnofficialRetweetActionSet.NoneKeyAction);
+            }
+            else
+            {
+                if (this.Tweet.Status is TwitterDirectMessage) return;
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
+                var status = this.Tweet.Status;
+                if (status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
+                    status = ((TwitterStatus)status).RetweetedOriginal;
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" RT @" + status.User.ScreenName + ": " + status.Text);
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInputCaretIndex(0);
+            }
         }
         #endregion
       
@@ -804,16 +852,29 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Quote()
         {
-            if (this.Tweet.Status is TwitterDirectMessage) return;
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(null);
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(this.Tweet);
-            var status = this.Tweet.Status;
-            if (status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
-                status = ((TwitterStatus)status).RetweetedOriginal;
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" QT @" + status.User.ScreenName + ": " + status.Text);
-            this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInputCaretIndex(0);
-
+            if (Setting.Instance.MouseAssignProperty.IsMouseAssignEnabled)
+            {
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.QuoteTweetActionSet.ControlKeyAction);
+                else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.QuoteTweetActionSet.AltKeyAction);
+                else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.QuoteTweetActionSet.ShiftKeyAction);
+                else
+                    MouseAssignCore.ExecuteAction(this.Tweet, Setting.Instance.MouseAssignProperty.QuoteTweetActionSet.NoneKeyAction);
+            }
+            else
+            {
+                if (this.Tweet.Status is TwitterDirectMessage) return;
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetOpenText(true, true);
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(null);
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInReplyTo(this.Tweet);
+                var status = this.Tweet.Status;
+                if (status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
+                    status = ((TwitterStatus)status).RetweetedOriginal;
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetText(" QT @" + status.User.ScreenName + ": " + status.Text);
+                this.Parent.Parent.Parent.Parent.InputBlockViewModel.SetInputCaretIndex(0);
+            }
         }
         #endregion
 

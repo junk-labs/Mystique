@@ -48,7 +48,8 @@ namespace Inscribe.Subsystems.KeyAssign
                 throw new Exception("キーとアクションが無い要素があります。");
             var preview = region.Attribute("Preview").ParseBool(false);
             var handleInText = region.Attribute("InTextBox").ParseBool(false);
-            return new AssignItem(kstr, action, preview, handleInText);
+            var argument = region.Attribute("Argument").ParseString();
+            return new AssignItem(kstr, action, preview, handleInText, argument);
         }
     }
 }

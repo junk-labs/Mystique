@@ -248,10 +248,15 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("Open10thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(9)));
 
             // Timeline action
-            KeyAssignCore.RegisterOperation("Mention", () => ExecTVMAction(vm => vm.MentionCommand.Execute()));
+            KeyAssignCore.RegisterOperation("Mention", () => ExecTVMAction(vm =>
+                MouseAssignCore.ExecuteAction(vm.Tweet, Configuration.Settings.ReplyMouseActionCandidates.Reply, null)));
+            KeyAssignCore.RegisterOperation("MentionSpecific", acc => ExecTVMAction(vm =>
+                MouseAssignCore.ExecuteAction(vm.Tweet, Configuration.Settings.ReplyMouseActionCandidates.ReplyFromSpecificAccount, acc)));
+            KeyAssignCore.RegisterOperation("MentionImmediately", text => ExecTVMAction(vm =>
+                MouseAssignCore.ExecuteAction(vm.Tweet, Configuration.Settings.ReplyMouseActionCandidates.ReplyImmediately, text)));
             KeyAssignCore.RegisterOperation("MentionMulti", () => ExecTVMAction(vm =>
             {
-                vm.MentionCommand.Execute();
+                MouseAssignCore.ExecuteAction(vm.Tweet, Configuration.Settings.ReplyMouseActionCandidates.Reply, null);
                 this.SetFocus();
             }));
             KeyAssignCore.RegisterOperation("SendDirectMessage", () => ExecTVMAction(vm => vm.DirectMessageCommand.Execute()));
@@ -260,27 +265,60 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 vm.Favorite();
                 vm.Retweet();
             }));
-            KeyAssignCore.RegisterOperation("FavoriteThisTabAll", () => ExecTabAction(vm =>
-            {
-                var items = vm.StackingTimelines.First().CoreViewModel.TweetsSource.ToArray();
-                var cms = new ConfirmationMessage(
-                    "タブ " + vm.TabProperty.Name + " に存在するすべてのステータスをFavoriteに追加します。" + Environment.NewLine +
-                    "(このタブには" + items.Length + "ステータスが存在します)" + Environment.NewLine +
-                    "よろしいですか？", "全Favoriteの警告", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
-                this.Messenger.Raise(cms);
-                if (cms.Response.GetValueOrDefault())
-                    items.ForEach(tdtvm => tdtvm.Favorite());
-            }));
-            KeyAssignCore.RegisterOperation("Favorite", () => ExecTVMAction(vm => vm.ToggleFavorite()));
-            KeyAssignCore.RegisterOperation("FavoriteCreate", () => ExecTVMAction(vm => vm.Favorite()));
-            KeyAssignCore.RegisterOperation("FavoriteDelete", () => ExecTVMAction(vm => vm.Unfavorite()));
-            KeyAssignCore.RegisterOperation("FavoriteMulti", () => ExecTVMAction(vm => vm.FavoriteMultiUserCommand.Execute()));
-            KeyAssignCore.RegisterOperation("Retweet", () => ExecTVMAction(vm => vm.ToggleRetweet()));
-            KeyAssignCore.RegisterOperation("RetweetCreate", () => ExecTVMAction(vm => vm.Retweet()));
-            KeyAssignCore.RegisterOperation("RetweetDelete", () => ExecTVMAction(vm => vm.Unretweet()));
-            KeyAssignCore.RegisterOperation("RetweetMulti", () => ExecTVMAction(vm => vm.RetweetMultiUserCommand.Execute()));
-            KeyAssignCore.RegisterOperation("UnofficialRetweet", () => ExecTVMAction(vm => vm.UnofficialRetweetCommand.Execute()));
-            KeyAssignCore.RegisterOperation("QuoteTweet", () => ExecTVMAction(vm => vm.QuoteCommand.Execute()));
+            KeyAssignCore.RegisterOperation("FavoriteThisTabAll", () => ExecTabAction(vm => vm.FavoriteThisTabAll()));
+            KeyAssignCore.RegisterOperation("RetweetThisTabAll", () => ExecTabAction(vm => vm.RetweetThisTabAll()));
+
+            KeyAssignCore.RegisterOperation("Favorite", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.FavMouseActionCandidates.FavToggle, null)));
+            KeyAssignCore.RegisterOperation("FavoriteAdd", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.FavMouseActionCandidates.FavAdd, null)));
+            KeyAssignCore.RegisterOperation("FavoriteRemove", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.FavMouseActionCandidates.FavRemove, null)));
+            KeyAssignCore.RegisterOperation("FavoriteSelect", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.FavMouseActionCandidates.FavSelect, null)));
+            KeyAssignCore.RegisterOperation("FavoriteAddAll", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.FavMouseActionCandidates.FavAddWithAllAccount, null)));
+            KeyAssignCore.RegisterOperation("FavoriteRemoveAll", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.FavMouseActionCandidates.FavRemoveWithAllAccount, null)));
+            KeyAssignCore.RegisterOperation("FavoriteSpecific", acc => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.FavMouseActionCandidates.FavToggleWithSpecificAccount, acc)));
+            KeyAssignCore.RegisterOperation("FavoriteAddSpecific", acc => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.FavMouseActionCandidates.FavAddWithSpecificAccount, acc)));
+            KeyAssignCore.RegisterOperation("FavoriteRemoveSpecific", acc => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.FavMouseActionCandidates.FavRemoveWithSpecificAccount, acc)));
+
+            KeyAssignCore.RegisterOperation("Retweet", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.RetweetMouseActionCandidates.RetweetToggle, null)));
+            KeyAssignCore.RegisterOperation("RetweetCreate", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.RetweetMouseActionCandidates.RetweetCreate, null)));
+            KeyAssignCore.RegisterOperation("RetweetDelete", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.RetweetMouseActionCandidates.RetweetDelete, null)));
+            KeyAssignCore.RegisterOperation("RetweetSelect", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.RetweetMouseActionCandidates.RetweetSelect, null)));
+            KeyAssignCore.RegisterOperation("RetweetCreateAll", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.RetweetMouseActionCandidates.RetweetCreateWithAllAccount, null)));
+            KeyAssignCore.RegisterOperation("RetweetDeleteAll", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.RetweetMouseActionCandidates.RetweetDeleteWithAllAccount, null)));
+            KeyAssignCore.RegisterOperation("RetweetSpecific", acc => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.RetweetMouseActionCandidates.RetweetToggleWithSpecificAccount, acc)));
+            KeyAssignCore.RegisterOperation("RetweetCreateSpecific", acc => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.RetweetMouseActionCandidates.RetweetCreateWithSpecificAccount, acc)));
+            KeyAssignCore.RegisterOperation("RetweetDeleteSpecific", acc => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.RetweetMouseActionCandidates.RetweetDeleteWithSpecificAccount, acc)));
+
+            KeyAssignCore.RegisterOperation("UnofficialRetweet", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                 Configuration.Settings.UnofficialRetweetQuoteMouseActionCandidates.DefaultUnofficialRetweet, null)));
+            KeyAssignCore.RegisterOperation("QuoteTweet", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.UnofficialRetweetQuoteMouseActionCandidates.DefaultQuoteTweet, null)));
+            KeyAssignCore.RegisterOperation("CustomUnofficialRetweet", arg => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                 Configuration.Settings.UnofficialRetweetQuoteMouseActionCandidates.CustomUnofficialRetweet, arg)));
+            KeyAssignCore.RegisterOperation("CustomQuoteTweet", arg => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.UnofficialRetweetQuoteMouseActionCandidates.CustomQuoteTweet, arg)));
+            KeyAssignCore.RegisterOperation("CustomUnofficialRetweetImmediately", arg => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                 Configuration.Settings.UnofficialRetweetQuoteMouseActionCandidates.CustomUnofficialRetweetImmediately, arg)));
+            KeyAssignCore.RegisterOperation("CustomQuoteTweetImmediately", arg => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
+                Configuration.Settings.UnofficialRetweetQuoteMouseActionCandidates.CustomQuoteTweetImmediately, arg)));
+
             KeyAssignCore.RegisterOperation("Delete", () => ExecTVMAction(vm => vm.DeleteCommand.Execute()));
             KeyAssignCore.RegisterOperation("Mute", () => ExecTVMAction(vm => vm.MuteCommand.Execute()));
             KeyAssignCore.RegisterOperation("ReportForSpam", () => ExecTVMAction(vm => vm.ReportForSpamCommand.Execute()));

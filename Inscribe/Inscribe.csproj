@@ -211,6 +211,7 @@
     <Compile Include="ViewModels\Dialogs\SettingSub\InputConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\KeyAssignConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\LayoutConfigViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SettingSub\MouseAssignConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\MuteConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\NotifyConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\NotifyKindConfigViewModel.cs" />

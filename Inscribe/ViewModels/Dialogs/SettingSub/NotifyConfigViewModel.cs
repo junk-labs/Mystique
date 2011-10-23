@@ -6,9 +6,9 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
     public class NotifyConfigViewModel : ViewModel, IApplyable
     {
-        public bool IsPowerUserMode
+        public bool IsAloofUserMode
         {
-            get { return Setting.Instance.ExperienceProperty.IsPowerUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsAloofUserMode; }
         }
 
         public NotifyConfigViewModel()

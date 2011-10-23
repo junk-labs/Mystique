@@ -87,7 +87,7 @@
                   Grid.ColumnSpan="2"
                   Margin="4"
                   Header="高度な設定"
-                  Visibility="{Binding PowerUserMode,
+                  Visibility="{Binding IsAloofUserMode,
                                        Converter={StaticResource BoolVisibleConverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>

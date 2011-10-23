@@ -1,21 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Dulcet.Twitter;
+using Inscribe.Authentication;
+using Inscribe.Communication.Posting;
 using Inscribe.Configuration.Settings;
 using Inscribe.Core;
-using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Inscribe.Storage;
-using Inscribe.Communication.Posting;
-using Inscribe.Authentication;
-using Dulcet.Twitter;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 
 namespace Inscribe.Subsystems
 {
     public static class MouseAssignCore
     {
+        /// <summary>
+        /// アクションを実行します。
+        /// </summary>
+        /// <param name="target">対象ターゲット</param>
+        /// <param name="action">アクション。Nullの場合は何も実行されません。</param>
         public static void ExecuteAction<T>(TweetViewModel target, ActionDescription<T> action)
         {
+            if (action == null) return;
             ExecuteAction(target, (dynamic)action.Action, action.ActionArgs);
         }
 
@@ -109,10 +114,10 @@ namespace Inscribe.Subsystems
                     else
                         PostOffice.Retweet(cais, target);
                     break;
-                case RetweetMouseActionCandidates.RetweetAdd:
+                case RetweetMouseActionCandidates.RetweetCreate:
                     PostOffice.Retweet(cais, target);
                     break;
-                case RetweetMouseActionCandidates.RetweetRemove:
+                case RetweetMouseActionCandidates.RetweetDelete:
                     PostOffice.Unretweet(cais, target);
                     break;
                 case RetweetMouseActionCandidates.RetweetSelect:
@@ -132,16 +137,16 @@ namespace Inscribe.Subsystems
                     else
                         PostOffice.Retweet(pais, target);
                     break;
-                case RetweetMouseActionCandidates.RetweetAddWithSpecificAccount:
+                case RetweetMouseActionCandidates.RetweetCreateWithSpecificAccount:
                     PostOffice.Retweet(pais, target);
                     break;
-                case RetweetMouseActionCandidates.RetweetRemoveWithSpecificAccount:
+                case RetweetMouseActionCandidates.RetweetDeleteWithSpecificAccount:
                     PostOffice.Unretweet(pais, target);
                     break;
-                case RetweetMouseActionCandidates.RetweetAddWithAllAccount:
+                case RetweetMouseActionCandidates.RetweetCreateWithAllAccount:
                     PostOffice.Retweet(AccountStorage.Accounts, target);
                     break;
-                case RetweetMouseActionCandidates.RetweetRemoveWithAllAccount:
+                case RetweetMouseActionCandidates.RetweetDeleteWithAllAccount:
                     PostOffice.Unretweet(AccountStorage.Accounts, target);
                     break;
             }
@@ -149,19 +154,44 @@ namespace Inscribe.Subsystems
 
         public static void ExecuteAction(TweetViewModel target, UnofficialRetweetQuoteMouseActionCandidates actionKind, string argument)
         {
+            if (target.Status is TwitterDirectMessage) return;
+            var status = target.Status;
+            if (status is TwitterStatus && ((TwitterStatus)status).RetweetedOriginal != null)
+                status = ((TwitterStatus)status).RetweetedOriginal;
             switch (actionKind)
             {
                 case UnofficialRetweetQuoteMouseActionCandidates.DefaultUnofficialRetweet:
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetOpenText(true, true);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetText(" RT @" + status.User.ScreenName + ": " + status.Text);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetInputCaretIndex(0);
                     break;
                 case UnofficialRetweetQuoteMouseActionCandidates.DefaultQuoteTweet:
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetOpenText(true, true);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetInReplyTo(null);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetInReplyTo(target);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetText(" QT @" + status.User.ScreenName + ": " + status.Text);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetInputCaretIndex(0);
                     break;
                 case UnofficialRetweetQuoteMouseActionCandidates.CustomUnofficialRetweet:
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetOpenText(true, true);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetText(String.Format(argument, "@" + status.User.ScreenName, status.Text));
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetInputCaretIndex(0);
                     break;
                 case UnofficialRetweetQuoteMouseActionCandidates.CustomQuoteTweet:
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetOpenText(true, true);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetInReplyTo(null);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetInReplyTo(target);
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetText(String.Format(argument, "@" + status.User.ScreenName, status.Text));
+                    KernelService.MainWindowViewModel.InputBlockViewModel.SetInputCaretIndex(0);
                     break;
                 case UnofficialRetweetQuoteMouseActionCandidates.CustomUnofficialRetweetImmediately:
+                    PostImmediate(GetAccountInfos(),
+                        String.Format(argument, "@" + status.User.ScreenName, status.Text));
                     break;
                 case UnofficialRetweetQuoteMouseActionCandidates.CustomQuoteTweetImmediately:
+                    PostImmediate(GetAccountInfos(),
+                        String.Format(argument, "@" + status.User.ScreenName, status.Text),
+                        status.Id);
                     break;
             }
         }
@@ -177,7 +207,9 @@ namespace Inscribe.Subsystems
 
         private static IEnumerable<AccountInfo> GetAccountInfos(string argument)
         {
+            if (argument == null) return new AccountInfo[0];
             return argument.Split(',').Select(s => AccountStorage.Get(s.Trim()))
+                            .Where(i => i != null)
                             .Distinct();
         }
 

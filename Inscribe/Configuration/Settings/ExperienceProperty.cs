@@ -8,7 +8,7 @@ namespace Inscribe.Configuration.Settings
             this.PostFinishShowLength = 3000;
             this.UpdateKind = Define.GetVersion().FileBuildPart;
             this.TwitterActionNotifyShowLength = 5000;
-            this.IsPowerUserMode = false;
+            this.IsAloofUserMode = false;
             this.StatusMessageDefaultShowLengthSec = 5;
             this.FontSize = 11.5;
             this.FontFamily = "Meiryo";
@@ -20,13 +20,13 @@ namespace Inscribe.Configuration.Settings
         /// <summary>
         /// 上級者向けの解説を使用する
         /// </summary>
-        public bool IsPowerUserMode { get; set; }
+        public bool IsAloofUserMode { get; set; }
 
         /// <summary>
         /// 更新パッケージ種別
         /// </summary>
         /// <remarks>
-        /// PowerUserModeがオンなら0-3で選択可能
+        /// IsAloofUserModeがオンなら0-3で選択可能
         /// </remarks>
         public int UpdateKind { get; set; }
 

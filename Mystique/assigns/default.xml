@@ -1,32 +1,32 @@
 <?xml version="1.0"?>
 <KeyAssign Name="Krile Default">
-	<AssignGroups>
-		<AssignGroup Region="General">
-			<Assign Action="FocusToTimeline" Key="Ctrl+T" />
-			<Assign Action="OpenInput" Key="Ctrl+I" />
-			<Assign Action="OpenInput" Key="Enter" />
+  <AssignGroups>
+    <AssignGroup Region="General">
+      <Assign Action="FocusToTimeline" Key="Ctrl+T" />
+      <Assign Action="OpenInput" Key="Ctrl+I" />
+      <Assign Action="OpenInput" Key="Enter" />
       <!-- Changing account -->
       <Assign Action="SelectNextAccount" Key="Ctrl+Alt+Down" Preview="True" InTextBox="True" />
       <Assign Action="SelectPreviousAccount" Key="Ctrl+Alt+Up" Preview="True" InTextBox="True" />
       <Assign Action="SelectFirstAccount" Key="Ctrl+Alt+Left" Preview="True" InTextBox="True" />
       <Assign Action="SelectAllAccount" Key="Ctrl+Alt+A" Preview="True" InTextBox="True" />
-		</AssignGroup>
-		<AssignGroup Region="Timeline">
-			<!-- Move -->
-			<Assign Action="OpenInput" Key="Enter" Preview="True" />
-			<Assign Action="MoveDown" Key="J" />
-			<Assign Action="MoveUp" Key="K" />
-			<Assign Action="MoveLeft" Key="H" />
-			<Assign Action="MoveRight" Key="L" />
-			<Assign Action="MoveLeftColumn" Key="Shift+H" />
-			<Assign Action="MoveRightColumn" Key="Shift+L" />
-			<Assign Action="MoveLeft" Key="Left" Preview="True" />
-			<Assign Action="MoveRight" Key="Right" Preview="True" />
-			<Assign Action="MoveLeftColumn" Key="Shift+Left" Preview="True" />
-			<Assign Action="MoveRightColumn" Key="Shift+Right" Preview="True" />
-			<Assign Action="Deselect" Key="Escape" />
-			<Assign Action="MoveTop" Key="0" />
-			<!-- Move (Ex) -->
+    </AssignGroup>
+    <AssignGroup Region="Timeline">
+      <!-- Move -->
+      <Assign Action="OpenInput" Key="Enter" Preview="True" />
+      <Assign Action="MoveDown" Key="J" />
+      <Assign Action="MoveUp" Key="K" />
+      <Assign Action="MoveLeft" Key="H" />
+      <Assign Action="MoveRight" Key="L" />
+      <Assign Action="MoveLeftColumn" Key="Shift+H" />
+      <Assign Action="MoveRightColumn" Key="Shift+L" />
+      <Assign Action="MoveLeft" Key="Left" Preview="True" />
+      <Assign Action="MoveRight" Key="Right" Preview="True" />
+      <Assign Action="MoveLeftColumn" Key="Shift+Left" Preview="True" />
+      <Assign Action="MoveRightColumn" Key="Shift+Right" Preview="True" />
+      <Assign Action="Deselect" Key="Escape" />
+      <Assign Action="MoveTop" Key="0" />
+      <!-- Move (Ex) -->
       <Assign Action="Select1stTab" Key="Shift+F1" Preview="True" />
       <Assign Action="Select2ndTab" Key="Shift+F2" Preview="True" />
       <Assign Action="Select3rdTab" Key="Shift+F3" Preview="True" />
@@ -55,37 +55,38 @@
       <Assign Action="Open1stUrl" Key="Shift+1" Preview="True" />
       <Assign Action="Open2ndUrl" Key="Shift+2" Preview="True" />
       <Assign Action="Open3rdUrl" Key="Shift+3" Preview="True" />
-			<!-- Action -->
-			<Assign Action="Mention" Key="R" />
-			<Assign Action="MentionMulti" Key="Shift+R" />
-			<Assign Action="Mention" Key="Space" Preview="True" />
-			<Assign Action="MentionMulti" Key="Shift+Space" Preview="True" />
-			<Assign Action="Favorite" Key="F" />
-			<Assign Action="Favorite" Key="Oem1" /> <!-- SEMICOLON -->
-			<Assign Action="FavoriteMulti" Key="Shift+F" />
-			<Assign Action="Retweet" Key="Ctrl+R" />
-			<Assign Action="RetweetMulti" Key="Ctrl+Shift+R" />
-			<Assign Action="UnofficialRetweet" Key="Ctrl+Alt+R" />
-			<Assign Action="QuoteTweet" Key="Ctrl+Q" />
-			<Assign Action="Delete" Key="Delete" />
-			<Assign Action="Mute" Key="Ctrl+Delete" />
-			<Assign Action="ShowConversation" Key="OemPeriod" />
-			<Assign Action="ShowUserDetail" Key="U" />
-			<Assign Action="Search" Key="F3" Preview="True" />
+      <!-- Action -->
+      <Assign Action="Mention" Key="R" />
+      <Assign Action="MentionMulti" Key="Shift+R" />
+      <Assign Action="Mention" Key="Space" Preview="True" />
+      <Assign Action="MentionMulti" Key="Shift+Space" Preview="True" />
+      <Assign Action="Favorite" Key="F" />
+      <Assign Action="Favorite" Key="Oem1" />
+      <!-- SEMICOLON -->
+      <Assign Action="FavoriteSelect" Key="Shift+F" />
+      <Assign Action="Retweet" Key="Ctrl+R" />
+      <Assign Action="RetweetSelect" Key="Ctrl+Shift+R" />
+      <Assign Action="UnofficialRetweet" Key="Ctrl+Alt+R" />
+      <Assign Action="QuoteTweet" Key="Ctrl+Q" />
+      <Assign Action="Delete" Key="Delete" />
+      <Assign Action="Mute" Key="Ctrl+Delete" />
+      <Assign Action="ShowConversation" Key="OemPeriod" />
+      <Assign Action="ShowUserDetail" Key="U" />
+      <Assign Action="Search" Key="F3" Preview="True" />
       <Assign Action="RemoveViewStackTop" Key="F4" Preview="True" InTextBox="True" />
       <Assign Action="CloseTab" Key="Ctrl+F4" Preview="True" />
       <Assign Action="CreateTab" Key="Ctrl+N" Preview="True" />
-		</AssignGroup>
-		<AssignGroup Region="Input">
-			<Assign Action="ToggleAutoBind" Key="Ctrl+B" Preview="True" InTextBox="True" />
-			<Assign Action="Post" Key="Ctrl+Enter" Preview="True" InTextBox="True" />
-      <!-- If you want to post with Enter key, comment above and uncomment below. -->
+    </AssignGroup>
+    <AssignGroup Region="Input">
+      <Assign Action="ToggleAutoBind" Key="Ctrl+B" Preview="True" InTextBox="True" />
+      <Assign Action="Post" Key="Ctrl+Enter" Preview="True" InTextBox="True" />
+      <!-- If you want to post with Enter key, comment-out above element and uncomment below element. -->
       <!-- <Assign Action="Post" Key="Enter" Preview="True" InTextBox="True" /> -->
-			<Assign Action="PostAndClose" Key="Ctrl+Shift+Enter" Preview="True" InTextBox="True" />
-			<Assign Action="CloseInput" Key="Escape" Preview="True" InTextBox="True" />
-		</AssignGroup>
+      <Assign Action="PostAndClose" Key="Ctrl+Shift+Enter" Preview="True" InTextBox="True" />
+      <Assign Action="CloseInput" Key="Escape" Preview="True" InTextBox="True" />
+    </AssignGroup>
     <AssignGroup Region="SearchBar">
       <Assign Action="RemoveViewStackTop" Key="Esc" Preview="True" InTextBox="True" />
     </AssignGroup>
-	</AssignGroups>
+  </AssignGroups>
 </KeyAssign>

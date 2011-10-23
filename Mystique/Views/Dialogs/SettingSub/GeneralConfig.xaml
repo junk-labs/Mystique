@@ -4,6 +4,9 @@
              xmlns:ab="clr-namespace:Mystique.Views.Behaviors.Attached"
              xmlns:cp="clr-namespace:Mystique.Views.Converters.Particular"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="300"
              d:DesignWidth="400"
@@ -11,6 +14,11 @@
     <UserControl.Resources>
         <cp:DoubleStringConverter x:Key="DoubleStringConverter" />
     </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
+            <l:ConfirmationDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -20,61 +28,43 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <CheckBox Grid.ColumnSpan="2"
-                  Margin="4"
-                  VerticalAlignment="Top"
-                  IsChecked="{Binding PowerUserMode}">
-            <StackPanel Orientation="Vertical">
-                <AccessText FontWeight="Bold" Text="ハイレベルモードにする(_P)[非推奨]" />
-                <TextBlock Text="Krileの取り扱いに自信のある方向けです。" />
-            </StackPanel>
-        </CheckBox>
-        <TextBlock Grid.Row="1"
-                   Margin="4,2"
+
+        <TextBlock Margin="4,2"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Center"
                    Text="自動アップデート" />
-        <ComboBox Grid.Row="1"
-                  Grid.Column="1"
+        <ComboBox Grid.Column="1"
                   Margin="4,2"
                   SelectedIndex="{Binding UpdateKind}">
             <ComboBoxItem Content="しない" />
             <ComboBoxItem Content="安定版のみアップデート" />
             <ComboBoxItem Content="安定候補版(RC)以上でアップデート" />
             <ComboBoxItem Content="開発版(beta)以上でアップデート"
-                          IsEnabled="{Binding PowerUserMode}"
-                          Visibility="{Binding PowerUserMode,
+                          IsEnabled="{Binding IsAloofUserMode}"
+                          Visibility="{Binding IsAloofUserMode,
                                                Converter={StaticResource BoolVisibleConverter}}" />
             <ComboBoxItem Content="開発版(daybreak)以上でアップデート"
-                          IsEnabled="{Binding PowerUserMode}"
-                          Visibility="{Binding PowerUserMode,
+                          IsEnabled="{Binding IsAloofUserMode}"
+                          Visibility="{Binding IsAloofUserMode,
                                                Converter={StaticResource BoolVisibleConverter}}" />
             <ComboBoxItem Content="(危険)試験版(twilight)以上でアップデート"
-                          IsEnabled="{Binding PowerUserMode}"
-                          Visibility="{Binding PowerUserMode,
+                          IsEnabled="{Binding IsAloofUserMode}"
+                          Visibility="{Binding IsAloofUserMode,
                                                Converter={StaticResource BoolVisibleConverter}}" />
             <ComboBoxItem Content="(危険)試験版(midnight)以上でアップデート(常に最新版)"
-                          IsEnabled="{Binding PowerUserMode}"
-                          Visibility="{Binding PowerUserMode,
+                          IsEnabled="{Binding IsAloofUserMode}"
+                          Visibility="{Binding IsAloofUserMode,
                                                Converter={StaticResource BoolVisibleConverter}}" />
         </ComboBox>
-        <TextBlock Grid.Row="2"
+        <TextBlock Grid.Row="1"
                    Margin="4,2"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Center"
                    Text="使用フォント" />
-        <Grid Grid.Row="2" Grid.Column="1">
+        <Grid Grid.Row="1" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="60" />
@@ -89,13 +79,24 @@
                      Text="{Binding FontSize,
                                     Converter={StaticResource DoubleStringConverter}}" />
         </Grid>
-        <CheckBox Grid.Row="3"
+        <CheckBox Grid.Row="2"
                   Grid.ColumnSpan="2"
                   Margin="4"
                   VerticalAlignment="Top"
                   Content="タイムアウトエラーを通知しない(_N)"
                   IsChecked="{Binding IgnoreTimeoutError}"
-                  Visibility="{Binding PowerUserMode,
+                  Visibility="{Binding IsAloofUserMode,
                                        Converter={StaticResource BoolVisibleConverter}}" />
+        <CheckBox Grid.Row="4"
+                  Grid.ColumnSpan="2"
+                  Margin="4"
+                  VerticalAlignment="Top"
+                  IsChecked="{Binding IsAloofUserMode}" IsEnabled="{Binding IsPowerUserEnableCheckEnabled}">
+            <StackPanel Orientation="Vertical">
+                <AccessText Text="私は超越者です(_A)" />
+                <TextBlock Foreground="DimGray" Text="Krileと運命を共にする覚悟のある方専用です。" />
+                <TextBlock Foreground="DimGray" Text="健全クラスタと別れを告げる覚悟を決めてください。" />
+            </StackPanel>
+        </CheckBox>
     </Grid>
 </UserControl>
