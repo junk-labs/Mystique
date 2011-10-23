@@ -238,7 +238,7 @@ namespace Mystique.Views.Converters.Particular
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
                         // Browser.Start("http://twitter.com/#search?q=" + source);
-                        Browser.Start("http://twitter.com/search/" + source);
+                        Browser.Start("http://twitter.com/search/%23" + source);
                     }
                     else
                     {

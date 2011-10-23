@@ -14,7 +14,7 @@
                               VerticalAlignment="Top"
                               Content="マウスアサインを有効にする(_A)"
                               IsChecked="{Binding IsMouseAssignEnabled}"
-                              IsEnabled="{Binding IsAllofUserMode}" />
+                              IsEnabled="{Binding IsAloofUserMode}" />
                 </Grid>
             </TabItem>
             <TabItem DataContext="{Binding ReplyActionSetViewModel}" Header="返信">
