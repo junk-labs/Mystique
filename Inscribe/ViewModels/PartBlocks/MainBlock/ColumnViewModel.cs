@@ -337,6 +337,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public void EditTab(TabViewModel vm)
         {
             vm.TabProperty = ShowTabEditor(vm.TabProperty);
+            vm.InvalidateTabProperty();
             vm.InvalidateCache();
         }
 

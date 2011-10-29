@@ -44,10 +44,15 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 this._tabProperty = value;
                 if (this._tabProperty != null)
                     this._tabProperty.LinkAccountInfoChanged += new EventHandler<EventArgs>(tabpropLinkAccountInfoChanged);
+                InvalidateTabProperty();
+            }
+        }
+
+        public void InvalidateTabProperty()
+        {
                 RaisePropertyChanged(() => TabProperty);
                 RaisePropertyChanged(() => NewTweetsCount);
                 RaisePropertyChanged(() => Name);
-            }
         }
 
         public string Name

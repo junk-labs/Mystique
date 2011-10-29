@@ -46,48 +46,24 @@ namespace Inscribe.Storage
 
         private static void GC(object o)
         {
-            BitmapImage[] releases = null;
             using (lockWrap.GetWriterLock())
             {
-                releases = imageDataDictionary
+                imageDataDictionary
                     .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds > Setting.Instance.KernelProperty.ImageLifetime)
                     .Concat(imageDataDictionary.OrderByDescending(v => v.Value.Value)
                     .Skip((int)(Setting.Instance.KernelProperty.ImageCacheMaxCount * Setting.Instance.KernelProperty.ImageCacheSurviveDensity)))
+                    .Select(d => d.Key)
                     .ToArray()
-                    .Select(d =>
-                    {
-                        imageDataDictionary.Remove(d.Key);
-                        return d.Value.Key;
-                    }).ToArray();
+                    .ForEach(d => imageDataDictionary.Remove(d));
             }
-            releases.ForEach(img =>
-            {
-                if (img.StreamSource != null)
-                {
-                    System.Diagnostics.Debug.WriteLine("finalize(gc)");
-                    img.StreamSource.Close();
-                    img.StreamSource.Dispose();
-                }
-            });
         }
 
         public static void ClearAllCache()
         {
-            KeyValuePair<BitmapImage, DateTime>[] idds;
             using (lockWrap.GetWriterLock())
             {
-                idds = imageDataDictionary.Values.ToArray();
                 imageDataDictionary.Clear();
             }
-            idds.ForEach(kv =>
-            {
-                if (kv.Key.StreamSource != null)
-                {
-                    System.Diagnostics.Debug.WriteLine("finalize(cac)");
-                    kv.Key.StreamSource.Close();
-                    kv.Key.StreamSource.Dispose();
-                }
-            });
         }
 
         private static void RemoveCache(Uri key)
@@ -95,15 +71,7 @@ namespace Inscribe.Storage
             KeyValuePair<BitmapImage, DateTime> kv;
             using(lockWrap.GetWriterLock())
             {
-                if (imageDataDictionary.TryGetValue(key, out kv) && imageDataDictionary.Remove(key))
-                {
-                    if (kv.Key.StreamSource != null)
-                    {
-                        System.Diagnostics.Debug.WriteLine("finalize(rc)");
-                        kv.Key.StreamSource.Close();
-                        kv.Key.StreamSource.Dispose();
-                    }
-                }
+                imageDataDictionary.Remove(key);
             }
         }
 
@@ -187,16 +155,9 @@ namespace Inscribe.Storage
                 var newv = new KeyValuePair<BitmapImage, DateTime>(bi, DateTime.Now);
                 using (lockWrap.GetWriterLock())
                 {
-                    KeyValuePair<BitmapImage, DateTime> oldValue;
-                    if (imageDataDictionary.TryGetValue(uri, out oldValue))
+                    if (imageDataDictionary.ContainsKey(uri))
                     {
                         imageDataDictionary[uri] = newv;
-                        if (oldValue.Key.StreamSource != null)
-                        {
-                            System.Diagnostics.Debug.WriteLine("release(overwrite)");
-                            oldValue.Key.StreamSource.Close();
-                            oldValue.Key.StreamSource.Dispose();
-                        }
                     }
                     else
                     {

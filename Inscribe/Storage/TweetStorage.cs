@@ -134,7 +134,7 @@ namespace Inscribe.Storage
             if (predicate == null)
                 return tvms;
             else
-                return tvms.AsParallel().Where(predicate).ToArray();
+                return tvms.AsParallel().Where(predicate);
         }
 
         private static volatile int _count;
@@ -474,12 +474,12 @@ namespace Inscribe.Storage
         internal static void UpdateMute()
         {
             if (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster == null) return;
-            var ng = GetAll(t => Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(t.Status)).ToArray();
-            foreach (var t in ng)
-            {
-                if (!AccountStorage.Contains(t.Status.User.ScreenName))
-                    Remove(t.bindingId);
-            }
+            GetAll(t => Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(t.Status))
+                .ForEach(t =>
+                {
+                    if (!AccountStorage.Contains(t.Status.User.ScreenName))
+                        Remove(t.bindingId);
+                });
         }
     }
 

@@ -8,6 +8,7 @@ using Inscribe.Configuration.Settings;
 using Inscribe.Core;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Inscribe.Configuration;
 
 namespace Inscribe.Subsystems
 {
@@ -39,9 +40,13 @@ namespace Inscribe.Subsystems
                     break;
                 case ReplyMouseActionCandidates.ReplyImmediately:
                     if (String.IsNullOrEmpty(argument)) return;
+                    var status = target.Status;
+                    if (!Setting.Instance.InputExperienceProperty.OfficialRetweetInReplyToRetweeter && status is TwitterStatus &&
+                        ((TwitterStatus)status).RetweetedOriginal != null)
+                        status = ((TwitterStatus)status).RetweetedOriginal;
                     PostImmediate(GetAccountInfos(),
-                        String.Format(argument, "@" + target.Status.User.ScreenName),
-                        target.Status.Id);
+                        String.Format(argument, "@" + status.User.ScreenName),
+                        status.Id);
                     break;
             }
         }

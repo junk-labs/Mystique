@@ -459,7 +459,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         {
             Task.Factory.StartNew(() =>
             {
-                TweetStorage.GetAll(tvm => (DateTime.Now - tvm.CreatedAt).TotalHours > 12).ForEach(t => TweetStorage.Remove(t.bindingId));
+                TweetStorage.GetAll(tvm => (DateTime.Now - tvm.CreatedAt).TotalHours > 12)
+                    .ForEach(t => TweetStorage.Remove(t.bindingId));
             });
 
         }

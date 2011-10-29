@@ -25,22 +25,11 @@ namespace Inscribe.ViewModels.Common
                     return ud.TwitterUser.ProfileImage;
                 else
                 {
-                    Task.Factory.StartNew(() => {
-                        try
+                    Task.Factory.StartNew(() =>
                         {
-                            var info = ApiHelper.ExecApi(() => this._info.GetUserByScreenName(this._info.ScreenName));
-                            if (info != null)
-                            {
-                                UserStorage.Register(info);
-                                RaisePropertyChanged(() => ProfileImage);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionStorage.Register(e, ExceptionCategory.TwitterError, 
-                                "ユーザー情報を取得できません。", () => RaisePropertyChanged(() => ProfileImage));
-                        }
-                    });
+                            UserStorage.Get(this._info.ScreenName);
+                            RaisePropertyChanged(() => ProfileImage);
+                        });
                     return null;
                 }
             }

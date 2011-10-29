@@ -16,14 +16,14 @@
       <Assign Action="Mention" Key="Enter" />
       <Assign Action="MentionMulti" Key="Ctrl+Shift+R" />
       <Assign Action="SendDirectMessage" Key="Ctrl+M" />
-      <Assign Action="FavoriteCreate" Key="Ctrl+S" />
-      <Assign Action="FavoriteDelete" Key="Ctrl+Shift+S" />
-      <Assign Action="FavoriteMulti" Key="Ctrl+Alt+S" />
+      <Assign Action="FavoriteAdd" Key="Ctrl+S" />
+      <Assign Action="FavoriteRemove" Key="Ctrl+Shift+S" />
+      <Assign Action="FavoriteSelect" Key="Ctrl+Alt+S" />
       <Assign Action="OpenTweetWeb" Key="Ctrl+O" />
       <Assign Action="ShowConversation" Key="Ctrl+I" />
       <Assign Action="FavoriteThisTabAll" Key="Ctrl+Alt+F" />
       <Assign Action="RetweetCreate" Key="Alt+R" />
-      <Assign Action="RetweetMulti" Key="Alt+E" />
+      <Assign Action="RetweetSelect" Key="Alt+E" />
       <Assign Action="UnofficialRetweet" Key="Alt+Shift+R" />
       <Assign Action="QuoteTweet" Key="Ctrl+Q" />
       <Assign Action="ShowUserDetail" Key="Alt+P" />

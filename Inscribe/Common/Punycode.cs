@@ -21,7 +21,11 @@ namespace System.Web
         public static Uri PunyEncode(this Uri uri)
         {
             string host = uri.Host.Split('.').Select(PunyEncodeSink).JoinString(".");
-            return new Uri(uri.Scheme + "://" + host + uri.LocalPath);
+            var ancidx = uri.OriginalString.IndexOf("#");
+            string anchor = String.Empty;
+            if (ancidx >= 0)
+                anchor = uri.OriginalString.Substring(ancidx);
+            return new Uri(uri.Scheme + "://" + host + uri.PathAndQuery + anchor);
         }
 
         private static string PunyEncodeSink(string particle)
@@ -39,7 +43,7 @@ namespace System.Web
         public static Uri PunyDecode(this Uri uri)
         {
             string host = uri.Host.Split('.').Select(PunyDecodeSink).JoinString(".");
-            return new Uri(uri.Scheme + "://" + host + uri.LocalPath);
+            return new Uri(uri.Scheme + "://" + host + uri.PathAndQuery);
         }
 
         private static string PunyDecodeSink(string particle)

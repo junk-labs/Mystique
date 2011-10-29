@@ -30,7 +30,7 @@ namespace Inscribe.Storage
             accounts.Add(accountInfo);
             OnAccountsChanged(EventArgs.Empty);
             // アカウント情報のキャッシュ
-            Task.Factory.StartNew(() => accountInfo.UserViewModel);
+            // Task.Factory.StartNew(() => accountInfo.UserViewModel);
         }
 
         /// <summary>
