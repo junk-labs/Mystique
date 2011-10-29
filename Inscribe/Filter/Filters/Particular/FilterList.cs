@@ -17,7 +17,7 @@ namespace Inscribe.Filter.Filters.Particular
         [GuiVisible("ユーザーID")]
         public string ListUser
         {
-            get { return listUser; }
+            get { return listUser ?? String.Empty; }
             set
             {
                 listUser = value;
@@ -29,7 +29,7 @@ namespace Inscribe.Filter.Filters.Particular
         [GuiVisible("リスト名")]
         public string ListName
         {
-            get { return listName; }
+            get { return listName ?? String.Empty; }
             set
             {
                 listName = value;

@@ -7,7 +7,7 @@ namespace Inscribe.Text
         /// <summary>
         /// @userid用のregex
         /// </summary>
-        public static Regex AtRegex = new Regex(@"@([A-Za-z0-9_]+(?:/[A-Za-z0-9_]*)?)",
+        public static Regex AtRegex = new Regex(@"(?<![A-Za-z0-9_])@([A-Za-z0-9_]+(?:/[A-Za-z0-9_]*)?)(?![A-Za-z0-9_@])",
             RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
