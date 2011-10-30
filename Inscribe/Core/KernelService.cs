@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using Inscribe.Common;
+using Inscribe.Configuration;
 using Inscribe.ViewModels;
 
 namespace Inscribe.Core
@@ -24,6 +25,14 @@ namespace Inscribe.Core
         public static void AppShutdown()
         {
             _isInShutdown = true;
+            if (Setting.IsInitialized)
+            {
+                var rect = Nightmare.WinAPI.NativeWindowControl.GetWindowPlacement(Application.Current.MainWindow);
+                Setting.Instance.StateProperty.WindowPosition = rect;
+                Setting.Instance.StateProperty.WindowState = Application.Current.MainWindow.WindowState;
+            }
+            Setting.Instance.KernelProperty.KillByErrorCount = 0;
+            Setting.Instance.Save();
             ThreadHelper.HaltThreads();
             Application.Current.Dispatcher.InvokeShutdown();
             Application.Current.Shutdown();
