@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Voices
 {
@@ -92,6 +87,11 @@ namespace Voices
                     }));
                 }
             });
+            var selfan = SelfAnalyzer.Analyze(ErrorLogData);
+            if (selfan != null)
+            {
+                MessageBox.Show(selfan, "Krile 自己診断", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private bool PostString(Uri target, string data, out string err)
@@ -170,8 +170,5 @@ namespace Voices
         {
             MessageBox.Show(ErrorLogData, "送信される情報詳細", MessageBoxButtons.OK);
         }
-
-
-
     }
 }

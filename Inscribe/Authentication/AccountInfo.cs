@@ -48,7 +48,7 @@ namespace Inscribe.Authentication
 
         public AccountInfo()
         {
-            this.AccoutProperty = new AccountProperty();
+            this.AccountProperty = new AccountProperty();
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace Inscribe.Authentication
 
         #endregion
 
-        public AccountProperty AccoutProperty { get; set; }
+        public AccountProperty AccountProperty { get; set; }
 
         #region Reference helper
 

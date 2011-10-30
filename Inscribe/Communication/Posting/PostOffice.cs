@@ -461,7 +461,7 @@ namespace Inscribe.Communication.Posting
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> retweetInjection =
-            new InjectionPort<Tuple<AccountInfo, TweetViewModel>>(a => RetweetCore(a.Item1, a.Item1, a.Item2));
+            new InjectionPort<Tuple<AccountInfo, TweetViewModel>>(a => RetweetCore(a.Item1, a.Item2));
 
         public static IInjectionPort<Tuple<AccountInfo, TweetViewModel>> RetweetInjection
         {
@@ -484,8 +484,8 @@ namespace Inscribe.Communication.Posting
                 return;
             }
             bool success = true;
-            Parallel.ForEach(infos,
-                (d) =>
+            Parallel.ForEach(infos.Select(i => CheckFallback(i)).Where(i => i != null).Distinct(),
+                d =>
                 {
                     // リツイート状態更新
                     var ud = UserStorage.Get(d.ScreenName);
@@ -512,19 +512,22 @@ namespace Inscribe.Communication.Posting
                 NotifyStorage.Notify("Retweetしました: @" + status.Status.User.ScreenName + ": " + status.Status.Text);
         }
 
-        private static void RetweetCore(AccountInfo d, AccountInfo origin, TweetViewModel status)
+        private static AccountInfo CheckFallback(AccountInfo d)
         {
-            if (Setting.Instance.InputExperienceProperty.OfficialRetweetFallback &&
+            AccountInfo origin = d;
+            while (Setting.Instance.InputExperienceProperty.OfficialRetweetFallback &&
                 IsAccountUnderControlled(d) &&
-                !String.IsNullOrEmpty(d.AccoutProperty.FallbackAccount))
+                !String.IsNullOrEmpty(d.AccountProperty.FallbackAccount))
             {
-                var fallbackTarget = AccountStorage.Get(d.AccoutProperty.FallbackAccount);
-                if (fallbackTarget != null && fallbackTarget != origin)
-                {
-                    RetweetCore(fallbackTarget, origin, status);
-                    return;
-                }
+                var fallback = AccountStorage.Get(d.AccountProperty.FallbackAccount);
+                if (fallback == origin) break;
+                d = fallback;
             }
+            return d;
+        }
+
+        private static void RetweetCore(AccountInfo d, TweetViewModel status)
+        {
             if (ApiHelper.ExecApi(() => d.Retweet(status.Status.Id)) == null)
                 throw new ApplicationException();
         }

@@ -118,8 +118,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public bool IsSelectedDefault
         {
-            get { return this.info.AccoutProperty.IsSelectedDefault; }
-            set { this.info.AccoutProperty.IsSelectedDefault = value; }
+            get { return this.info.AccountProperty.IsSelectedDefault; }
+            set { this.info.AccountProperty.IsSelectedDefault = value; }
         }
 
         private ProfileImageProvider _profileImageProvider;

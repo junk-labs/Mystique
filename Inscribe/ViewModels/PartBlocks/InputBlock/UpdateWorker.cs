@@ -121,9 +121,9 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
                     // add footer (when is in not "unofficial RT")
                     if (!isQuoting &&
-                        !String.IsNullOrEmpty(accountInfo.AccoutProperty.FooterString) &&
-                        TweetTextCounter.Count(body) + TweetTextCounter.Count(accountInfo.AccoutProperty.FooterString) + 1 <= TwitterDefine.TweetMaxLength)
-                        body += " " + accountInfo.AccoutProperty.FooterString;
+                        !String.IsNullOrEmpty(accountInfo.AccountProperty.FooterString) &&
+                        TweetTextCounter.Count(body) + TweetTextCounter.Count(accountInfo.AccountProperty.FooterString) + 1 <= TwitterDefine.TweetMaxLength)
+                        body += " " + accountInfo.AccountProperty.FooterString;
 
 
                     // bind tag
@@ -156,7 +156,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 }
                 catch (TweetFailedException tfex)
                 {
-                    var acc = AccountStorage.Get(this.accountInfo.AccoutProperty.FallbackAccount);
+                    var acc = AccountStorage.Get(this.accountInfo.AccountProperty.FallbackAccount);
                     if (tfex.ErrorKind != TweetFailedException.TweetErrorKind.Controlled ||
                         acc == null)
                     {

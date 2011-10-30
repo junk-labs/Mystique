@@ -51,7 +51,7 @@ namespace Inscribe.Communication.UserStreams
             {
                 var exists = connections.Keys;
                 var infos = AccountStorage.Accounts
-                    .Where(i => i.AccoutProperty.UseUserStreams)
+                    .Where(i => i.AccountProperty.UseUserStreams)
                     .ToArray();
                 var addeds = infos.Except(exists).ToArray();
                 var removes = exists.Except(infos).ToArray();
@@ -153,7 +153,7 @@ namespace Inscribe.Communication.UserStreams
                 // コネクションカウントが0の時はとりあえず受け付ける
                 // まだ接続されていないんじゃないかな？
                 var info = AccountStorage.Accounts
-                    .Where(a => a.AccoutProperty.UseUserStreams)
+                    .Where(a => a.AccountProperty.UseUserStreams)
                     .OrderByDescending(a => lookupDictionary.Where(v => v.Value == a).Count())
                     .FirstOrDefault();
                 if (info == null)
@@ -164,7 +164,7 @@ namespace Inscribe.Communication.UserStreams
             else
             {
                 var info = AccountStorage.Accounts
-                    .Where(a => a.AccoutProperty.UseUserStreams && connections.ContainsKey(a))
+                    .Where(a => a.AccountProperty.UseUserStreams && connections.ContainsKey(a))
                     .OrderByDescending(a => lookupDictionary.Where(v => v.Value == a).Count())
                     .FirstOrDefault();
                 if (info == null)
@@ -206,7 +206,7 @@ namespace Inscribe.Communication.UserStreams
         private static void RefreshQuery()
         {
             lookupDictionary.Keys
-                .Where(k => !lookupDictionary[k].AccoutProperty.UseUserStreams)
+                .Where(k => !lookupDictionary[k].AccountProperty.UseUserStreams)
                 .ForEach(k =>
                 {
                     lookupDictionary.Remove(k);

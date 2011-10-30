@@ -258,7 +258,7 @@ namespace Inscribe.Communication.UserStreams
                             System.Diagnostics.Debug.WriteLine("User Streams Connection with Track: " + track);
                             connection = streamingCore.ConnectNew(
                                 info, StreamingDescription.ForUserStreams(TwitterDefine.UserStreamsTimeout,
-                                track: track, repliesAll: info.AccoutProperty.UserStreamsRepliesAll));
+                                track: track, repliesAll: info.AccountProperty.UserStreamsRepliesAll));
                         }
                     }
                     catch (WebException we)

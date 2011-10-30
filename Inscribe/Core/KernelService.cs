@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Inscribe.Common;
 using Inscribe.ViewModels;
 
 namespace Inscribe.Core
@@ -23,6 +24,8 @@ namespace Inscribe.Core
         public static void AppShutdown()
         {
             _isInShutdown = true;
+            ThreadHelper.HaltThreads();
+            Application.Current.Dispatcher.InvokeShutdown();
             Application.Current.Shutdown();
         }
 

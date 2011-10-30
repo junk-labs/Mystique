@@ -41,7 +41,7 @@ namespace Inscribe.Communication.CruiseControl
         protected override void OnFallingASleep()
         {
             this.TaskRateLimit = this._accountInfo.RateLimitRemaining
-                - (int)(this._accountInfo.RateLimitMax * (1 - this._accountInfo.AccoutProperty.AutoCruiseApiConsumeRate));
+                - (int)(this._accountInfo.RateLimitMax * (1 - this._accountInfo.AccountProperty.AutoCruiseApiConsumeRate));
             int wndTime = (int)this._accountInfo.RateLimitReset.Subtract(DateTime.Now).TotalMilliseconds;
             if (wndTime < 0)
                 this.WindowTime = 0;
@@ -53,7 +53,7 @@ namespace Inscribe.Communication.CruiseControl
         {
             try
             {
-                this.TargetMu = this._accountInfo.AccoutProperty.AutoCruiseDefaultMu;
+                this.TargetMu = this._accountInfo.AccountProperty.AutoCruiseDefaultMu;
             }
             catch (Exception e)
             {

@@ -1098,7 +1098,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         {
             if (!PostOffice.IsAccountUnderControlled(current))
                 return current;
-            var fallback = AccountStorage.Get(current.AccoutProperty.FallbackAccount);
+            var fallback = AccountStorage.Get(current.AccountProperty.FallbackAccount);
             if (fallback == null || fallback == original)
                 return current;
             else

@@ -34,30 +34,30 @@ namespace Inscribe.ViewModels.Dialogs.Account
 
         public bool UseUserStreams
         {
-            get { return this.AccountInfo.AccoutProperty.UseUserStreams; }
+            get { return this.AccountInfo.AccountProperty.UseUserStreams; }
             set
             {
-                this.AccountInfo.AccoutProperty.UseUserStreams = value;
+                this.AccountInfo.AccountProperty.UseUserStreams = value;
                 RaisePropertyChanged(() => UseUserStreams);
             }
         }
 
         public bool UserStreamsRepliesAll
         {
-            get { return this.AccountInfo.AccoutProperty.UserStreamsRepliesAll; }
+            get { return this.AccountInfo.AccountProperty.UserStreamsRepliesAll; }
             set
             {
-                this.AccountInfo.AccoutProperty.UserStreamsRepliesAll = value;
+                this.AccountInfo.AccountProperty.UserStreamsRepliesAll = value;
                 RaisePropertyChanged(() => UserStreamsRepliesAll);
             }
         }
 
         public string Footer
         {
-            get { return this.AccountInfo.AccoutProperty.FooterString; }
+            get { return this.AccountInfo.AccountProperty.FooterString; }
             set
             {
-                this.AccountInfo.AccoutProperty.FooterString = value;
+                this.AccountInfo.AccountProperty.FooterString = value;
                 RaisePropertyChanged(() => Footer);
             }
         }
@@ -75,8 +75,8 @@ namespace Inscribe.ViewModels.Dialogs.Account
         {
             get
             {
-                if (String.IsNullOrEmpty(AccountInfo.AccoutProperty.FallbackAccount) ||
-                    !AccountStorage.Contains(AccountInfo.AccoutProperty.FallbackAccount))
+                if (String.IsNullOrEmpty(AccountInfo.AccountProperty.FallbackAccount) ||
+                    !AccountStorage.Contains(AccountInfo.AccountProperty.FallbackAccount))
                 {
                     return 0;
                 }
@@ -84,18 +84,18 @@ namespace Inscribe.ViewModels.Dialogs.Account
                 {
                     return Array.IndexOf(AccountStorage.Accounts.Except(new[] { AccountInfo })
                         .Select(a => a.ScreenName).ToArray(),
-                        AccountInfo.AccoutProperty.FallbackAccount) + 1;
+                        AccountInfo.AccountProperty.FallbackAccount) + 1;
                 }
             }
             set
             {
                 if (value == 0)
                 {
-                    AccountInfo.AccoutProperty.FallbackAccount = null;
+                    AccountInfo.AccountProperty.FallbackAccount = null;
                 }
                 else
                 {
-                    AccountInfo.AccoutProperty.FallbackAccount = AccountStorage.Accounts
+                    AccountInfo.AccountProperty.FallbackAccount = AccountStorage.Accounts
                         .Except(new[] { AccountInfo }).ElementAt(value - 1).ScreenName;
                 }
                 RaisePropertyChanged(() => FallbackIndex);
@@ -104,20 +104,20 @@ namespace Inscribe.ViewModels.Dialogs.Account
 
         public double RestApiRate
         {
-            get { return this.AccountInfo.AccoutProperty.AutoCruiseApiConsumeRate; }
+            get { return this.AccountInfo.AccountProperty.AutoCruiseApiConsumeRate; }
             set
             {
-                this.AccountInfo.AccoutProperty.AutoCruiseApiConsumeRate = value;
+                this.AccountInfo.AccountProperty.AutoCruiseApiConsumeRate = value;
                 RaisePropertyChanged(() => RestApiRate);
             }
         }
 
         public double AutoCruiseMu
         {
-            get { return this.AccountInfo.AccoutProperty.AutoCruiseDefaultMu; }
+            get { return this.AccountInfo.AccountProperty.AutoCruiseDefaultMu; }
             set
             {
-                this.AccountInfo.AccoutProperty.AutoCruiseDefaultMu = value;
+                this.AccountInfo.AccountProperty.AutoCruiseDefaultMu = value;
                 RaisePropertyChanged(() => AutoCruiseMu);
             }
         }
@@ -169,10 +169,10 @@ namespace Inscribe.ViewModels.Dialogs.Account
 
         public string[] Queries
         {
-            get { return this.AccountInfo.AccoutProperty.AccountDependentQuery ?? new string[0]; }
+            get { return this.AccountInfo.AccountProperty.AccountDependentQuery ?? new string[0]; }
             set
             {
-                this.AccountInfo.AccoutProperty.AccountDependentQuery = value;
+                this.AccountInfo.AccountProperty.AccountDependentQuery = value;
                 RaisePropertyChanged(() => Queries);
             }
         }
