@@ -91,6 +91,7 @@ namespace Inscribe.Core
                 PluginLoader.Load();
             }
             UpdateReceiver.StartSchedule();
+            ThreadHelper.Halt += new Action(() => AppExit(null, null));
             Application.Current.Exit += new ExitEventHandler(AppExit);
         }
 
