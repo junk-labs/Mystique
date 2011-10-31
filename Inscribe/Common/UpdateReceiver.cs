@@ -45,19 +45,26 @@ namespace Inscribe.Common
                 var xmlstream = DownloadStream(new Uri(Define.RemoteVersionXml));
                 if (xmlstream != null)
                 {
-                    var xmldoc = XDocument.Load(xmlstream);
-                    var version = xmldoc.Element("update").Element("latests").Elements("version")
-                        .Where(xe => int.Parse(xe.Attribute("kind").Value) <= Setting.Instance.ExperienceProperty.UpdateKind)
-                        .Select(xe => xe.Attribute("ver").Value).Select(double.Parse).Max();
-                    // NO RECORD
-                    if(version == 0)
-                        return false;
-                    var bin = xmldoc.Element("update").Element("bin").Value;
-                    var sig = xmldoc.Element("update").Element("sig").Value;
-                    if (version != 0 && version > Define.GetNumericVersion())
+                    try
                     {
-                        DownloadUpdate(new Uri(bin), new Uri(sig));
-                        return true;
+                        var xmldoc = XDocument.Load(xmlstream);
+                        var version = xmldoc.Element("update").Element("latests").Elements("version")
+                            .Where(xe => int.Parse(xe.Attribute("kind").Value) <= Setting.Instance.ExperienceProperty.UpdateKind)
+                            .Select(xe => xe.Attribute("ver").Value).Select(double.Parse).Max();
+                        System.Diagnostics.Debug.WriteLine("Check ver:" + version);
+                        // NO RECORD
+                        if (version == 0)
+                            return false;
+                        var bin = xmldoc.Element("update").Element("bin").Value;
+                        var sig = xmldoc.Element("update").Element("sig").Value;
+                        if (version != 0 && version > Define.GetNumericVersion())
+                        {
+                            DownloadUpdate(new Uri(bin), new Uri(sig));
+                            return true;
+                        }
+                    }
+                    catch (InvalidOperationException)
+                    {
                     }
                 }
                 return false;

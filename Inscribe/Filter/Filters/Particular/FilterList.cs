@@ -84,8 +84,8 @@ namespace Inscribe.Filter.Filters.Particular
 
         public override IEnumerable<object> GetArgumentsForQueryify()
         {
-            yield return listUser;
-            yield return listName;
+            yield return this.ListUser;
+            yield return this.ListName;
         }
 
         public override string Description

@@ -19,84 +19,91 @@
             <l:ConfirmationDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <ScrollViewer CanContentScroll="True">
+        <DockPanel>
+            <Grid Height="300" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Margin="4,2"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Text="自動アップデート" />
+                <ComboBox Grid.Column="1"
+                          Margin="4,2"
+                          SelectedIndex="{Binding UpdateKind}">
+                    <ComboBoxItem Content="しない" />
+                    <ComboBoxItem Content="安定版のみアップデート" />
+                    <ComboBoxItem Content="安定候補版(RC)以上でアップデート" />
+                    <ComboBoxItem Content="開発版(beta)以上でアップデート"
+                                  IsEnabled="{Binding IsAloofUserMode}"
+                                  Visibility="{Binding IsAloofUserMode,
+                                                       Converter={StaticResource BoolVisibleConverter}}" />
+                    <ComboBoxItem Content="開発版(daybreak)以上でアップデート"
+                                  IsEnabled="{Binding IsAloofUserMode}"
+                                  Visibility="{Binding IsAloofUserMode,
+                                                       Converter={StaticResource BoolVisibleConverter}}" />
+                    <ComboBoxItem Content="(危険)試験版(twilight)以上でアップデート"
+                                  IsEnabled="{Binding IsAloofUserMode}"
+                                  Visibility="{Binding IsAloofUserMode,
+                                                       Converter={StaticResource BoolVisibleConverter}}" />
+                    <ComboBoxItem Content="(危険)試験版(midnight)以上でアップデート(常に最新版)"
+                                  IsEnabled="{Binding IsAloofUserMode}"
+                                  Visibility="{Binding IsAloofUserMode,
+                                                       Converter={StaticResource BoolVisibleConverter}}" />
+                </ComboBox>
+                <TextBlock Grid.Row="1"
+                           Margin="4,2"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Text="使用フォント" />
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="60" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Margin="4,2,0,2"
+                              ItemsSource="{Binding DisplayFontFamilies}"
+                              SelectedIndex="{Binding FontFamilyIndex}" />
+                    <TextBox Grid.Column="1"
+                             Margin="0,0,4,0"
+                             VerticalAlignment="Center"
+                             ab:TextBoxExtension.IsNumeric="True"
+                             Text="{Binding FontSize,
+                                            Converter={StaticResource DoubleStringConverter}}" />
+                </Grid>
+                <CheckBox Grid.Row="2"
+                          Grid.ColumnSpan="2"
+                          Margin="4"
+                          VerticalAlignment="Top"
+                          Content="タイムアウトエラーを通知しない(_N)"
+                          IsChecked="{Binding IgnoreTimeoutError}"
+                          Visibility="{Binding IsAloofUserMode,
+                                               Converter={StaticResource BoolVisibleConverter}}" />
 
-        <TextBlock Margin="4,2"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Center"
-                   Text="自動アップデート" />
-        <ComboBox Grid.Column="1"
-                  Margin="4,2"
-                  SelectedIndex="{Binding UpdateKind}">
-            <ComboBoxItem Content="しない" />
-            <ComboBoxItem Content="安定版のみアップデート" />
-            <ComboBoxItem Content="安定候補版(RC)以上でアップデート" />
-            <ComboBoxItem Content="開発版(beta)以上でアップデート"
-                          IsEnabled="{Binding IsAloofUserMode}"
-                          Visibility="{Binding IsAloofUserMode,
-                                               Converter={StaticResource BoolVisibleConverter}}" />
-            <ComboBoxItem Content="開発版(daybreak)以上でアップデート"
-                          IsEnabled="{Binding IsAloofUserMode}"
-                          Visibility="{Binding IsAloofUserMode,
-                                               Converter={StaticResource BoolVisibleConverter}}" />
-            <ComboBoxItem Content="(危険)試験版(twilight)以上でアップデート"
-                          IsEnabled="{Binding IsAloofUserMode}"
-                          Visibility="{Binding IsAloofUserMode,
-                                               Converter={StaticResource BoolVisibleConverter}}" />
-            <ComboBoxItem Content="(危険)試験版(midnight)以上でアップデート(常に最新版)"
-                          IsEnabled="{Binding IsAloofUserMode}"
-                          Visibility="{Binding IsAloofUserMode,
-                                               Converter={StaticResource BoolVisibleConverter}}" />
-        </ComboBox>
-        <TextBlock Grid.Row="1"
-                   Margin="4,2"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Center"
-                   Text="使用フォント" />
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="60" />
-            </Grid.ColumnDefinitions>
-            <ComboBox Margin="4,2,0,2"
-                      ItemsSource="{Binding DisplayFontFamilies}"
-                      SelectedIndex="{Binding FontFamilyIndex}" />
-            <TextBox Grid.Column="1"
-                     Margin="0,0,4,0"
-                     VerticalAlignment="Center"
-                     ab:TextBoxExtension.IsNumeric="True"
-                     Text="{Binding FontSize,
-                                    Converter={StaticResource DoubleStringConverter}}" />
-        </Grid>
-        <CheckBox Grid.Row="2"
-                  Grid.ColumnSpan="2"
-                  Margin="4"
-                  VerticalAlignment="Top"
-                  Content="タイムアウトエラーを通知しない(_N)"
-                  IsChecked="{Binding IgnoreTimeoutError}"
-                  Visibility="{Binding IsAloofUserMode,
-                                       Converter={StaticResource BoolVisibleConverter}}" />
-        <CheckBox Grid.Row="4"
-                  Grid.ColumnSpan="2"
-                  Margin="4"
-                  VerticalAlignment="Top"
-                  IsChecked="{Binding IsAloofUserMode}" IsEnabled="{Binding IsPowerUserEnableCheckEnabled}">
-            <StackPanel Orientation="Vertical">
-                <AccessText Text="私は超越者です(_A)" />
+            </Grid>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Margin="25,0,0,0">
                 <TextBlock Foreground="DimGray" Text="Krileと運命を共にする覚悟のある方専用です。" />
-                <TextBlock Foreground="DimGray" Text="健全クラスタと別れを告げる覚悟を決めてください。" />
+                <TextBlock Foreground="DimGray" Text="・Twitter廃人という自覚が無いと辛いです。" />
+                <TextBlock Foreground="DimGray" Text="・使い方を誤ると、アカウントを喪失するおそれがあります。" />
+                <TextBlock Foreground="DimGray" Text="・健全クラスタと別れを告げる覚悟を決めてください。" />
+                <TextBlock Foreground="DimGray" Text="・超越の際は、超越ツイートが自動で行われます。" />
             </StackPanel>
-        </CheckBox>
-    </Grid>
+            <CheckBox Margin="4"
+                      VerticalAlignment="Top"
+                      DockPanel.Dock="Bottom"
+                      IsChecked="{Binding IsAloofUserMode}"
+                      IsEnabled="{Binding IsPowerUserEnableCheckEnabled}">
+                <AccessText FontWeight="Bold" Text="私は超越者です(_A)" />
+            </CheckBox>
+        </DockPanel>
+    </ScrollViewer>
 </UserControl>

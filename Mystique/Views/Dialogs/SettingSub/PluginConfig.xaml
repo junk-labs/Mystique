@@ -11,7 +11,7 @@
              d:DesignWidth="300"
              mc:Ignorable="d">
     <i:Interaction.Triggers>
-        <l:InteractionMessageTrigger MessageKey="OpenConfig" Messenger="{Binding}">
+        <l:InteractionMessageTrigger MessageKey="OpenConfig" Messenger="{Binding Messenger}">
             <ba:TransitionExInteractionMessageAction />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
@@ -21,7 +21,9 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <TextBlock Margin="4,2" Text="読み込まれているプラグイン:" />
-        <Border BorderBrush="DimGray" BorderThickness="1" Grid.Row="1">
+        <Border Grid.Row="1"
+                BorderBrush="DimGray"
+                BorderThickness="1">
             <ScrollViewer>
                 <ItemsControl Background="White" ItemsSource="{Binding PluginViewModels}">
                     <ItemsControl.ItemsPanel>

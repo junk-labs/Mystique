@@ -16,7 +16,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public GeneralConfigViewModel()
         {
             this._powerUserMode = Setting.Instance.ExperienceProperty.IsAloofUserMode;
-            this._updateKind = Setting.Instance.ExperienceProperty.UpdateKind;
+            this._updateKind = Setting.Instance.ExperienceProperty.UpdateKind + 1;
             this.FontFamilies = Fonts.SystemFontFamilies.ToArray();
             var curFF = String.IsNullOrEmpty(Setting.Instance.ExperienceProperty.FontFamily) ?
                 new FontFamily() :
@@ -35,19 +35,28 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 _powerUserMode = value;
                 if (value)
                 {
-                    var cm = new ConfirmationMessage(
-                        "もうもどれませんがよろしいですか？",
-                        "また新たな超越者が生まれた...",
-                         System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
-                    this.Messenger.Raise(cm);
-                    if (!cm.Response.GetValueOrDefault())
+                    if (AccountStorage.Accounts.Count() == 0)
                     {
                         _powerUserMode = false;
                     }
-                    RaisePropertyChanged(() => IsAloofUserMode);
-                    RaisePropertyChanged(() => IsPowerUserEnableCheckEnabled);
-                    var a = AccountStorage.Accounts.FirstOrDefault();
-                    PostOffice.UpdateTweet(a, "私は超越しました。http://krile.starwing.net/ #krile #超越しました");
+                    else
+                    {
+                        var cm = new ConfirmationMessage(
+                            "もうもどれませんがよろしいですか？",
+                            "また新たな超越者が生まれた...",
+                             System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
+                        this.Messenger.Raise(cm);
+                        if (!cm.Response.GetValueOrDefault())
+                        {
+                            _powerUserMode = false;
+                        }
+                        else
+                        {
+                            var a = AccountStorage.Accounts.FirstOrDefault();
+                            PostOffice.UpdateTweet(a, "私は超越しました。http://krile.starwing.net/ #krile #超越しました");
+                            Setting.Instance.ExperienceProperty.IsAloofUserMode = true;
+                        }
+                    }
                 }
                 RaisePropertyChanged(() => IsAloofUserMode);
                 RaisePropertyChanged(() => IsPowerUserEnableCheckEnabled);
@@ -56,7 +65,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public bool IsPowerUserEnableCheckEnabled
         {
-            get { return !IsAloofUserMode; }
+            get { return !IsAloofUserMode && AccountStorage.Accounts.Count() > 0; }
         }
 
         private int _updateKind;
@@ -119,7 +128,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public void Apply()
         {
             Setting.Instance.ExperienceProperty.IsAloofUserMode = this._powerUserMode;
-            Setting.Instance.ExperienceProperty.UpdateKind = this._updateKind;
+            Setting.Instance.ExperienceProperty.UpdateKind = this._updateKind - 1;
             Setting.Instance.ExperienceProperty.FontFamily =
                 FontFamilies.Select(ff => ff.FamilyNames.Select(fn => fn.Value).FirstOrDefault())
                 .ElementAtOrDefault(_fontFamilyIndex);
