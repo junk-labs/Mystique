@@ -20,6 +20,8 @@ namespace Inscribe.Configuration.Settings
             TimelineStrictLock = true;
             ShowTabInBottom = false;
             ShowTabInBottom = false;
+            DoNotFavoriteMyTweet = true;
+            SelfBlockingProtection = true;
         }
 
         public bool UseFastScrolling { get; set; }
@@ -62,6 +64,10 @@ namespace Inscribe.Configuration.Settings
         public bool ShowTabInBottom { get; set; }
 
         public bool ShowSearchBarInBottom { get; set; }
+
+        public bool DoNotFavoriteMyTweet { get; set; }
+
+        public bool SelfBlockingProtection { get; set; }
     }
 
     /// <summary>

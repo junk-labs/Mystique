@@ -53,7 +53,7 @@ namespace Inscribe.Subsystems
 
         public static void ExecuteAction(TweetViewModel target, FavMouseActionCandidates actionKind, string argument)
         {
-            if (target.Status is TwitterDirectMessage) return;
+            if (!target.CanFavorite) return;
             var cais = GetAccountInfos();
             var pais = GetAccountInfos(argument);
             switch (actionKind)

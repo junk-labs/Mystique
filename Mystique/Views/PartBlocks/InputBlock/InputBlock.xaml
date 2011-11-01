@@ -41,6 +41,7 @@
     <UserControl.Resources>
         <BitmapImage x:Key="Delete" UriSource="/Resources/delete.png" />
         <BitmapImage x:Key="Close" UriSource="/Resources/cross_gray.png" />
+        <BitmapImage x:Key="DirectMessage" UriSource="/Resources/heart.png" />
         <BitmapImage x:Key="Reply" UriSource="/Resources/comment_add.png" />
         <BitmapImage x:Key="Krile" UriSource="/Resources/krile32.png" />
         <BitmapImage x:Key="Chevron" UriSource="/Resources/chevron.png" />
@@ -352,7 +353,7 @@
                     <Border Background="OldLace"
                             BorderBrush="Gray"
                             BorderThickness="0,0,0,1"
-                            Visibility="{Binding Path=CurrentInputDescription.IsInReplyToEnabled,
+                            Visibility="{Binding Path=IsInReplyToEnabled,
                                                  Converter={StaticResource BoolVisibleConverter}}">
                         <DockPanel>
                             <Button Command="{Binding RemoveInReplyToCommand}"
@@ -392,12 +393,32 @@
                                    VerticalAlignment="Center"
                                    DockPanel.Dock="Left"
                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                   Source="{StaticResource Warning}" />
-                            <TextBlock Margin="0, 2"
+                                   Source="{StaticResource Failed}" />
+                            <TextBlock Margin="0,3,0,1"
                                        VerticalAlignment="Center"
                                        FontSize="10.5"
                                        Foreground="Tomato"
                                        Text="投稿アカウントが選択されていません。左の×をクリックして、アカウントを選択してください。"
+                                       TextTrimming="CharacterEllipsis" />
+                        </DockPanel>
+                    </Border>
+                    <Border Background="#FFFFE6F0"
+                            BorderBrush="Gray"
+                            BorderThickness="0,0,0,1"
+                            Visibility="{Binding Path=IsDirectMessage,
+                                                 Converter={StaticResource BoolVisibleConverter}}">
+                        <DockPanel>
+                            <Image Width="16"
+                                   Height="16"
+                                   Margin="2"
+                                   VerticalAlignment="Center"
+                                   DockPanel.Dock="Left"
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                   Source="{StaticResource DirectMessage}" />
+                            <TextBlock Margin="0, 2"
+                                       VerticalAlignment="Center"
+                                       Foreground="Tomato"
+                                       Text="{Binding DirectMessageTarget, StringFormat={}{0}へのダイレクトメッセージ}"
                                        TextTrimming="CharacterEllipsis" />
                         </DockPanel>
                     </Border>

@@ -26,6 +26,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._showUnofficialRTButton = Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton;
             this._showQuoteTweetButton = Setting.Instance.TweetExperienceProperty.ShowQuoteButton;
             this._fullLineView = Setting.Instance.TweetExperienceProperty.UseFullLineView;
+            this._doNotFavMyTweet = Setting.Instance.TimelineExperienceProperty.DoNotFavoriteMyTweet;
         }
 
         private int _resolveStrategyIndex;
@@ -63,6 +64,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         private int _notificationNameViewModeIndex;
         public int NotificationNameViewModeIndex
+
         {
             get { return _notificationNameViewModeIndex; }
             set
@@ -133,6 +135,17 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+        private bool _doNotFavMyTweet;
+        public bool DoNotFavMyTweet
+        {
+            get { return _doNotFavMyTweet; }
+            set
+            {
+                _doNotFavMyTweet = value;
+                RaisePropertyChanged(() => DoNotFavMyTweet);
+            }
+        }
+
         public void Apply()
         {
             Setting.Instance.TweetExperienceProperty.UrlResolveMode= (UrlResolve)this._resolveStrategyIndex;
@@ -144,6 +157,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton = this._showUnofficialRTButton;
             Setting.Instance.TweetExperienceProperty.ShowQuoteButton = this._showQuoteTweetButton;
             Setting.Instance.TweetExperienceProperty.UseFullLineView = this._fullLineView;
+            Setting.Instance.TimelineExperienceProperty.DoNotFavoriteMyTweet = this._doNotFavMyTweet;
         }
     }
 }

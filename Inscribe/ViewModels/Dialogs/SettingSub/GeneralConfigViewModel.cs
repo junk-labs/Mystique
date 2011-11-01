@@ -15,7 +15,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
     {
         public GeneralConfigViewModel()
         {
-            this._powerUserMode = Setting.Instance.ExperienceProperty.IsAloofUserMode;
+            this._aloofUserMode = Setting.Instance.ExperienceProperty.IsAloofUserMode;
             this._updateKind = Setting.Instance.ExperienceProperty.UpdateKind + 1;
             this.FontFamilies = Fonts.SystemFontFamilies.ToArray();
             var curFF = String.IsNullOrEmpty(Setting.Instance.ExperienceProperty.FontFamily) ?
@@ -26,18 +26,18 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this.IgnoreTimeoutError = Setting.Instance.ExperienceProperty.IgnoreTimeoutError;
         }
 
-        private bool _powerUserMode;
+        private bool _aloofUserMode;
         public bool IsAloofUserMode
         {
-            get { return _powerUserMode; }
+            get { return _aloofUserMode; }
             set
             {
-                _powerUserMode = value;
+                _aloofUserMode = value;
                 if (value)
                 {
                     if (AccountStorage.Accounts.Count() == 0)
                     {
-                        _powerUserMode = false;
+                        _aloofUserMode = false;
                     }
                     else
                     {
@@ -48,7 +48,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                         this.Messenger.Raise(cm);
                         if (!cm.Response.GetValueOrDefault())
                         {
-                            _powerUserMode = false;
+                            _aloofUserMode = false;
                         }
                         else
                         {
@@ -114,7 +114,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         }
 
         private bool _ignoreTimeoutError;
-
         public bool IgnoreTimeoutError
         {
             get { return _ignoreTimeoutError; }
@@ -127,7 +126,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public void Apply()
         {
-            Setting.Instance.ExperienceProperty.IsAloofUserMode = this._powerUserMode;
+            Setting.Instance.ExperienceProperty.IsAloofUserMode = this._aloofUserMode;
             Setting.Instance.ExperienceProperty.UpdateKind = this._updateKind - 1;
             Setting.Instance.ExperienceProperty.FontFamily =
                 FontFamilies.Select(ff => ff.FamilyNames.Select(fn => fn.Value).FirstOrDefault())

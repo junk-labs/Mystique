@@ -30,8 +30,10 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="1*" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
                 <TextBlock Margin="4,2"
                            HorizontalAlignment="Right"
@@ -88,11 +90,11 @@
                           IsChecked="{Binding IgnoreTimeoutError}"
                           Visibility="{Binding IsAloofUserMode,
                                                Converter={StaticResource BoolVisibleConverter}}" />
-
             </Grid>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Margin="25,0,0,0">
                 <TextBlock Foreground="DimGray" Text="Krileと運命を共にする覚悟のある方専用です。" />
                 <TextBlock Foreground="DimGray" Text="・Twitter廃人という自覚が無いと辛いです。" />
+                <TextBlock Foreground="DimGray" Text="・予期しない動作をすることがあります。" />
                 <TextBlock Foreground="DimGray" Text="・使い方を誤ると、アカウントを喪失するおそれがあります。" />
                 <TextBlock Foreground="DimGray" Text="・健全クラスタと別れを告げる覚悟を決めてください。" />
                 <TextBlock Foreground="DimGray" Text="・超越の際は、超越ツイートが自動で行われます。" />
@@ -102,7 +104,7 @@
                       DockPanel.Dock="Bottom"
                       IsChecked="{Binding IsAloofUserMode}"
                       IsEnabled="{Binding IsPowerUserEnableCheckEnabled}">
-                <AccessText FontWeight="Bold" Text="私は超越者です(_A)" />
+                <AccessText FontWeight="Bold" Text="私は超越者です(_A) [人柱向けオプション]" />
             </CheckBox>
         </DockPanel>
     </ScrollViewer>

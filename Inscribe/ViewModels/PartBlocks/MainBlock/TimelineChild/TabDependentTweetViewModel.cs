@@ -628,9 +628,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 if (_FavoriteCommand == null)
-                    _FavoriteCommand = new ViewModelCommand(FavoriteInternal);
+                    _FavoriteCommand = new ViewModelCommand(FavoriteInternal, CanFavoriteInternal);
                 return _FavoriteCommand;
             }
+        }
+
+        private bool CanFavoriteInternal()
+        {
+            return this.Tweet.CanFavorite;
         }
 
         private void FavoriteInternal()
@@ -656,9 +661,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
         #endregion
 
+
         public void ToggleFavorite()
         {
-            if (this.Tweet.Status is TwitterDirectMessage) return;
+            if (!this.Tweet.CanFavorite) return;
             if (this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
                 .All(u => this.Tweet.FavoredUsers.Contains(u)))
             {
@@ -673,13 +679,13 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public void Favorite()
         {
-            if (this.Tweet.Status is TwitterDirectMessage) return;
+            if (!this.Tweet.CanFavorite) return;
             PostOffice.FavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
         }
 
         public void Unfavorite()
         {
-            if (this.Tweet.Status is TwitterDirectMessage) return;
+            if (!this.Tweet.CanFavorite) return;
             PostOffice.UnfavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
         }
 
@@ -691,13 +697,19 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 if (_FavoriteMultiUserCommand == null)
-                    _FavoriteMultiUserCommand = new ViewModelCommand(FavoriteMultiUser);
+                    _FavoriteMultiUserCommand = new ViewModelCommand(FavoriteMultiUser, CanFavoriteMultiUser);
                 return _FavoriteMultiUserCommand;
             }
         }
 
+        private bool CanFavoriteMultiUser()
+        {
+            return this.Tweet.CanFavorite;
+        }
+
         private void FavoriteMultiUser()
         {
+            if (!this.Tweet.CanFavorite) return;
             var favored = AccountStorage.Accounts.Where(a => this.Tweet.FavoredUsers.Contains(a.UserViewModel)).ToArray();
             this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.Favorite,
                 favored,
@@ -912,13 +924,20 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 if (_ReportForSpamCommand == null)
-                    _ReportForSpamCommand = new ViewModelCommand(ReportForSpam);
+                    _ReportForSpamCommand = new ViewModelCommand(ReportForSpam, CanReportForSpam);
                 return _ReportForSpamCommand;
             }
         }
 
+        private bool CanReportForSpam()
+        {
+            return !this.Tweet.IsMyTweet ||
+                !Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
+        }
+
         private void ReportForSpam()
         {
+            if (!CanReportForSpam()) return;
             var conf = new ConfirmationMessage("ユーザー @" + this.Tweet.Status.User.ScreenName + " をスパム報告してもよろしいですか？" + Environment.NewLine +
                 "(Krileに存在するすべてのアカウントでスパム報告を行います)",
                 "スパム報告の確認", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
@@ -1015,6 +1034,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void DirectMessage()
         {
+            this.Parent.Parent.Parent.Parent.InputBlockViewModel
+                .SetOpenText(true, true);
             this.Parent.Parent.Parent.Parent.InputBlockViewModel
                 .SetText("d @" + this.Tweet.Status.User.ScreenName + " ");
             this.Parent.Parent.Parent.Parent.InputBlockViewModel

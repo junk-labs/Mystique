@@ -319,6 +319,29 @@ namespace Inscribe.Communication.Posting
             NotifyStorage.Notify("ツイートしました:@" + info.ScreenName + ": " + text);
         }
 
+        internal static void UpdateDirectMessage(AccountInfo accountInfo, string target, string body)
+        {
+            dmInjection.Execute(new Tuple<AccountInfo, string, string>(accountInfo, target, body));
+        }
+
+        private static InjectionPort<Tuple<AccountInfo, string, string>> dmInjection =
+            new InjectionPort<Tuple<AccountInfo, string, string>>(a => UpdateDirectMessageSink(a.Item1, a.Item2, a.Item3));
+
+        public static IInjectionPort<Tuple<AccountInfo, string, string>> DirectMessageInjection
+        {
+            get { return dmInjection.GetInterface(); }
+        }
+
+        private static void UpdateDirectMessageSink(AccountInfo info, string target, string body)
+        {
+            var status = info.SendDirectMessage(target, body);
+            if(status == null || status.Id == 0)
+                throw new WebException("Timeout or failure sending tweet.", WebExceptionStatus.Timeout);
+
+            TweetStorage.Register(status);
+            NotifyStorage.Notify("DMを送信しました: @" + info.ScreenName + " -> @" + target + ": " + body);
+        }
+
         #region Favorite
 
         public static void FavTweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
@@ -651,6 +674,7 @@ namespace Inscribe.Communication.Posting
         }
 
         #endregion
+
     }
 
     public class UnderControlEventArgs : EventArgs

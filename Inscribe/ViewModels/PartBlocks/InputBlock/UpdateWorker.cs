@@ -49,7 +49,100 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public Task<bool> DoWork()
         {
-            return Task.Factory.StartNew(() => WorkCore());
+            if (RegularExpressions.DirectMessageSendRegex.IsMatch(body))
+            {
+                return Task.Factory.StartNew(() => WorkDirectMessageCore());
+            }
+            else
+            {
+                return Task.Factory.StartNew(() => WorkCore());
+            }
+        }
+
+        private bool WorkDirectMessageCore()
+        {
+            try
+            {
+                try
+                {
+                    var match = RegularExpressions.DirectMessageSendRegex.Match(body);
+                    if (!match.Success)
+                        throw new InvalidOperationException("アサーション失敗(DM-postcheck)");
+                    String target = match.Groups[1].Value;
+                    body = match.Groups[2].Value;
+                    // build text
+
+                    // attach image
+                    if (!String.IsNullOrEmpty(this.attachImagePath))
+                    {
+                        if (File.Exists(this.attachImagePath))
+                        {
+                            try
+                            {
+                                var upl = UploaderManager.GetSuggestedUploader();
+                                if (upl == null)
+                                    throw new InvalidOperationException("画像のアップローダ―が指定されていません。");
+                                body += " " + upl.UploadImage(this.accountInfo, this.attachImagePath, this.body);
+                            }
+                            catch (Exception e)
+                            {
+                                throw new WebException("画像のアップロードに失敗しました。", e);
+                            }
+                        }
+                        else
+                        {
+                            throw new FileNotFoundException("添付ファイルが見つかりません。");
+                        }
+                    }
+
+
+                    if (TweetTextCounter.Count(body) > TwitterDefine.TweetMaxLength)
+                    {
+                        if (Setting.Instance.InputExperienceProperty.TrimExceedChars)
+                        {
+                            while (TweetTextCounter.Count(body) > TwitterDefine.TweetMaxLength)
+                            {
+                                body = body.Substring(0, body.Length - 1);
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("ツイートが140文字を超えました。");
+                        }
+                    }
+
+                    this.TweetSummary = body;
+
+                    PostOffice.UpdateDirectMessage(this.accountInfo, target, body);
+
+                    this.WorkingState = InputBlock.WorkingState.Updated;
+
+                    return true;
+                }
+                catch (TweetFailedException tfex)
+                {
+                    var acc = AccountStorage.Get(this.accountInfo.AccountProperty.FallbackAccount);
+                    if (tfex.ErrorKind != TweetFailedException.TweetErrorKind.Controlled ||
+                        acc == null)
+                    {
+                        throw;
+                    }
+                    else
+                    {
+                        // fallbacking
+                        WorkerAddRequired(new TweetWorker(this.parent, acc, this.body, this.inReplyToId, this.attachImagePath, this.tags));
+                        throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.Fallbacked);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.WorkingState = ex is TweetAnnotationException ? InputBlock.WorkingState.Annotated : InputBlock.WorkingState.Failed;
+                this.ExceptionString = ex.ToString();
+                ParseFailException(ex);
+                this.RecentPostCount = -1;
+                return this.WorkingState == InputBlock.WorkingState.Annotated;
+            }
         }
 
         private bool WorkCore()
@@ -83,6 +176,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         }
                     }
 
+
                     if (TweetTextCounter.Count(body) > TwitterDefine.TweetMaxLength)
                     {
                         if (Setting.Instance.InputExperienceProperty.TrimExceedChars)
@@ -97,6 +191,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                             throw new Exception("ツイートが140文字を超えました。");
                         }
                     }
+
 
                     // is Unoffocial RT
                     bool isQuoting = false;

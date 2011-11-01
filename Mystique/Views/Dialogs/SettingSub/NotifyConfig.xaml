@@ -24,11 +24,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <CheckBox Margin="4,2"
-                  Content="タブの通知をデフォルトで有効にする(_E)"
+                  Content="新しくタブを作った時、そのタブの通知をオンにする(_E)"
                   IsChecked="{Binding TabNotifyEnabledAsDefault}" />
         <CheckBox Grid.Row="1"
                   Margin="4,2"
-                  Content="通知バーを使ったイベント通知を有効にする(_B)"
+                  Content="通知バーでイベントを通知する(_B)"
                   IsChecked="{Binding IsEnabledNotificationBar}" />
         <CheckBox Grid.Row="2"
                   Margin="4,2"

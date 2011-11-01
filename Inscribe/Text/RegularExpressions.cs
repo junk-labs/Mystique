@@ -26,5 +26,10 @@ namespace Inscribe.Text
         /// </summary>
         public static Regex HashRegex = new Regex(@"(?<!\w)([#＃]\w+)",
             RegexOptions.Compiled | RegexOptions.Singleline);
+
+        /// <summary>
+        /// ダイレクトメッセージ送信判定用のregex
+        /// </summary>
+        public static Regex DirectMessageSendRegex = new Regex(@"^d (?<![A-Za-z0-9_])@([A-Za-z0-9_]+(?:/[A-Za-z0-9_]*)?)(?![A-Za-z0-9_@]) (.*)$");
     }
 }

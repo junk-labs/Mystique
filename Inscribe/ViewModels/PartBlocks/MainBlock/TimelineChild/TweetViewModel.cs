@@ -231,6 +231,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             RaisePropertyChanged(() => Status);
             RaisePropertyChanged(() => NameAreaWidth);
+            RaisePropertyChanged(() => CanFavorite);
         }
 
         public void RefreshInReplyToInfo()
@@ -399,6 +400,15 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     stat.RetweetedOriginal != null ?
                     stat.RetweetedOriginal.CreatedAt :
                     this.CreatedAt;
+            }
+        }
+
+        public bool CanFavorite
+        {
+            get
+            {
+                return this.Status is TwitterStatus &&
+                    (!this.IsMyTweet || !Setting.Instance.TimelineExperienceProperty.DoNotFavoriteMyTweet);
             }
         }
 

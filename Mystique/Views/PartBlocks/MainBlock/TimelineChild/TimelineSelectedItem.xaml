@@ -69,7 +69,9 @@
             <MenuItem Command="{Binding FavoriteCommand}"
                       Header="_Favorite"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                 ConverterParameter=Favorite}">
+                                                 ConverterParameter=Favorite}"
+                      Visibility="{Binding Path=Tweet.CanFavorite,
+                                           Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Favorite}" />
                 </MenuItem.Icon>
@@ -116,7 +118,9 @@
                 <MenuItem Command="{Binding FavoriteMultiUserCommand}"
                           Header="_Favorite..."
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                     ConverterParameter=FavoriteMulti}">
+                                                     ConverterParameter=FavoriteMulti}"
+                          Visibility="{Binding Path=Tweet.CanFavorite,
+                                               Converter={StaticResource BoolVisibleConverter}}">
                     <MenuItem.Icon>
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Favorite}" />
                     </MenuItem.Icon>
@@ -462,7 +466,7 @@
                                                                             AncestorType={x:Type ListBoxItem}},
                                              Path=IsSelected,
                                              Converter={StaticResource BoolVisibleConverter}}">
-                <Grid VerticalAlignment="Center">
+                <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.CanFavorite, Converter={StaticResource BoolVisibleConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="11" />
@@ -470,11 +474,11 @@
                     <Button Grid.ColumnSpan="2"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Right"
+                            VerticalContentAlignment="Center"
                             Command="{Binding FavoriteMultiUserCommand}"
                             Focusable="False"
-                            HorizontalContentAlignment="Right"
-                            Style="{DynamicResource FlatButtonStyle}"
-                            VerticalContentAlignment="Center">
+                            Style="{DynamicResource FlatButtonStyle}">
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Chevron}" />
                         <Button.ToolTip>多重Favorite...</Button.ToolTip>
                     </Button>
@@ -494,11 +498,11 @@
                     <Button Grid.ColumnSpan="2"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Right"
+                            VerticalContentAlignment="Center"
                             Command="{Binding RetweetMultiUserCommand}"
                             Focusable="False"
-                            HorizontalContentAlignment="Right"
-                            Style="{DynamicResource FlatButtonStyle}"
-                            VerticalContentAlignment="Center">
+                            Style="{DynamicResource FlatButtonStyle}">
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Chevron}" />
                         <Button.ToolTip>多重公式Retweet...</Button.ToolTip>
                     </Button>

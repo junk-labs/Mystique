@@ -63,9 +63,9 @@
             <ToolTip Width="{Binding Path=TooltipWidth,
                                      Mode=OneWay,
                                      IsAsync=True}"
+                     HorizontalContentAlignment="Stretch"
                      DataContext="{Binding Path=PlacementTarget.DataContext,
                                            RelativeSource={x:Static RelativeSource.Self}}"
-                     HorizontalContentAlignment="Stretch"
                      Placement="Bottom">
                 <DockPanel>
                     <my:LazyImage Width="48"
@@ -75,7 +75,7 @@
                                   DockPanel.Dock="Left"
                                   UriSource="{Binding Path=Tweet,
                                                       Converter={StaticResource TweetUserImageConverter},
-                                                      ConverterParameter=Suggested}" /> 
+                                                      ConverterParameter=Suggested}" />
                     <DockPanel DockPanel.Dock="Top">
                         <DockPanel.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -164,7 +164,7 @@
                         </Style.Triggers>
                     </Style>
                 </my:LazyImage.Style>
-            </my:LazyImage> 
+            </my:LazyImage>
             <Grid Visibility="{Binding Path=IsMouseOver, Converter={StaticResource BoolVisibleConverter}, ElementName=UserImageOwner, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
@@ -188,7 +188,9 @@
                 <Button Grid.Column="1"
                         Command="{Binding Path=FavoriteCommand,
                                           Mode=OneTime}"
-                        Style="{StaticResource SimpleButtonStyle}">
+                        Style="{StaticResource SimpleButtonStyle}"
+                        Visibility="{Binding Path=Tweet.CanFavorite,
+                                             Converter={StaticResource BoolVisibleConverter}}">
                     <Image Width="16"
                            Height="16"
                            Margin="1"

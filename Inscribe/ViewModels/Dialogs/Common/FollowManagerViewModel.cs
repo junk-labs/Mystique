@@ -11,6 +11,7 @@ using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging.Windows;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.Dialogs.Common
 {
@@ -93,14 +94,20 @@ namespace Inscribe.ViewModels.Dialogs.Common
             get
             {
                 if (_R4SAllCommand == null)
-                    _R4SAllCommand = new ViewModelCommand(R4SAll);
+                    _R4SAllCommand = new ViewModelCommand(R4SAll, CanR4SAll);
                 return _R4SAllCommand;
             }
         }
 
+        private bool CanR4SAll()
+        {
+            return !AccountStorage.Contains(this.Target.TwitterUser.ScreenName) ||
+                !Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
+        }
+
         private void R4SAll()
         {
-            this.Relations.ForEach(r => r.State = Relation.FollowState.ReportForSpam);
+            this.Relations.ForEach(r => r.ReportForSpamCommand.Execute());
         }
         #endregion
 
@@ -319,13 +326,20 @@ namespace Inscribe.ViewModels.Dialogs.Common
             get
             {
                 if (_BlockCommand == null)
-                    _BlockCommand = new ViewModelCommand(Block);
+                    _BlockCommand = new ViewModelCommand(Block, CanBlock);
                 return _BlockCommand;
             }
         }
 
+        private bool CanBlock()
+        {
+            return !AccountStorage.Contains(this.TargetUser.TwitterUser.ScreenName) ||
+                !Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
+        }
+
         private void Block()
         {
+            if (!CanBlock()) return;
             State = FollowState.Blocking;
         }
         #endregion
@@ -357,13 +371,20 @@ namespace Inscribe.ViewModels.Dialogs.Common
             get
             {
                 if (_ReportForSpamCommand == null)
-                    _ReportForSpamCommand = new ViewModelCommand(ReportForSpam);
+                    _ReportForSpamCommand = new ViewModelCommand(ReportForSpam, CanReportForSpam);
                 return _ReportForSpamCommand;
             }
         }
 
+        private bool CanReportForSpam()
+        {
+            return !AccountStorage.Contains(this.TargetUser.TwitterUser.ScreenName) ||
+                !Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
+        }
+
         private void ReportForSpam()
         {
+            if (!CanReportForSpam()) return;
             State = FollowState.ReportForSpam;
         }
         #endregion

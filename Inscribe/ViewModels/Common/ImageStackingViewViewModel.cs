@@ -35,9 +35,10 @@ namespace Inscribe.ViewModels.Common
             set
             {
                 if (this._images == value) return;
-                this._images = value;
                 if (value == null || value.Count() == 0)
                     this._images = null;
+                else
+                    this._images = value.ToArray();
                 RaisePropertyChanged(() => ImageUrls);
                 RaisePropertyChanged(() => Images);
             }

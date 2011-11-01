@@ -44,8 +44,10 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             this._inputUserSelectorViewModel.LinkChanged += this.inputLinkUserChanged;
             this._intelliSenseTextBoxViewModel = new IntelliSenseTextBoxViewModel();
             this._intelliSenseTextBoxViewModel.TextChanged += (o, e) => invalidateTagBindState();
+            this._intelliSenseTextBoxViewModel.TextChanged += (o, e) => RaisePropertyChanged(() => IsDirectMessage);
+            this._intelliSenseTextBoxViewModel.TextChanged += (o, e) => RaisePropertyChanged(() => DirectMessageTarget);
+            this._intelliSenseTextBoxViewModel.TextChanged += (o, e) => RaisePropertyChanged(() => IsInReplyToEnabled);
             this._intelliSenseTextBoxViewModel.ItemsOpening += (o, e) => _intelliSenseTextBoxViewModel_OnItemsOpening();
-
             // Listen changing tab
             this.Parent.ColumnOwnerViewModel.CurrentTabChanged += new Action<TabViewModel>(CurrentTabChanged);
             RegisterKeyAssign();
@@ -490,7 +492,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         #region Input control
 
-        private InputDescription _currentInputDescription = null;
+        private volatile InputDescription _currentInputDescription = null;
         public InputDescription CurrentInputDescription
         {
             get
@@ -500,6 +502,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     System.Diagnostics.Debug.WriteLine("input description initialized");
                     this._currentInputDescription = new InputDescription(this._intelliSenseTextBoxViewModel);
                     this._currentInputDescription.PropertyChanged += (o, e) => UpdateCommand.RaiseCanExecuteChanged();
+                    this._currentInputDescription.PropertyChanged += (o, e) => RaisePropertyChanged(() => IsInReplyToEnabled);
                 }
                 return this._currentInputDescription;
             }
@@ -745,9 +748,48 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 currentTarget = this.UserSelectorViewModel.LinkElements;
             if (currentTarget != null)
                 currentTarget = AccountStorage.Accounts.Where(i => currentTarget.Contains(i)).ToArray();
-            Task.Factory.StartNew(() => currentTarget.Select(ai => ai.ProfileImage).ToArray())
-                .ContinueWith(r => DispatcherHelper.BeginInvoke(() => ImageStackingViewViewModel.ImageUrls = r.Result));
+            Task.Factory.StartNew(() =>
+            {
+                var profimgs = currentTarget.Select(ai => ai.ProfileImage).ToArray();
+                DispatcherHelper.BeginInvoke(() => ImageStackingViewViewModel.ImageUrls = profimgs);
+            });
             RaisePropertyChanged(() => IsSelectedAccountEmpty);
+        }
+
+        public bool IsDirectMessage
+        {
+            get
+            {
+                return RegularExpressions.DirectMessageSendRegex.IsMatch(this._intelliSenseTextBoxViewModel.TextBoxText);
+            }
+        }
+
+        public string DirectMessageTarget
+        {
+            get
+            {
+                var match = RegularExpressions.DirectMessageSendRegex.Match(this._intelliSenseTextBoxViewModel.TextBoxText);
+                if (match.Success)
+                {
+                    return match.Groups[1].Value;
+                }
+                else
+                {
+                    return String.Empty;
+                }
+            }
+        }
+
+        public bool IsInReplyToEnabled
+        {
+            get
+            {
+                var cur = this._currentInputDescription;
+                if (cur == null)
+                    return false;
+                else
+                    return cur.IsInReplyToEnabled && !this.IsDirectMessage;
+            }
         }
 
         #endregion
@@ -775,7 +817,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         private bool _isEnabledAutoBind = true;
         public bool IsEnabledAutoBind
         {
-            get { return this._isEnabledAutoBind; }
+            get { return this._isEnabledAutoBind && !this.IsDirectMessage; }
             set
             {
                 this._isEnabledAutoBind = value;
@@ -787,7 +829,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         private void invalidateTagBindState()
         {
             // 自動バインドの処理
-            if (this._isEnabledAutoBind)
+            if (this.IsEnabledAutoBind)
             {
                 var autobinds = Setting.Instance.InputExperienceProperty.HashtagAutoBindDescriptions
                     .Where(d => d.CheckCondition(_intelliSenseTextBoxViewModel.TextBoxText))
@@ -1088,7 +1130,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             if (targets == null)
                 targets = this.UserSelectorViewModel.LinkElements;
             var decidedTargets = targets.ToArray();
-            if (Setting.Instance.InputExperienceProperty.UseActiveFallback)
+            if (Setting.Instance.InputExperienceProperty.UseActiveFallback && !IsDirectMessage)
                 decidedTargets = targets.Select(a => FallbackAccount(a, a)).Distinct().ToArray();
             this.CurrentInputDescription.ReadyUpdate(this, boundTags, decidedTargets).ForEach(AddUpdateWorker);
             ResetInputDescription();

@@ -97,6 +97,7 @@ namespace Inscribe.Communication.UserStreams
             switch (elem.Kind)
             {
                 case ElementKind.Status:
+                case ElementKind.DirectMessage:
                     // 通常ステータスを受信した
                     TweetStorage.Register(elem.Status);
                     break;
@@ -171,6 +172,9 @@ namespace Inscribe.Communication.UserStreams
                     if (info == null) break;
                     info.RemoveBlocking(elem.TargetUser.NumericId);
                     // TODO: Notify events
+                    break;
+                default:
+                    System.Diagnostics.Debug.WriteLine("unknown:" + elem.ToString());
                     break;
             }
         }

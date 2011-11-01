@@ -20,6 +20,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._tweetInitStrategyIndex = (int)Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy;
             this._useIntelligentOrdering = Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering;
             this._intelligentOrderingThresholdSec = Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec;
+            this._selfBlockingProtection = Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
         }
 
         private int _timelineScrollLockIndex;
@@ -95,6 +96,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+
+        private bool _selfBlockingProtection;
+        public bool SelfBlockingProtection
+        {
+            get { return _selfBlockingProtection; }
+            set { _selfBlockingProtection = value; }
+        }
+
         public void Apply()
         {
             Setting.Instance.TimelineExperienceProperty.ScrollLockMode = (ScrollLock)this._timelineScrollLockIndex;
@@ -104,6 +113,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy = (ItemInitStrategy)this._tweetInitStrategyIndex;
             Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering = this._useIntelligentOrdering;
             Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec = this._intelligentOrderingThresholdSec;
+            Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection = this._selfBlockingProtection;
         }
     }
 }

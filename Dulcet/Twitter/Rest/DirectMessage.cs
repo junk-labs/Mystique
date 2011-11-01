@@ -100,7 +100,7 @@ namespace Dulcet.Twitter.Rest
             if (xmlDoc == null)
                 return null;
 
-            return TwitterDirectMessage.FromNode(xmlDoc.Element("direct_message"));
+            return TwitterDirectMessage.FromNode(xmlDoc.Root);
         }
 
         /// <summary>
