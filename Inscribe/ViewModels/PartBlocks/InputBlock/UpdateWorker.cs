@@ -12,6 +12,7 @@ using Inscribe.Storage;
 using Inscribe.Text;
 using Livet;
 using Livet.Commands;
+using System.Threading;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -478,6 +479,35 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             catch { }
         }
         #endregion
+
+        #region RetryCommand
+        private ViewModelCommand _RetryCommand;
+
+        public ViewModelCommand RetryCommand
+        {
+            get
+            {
+                if (_RetryCommand == null)
+                {
+                    _RetryCommand = new ViewModelCommand(Retry);
+                }
+                return _RetryCommand;
+            }
+        }
+
+        public void Retry()
+        {
+            this.DoWork().ContinueWith(t =>
+            {
+                if (t.Result)
+                {
+                    Thread.Sleep(Setting.Instance.ExperienceProperty.PostFinishShowLength);
+                    DispatcherHelper.BeginInvoke(() => parent.UpdateWorkers.Remove(this));
+                }
+            });
+        }
+        #endregion
+
 
         #region ReturnToBoxCommand
         ViewModelCommand _ReturnToBoxCommand;
