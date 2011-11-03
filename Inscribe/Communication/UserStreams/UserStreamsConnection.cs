@@ -9,6 +9,7 @@ using Inscribe.Authentication;
 using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Storage;
+using System.Threading.Tasks;
 
 namespace Inscribe.Communication.UserStreams
 {
@@ -37,6 +38,16 @@ namespace Inscribe.Communication.UserStreams
                 }
                 catch { }
             };
+            StartPump();
+        }
+
+        private static void StartPump()
+        {
+            if (pumpThread != null && pumpThread.IsAlive)
+            {
+                pumpThread.Abort();
+                pumpThread = null;
+            }
             pumpThread = new Thread(PumpTweets);
             pumpThread.Start();
         }
@@ -84,6 +95,7 @@ namespace Inscribe.Communication.UserStreams
             {
                 ExceptionStorage.Register(e, ExceptionCategory.InternalError, 
                     "メッセージポンピングシステムにエラーが発生しました。");
+                Task.Factory.StartNew(() => StartPump());
             }
         }
 
