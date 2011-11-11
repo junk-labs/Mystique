@@ -350,8 +350,7 @@
                                    DocumentMouseMove="ItemMouseMove"
                                    DocumentMouseUp="ItemMouseButtonUp"
                                    DynamicInline="{Binding Path=Tweet.TweetText,
-                                                           Converter={StaticResource TextFlowDocumentConverter},
-                                                           IsAsync=True}"
+                                                           Converter={StaticResource TextFlowDocumentConverter}}"
                                    InputMethod.IsInputMethodEnabled="False"
                                    IsDocumentEnabled="True"
                                    IsReadOnly="True"
@@ -567,8 +566,7 @@
                                          VerticalAlignment="Center"
                                          DynamicInline="{Binding Tweet,
                                                                  Converter={StaticResource SourceInlinesConverter},
-                                                                 ConverterParameter=True,
-                                                                 IsAsync=True}"
+                                                                 ConverterParameter=True}"
                                          FontSize="11"
                                          Foreground="DimGray" />
 
@@ -620,8 +618,7 @@
                         <tc:DynamicTextBlock Margin="2"
                                              VerticalAlignment="Center"
                                              DynamicInline="{Binding Tweet,
-                                                                     Converter={StaticResource SourceInlinesConverter},
-                                                                     IsAsync=True}"
+                                                                     Converter={StaticResource SourceInlinesConverter}}"
                                              FontSize="11"
                                              Foreground="DimGray"
                                              Visibility="{Binding Path=Tweet.IsStatus,

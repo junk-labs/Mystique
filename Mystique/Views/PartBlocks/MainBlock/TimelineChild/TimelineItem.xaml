@@ -52,7 +52,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid x:Name="LayoutRoot" Background="{Binding Path=BackBrush, Mode=OneWay, IsAsync=True}">
+    <Grid x:Name="LayoutRoot" Background="{Binding Path=BackBrush, Mode=OneWay}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="{Binding Path=Tweet.NameAreaWidth, FallbackValue=Auto}" />
@@ -61,8 +61,7 @@
         </Grid.ColumnDefinitions>
         <Grid.ToolTip>
             <ToolTip Width="{Binding Path=TooltipWidth,
-                                     Mode=OneWay,
-                                     IsAsync=True}"
+                                     Mode=OneWay}"
                      HorizontalContentAlignment="Stretch"
                      DataContext="{Binding Path=PlacementTarget.DataContext,
                                            RelativeSource={x:Static RelativeSource.Self}}"

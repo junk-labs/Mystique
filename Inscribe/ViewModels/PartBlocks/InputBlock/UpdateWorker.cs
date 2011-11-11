@@ -50,6 +50,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public Task<bool> DoWork()
         {
+            this.WorkingState = InputBlock.WorkingState.Updating;
             if (RegularExpressions.DirectMessageSendRegex.IsMatch(body))
             {
                 return Task.Factory.StartNew(() => WorkDirectMessageCore());
@@ -507,7 +508,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             });
         }
         #endregion
-
 
         #region ReturnToBoxCommand
         ViewModelCommand _ReturnToBoxCommand;
