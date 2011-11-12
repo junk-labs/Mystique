@@ -27,7 +27,7 @@ namespace Inscribe.Configuration.Settings
             {
                 if (value != null)
                 {
-                    value.ForEach(a => AccountStorage.RegisterAccount(a));
+                    value.Where(a => a != null).ForEach(a => AccountStorage.RegisterAccount(a));
                 }
             }
         }

@@ -8,6 +8,7 @@ using System.Windows;
 using Inscribe.Common;
 using Inscribe.Configuration.Settings;
 using Inscribe.Storage;
+using System.Linq;
 using Livet;
 
 namespace Inscribe.Configuration

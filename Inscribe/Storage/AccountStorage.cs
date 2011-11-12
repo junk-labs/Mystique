@@ -27,6 +27,8 @@ namespace Inscribe.Storage
         /// <param name="accountInfo">登録するアカウント情報</param>
         public static void RegisterAccount(AccountInfo accountInfo)
         {
+            if (accountInfo == null)
+                throw new ArgumentNullException("accountInfo");
             accounts.Add(accountInfo);
             OnAccountsChanged(EventArgs.Empty);
             // アカウント情報のキャッシュ
