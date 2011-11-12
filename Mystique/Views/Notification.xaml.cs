@@ -107,7 +107,7 @@ namespace Mystique.Views
             else
             {
                 // Window location starts from bottom
-                this.Top = screen.WorkingArea.Bottom - offsetIndex * (48 + 10) - 58;
+                this.Top = screen.WorkingArea.Bottom - offsetIndex * (48 + 10) - 58 - screen.WorkingArea.Top;
             }
             if (Setting.Instance.NotificationProperty.NotifyLocation == Inscribe.Configuration.Settings.NotifyLocation.LeftTop ||
                 Setting.Instance.NotificationProperty.NotifyLocation == Inscribe.Configuration.Settings.NotifyLocation.LeftBottom)
@@ -118,7 +118,7 @@ namespace Mystique.Views
             else
             {
                 // Window location in Right
-                this.Left = screen.WorkingArea.Right - 360;
+                this.Left = screen.WorkingArea.Right - 360 - screen.WorkingArea.Left;
             }
         }
 
