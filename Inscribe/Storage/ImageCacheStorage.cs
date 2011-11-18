@@ -16,7 +16,6 @@ namespace Inscribe.Storage
     {
         public const int ImageMaxWidth = 48;
 
-
         private static ReaderWriterLockWrap lockWrap;
         private static Dictionary<Uri, KeyValuePair<BitmapImage, DateTime>> imageDataDictionary;
         private static object semaphoreAccessLocker = new object();

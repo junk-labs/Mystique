@@ -1,15 +1,28 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
+using Inscribe.Data;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Inscribe.Storage
 {
     public static class UserStorage
     {
-        private static ConcurrentDictionary<string, UserViewModel> dictionary = new ConcurrentDictionary<string, UserViewModel>();
+        private static ReaderWriterLockWrap lockWrap;
+        private static Dictionary<string, UserViewModel> dictionary;
+        private static object semaphoreAccessLocker = new object();
+        private static Dictionary<string, ManualResetEvent> semaphores;
+
+        static UserStorage()
+        {
+            lockWrap = new ReaderWriterLockWrap();
+            dictionary = new Dictionary<string, UserViewModel>();
+            semaphores = new Dictionary<string, ManualResetEvent>();
+        }
 
         /// <summary>
         /// キャッシュにユーザー情報が存在していたら、すぐに返します。<para />
@@ -20,10 +33,13 @@ namespace Inscribe.Storage
             if (userScreenName == null)
                 throw new ArgumentNullException("userScreenName");
             UserViewModel ret;
-            if (dictionary.TryGetValue(userScreenName, out ret))
-                return ret;
-            else
-                return null;
+            using (lockWrap.GetReaderLock())
+            {
+                if (dictionary.TryGetValue(userScreenName, out ret))
+                    return ret;
+                else
+                    return null;
+            }
         }
 
         /// <summary>
@@ -31,7 +47,7 @@ namespace Inscribe.Storage
         /// </summary>
         public static void Register(TwitterUser user)
         {
-            Get(user);
+            Task.Factory.StartNew(() => Get(user));
         }
 
         /// <summary>
@@ -44,7 +60,13 @@ namespace Inscribe.Storage
             if (user == null)
                 throw new ArgumentNullException("user");
             var newvm = new UserViewModel(user);
-            dictionary.AddOrUpdate(user.ScreenName, newvm);
+            using (lockWrap.GetWriterLock())
+            {
+                if (dictionary.ContainsKey(user.ScreenName))
+                    dictionary[user.ScreenName] = newvm;
+                else
+                    dictionary.Add(user.ScreenName, newvm);
+            }
             return newvm;
         }
 
@@ -60,11 +82,34 @@ namespace Inscribe.Storage
             if (String.IsNullOrEmpty(userScreenName))
                 throw new ArgumentNullException("userScreenName", "userScreenNameがNullであるか、または空白です。");
             UserViewModel ret = null;
-            if (useCache && dictionary.TryGetValue(userScreenName, out ret))
+            if (useCache)
             {
-                return ret;
+                ret = Lookup(userScreenName);
+                if (ret != null)
+                    return ret;
             }
-            else
+            return DownloadUser(userScreenName);
+        }
+
+        /// <summary>
+        /// ユーザー情報をダウンロードし、キャッシュを更新します。
+        /// </summary>
+        private static UserViewModel DownloadUser(string userScreenName)
+        {
+            ManualResetEvent mre;
+            lock (semaphoreAccessLocker)
+            {
+                if (!semaphores.TryGetValue(userScreenName, out mre))
+                {
+                    semaphores.Add(userScreenName, new ManualResetEvent(false));
+                }
+            }
+            if (mre != null)
+            {
+                mre.WaitOne();
+                return Get(userScreenName);
+            }
+            try
             {
                 var acc = AccountStorage.GetRandom(ai => true, true);
                 if (acc != null)
@@ -75,7 +120,13 @@ namespace Inscribe.Storage
                         if (ud != null)
                         {
                             var uvm = new UserViewModel(ud);
-                            dictionary.AddOrUpdate(userScreenName, uvm);
+                            using (lockWrap.GetWriterLock())
+                            {
+                                if (dictionary.ContainsKey(userScreenName))
+                                    dictionary[userScreenName] = uvm;
+                                else
+                                    dictionary.Add(userScreenName, uvm);
+                            }
                             return uvm;
                         }
                     }
@@ -90,7 +141,19 @@ namespace Inscribe.Storage
                     return null;
                 }
             }
+            finally
+            {
+                lock (semaphoreAccessLocker)
+                {
+                    if (semaphores.ContainsKey(userScreenName))
+                    {
+                        semaphores[userScreenName].Set();
+                        semaphores.Remove(userScreenName);
+                    }
+                }
+            }
         }
+
 
         /// <summary>
         /// ストレージに格納されているすべてのユーザーを取得します。
