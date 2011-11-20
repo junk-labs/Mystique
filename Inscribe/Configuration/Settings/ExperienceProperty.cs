@@ -13,6 +13,8 @@ namespace Inscribe.Configuration.Settings
             this.FontSize = 11.5;
             this.FontFamily = "Meiryo";
             this.IgnoreTimeoutError = true;
+            this.WebBrowserPath = string.Empty;
+            this.WebBrowserParam = string.Empty;
         }
 
         #region General experience
@@ -51,5 +53,18 @@ namespace Inscribe.Configuration.Settings
         public double FontSize { get; set; }
 
         public bool IgnoreTimeoutError { get; set; }
+
+        /// <summary>
+        /// URLを開くWebブラウザのパス
+        /// </summary>
+        /// <remarks>未設定の場合関連付けで開く</remarks>
+        public string WebBrowserPath { get; set; }
+
+        /// <summary>
+        /// URLを開くWebブラウザに渡すパラメータ
+        /// </summary>
+        /// <remarks>{URL}はURLに置き換わる。未設定の場合はURLがそのまま指定される</remarks>
+        public string WebBrowserParam { get; set; }
+
     }
 }
