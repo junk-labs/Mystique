@@ -1,4 +1,5 @@
 ﻿
+using System;
 namespace Inscribe.Configuration.Settings
 {
     public class ExperienceProperty
@@ -8,7 +9,7 @@ namespace Inscribe.Configuration.Settings
             this.PostFinishShowLength = 3000;
             this.UpdateKind = Define.GetVersion().FileBuildPart;
             this.TwitterActionNotifyShowLength = 5000;
-            this.IsAloofUserMode = false;
+            this.IsTranscender = false;
             this.StatusMessageDefaultShowLengthSec = 5;
             this.FontSize = 11.5;
             this.FontFamily = "Meiryo";
@@ -18,15 +19,25 @@ namespace Inscribe.Configuration.Settings
         #region General experience
 
         /// <summary>
+        /// 超越者である
+        /// </summary>
+        public bool IsTranscender { get; set; }
+
+        /// <summary>
         /// 上級者向けの解説を使用する
         /// </summary>
-        public bool IsAloofUserMode { get; set; }
+        [Obsolete("use IsTranscender property.")]
+        public bool IsAloofUserMode
+        {
+            get { return IsTranscender; }
+            set { IsTranscender = value; }
+        }
 
         /// <summary>
         /// 更新パッケージ種別
         /// </summary>
         /// <remarks>
-        /// IsAloofUserModeがオンなら0-3で選択可能
+        /// IsTranscenderがオンなら0-3で選択可能
         /// </remarks>
         public int UpdateKind { get; set; }
 

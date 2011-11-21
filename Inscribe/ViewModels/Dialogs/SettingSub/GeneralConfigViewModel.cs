@@ -15,7 +15,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
     {
         public GeneralConfigViewModel()
         {
-            this._aloofUserMode = Setting.Instance.ExperienceProperty.IsAloofUserMode;
+            this._aloofUserMode = Setting.Instance.ExperienceProperty.IsTranscender;
             this._updateKind = Setting.Instance.ExperienceProperty.UpdateKind + 1;
             this.FontFamilies = Fonts.SystemFontFamilies.ToArray();
             var curFF = String.IsNullOrEmpty(Setting.Instance.ExperienceProperty.FontFamily) ?
@@ -27,7 +27,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         }
 
         private bool _aloofUserMode;
-        public bool IsAloofUserMode
+        public bool IsTranscender
         {
             get { return _aloofUserMode; }
             set
@@ -54,18 +54,18 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                         {
                             var a = AccountStorage.Accounts.FirstOrDefault();
                             PostOffice.UpdateTweet(a, "私は超越しました。http://krile.starwing.net/ #krile #超越しました");
-                            Setting.Instance.ExperienceProperty.IsAloofUserMode = true;
+                            Setting.Instance.ExperienceProperty.IsTranscender = true;
                         }
                     }
                 }
-                RaisePropertyChanged(() => IsAloofUserMode);
+                RaisePropertyChanged(() => IsTranscender);
                 RaisePropertyChanged(() => IsPowerUserEnableCheckEnabled);
             }
         }
 
         public bool IsPowerUserEnableCheckEnabled
         {
-            get { return !IsAloofUserMode && AccountStorage.Accounts.Count() > 0; }
+            get { return !IsTranscender && AccountStorage.Accounts.Count() > 0; }
         }
 
         private int _updateKind;
@@ -126,7 +126,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public void Apply()
         {
-            Setting.Instance.ExperienceProperty.IsAloofUserMode = this._aloofUserMode;
+            Setting.Instance.ExperienceProperty.IsTranscender = this._aloofUserMode;
             Setting.Instance.ExperienceProperty.UpdateKind = this._updateKind - 1;
             Setting.Instance.ExperienceProperty.FontFamily =
                 FontFamilies.Select(ff => ff.FamilyNames.Select(fn => fn.Value).FirstOrDefault())

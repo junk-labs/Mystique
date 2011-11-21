@@ -12,6 +12,14 @@ namespace Inscribe.Filter
     /// </summary>
     public abstract class FilterBase : IFilter
     {
+        public virtual bool IsOnlyTranscender
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// フィルタを適用します。
         /// </summary>

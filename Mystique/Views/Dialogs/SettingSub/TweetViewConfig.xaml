@@ -40,7 +40,7 @@
         <Grid Grid.Row="1"
               Grid.Column="1"
               Margin="4,2"
-              Visibility="{Binding IsAloofUserMode,
+              Visibility="{Binding IsTranscender,
                                    Converter={StaticResource BoolVisibleConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -133,7 +133,7 @@
                   Grid.ColumnSpan="2"
                   Margin="4,2"
                   IsChecked="{Binding FullLineView}"
-                  Visibility="{Binding IsAloofUserMode,
+                  Visibility="{Binding IsTranscender,
                                        Converter={StaticResource BoolVisibleConverter}}">
             <AccessText Text="常にツイートを展開状態で表示(_X)[非推奨、無サポート]" />
         </CheckBox>

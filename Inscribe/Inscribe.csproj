@@ -69,6 +69,7 @@
     <Compile Include="Filter\Filters\Text\FilterHashtagText.cs" />
     <Compile Include="Filter\Filters\Text\FilterUrlText.cs" />
     <Compile Include="Common\KeyAssignHelper.cs" />
+    <Compile Include="Filter\Filters\Transcend\ExceptedFilter.cs" />
     <Compile Include="Filter\WeakEventBinder.cs" />
     <Compile Include="Storage\ImageCacheStorage.cs" />
     <Compile Include="Storage\UrlResolveCacheStorage.cs" />

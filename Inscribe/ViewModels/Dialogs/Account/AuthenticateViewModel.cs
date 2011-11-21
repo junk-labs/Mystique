@@ -55,7 +55,7 @@ namespace Inscribe.ViewModels.Dialogs.Account
 
         public bool CanOverrideAPIKey
         {
-            get { return Setting.Instance.ExperienceProperty.IsAloofUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsTranscender; }
         }
 
         public bool IsOverridesConsumerInfo

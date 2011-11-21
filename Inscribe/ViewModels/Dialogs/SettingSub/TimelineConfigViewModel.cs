@@ -6,9 +6,9 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
     public class TimelineConfigViewModel : ViewModel, IApplyable
     {
-        public bool IsAloofUserMode
+        public bool IsTranscender
         {
-            get { return Setting.Instance.ExperienceProperty.IsAloofUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsTranscender;}
         }
 
         public TimelineConfigViewModel()
