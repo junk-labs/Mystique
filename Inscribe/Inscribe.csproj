@@ -206,7 +206,7 @@
     <Compile Include="ViewModels\Dialogs\Common\FollowManagerViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MuteViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\ColoringConfigViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\SettingSub\ExtServiceConfigViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SettingSub\ExternalConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\GeneralConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\IApplyable.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\InputConfigViewModel.cs" />

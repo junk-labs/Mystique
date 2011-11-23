@@ -107,7 +107,13 @@ namespace Inscribe.Data
 
         public void CopyTo(Array array, int index)
         {
-            CopyTo(array, index);
+            if (array == null)
+                throw new ArgumentNullException("array");
+            var castedArray = array as T[];
+            if (array == null)
+                throw new ArgumentException("array is uncastable to T[].");
+            using (ReaderLock())
+                internalList.CopyTo(castedArray, index);
         }
 
         /// <summary>

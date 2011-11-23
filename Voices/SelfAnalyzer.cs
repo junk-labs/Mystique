@@ -21,7 +21,7 @@ namespace Voices
             {
                 return "Windows Presentation Foundation 内部エラーが発生しました。" + Environment.NewLine +
                     "お手数ですが再度起動してください。" + Environment.NewLine +
-                    "また、Windows Updateを確認してみてください。";
+                    "(システムのメモリが不足している可能性があります。)";
             }
             if (error.Contains("System.MissingMethodException"))
             {

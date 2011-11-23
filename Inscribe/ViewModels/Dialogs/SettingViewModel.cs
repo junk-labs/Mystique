@@ -82,10 +82,10 @@ namespace Inscribe.ViewModels.Dialogs
             get { return _mouseAssignConfigViewModel; }
         }
 
-        private ExtServiceConfigViewModel _extServiceConfigViewModel = new ExtServiceConfigViewModel();
-        public ExtServiceConfigViewModel ExtServiceConfigViewModel
+        private ExternalConfigViewModel _externalConfigViewModel = new ExternalConfigViewModel();
+        public ExternalConfigViewModel ExternalConfigViewModel
         {
-            get { return _extServiceConfigViewModel; }
+            get { return _externalConfigViewModel; }
         }
 
         private PluginConfigViewModel _pluginConfigViewModel = new PluginConfigViewModel();
@@ -122,7 +122,7 @@ namespace Inscribe.ViewModels.Dialogs
             this.MuteConfigViewModel.Apply();
             this.KeyAssignConfigViewModel.Apply();
             this.MouseAssignConfigViewModel.Apply();
-            this.ExtServiceConfigViewModel.Apply();
+            this.ExternalConfigViewModel.Apply();
 
             Setting.RaiseSettingValueChanged();
             Close();
