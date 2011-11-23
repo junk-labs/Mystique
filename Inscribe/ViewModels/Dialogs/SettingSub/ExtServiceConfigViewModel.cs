@@ -18,7 +18,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             if (su != null)
             {
                 var idx = this.ImageUploaderCandidates
-                    .TakeWhile(u => u.ServiceName != Setting.Instance.ExternalServiceProperty.UploaderService)
+                    .TakeWhile(u => u.ServiceName != Setting.Instance.ExternalProperty.UploaderService)
                     .Count();
                 if (idx < this.ImageUploaderCandidates.Length)
                 {
@@ -45,10 +45,10 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public void Apply()
         {
             if (this.ImageUploadCandidateIndex < this.ImageUploaderCandidates.Count())
-                Setting.Instance.ExternalServiceProperty.UploaderService =
+                Setting.Instance.ExternalProperty.UploaderService =
                     this.ImageUploaderCandidates[this.ImageUploadCandidateIndex].ServiceName;
             else
-                Setting.Instance.ExternalServiceProperty.UploaderService = String.Empty;
+                Setting.Instance.ExternalProperty.UploaderService = String.Empty;
         }
     }
 }

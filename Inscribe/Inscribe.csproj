@@ -110,7 +110,7 @@
     <Compile Include="Configuration\Settings\ColoringProperty.cs" />
     <Compile Include="Configuration\Settings\ConnectionProperty.cs" />
     <Compile Include="Configuration\Settings\ExperienceProperty.cs" />
-    <Compile Include="Configuration\Settings\ExternalServiceProperty.cs" />
+    <Compile Include="Configuration\Settings\ExternalProperty.cs" />
     <Compile Include="Configuration\Settings\InputExperienceProperty.cs" />
     <Compile Include="Configuration\Settings\KernelProperty.cs" />
     <Compile Include="Configuration\Settings\KeyAssignProperty.cs" />

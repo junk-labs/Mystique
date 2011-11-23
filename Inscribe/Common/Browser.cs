@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Inscribe.Configuration;
+﻿using Inscribe.Configuration;
 
 namespace Inscribe.Common
 {
@@ -12,14 +8,14 @@ namespace Inscribe.Common
         {
             try
             {
-                string path = Setting.Instance.ExperienceProperty.WebBrowserPath;
+                string path = Setting.Instance.ExternalProperty.WebBrowserPath;
                 if (string.IsNullOrEmpty(path))
                 {
                     System.Diagnostics.Process.Start(navigate);
                 }
                 else
                 {
-                    string param = Setting.Instance.ExperienceProperty.WebBrowserParam;
+                    string param = Setting.Instance.ExternalProperty.WebBrowserParam;
                     if (string.IsNullOrEmpty(param))
                     {
                         param = navigate;

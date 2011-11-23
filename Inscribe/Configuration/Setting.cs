@@ -144,7 +144,7 @@ namespace Inscribe.Configuration
             this.TweetExperienceProperty = new Settings.TweetExperienceProperty();
             this.InputExperienceProperty = new InputExperienceProperty();
             this.TimelineFilteringProperty = new TimelineFilterlingProperty();
-            this.ExternalServiceProperty = new ExternalServiceProperty();
+            this.ExternalProperty = new ExternalProperty();
             this.ColoringProperty = new ColoringProperty();
             this.KeyAssignProperty = new KeyAssignProperty();
             this.MouseAssignProperty = new MouseAssignProperty();
@@ -166,7 +166,7 @@ namespace Inscribe.Configuration
 
         public TimelineFilterlingProperty TimelineFilteringProperty { get; set; }
 
-        public ExternalServiceProperty ExternalServiceProperty { get; set; }
+        public ExternalProperty ExternalProperty { get; set; }
 
         public ColoringProperty ColoringProperty { get; set; }
 
