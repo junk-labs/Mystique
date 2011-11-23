@@ -408,8 +408,13 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 return this.Status is TwitterStatus &&
-                    (!this.IsMyTweet || !Setting.Instance.TimelineExperienceProperty.DoNotFavoriteMyTweet);
+                    (!this.IsMyTweet || Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet);
             }
+        }
+
+        public bool ShowTooltip
+        {
+            get { return Setting.Instance.TweetExperienceProperty.ShowTweetTooltip; }
         }
 
         #endregion

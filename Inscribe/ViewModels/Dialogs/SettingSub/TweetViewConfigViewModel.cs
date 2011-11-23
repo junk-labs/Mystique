@@ -5,6 +5,7 @@ using System.Text;
 using Livet;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
+using Inscribe.Storage;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
@@ -26,7 +27,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._showUnofficialRTButton = Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton;
             this._showQuoteTweetButton = Setting.Instance.TweetExperienceProperty.ShowQuoteButton;
             this._fullLineView = Setting.Instance.TweetExperienceProperty.UseFullLineView;
-            this._doNotFavMyTweet = Setting.Instance.TimelineExperienceProperty.DoNotFavoriteMyTweet;
+            this._canFavMyTweet = Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet;
+            this._showTweetTooltip = Setting.Instance.TweetExperienceProperty.ShowTweetTooltip;
         }
 
         private int _resolveStrategyIndex;
@@ -135,29 +137,48 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
-        private bool _doNotFavMyTweet;
-        public bool DoNotFavMyTweet
+        private bool _canFavMyTweet;
+        public bool CanFavMyTweet
         {
-            get { return _doNotFavMyTweet; }
+            get { return _canFavMyTweet; }
             set
             {
-                _doNotFavMyTweet = value;
-                RaisePropertyChanged(() => DoNotFavMyTweet);
+                _canFavMyTweet = value;
+                RaisePropertyChanged(() => CanFavMyTweet);
+            }
+        }
+
+        private bool _showTweetTooltip;
+        public bool ShowTweetTooltip
+        {
+            get { return _showTweetTooltip; }
+            set
+            {
+                _showTweetTooltip = value;
+                RaisePropertyChanged(() => ShowTweetTooltip);
             }
         }
 
         public void Apply()
         {
-            Setting.Instance.TweetExperienceProperty.UrlResolveMode= (UrlResolve)this._resolveStrategyIndex;
-            Setting.Instance.TweetExperienceProperty.UrlTooltipShowLength = int.Parse(this._tipHelpShowLength);
-            Setting.Instance.TweetExperienceProperty.UserNameViewMode = (NameView)this._userNameViewModeIndex;
-            Setting.Instance.TweetExperienceProperty.NotificationNameViewMode = (NameView)this._notificationNameViewModeIndex;
-            Setting.Instance.TweetExperienceProperty.NameAreaWidth = this.UserNameAreaWidthInt;
-            Setting.Instance.TweetExperienceProperty.UseP3StyleIcon = this._p3StyleIcon;
-            Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton = this._showUnofficialRTButton;
-            Setting.Instance.TweetExperienceProperty.ShowQuoteButton = this._showQuoteTweetButton;
-            Setting.Instance.TweetExperienceProperty.UseFullLineView = this._fullLineView;
-            Setting.Instance.TimelineExperienceProperty.DoNotFavoriteMyTweet = this._doNotFavMyTweet;
+            try
+            {
+                Setting.Instance.TweetExperienceProperty.UrlResolveMode = (UrlResolve)this._resolveStrategyIndex;
+                Setting.Instance.TweetExperienceProperty.UrlTooltipShowLength = int.Parse(this._tipHelpShowLength);
+                Setting.Instance.TweetExperienceProperty.UserNameViewMode = (NameView)this._userNameViewModeIndex;
+                Setting.Instance.TweetExperienceProperty.NotificationNameViewMode = (NameView)this._notificationNameViewModeIndex;
+                Setting.Instance.TweetExperienceProperty.NameAreaWidth = this.UserNameAreaWidthInt;
+                Setting.Instance.TweetExperienceProperty.UseP3StyleIcon = this._p3StyleIcon;
+                Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton = this._showUnofficialRTButton;
+                Setting.Instance.TweetExperienceProperty.ShowQuoteButton = this._showQuoteTweetButton;
+                Setting.Instance.TweetExperienceProperty.UseFullLineView = this._fullLineView;
+                Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet = this._canFavMyTweet;
+                Setting.Instance.TweetExperienceProperty.ShowTweetTooltip = this._showTweetTooltip;
+            }
+            catch (Exception ex)
+            {
+                ExceptionStorage.Register(ex, ExceptionCategory.UserError, "Setting error.");
+            }
         }
     }
 }

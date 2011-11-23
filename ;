@@ -1,4 +1,4 @@
-﻿
+
 namespace Inscribe.Configuration.Settings
 {
     public class NotificationProperty

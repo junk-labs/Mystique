@@ -102,7 +102,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
         private bool CanR4SAll()
         {
             return !AccountStorage.Contains(this.Target.TwitterUser.ScreenName) ||
-                !Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
+                Setting.Instance.TimelineExperienceProperty.CanBlockMyself;
         }
 
         private void R4SAll()
@@ -334,7 +334,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
         private bool CanBlock()
         {
             return !AccountStorage.Contains(this.TargetUser.TwitterUser.ScreenName) ||
-                !Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
+                Setting.Instance.TimelineExperienceProperty.CanBlockMyself;
         }
 
         private void Block()
@@ -379,7 +379,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
         private bool CanReportForSpam()
         {
             return !AccountStorage.Contains(this.TargetUser.TwitterUser.ScreenName) ||
-                !Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
+                Setting.Instance.TimelineExperienceProperty.CanBlockMyself;
         }
 
         private void ReportForSpam()

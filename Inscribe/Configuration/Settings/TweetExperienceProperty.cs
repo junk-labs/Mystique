@@ -6,14 +6,16 @@ namespace Inscribe.Configuration.Settings
         public TweetExperienceProperty()
         {
             ShowUnofficialRetweetButton = true;
-            ShowQuoteButton = false;
+            ShowQuoteButton = true;
             UseP3StyleIcon = true;
             NameAreaWidth = 120;
             UserNameViewMode = NameView.ID;
             NotificationNameViewMode = NameView.ID;
             UrlResolveMode = UrlResolve.OnPointed;
             UrlTooltipShowLength = 60 * 1000;
-            this.UseFullLineView = false;
+            ShowTweetTooltip = true;
+            UseFullLineView = false;
+            CanFavoriteMyTweet = false;
         }
 
         public bool ShowUnofficialRetweetButton { get; set; }
@@ -32,7 +34,11 @@ namespace Inscribe.Configuration.Settings
 
         public int UrlTooltipShowLength { get; set; }
 
+        public bool ShowTweetTooltip { get; set; }
+
         public bool UseFullLineView { get; set; }
+
+        public bool CanFavoriteMyTweet { get; set; }
     }
 
     public enum NameView
