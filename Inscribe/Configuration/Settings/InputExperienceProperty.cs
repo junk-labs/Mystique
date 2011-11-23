@@ -15,7 +15,7 @@ namespace Inscribe.Configuration.Settings
             OfficialRetweetFallback = false;
             IsEnabledTemporarilyUserSelection = false;
             TrimExceedChars = false;
-            AutoRetryOnTimeout = true;
+            AutoRetryOnError = true;
             AutoRetryMaxCount = 5;
             ShowInputBlockInBottom = false;
         }
@@ -41,7 +41,7 @@ namespace Inscribe.Configuration.Settings
 
         public bool TrimExceedChars { get; set; }
 
-        public bool AutoRetryOnTimeout { get; set; }
+        public bool AutoRetryOnError { get; set; }
 
         public int AutoRetryMaxCount { get; set; }
 

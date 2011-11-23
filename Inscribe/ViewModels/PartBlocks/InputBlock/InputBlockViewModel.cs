@@ -1155,9 +1155,24 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public void AddUpdateWorker(TweetWorker w)
         {
+            AddUpdateWorker(w, null);
+        }
+
+        private void AddUpdateWorker(TweetWorker w, AccountInfo fallbackOriginal)
+        {
+            if (fallbackOriginal == null)
+            {
+                fallbackOriginal = w.AccountInfo;
+            }
+            else if (fallbackOriginal == w.AccountInfo)
+            {
+                ExceptionStorage.Register(new InvalidOperationException("フォールバックがループしています。"), ExceptionCategory.ConfigurationError);
+                return;
+            }
             DispatcherHelper.BeginInvoke(() => this._updateWorkers.Add(w));
+            w.fallbackOriginalAccount = fallbackOriginal;
             w.RemoveRequired += () => DispatcherHelper.BeginInvoke(() => this._updateWorkers.Remove(w));
-            w.WorkerAddRequired += AddUpdateWorker;
+            w.FallbackRequired += new Action<TweetWorker>(fw => AddUpdateWorker(fw, fallbackOriginal));
             w.DoWork().ContinueWith(t =>
             {
                 if (t.Result)
@@ -1167,6 +1182,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 }
             });
         }
+
 
         ObservableCollection<TweetWorker> _updateWorkers = new ObservableCollection<TweetWorker>();
         public ObservableCollection<TweetWorker> UpdateWorkers

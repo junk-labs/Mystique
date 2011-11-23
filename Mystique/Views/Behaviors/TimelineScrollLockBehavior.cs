@@ -82,13 +82,14 @@ namespace Mystique.Views.Behaviors
                     if (Setting.Instance.TimelineExperienceProperty.TimelineStrictLock &&
                         vm.SelectedTweetViewModel != null)
                     {
-                        SetScroll(e.NewItems.OfType<TabDependentTweetViewModel>()
-                            .Where(a => a.Tweet.CreatedAt > vm.SelectedTweetViewModel.Tweet.CreatedAt).Count());
+                        SetScroll(-(e.NewItems.OfType<TabDependentTweetViewModel>()
+                            .Where(a => a.Tweet.CreatedAt > vm.SelectedTweetViewModel.Tweet.CreatedAt).Count()));
                     }
                     else
                     {
-                        SetScroll(e.NewItems.Count);
+                        SetScroll(-e.NewItems.Count);
                     }
+
                 }
                 else
                 {
@@ -113,15 +114,16 @@ namespace Mystique.Views.Behaviors
                             // 常にスクロールロック
                             break;
                     }
-                    if (Setting.Instance.TimelineExperienceProperty.TimelineStrictLock && 
+
+                    if (Setting.Instance.TimelineExperienceProperty.TimelineStrictLock &&
                         vm.SelectedTweetViewModel != null)
                     {
-                        SetScroll(-(e.NewItems.OfType<TabDependentTweetViewModel>()
-                            .Where(a => a.Tweet.CreatedAt > vm.SelectedTweetViewModel.Tweet.CreatedAt).Count()));
+                        SetScroll(e.NewItems.OfType<TabDependentTweetViewModel>()
+                            .Where(a => a.Tweet.CreatedAt > vm.SelectedTweetViewModel.Tweet.CreatedAt).Count());
                     }
                     else
                     {
-                        SetScroll(-e.NewItems.Count);
+                        SetScroll(e.NewItems.Count);
                     }
                 }
             }

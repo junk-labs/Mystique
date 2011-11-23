@@ -32,6 +32,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         private long inReplyToId;
         private string attachImagePath;
         private string[] tags;
+        public AccountInfo fallbackOriginalAccount;
 
         public TweetWorker(InputBlockViewModel parent, AccountInfo info, string body, long inReplyToId, string attachedImage, string[] tag)
         {
@@ -46,7 +47,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public event Action RemoveRequired;
 
-        public event Action<TweetWorker> WorkerAddRequired;
+        public event Action<TweetWorker> FallbackRequired;
 
         public Task<bool> DoWork()
         {
@@ -132,7 +133,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     else
                     {
                         // fallbacking
-                        WorkerAddRequired(new TweetWorker(this.parent, acc, this.body, this.inReplyToId, this.attachImagePath, this.tags));
+                        FallbackRequired(new TweetWorker(this.parent, acc, this.body, this.inReplyToId, this.attachImagePath, this.tags));
                         throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.Fallbacked);
                     }
                 }
@@ -262,7 +263,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     else
                     {
                         // fallbacking
-                        WorkerAddRequired(new TweetWorker(this.parent, acc, this.body, this.inReplyToId, this.attachImagePath, this.tags));
+                        FallbackRequired(new TweetWorker(this.parent, acc, this.body, this.inReplyToId, this.attachImagePath, this.tags));
                         throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.Fallbacked);
                     }
                 }
@@ -348,6 +349,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             this.ErrorTitle = "エラーが発生しました。";
             this.ErrorSummary = exception.Message + Environment.NewLine +
                 "詳しい情報の確認には、Detail of exception を展開してください。";
+        }
+
+        public AccountInfo AccountInfo
+        {
+            get { return this.accountInfo; }
         }
 
         private string _tweetSummary = String.Empty;
