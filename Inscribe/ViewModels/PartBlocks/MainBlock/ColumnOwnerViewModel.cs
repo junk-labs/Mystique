@@ -213,6 +213,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("Select8thTab", () => SelectIndexOfTab(7));
             KeyAssignCore.RegisterOperation("Select9thTab", () => SelectIndexOfTab(8));
             KeyAssignCore.RegisterOperation("Select10thTab", () => SelectIndexOfTab(9));
+            KeyAssignCore.RegisterOperation("SelectNthTab", s => SelectIndexOfTab(Int32.Parse(s)));
 
             KeyAssignCore.RegisterOperation("Select1stColumn", () => SelectIndexOfColumn(0));
             KeyAssignCore.RegisterOperation("Select2ndColumn", () => SelectIndexOfColumn(1));
@@ -224,6 +225,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("Select8thColumn", () => SelectIndexOfColumn(7));
             KeyAssignCore.RegisterOperation("Select9thColumn", () => SelectIndexOfColumn(8));
             KeyAssignCore.RegisterOperation("Select10thColumn", () => SelectIndexOfColumn(9));
+            KeyAssignCore.RegisterOperation("SelectNthColumn", s => SelectIndexOfColumn(Int32.Parse(s)));
 
             KeyAssignCore.RegisterOperation("Select1stTweet", () => SelectIndexOfTimeline(0));
             KeyAssignCore.RegisterOperation("Select2ndTweet", () => SelectIndexOfTimeline(1));
@@ -235,6 +237,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("Select8thTweet", () => SelectIndexOfTimeline(7));
             KeyAssignCore.RegisterOperation("Select9thTweet", () => SelectIndexOfTimeline(8));
             KeyAssignCore.RegisterOperation("Select10thTweet", () => SelectIndexOfTimeline(9));
+            KeyAssignCore.RegisterOperation("SelectNthTweet", s => SelectIndexOfTimeline(Int32.Parse(s)));
 
             KeyAssignCore.RegisterOperation("Open1stUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(0)));
             KeyAssignCore.RegisterOperation("Open2ndUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(1)));
@@ -246,6 +249,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("Open8thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(7)));
             KeyAssignCore.RegisterOperation("Open9thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(8)));
             KeyAssignCore.RegisterOperation("Open10thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(9)));
+            KeyAssignCore.RegisterOperation("OpenNthUrl", s => ExecTVMAction(t => t.OpenIndexOfUrl(Int32.Parse(s))));
 
             // Timeline action
             KeyAssignCore.RegisterOperation("Mention", () => ExecTVMAction(vm =>

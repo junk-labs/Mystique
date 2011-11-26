@@ -23,6 +23,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             Applyables = new IApplyable[]{
                 Wrap(Setting.Instance.ColoringProperty.BaseColor, "基本色"),
+                Wrap(Setting.Instance.ColoringProperty.BaseLinkColor, "リンク色"),
                 Wrap(Setting.Instance.ColoringProperty.Selected, "選択ツイートと同じユーザーのツイート"),
                 Wrap(Setting.Instance.ColoringProperty.Retweeted, "リツイートされたツイート"),
                 Wrap(Setting.Instance.ColoringProperty.DirectMessage, "アクティブアカウントのDM"),

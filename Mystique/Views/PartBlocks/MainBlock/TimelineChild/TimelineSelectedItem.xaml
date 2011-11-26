@@ -351,6 +351,7 @@
                                    DocumentMouseUp="ItemMouseButtonUp"
                                    DynamicInline="{Binding Path=Tweet.TweetText,
                                                            Converter={StaticResource TextFlowDocumentConverter}}"
+                                   Foreground="{Binding Path=ForeBrush}"
                                    InputMethod.IsInputMethodEnabled="False"
                                    IsDocumentEnabled="True"
                                    IsReadOnly="True"

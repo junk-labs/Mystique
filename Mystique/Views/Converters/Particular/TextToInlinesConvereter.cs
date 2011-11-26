@@ -68,38 +68,30 @@ namespace Mystique.Views.Converters.Particular
                 switch (tok.Kind)
                 {
                     case TokenKind.AtLink:
-                        var atlink = new Hyperlink(new Run(ctt));
-                        atlink.PreviewMouseLeftButtonDown += (o, e) =>
-                        {
-                            e.Handled = true;
-                            InternalLinkClicked(InternalLinkKind.User, ctt);
-                        };
-                        yield return atlink;
+                        yield return TextElementGenerator.GenerateHyperlink(ctt,
+                            () => InternalLinkClicked(InternalLinkKind.User, ctt));
                         break;
                     case TokenKind.Hashtag:
-                        var hashlink = new Hyperlink(new Run(ctt));
-                        hashlink.PreviewMouseLeftButtonDown += (o, e) =>
-                        {
-                            e.Handled = true;
-                            InternalLinkClicked(InternalLinkKind.Hash, ctt);
-                        };
+                        var hashlink = TextElementGenerator.GenerateHyperlink(ctt,
+                            () => InternalLinkClicked(InternalLinkKind.Hash, ctt));
                         hashlink.ToolTip = new TextBlock(new Run("Ctrlキーを押しながらクリックすると、ブラウザを開いて検索します..."));
                         yield return hashlink;
                         break;
                     case TokenKind.Url:
-                        var urllink = new Hyperlink();
+                        String resolved = null;
+                        try
+                        {
+                            resolved = new Uri(ctt).PunyDecode().OriginalString;
+                        }
+                        catch (UriFormatException) { }
+                        var urllink = TextElementGenerator.GenerateHyperlink(
+                            String.IsNullOrEmpty(resolved) ? ctt : resolved,
+                            () => ExternalLinkClicked(ctt));
+
                         switch (Setting.Instance.TweetExperienceProperty.UrlResolveMode)
                         {
                             case UrlResolve.OnPointed:
                             case UrlResolve.Never:
-                                try
-                                {
-                                    urllink.Inlines.Add(new Run(new Uri(ctt).PunyDecode().OriginalString));
-                                }
-                                catch (UriFormatException)
-                                {
-                                    urllink.Inlines.Add(new Run(ctt));
-                                }
                                 urllink.ToolTip = new UrlTooltip(ctt);
                                 break;
                             case UrlResolve.OnReceived:
@@ -120,27 +112,20 @@ namespace Mystique.Views.Converters.Particular
                                 }
                                 if (String.IsNullOrEmpty(nurl))
                                 {
-                                    urllink.Inlines.Add(new Run(ctt));
                                     urllink.ToolTip = new UrlTooltip(ctt);
                                 }
                                 else
                                 {
-                                    urllink.Inlines.Add(new Run(nurl));
                                     urllink.ToolTip = new UrlTooltip(nurl);
                                 }
                                 break;
                         }
                         ToolTipService.SetShowDuration(urllink, Setting.Instance.TweetExperienceProperty.UrlTooltipShowLength);
-                        urllink.PreviewMouseLeftButtonDown += (o, e) =>
-                        {
-                            e.Handled = true;
-                            OuterLinkClicked(ctt);
-                        };
                         yield return urllink;
                         break;
                     case TokenKind.Text:
                     default:
-                        yield return new Run(ctt);
+                        yield return TextElementGenerator.GenerateRun(ctt);
                         break;
                 }
             }
@@ -166,23 +151,20 @@ namespace Mystique.Views.Converters.Particular
                 switch (tok.Kind)
                 {
                     case TokenKind.AtLink:
-                        var atlink = new Hyperlink(new Run(tok.Text));
-                        atlink.MouseLeftButtonDown += (o, e) => InternalLinkClicked(InternalLinkKind.User, tok.Text);
-                        yield return atlink;
+                        yield return TextElementGenerator.GenerateHyperlink(tok.Text,
+                            () => InternalLinkClicked(InternalLinkKind.User, tok.Text));
                         break;
                     case TokenKind.Hashtag:
-                        var hashlink = new Hyperlink(new Run(tok.Text));
-                        hashlink.MouseLeftButtonDown += (o, e) => InternalLinkClicked(InternalLinkKind.Hash, tok.Text);
-                        yield return hashlink;
+                        yield return TextElementGenerator.GenerateHyperlink(tok.Text,
+                            () => InternalLinkClicked(InternalLinkKind.Hash, tok.Text));
                         break;
                     case TokenKind.Url:
-                        var urllink = new Hyperlink(new Run(tok.Text));
-                        urllink.MouseLeftButtonDown += (o, e) => OuterLinkClicked(tok.Text);
-                        yield return urllink;
+                        yield return TextElementGenerator.GenerateHyperlink(tok.Text,
+                            () => ExternalLinkClicked(tok.Text));
                         break;
                     case TokenKind.Text:
                     default:
-                        yield return new Run(tok.Text);
+                        yield return TextElementGenerator.GenerateRun(tok.Text);
                         break;
                 }
             }
@@ -210,7 +192,7 @@ namespace Mystique.Views.Converters.Particular
                     case TokenKind.Url:
                         yield return new Action(() =>
                         {
-                            OuterLinkClicked(ctt);
+                            ExternalLinkClicked(ctt);
                         });
                         break;
                 }
@@ -234,11 +216,10 @@ namespace Mystique.Views.Converters.Particular
                             .SelectedTabViewModel.AddTopUser(source);
                     break;
                 case InternalLinkKind.Hash:
-                    System.Diagnostics.Debug.WriteLine("Extracting hash:" + source);
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
                         // Browser.Start("http://twitter.com/#search?q=" + source);
-                        Browser.Start("http://twitter.com/search/%23" + source);
+                        Browser.Start("http://twitter.com/search/%23" + source.Replace("#", ""));
                     }
                     else
                     {
@@ -255,7 +236,7 @@ namespace Mystique.Views.Converters.Particular
             }
         }
 
-        static void OuterLinkClicked(string navigate)
+        static void ExternalLinkClicked(string navigate)
         {
             Browser.Start(navigate);
         }

@@ -65,6 +65,9 @@ namespace Inscribe.Configuration.Settings
             new PairColorElement(
                 new ColorElement(Colors.White),
                 new ColorElement(Colors.Black));
+
+        public ColorElement BaseLinkColor =
+            new ColorElement(Colors.RoyalBlue);
     }
 
     public interface IColorElement
