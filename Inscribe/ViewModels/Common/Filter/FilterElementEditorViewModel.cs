@@ -7,6 +7,7 @@ using Inscribe.Filter.Core;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging.Windows;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.Common.Filter
 {
@@ -64,6 +65,9 @@ namespace Inscribe.ViewModels.Common.Filter
                             inst = ci.Invoke(new object[0]) as FilterBase;
                         if (inst != null)
                         {
+                            if (inst.IsOnlyTranscender && !
+                                Setting.Instance.ExperienceProperty.IsTranscender)
+                                continue;
                             if (localcount > 0)
                                 yield return s + "(" + localcount + "): " + inst.Description;
                             else
