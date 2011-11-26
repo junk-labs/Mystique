@@ -34,11 +34,11 @@
       <Assign Action="MoveLeft" Key="A" />
       <Assign Action="MoveLeft" Key="Ctrl+P" />
       <Assign Action="MoveLeft" Key="Ctrl+PageUp" />
-      <Assign Action="MoveLeft" Key="Ctrl+Tab" />
+      <Assign Action="MoveLeft" Key="Ctrl+Shift+Tab" />
       <Assign Action="MoveRight" Key="S" />
       <Assign Action="MoveRight" Key="Ctrl+N" />
       <Assign Action="MoveRight" Key="Ctrl+PageDown" />
-      <Assign Action="MoveRight" Key="Ctrl+Shift+Tab" />
+      <Assign Action="MoveRight" Key="Ctrl+Tab" />
       <Assign Action="MoveLeftColumn" Key="Shift+Left" Preview="True" />
       <Assign Action="MoveRightColumn" Key="Shift+Right" Preview="True" />
       <Assign Action="Deselect" Key="Escape" />
