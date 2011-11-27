@@ -1,5 +1,6 @@
 ﻿Acuerdo Library
 
 Krile Mystiqueのプラグインシステムの一部を保持します。
+C#によるスクリプト拡張(.csx)の実行を支援します。
 
 from acuerdo ave;new 3rd maxi single
