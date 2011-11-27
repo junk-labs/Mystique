@@ -46,20 +46,20 @@
                     <ComboBoxItem Content="安定版のみアップデート" />
                     <ComboBoxItem Content="安定候補版(RC)以上でアップデート" />
                     <ComboBoxItem Content="開発版(beta)以上でアップデート"
-                                  IsEnabled="{Binding IsAloofUserMode}"
-                                  Visibility="{Binding IsAloofUserMode,
+                                  IsEnabled="{Binding IsTranscender}"
+                                  Visibility="{Binding IsTranscender,
                                                        Converter={StaticResource BoolVisibleConverter}}" />
                     <ComboBoxItem Content="開発版(daybreak)以上でアップデート"
-                                  IsEnabled="{Binding IsAloofUserMode}"
-                                  Visibility="{Binding IsAloofUserMode,
+                                  IsEnabled="{Binding IsTranscender}"
+                                  Visibility="{Binding IsTranscender,
                                                        Converter={StaticResource BoolVisibleConverter}}" />
                     <ComboBoxItem Content="(危険)試験版(twilight)以上でアップデート"
-                                  IsEnabled="{Binding IsAloofUserMode}"
-                                  Visibility="{Binding IsAloofUserMode,
+                                  IsEnabled="{Binding IsTranscender}"
+                                  Visibility="{Binding IsTranscender,
                                                        Converter={StaticResource BoolVisibleConverter}}" />
                     <ComboBoxItem Content="(危険)試験版(midnight)以上でアップデート(常に最新版)"
-                                  IsEnabled="{Binding IsAloofUserMode}"
-                                  Visibility="{Binding IsAloofUserMode,
+                                  IsEnabled="{Binding IsTranscender}"
+                                  Visibility="{Binding IsTranscender,
                                                        Converter={StaticResource BoolVisibleConverter}}" />
                 </ComboBox>
                 <TextBlock Grid.Row="1"
@@ -88,7 +88,7 @@
                           VerticalAlignment="Top"
                           Content="タイムアウトエラーを通知しない(_N)"
                           IsChecked="{Binding IgnoreTimeoutError}"
-                          Visibility="{Binding IsAloofUserMode,
+                          Visibility="{Binding IsTranscender,
                                                Converter={StaticResource BoolVisibleConverter}}" />
             </Grid>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Margin="25,0,0,0">
@@ -102,7 +102,7 @@
             <CheckBox Margin="4"
                       VerticalAlignment="Top"
                       DockPanel.Dock="Bottom"
-                      IsChecked="{Binding IsAloofUserMode}"
+                      IsChecked="{Binding IsTranscender}"
                       IsEnabled="{Binding IsPowerUserEnableCheckEnabled}">
                 <AccessText FontWeight="Bold" Text="私は超越者です(_A) [人柱向けオプション]" />
             </CheckBox>

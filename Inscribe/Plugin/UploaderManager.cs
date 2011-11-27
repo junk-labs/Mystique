@@ -99,7 +99,7 @@ namespace Inscribe.Plugin
 
         public static IUploader GetSuggestedUploader()
         {
-            string sn = Setting.Instance.ExternalServiceProperty.UploaderService;
+            string sn = Setting.Instance.ExternalProperty.UploaderService;
             if (String.IsNullOrEmpty(sn)) return null;
             foreach (var ss in uploaders)
             {

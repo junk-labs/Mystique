@@ -73,7 +73,7 @@ namespace Inscribe.Storage
         /// </summary>
         public static TweetExistState Contains(long id)
         {
-            using(elockWrap.GetReaderLock())
+            using (elockWrap.GetReaderLock())
             using (lockWrap.GetReaderLock())
             {
                 System.Diagnostics.Debug.WriteLine("contains");
@@ -390,11 +390,11 @@ namespace Inscribe.Storage
                     dictionary.Remove(id);
                     viewmodels.Remove(remobj);
                     _count--;
-                    Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
                 }
             }
             if (remobj != null)
             {
+                Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
                 // リツイート判定
                 var status = remobj.Status as TwitterStatus;
                 if (status != null && status.RetweetedOriginal != null)

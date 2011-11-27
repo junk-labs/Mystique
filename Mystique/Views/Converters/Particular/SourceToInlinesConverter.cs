@@ -4,10 +4,10 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Media;
 using Dulcet.Twitter;
 using Inscribe.Common;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
+using Mystique.Views.Common;
 
 namespace Mystique.Views.Converters.Particular
 {
@@ -30,14 +30,13 @@ namespace Mystique.Views.Converters.Particular
                 Match m = null;
                 if (!String.IsNullOrEmpty(src) && (m = SourceRegex.Match(src.Replace("\\", ""))).Success)
                 {
-                    var hlink = new Hyperlink(new Run(m.Groups[2].Value));
-                    hlink.Click += (o, e) => Browser.Start(m.Groups[1].Value);
-                    hlink.Foreground = Brushes.DodgerBlue;
-                    return new[] { hlink };
+                    return new[] { TextElementGenerator.GenerateHyperlink(
+                        m.Groups[2].Value,
+                        ()=>Browser.Start(m.Groups[1].Value))};
                 }
                 else
                 {
-                    return new[] { new Run(status.Source) };
+                    return new[] { TextElementGenerator.GenerateRun(status.Source) };
                 }
             }
             // ELSE

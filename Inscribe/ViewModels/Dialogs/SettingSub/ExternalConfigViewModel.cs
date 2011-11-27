@@ -7,9 +7,9 @@ using Livet;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
-    public class ExtServiceConfigViewModel : ViewModel, IApplyable
+    public class ExternalConfigViewModel : ViewModel, IApplyable
     {
-        public ExtServiceConfigViewModel()
+        public ExternalConfigViewModel()
         {
             this.ImageUploaderCandidates = UploaderManager.Uploaders.ToArray();
 
@@ -18,7 +18,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             if (su != null)
             {
                 var idx = this.ImageUploaderCandidates
-                    .TakeWhile(u => u.ServiceName != Setting.Instance.ExternalServiceProperty.UploaderService)
+                    .TakeWhile(u => u.ServiceName != Setting.Instance.ExternalProperty.UploaderService)
                     .Count();
                 if (idx < this.ImageUploaderCandidates.Length)
                 {
@@ -42,13 +42,37 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+        private string _webBrowserPath;
+        public string WebBrowserPath
+        {
+            get { return _webBrowserPath; }
+            set
+            {
+                _webBrowserPath = value;
+                RaisePropertyChanged(() => WebBrowserPath);
+            }
+        }
+
+        private string _webBrowserParam;
+        public string WebBrowserParam
+        {
+            get { return _webBrowserParam; }
+            set
+            {
+                _webBrowserParam = value;
+                RaisePropertyChanged(() => WebBrowserParam);
+            }
+        }
+
         public void Apply()
         {
             if (this.ImageUploadCandidateIndex < this.ImageUploaderCandidates.Count())
-                Setting.Instance.ExternalServiceProperty.UploaderService =
+                Setting.Instance.ExternalProperty.UploaderService =
                     this.ImageUploaderCandidates[this.ImageUploadCandidateIndex].ServiceName;
             else
-                Setting.Instance.ExternalServiceProperty.UploaderService = String.Empty;
+                Setting.Instance.ExternalProperty.UploaderService = String.Empty;
+            Setting.Instance.ExternalProperty.WebBrowserPath = this.WebBrowserPath;
+            Setting.Instance.ExternalProperty.WebBrowserParam = this.WebBrowserParam;
         }
     }
 }

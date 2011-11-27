@@ -254,7 +254,9 @@ namespace Inscribe.ViewModels.Dialogs
             {
                 if (!AccountStorage.Contains(_selectedScreenName))
                     return null;
-                return AccountStorage.Get(_selectedScreenName).FollowingLists.Select(l => l.User.ScreenName + "/" + l.Name).ToArray();
+                return AccountStorage.Get(_selectedScreenName).FollowingLists
+                    .Select(l => l.User.ScreenName + "/" + l.Slug)
+                    .ToArray();
             }
         }
 

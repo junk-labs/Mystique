@@ -932,7 +932,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         private bool CanReportForSpam()
         {
             return !this.Tweet.IsMyTweet ||
-                !Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
+                Setting.Instance.TimelineExperienceProperty.CanBlockMyself;
         }
 
         private void ReportForSpam()

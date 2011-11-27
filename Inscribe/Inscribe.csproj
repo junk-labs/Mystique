@@ -69,6 +69,7 @@
     <Compile Include="Filter\Filters\Text\FilterHashtagText.cs" />
     <Compile Include="Filter\Filters\Text\FilterUrlText.cs" />
     <Compile Include="Common\KeyAssignHelper.cs" />
+    <Compile Include="Filter\Filters\Transcend\ExceptedFilter.cs" />
     <Compile Include="Filter\WeakEventBinder.cs" />
     <Compile Include="Storage\ImageCacheStorage.cs" />
     <Compile Include="Storage\UrlResolveCacheStorage.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="Configuration\Settings\ColoringProperty.cs" />
     <Compile Include="Configuration\Settings\ConnectionProperty.cs" />
     <Compile Include="Configuration\Settings\ExperienceProperty.cs" />
-    <Compile Include="Configuration\Settings\ExternalServiceProperty.cs" />
+    <Compile Include="Configuration\Settings\ExternalProperty.cs" />
     <Compile Include="Configuration\Settings\InputExperienceProperty.cs" />
     <Compile Include="Configuration\Settings\KernelProperty.cs" />
     <Compile Include="Configuration\Settings\KeyAssignProperty.cs" />
@@ -205,7 +206,7 @@
     <Compile Include="ViewModels\Dialogs\Common\FollowManagerViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MuteViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\ColoringConfigViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\SettingSub\ExtServiceConfigViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SettingSub\ExternalConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\GeneralConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\IApplyable.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\InputConfigViewModel.cs" />

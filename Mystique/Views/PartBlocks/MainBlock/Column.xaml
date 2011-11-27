@@ -59,7 +59,7 @@
                 <Border.ContextMenu>
                     <ContextMenu>
                         <MenuItem Command="{Binding Path=EditTabCommand}" Header="このタブを編集(_E)..." />
-                        <MenuItem Header="このタブについて(_T)" Visibility="{Binding IsAloofUserMode, Converter={StaticResource BoolVisibleConverter}}">
+                        <MenuItem Header="このタブについて(_T)" Visibility="{Binding IsTranscender, Converter={StaticResource BoolVisibleConverter}}">
                             <MenuItem Command="{Binding FavoriteThisTabAllCommand}" Header="全てFavorite(_F)" />
                             <MenuItem Command="{Binding RetweetThisTabAllCommand}" Header="全てRetweet(_R)" />
                         </MenuItem>

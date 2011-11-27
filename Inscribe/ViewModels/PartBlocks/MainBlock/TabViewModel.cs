@@ -162,7 +162,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             RaisePropertyChanged(() => IsFullLineView);
             RaisePropertyChanged(() => IsSearchBarBottom);
             RaisePropertyChanged(() => SearchBarDock);
-            RaisePropertyChanged(() => IsAloofUserMode);
+            RaisePropertyChanged(() => IsTranscender);
         }
 
         /// <summary>
@@ -187,9 +187,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             });
         }
 
-        public bool IsAloofUserMode
+        public bool IsTranscender
         {
-            get { return Setting.Instance.ExperienceProperty.IsAloofUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsTranscender; }
         }
 
         public bool IsCurrentFocused

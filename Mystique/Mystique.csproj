@@ -120,6 +120,7 @@
     <Compile Include="Views\Common\IntelliSenseTextBox.xaml.cs">
       <DependentUpon>IntelliSenseTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\TextElementGenerator.cs" />
     <Compile Include="Views\Common\UrlTooltip.xaml.cs">
       <DependentUpon>UrlTooltip.xaml</DependentUpon>
     </Compile>
@@ -165,8 +166,8 @@
     <Compile Include="Views\Dialogs\SettingSub\ColoringConfig.xaml.cs">
       <DependentUpon>ColoringConfig.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dialogs\SettingSub\ExtServiceConfig.xaml.cs">
-      <DependentUpon>ExtServiceConfig.xaml</DependentUpon>
+    <Compile Include="Views\Dialogs\SettingSub\ExternalConfig.xaml.cs">
+      <DependentUpon>ExternalConfig.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\SettingSub\GeneralConfig.xaml.cs">
       <DependentUpon>GeneralConfig.xaml</DependentUpon>
@@ -352,7 +353,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dialogs\SettingSub\ExtServiceConfig.xaml">
+    <Page Include="Views\Dialogs\SettingSub\ExternalConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

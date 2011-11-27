@@ -16,7 +16,7 @@ namespace Inscribe.ViewModels.Common
 
         public IEnumerable<char> Splitters
         {
-            get { return new[] { '\r', '\n', ' ', '\t', ',', '.' }; }
+            get { return new[] { '\r', '\n', ' ', '\t', ',', '.', '　', '、', '。' }; }
         }
 
         private string _textBoxText = String.Empty;

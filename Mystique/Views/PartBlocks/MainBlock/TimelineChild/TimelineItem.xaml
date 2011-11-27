@@ -65,7 +65,9 @@
                      HorizontalContentAlignment="Stretch"
                      DataContext="{Binding Path=PlacementTarget.DataContext,
                                            RelativeSource={x:Static RelativeSource.Self}}"
-                     Placement="Bottom">
+                     Placement="Bottom"
+                     Visibility="{Binding Path=Tweet.ShowTooltip,
+                                          Converter={StaticResource BoolVisibleConverter}}">
                 <DockPanel>
                     <my:LazyImage Width="48"
                                   Height="48"
@@ -203,7 +205,9 @@
                 <Button Grid.Column="2"
                         Command="{Binding Path=RetweetCommand,
                                           Mode=OneTime}"
-                        Style="{StaticResource SimpleButtonStyle}">
+                        Style="{StaticResource SimpleButtonStyle}"
+                        Visibility="{Binding Path=Tweet.IsProtected,
+                                             Converter={StaticResource BoolInvisibleConverter}}">
                     <Image Width="16"
                            Height="16"
                            Margin="1"

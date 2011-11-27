@@ -271,16 +271,18 @@ namespace Inscribe.Communication.Posting
                     }
                     else
                     {
-                        if (wex.Status == WebExceptionStatus.Timeout)
+                        if (!Setting.Instance.InputExperienceProperty.AutoRetryOnError)
                         {
-                            // タイムアウト
-                            if (!Setting.Instance.InputExperienceProperty.AutoRetryOnTimeout)
+                            if (wex.Status == WebExceptionStatus.Timeout)
+                            {
+                                // タイムアウト
                                 throw new TweetFailedException(TweetFailedException.TweetErrorKind.Timeout, "ツイートに失敗しました(タイムアウトしました。Twitterが不調かも)", wex);
-                        }
-                        else
-                        {
-                            // 何かがおかしい
-                            throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, "ツイートに失敗しました(" + (int)wex.Status + ")", wex);
+                            }
+                            else
+                            {
+                                // 何かがおかしい
+                                throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, "ツイートに失敗しました(" + (int)wex.Status + ")", wex);
+                            }
                         }
                     }
                 }
@@ -292,7 +294,7 @@ namespace Inscribe.Communication.Posting
                 {
                     throw new TweetFailedException(TweetFailedException.TweetErrorKind.CommonFailed, "ツイートに失敗しました(" + ex.Message + ")", ex);
                 }
-            } while (Setting.Instance.InputExperienceProperty.AutoRetryOnTimeout && retryCount++ < Setting.Instance.InputExperienceProperty.AutoRetryMaxCount);
+            } while (Setting.Instance.InputExperienceProperty.AutoRetryOnError && retryCount++ < Setting.Instance.InputExperienceProperty.AutoRetryMaxCount);
 
             var chunk = GetUnderControlChunk(info);
             if (chunk.Item2 > TwitterDefine.UnderControlWarningThreshold)

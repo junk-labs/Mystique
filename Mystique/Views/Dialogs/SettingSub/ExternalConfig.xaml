@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Mystique.Views.Dialogs.SettingSub.ExtServiceConfig"
+﻿<UserControl x:Class="Mystique.Views.Dialogs.SettingSub.ExternalConfig"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,6 +12,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -52,5 +53,23 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+        <TextBlock Grid.Row="2"
+                   Margin="4,2"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center"
+                   Text="ブラウザのパス" />
+        <TextBox Grid.Row="2"
+                 Grid.Column="1"
+                 Margin="4,2"
+                 Text="{Binding WebBrowserPath}" />
+        <TextBlock Grid.Row="3"
+                   Margin="4,2"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center"
+                   Text="引数(URL:{URL})" />
+        <TextBox Grid.Row="3"
+                 Grid.Column="1"
+                 Margin="4,2"
+                 Text="{Binding WebBrowserParam}" />
     </Grid>
 </UserControl>

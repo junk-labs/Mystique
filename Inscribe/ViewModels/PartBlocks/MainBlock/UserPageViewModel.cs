@@ -159,6 +159,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void OpenLink(string parameter)
         {
+            if (User == null || User.TwitterUser == null) return;
             if (String.IsNullOrEmpty(parameter))
                 Browser.Start("http://twitter.com/" + User.TwitterUser.ScreenName);
             else

@@ -54,7 +54,7 @@
                   Grid.ColumnSpan="2"
                   Margin="4"
                   Header="高度な設定"
-                  Visibility="{Binding IsAloofUserMode,
+                  Visibility="{Binding IsTranscender,
                                        Converter={StaticResource BoolVisibleConverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -71,9 +71,9 @@
                 <CheckBox Grid.Row="0"
                           Grid.ColumnSpan="2"
                           Margin="4,2"
-                          IsChecked="{Binding SelfBlockingProtection}">
+                          IsChecked="{Binding CanBlockMyself}">
                     <StackPanel Orientation="Horizontal">
-                        <AccessText Text="自分をブロックやスパム報告の対象にしない(_S)" />
+                        <AccessText Text="自分自身をブロックやスパム報告できるようにする(_B)" />
                     </StackPanel>
                 </CheckBox>
                 <CheckBox Grid.Row="1"

@@ -6,9 +6,9 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
     public class TimelineConfigViewModel : ViewModel, IApplyable
     {
-        public bool IsAloofUserMode
+        public bool IsTranscender
         {
-            get { return Setting.Instance.ExperienceProperty.IsAloofUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsTranscender;}
         }
 
         public TimelineConfigViewModel()
@@ -20,7 +20,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._tweetInitStrategyIndex = (int)Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy;
             this._useIntelligentOrdering = Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering;
             this._intelligentOrderingThresholdSec = Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec;
-            this._selfBlockingProtection = Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection;
+            this._canBlockMyself = Setting.Instance.TimelineExperienceProperty.CanBlockMyself;
         }
 
         private int _timelineScrollLockIndex;
@@ -97,11 +97,11 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         }
 
 
-        private bool _selfBlockingProtection;
-        public bool SelfBlockingProtection
+        private bool _canBlockMyself;
+        public bool CanBlockMyself
         {
-            get { return _selfBlockingProtection; }
-            set { _selfBlockingProtection = value; }
+            get { return _canBlockMyself; }
+            set { _canBlockMyself = value; }
         }
 
         public void Apply()
@@ -113,7 +113,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.TimelineExperienceProperty.TimelineItemInitStrategy = (ItemInitStrategy)this._tweetInitStrategyIndex;
             Setting.Instance.TimelineExperienceProperty.UseIntelligentOrdering = this._useIntelligentOrdering;
             Setting.Instance.TimelineExperienceProperty.IntelligentOrderingThresholdSec = this._intelligentOrderingThresholdSec;
-            Setting.Instance.TimelineExperienceProperty.SelfBlockingProtection = this._selfBlockingProtection;
+            Setting.Instance.TimelineExperienceProperty.CanBlockMyself = this._canBlockMyself;
         }
     }
 }

@@ -23,6 +23,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"
                    Margin="4,2"
@@ -40,7 +41,7 @@
         <Grid Grid.Row="1"
               Grid.Column="1"
               Margin="4,2"
-              Visibility="{Binding IsAloofUserMode,
+              Visibility="{Binding IsTranscender,
                                    Converter={StaticResource BoolVisibleConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -126,14 +127,20 @@
         <CheckBox Grid.Row="8"
                   Grid.ColumnSpan="2"
                   Margin="4,2"
-                  IsChecked="{Binding DoNotFavMyTweet}">
-            <AccessText Text="自分のツイートをFavしない(_N)" />
+                  IsChecked="{Binding CanFavMyTweet}">
+            <AccessText Text="自分のツイートもFav可能にする(_M)" />
         </CheckBox>
         <CheckBox Grid.Row="9"
                   Grid.ColumnSpan="2"
                   Margin="4,2"
+                  IsChecked="{Binding ShowTweetTooltip}">
+            <AccessText Text="ツイートツールチップを表示する(_T)" />
+        </CheckBox>
+        <CheckBox Grid.Row="10"
+                  Grid.ColumnSpan="2"
+                  Margin="4,2"
                   IsChecked="{Binding FullLineView}"
-                  Visibility="{Binding IsAloofUserMode,
+                  Visibility="{Binding IsTranscender,
                                        Converter={StaticResource BoolVisibleConverter}}">
             <AccessText Text="常にツイートを展開状態で表示(_X)[非推奨、無サポート]" />
         </CheckBox>

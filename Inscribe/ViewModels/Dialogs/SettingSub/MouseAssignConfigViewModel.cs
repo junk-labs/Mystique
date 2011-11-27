@@ -17,9 +17,9 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             quoteTweetActionSetViewModel = new ActionSetViewModel<UnofficialRetweetQuoteMouseActionCandidates>(Setting.Instance.MouseAssignProperty.QuoteTweetActionSet);
         }
 
-        public bool IsAloofUserMode
+        public bool IsTranscender
         {
-            get { return Setting.Instance.ExperienceProperty.IsAloofUserMode; }
+            get { return Setting.Instance.ExperienceProperty.IsTranscender; }
         }
 
         private bool isMouseAssignEnabled;
