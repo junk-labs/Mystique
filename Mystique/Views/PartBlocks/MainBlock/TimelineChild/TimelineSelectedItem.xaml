@@ -343,7 +343,6 @@
             <tc:DynamicRichTextBox x:Name="BodyText"
                                    Margin="2"
                                    HorizontalAlignment="Stretch"
-                                   Foreground="{Binding Path=ForeBrush}"
                                    Background="Transparent"
                                    BorderThickness="0"
                                    ContextMenu="{StaticResource TweetContextMenu}"
