@@ -27,6 +27,9 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
             if (this.ImageUploadCandidateIndex == -1)
                 this.ImageUploadCandidateIndex = 0;
+
+            this.WebBrowserParam = Setting.Instance.ExternalProperty.WebBrowserParam;
+            this.WebBrowserPath = Setting.Instance.ExternalProperty.WebBrowserPath;
         }
 
         public IUploader[] ImageUploaderCandidates { get; private set; }
