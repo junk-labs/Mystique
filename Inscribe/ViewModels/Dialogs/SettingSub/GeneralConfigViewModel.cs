@@ -90,7 +90,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 try
                 {
                     return FontFamilies.Select(ff => ff.FamilyNames.ContainsKey(jaJP) ?
-                        ff.FamilyNames[jaJP] : ff.FamilyNames.Select(xl => xl.Value).FirstOrDefault());
+                        ff.FamilyNames[jaJP] : ff.FamilyNames.Select(xl => xl.Value).FirstOrDefault())
+                        .ToArray();
                 }
                 catch (ArgumentException)
                 {

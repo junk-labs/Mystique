@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Inscribe.Authentication;
 using Inscribe.Data;
 using Livet;
@@ -18,7 +17,7 @@ namespace Inscribe.Storage
         /// </summary>
         public static IEnumerable<AccountInfo> Accounts
         {
-            get { return accounts; }
+            get { return accounts.ToArray(); }
         }
 
         /// <summary>

@@ -60,7 +60,7 @@ namespace Inscribe.Storage
 
         public static IEnumerable<ExceptionDescription> Exceptions
         {
-            get { return exceptions; }
+            get { return exceptions.ToArray(); }
         }
     }
 

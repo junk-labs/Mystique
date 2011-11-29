@@ -221,13 +221,16 @@ namespace Inscribe.Subsystems
         private static void PostImmediate(IEnumerable<AccountInfo> infos, string body, long inReplyToId = 0)
         {
             if (infos == null || infos.Count() == 0) return;
-            infos.AsParallel().ForAll(i =>
-            KernelService.MainWindowViewModel.InputBlockViewModel.AddUpdateWorker(
-                new ViewModels.PartBlocks.InputBlock.TweetWorker(
-                    KernelService.MainWindowViewModel.InputBlockViewModel,
-                    i, body,
-                    inReplyToId,
-                    null, new string[0])));
+            infos
+                .Where(i => i != null)
+                .AsParallel()
+                .ForAll(i =>
+                    KernelService.MainWindowViewModel.InputBlockViewModel.AddUpdateWorker(
+                    new ViewModels.PartBlocks.InputBlock.TweetWorker(
+                        KernelService.MainWindowViewModel.InputBlockViewModel,
+                        i, body,
+                        inReplyToId,
+                        null, new string[0])));
         }
     }
 }

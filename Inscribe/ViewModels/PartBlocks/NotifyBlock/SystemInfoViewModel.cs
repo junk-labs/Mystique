@@ -8,7 +8,6 @@ using System.Windows.Media;
 using Inscribe.Authentication;
 using Inscribe.Common;
 using Inscribe.Communication.Posting;
-using Inscribe.Configuration;
 using Inscribe.Storage;
 using Inscribe.ViewModels.Common;
 using Livet;

@@ -275,7 +275,10 @@ namespace Inscribe.Data
 
         public IEnumerator<T> GetEnumerator()
         {
-            foreach (var i in internalList.ToArray())
+            T[] tmparray;
+            using (AcquireReaderLock(readerWriterLock))
+                tmparray = internalList.ToArray();
+            foreach (var i in tmparray)
                 yield return i;
         }
 

@@ -91,7 +91,9 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             var containsTags = RegularExpressions.HashRegex.Matches(InputText)
                 .Cast<Match>().Select(m => m.Value).ToArray();
             var excepteds = bindTags.Except(containsTags).Distinct();
-            return infos.Select(i => new TweetWorker(ibvm, i, InputText, InReplyToId, AttachedImage, excepteds.ToArray()));
+            return infos
+                .Where(i => i != null)
+                .Select(i => new TweetWorker(ibvm, i, InputText, InReplyToId, AttachedImage, excepteds.ToArray()));
         }
 
     }

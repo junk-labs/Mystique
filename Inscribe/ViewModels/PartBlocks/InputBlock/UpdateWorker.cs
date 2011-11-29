@@ -36,6 +36,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         public TweetWorker(InputBlockViewModel parent, AccountInfo info, string body, long inReplyToId, string attachedImage, string[] tag)
         {
+            if (info == null)
+                throw new ArgumentNullException("info");
             this.parent = parent;
             this.TweetSummary = info.ScreenName + ": " + body;
             this.accountInfo = info;
