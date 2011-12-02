@@ -17,7 +17,7 @@ namespace Mystique.Views.Common
 
         static LazyImage()
         {
-            taskrun = new QueueTaskDispatcher(4);
+            taskrun = new QueueTaskDispatcher(1);
             ThreadHelper.Halt += taskrun.Dispose;
         }
 
@@ -53,51 +53,49 @@ namespace Mystique.Views.Common
                     if (uri.Scheme == "pack")
                     {
                         var bi = new BitmapImage(uri).AsFreeze();
-                        Application.Current.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri), DispatcherPriority.Render);
+                        SetImage(img, bi, uri);
                     }
                     else
                     {
-                        taskrun.Enqueue(() =>
+                        bool hitCache = false;
+                        try
+                        {
+                            var cache = ImageCacheStorage.GetImageCache(uri);
+                            if (cache != null)
+                            {
+                                SetImage(img, cache, uri);
+                                hitCache = true;
+                            }
+                            else
+                            {
+                                if (img.DefaultImage == null || img.DefaultImage == DependencyProperty.UnsetValue)
+                                {
+                                    // img.Source = null causes binding error.
+                                    img.SetValue(Image.SourceProperty, DependencyProperty.UnsetValue);
+                                }
+                                else
+                                {
+                                    img.Source = img.DefaultImage.CloneFreezeNew();
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            hitCache = false;
+                        }
+                        if (!hitCache)
+                        {
+                            taskrun.Enqueue(() =>
                             {
                                 try
                                 {
-                                    var cache = ImageCacheStorage.GetImageCache(uri);
-                                    if (cache != null)
-                                    {
-                                        Application.Current.Dispatcher.BeginInvoke(() => SetImage(img, cache, uri),
-                                            DispatcherPriority.Render);
-                                    }
-                                    else
-                                    {
-                                        Application.Current.Dispatcher.BeginInvoke(() =>
-                                        {
-                                            try
-                                            {
-                                                if (img.DefaultImage == null)
-                                                {
-                                                    img.Source = null;
-                                                }
-                                                else
-                                                {
-                                                    img.Source = img.DefaultImage.CloneFreezeNew();
-                                                }
-                                            }
-                                            catch { }
-                                        }, DispatcherPriority.Render);
-                                        taskrun.Enqueue(() =>
-                                        {
-                                            try
-                                            {
-                                                var bi = ImageCacheStorage.DownloadImage(uri);
-                                                Application.Current.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri),
-                                                    DispatcherPriority.ContextIdle);
-                                            }
-                                            catch { }
-                                        });
-                                    }
+                                    var bi = ImageCacheStorage.DownloadImage(uri);
+                                    Application.Current.Dispatcher.BeginInvoke(() => SetImage(img, bi, uri),
+                                        DispatcherPriority.ContextIdle);
                                 }
                                 catch { }
                             });
+                        }
                     }
                 }
                 catch { }
@@ -108,16 +106,9 @@ namespace Mystique.Views.Common
         {
             try
             {
-                if (bitmap != null)
+                if (bitmap != null && (checkUri == null || image.UriSource == checkUri))
                 {
-                    if (checkUri == null || image.UriSource == checkUri)
-                    {
-                        if (!bitmap.IsFrozen)
-                        {
-                            System.Diagnostics.Debug.WriteLine("unfreezed. source type is:" + bitmap.GetType());
-                        }
-                        image.Source = bitmap;
-                    }
+                    image.Source = bitmap;
                 }
             }
             catch { }

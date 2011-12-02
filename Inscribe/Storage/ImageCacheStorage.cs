@@ -40,21 +40,44 @@ namespace Inscribe.Storage
             lockWrap = new ReaderWriterLockWrap();
             imageDataDictionary = new Dictionary<Uri, KeyValuePair<BitmapImage, DateTime>>();
             semaphores = new Dictionary<Uri, ManualResetEvent>();
-            gcTimer = new Timer(GC, null, Setting.Instance.KernelProperty.ImageGCInitialDelay, Setting.Instance.KernelProperty.ImageGCInterval);
+            gcTimer = new Timer(GCCacheStorage, null, Setting.Instance.KernelProperty.ImageGCInitialDelay, Setting.Instance.KernelProperty.ImageGCInterval);
         }
 
-        private static void GC(object o)
+        private static bool _isGCing = false;
+        private static void GCCacheStorage(object o)
         {
+            if (_isGCing) return;
+            _isGCing = true;
+
+            System.Diagnostics.Debug.WriteLine("GC!");
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
+            IEnumerable<KeyValuePair<Uri, KeyValuePair<BitmapImage, DateTime>>> tuple = null;
+            using (lockWrap.GetReaderLock())
+            {
+                tuple = imageDataDictionary.ToArray();
+            }
+
+            // 生き残るキャッシュの判定
+            var surviver = tuple
+                .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds < Setting.Instance.KernelProperty.ImageLifetime)
+                .OrderBy(v => v.Value.Value)
+                .Take((int)(Setting.Instance.KernelProperty.ImageCacheMaxCount * Setting.Instance.KernelProperty.ImageCacheSurviveDensity))
+                .ToArray();
+            var newdic = new Dictionary<Uri, KeyValuePair<BitmapImage, DateTime>>();
+            surviver.ForEach(i => newdic.Add(i.Key, i.Value));
+
             using (lockWrap.GetWriterLock())
             {
-                imageDataDictionary
-                    .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds > Setting.Instance.KernelProperty.ImageLifetime)
-                    .Concat(imageDataDictionary.OrderByDescending(v => v.Value.Value)
-                    .Skip((int)(Setting.Instance.KernelProperty.ImageCacheMaxCount * Setting.Instance.KernelProperty.ImageCacheSurviveDensity)))
-                    .Select(d => d.Key)
-                    .ToArray()
-                    .ForEach(d => imageDataDictionary.Remove(d));
+                imageDataDictionary = newdic;
             }
+            GC.Collect();
+
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine("GC completed: " + sw.ElapsedMilliseconds.ToString());
+
+            _isGCing = false;
         }
 
         public static void ClearAllCache()
@@ -86,11 +109,22 @@ namespace Inscribe.Storage
             {
                 hot = imageDataDictionary.TryGetValue(uri, out cdata);
             }
-            if (hot && DateTime.Now.Subtract(cdata.Value).TotalMilliseconds <= Setting.Instance.KernelProperty.ImageLifetime)
+            if (hot)
+            {
+                if (DateTime.Now.Subtract(cdata.Value).TotalMilliseconds >= Setting.Instance.KernelProperty.ImageLifetime)
+                {
+                    // キャッシュ更新を非同期で行っておく
+                    Task.Factory.StartNew(() => DownloadImage(uri));
+                }
+                else
+                {
+                }
                 return cdata.Key;
-            // return cdata.Key.CloneFreeze();
+            }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>
@@ -162,11 +196,10 @@ namespace Inscribe.Storage
                     {
                         imageDataDictionary.Add(uri, newv);
                         if (imageDataDictionary.Count() > Setting.Instance.KernelProperty.ImageCacheMaxCount)
-                            Task.Factory.StartNew(() => GC(null));
+                            Task.Factory.StartNew(() => GCCacheStorage(null));
                     }
                 }
                 return bi;
-                // return bi.CloneFreeze();
             }
             catch (Exception e)
             {

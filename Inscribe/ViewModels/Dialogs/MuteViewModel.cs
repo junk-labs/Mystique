@@ -16,10 +16,10 @@ namespace Inscribe.ViewModels.Dialogs
     {
         private TweetViewModel _status;
 
-        public MuteViewModel(TweetViewModel tvm)
+        public MuteViewModel(TweetViewModel tvm, string defaultString = null)
         {
             this._status = tvm;
-            this.MuteText = tvm.Status.Text;
+            this.MuteText = defaultString ?? tvm.Status.Text;
         }
 
         private string _muteText;

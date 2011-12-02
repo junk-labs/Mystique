@@ -94,6 +94,7 @@
     </ApplicationDefinition>
     <Compile Include="Views\Behaviors\Actions\FrameworkSetFocusAction.cs" />
     <Compile Include="Views\Behaviors\Actions\InvokePassThruCommandAction.cs" />
+    <Compile Include="Views\Behaviors\Actions\RichTextBoxTextSelectionAction.cs" />
     <Compile Include="Views\Behaviors\Actions\SetListSelectionInteractionMessageAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TextBoxSetCaretAction.cs" />
     <Compile Include="Views\Behaviors\Actions\TransitionExInteractionMessageAction.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Views\Behaviors\DragDropBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\MouseOverBindBehavior.cs" />
     <Compile Include="Views\Behaviors\Particular\SquaredScrollBehavior.cs" />
+    <Compile Include="Views\Behaviors\Actions\RichTextBoxAction.cs" />
     <Compile Include="Views\Behaviors\TimelineScrollLockBehavior.cs" />
     <Compile Include="Views\Common\ColorPickButton.xaml.cs">
       <DependentUpon>ColorPickButton.xaml</DependentUpon>
@@ -252,12 +254,6 @@
     </Compile>
     <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\DynamicRichTextBox.cs" />
     <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\DynamicTextBlock.cs" />
-    <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml.cs">
-      <DependentUpon>TimelineItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineSelectedItem.xaml.cs">
-      <DependentUpon>TimelineSelectedItem.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\PartBlocks\MainBlock\TimelineList.xaml.cs">
       <DependentUpon>TimelineList.xaml</DependentUpon>
     </Compile>
@@ -279,7 +275,6 @@
     <Compile Include="Views\PartBlocks\NotifyBlock\TwitterEventInfo.xaml.cs">
       <DependentUpon>TwitterEventInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Text\Tokenizer.cs" />
     <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -454,14 +449,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PartBlocks\MainBlock\Column.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartBlocks\MainBlock\TimelineChild\TimelineSelectedItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

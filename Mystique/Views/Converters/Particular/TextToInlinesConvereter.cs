@@ -14,8 +14,8 @@ using Inscribe.Filter.Filters.Text;
 using Inscribe.Plugin;
 using Inscribe.Storage;
 using Mystique.Views.Common;
-using Mystique.Views.Text;
 using System.Web;
+using Inscribe.Text;
 
 namespace Mystique.Views.Converters.Particular
 {
@@ -232,7 +232,6 @@ namespace Mystique.Views.Converters.Particular
                 default:
                     InvalidLinkClicked("Internal::" + kind.ToString() + "," + source);
                     break;
-
             }
         }
 

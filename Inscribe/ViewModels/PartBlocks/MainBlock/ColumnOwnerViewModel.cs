@@ -251,6 +251,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("Open10thUrl", () => ExecTVMAction(t => t.OpenIndexOfUrl(9)));
             KeyAssignCore.RegisterOperation("OpenNthUrl", s => ExecTVMAction(t => t.OpenIndexOfUrl(Int32.Parse(s))));
 
+            KeyAssignCore.RegisterOperation("Open1stAction", () => ExecTVMAction(t => t.OpenIndexOfAction(0)));
+            KeyAssignCore.RegisterOperation("Open2ndAction", () => ExecTVMAction(t => t.OpenIndexOfAction(1)));
+            KeyAssignCore.RegisterOperation("Open3rdAction", () => ExecTVMAction(t => t.OpenIndexOfAction(2)));
+            KeyAssignCore.RegisterOperation("Open4thAction", () => ExecTVMAction(t => t.OpenIndexOfAction(3)));
+            KeyAssignCore.RegisterOperation("Open5thAction", () => ExecTVMAction(t => t.OpenIndexOfAction(4)));
+            KeyAssignCore.RegisterOperation("Open6thAction", () => ExecTVMAction(t => t.OpenIndexOfAction(5)));
+            KeyAssignCore.RegisterOperation("Open7thAction", () => ExecTVMAction(t => t.OpenIndexOfAction(6)));
+            KeyAssignCore.RegisterOperation("Open8thAction", () => ExecTVMAction(t => t.OpenIndexOfAction(7)));
+            KeyAssignCore.RegisterOperation("Open9thAction", () => ExecTVMAction(t => t.OpenIndexOfAction(8)));
+            KeyAssignCore.RegisterOperation("Open10thAction", () => ExecTVMAction(t => t.OpenIndexOfAction(9)));
+            KeyAssignCore.RegisterOperation("OpenNthAction", s => ExecTVMAction(t => t.OpenIndexOfAction(Int32.Parse(s))));
+
             // Timeline action
             KeyAssignCore.RegisterOperation("Mention", () => ExecTVMAction(vm =>
                 MouseAssignCore.ExecuteAction(vm.Tweet, Configuration.Settings.ReplyMouseActionCandidates.Reply, null)));

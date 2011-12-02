@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Inscribe.Text;
 
-namespace Mystique.Views.Text
+namespace Inscribe.Text
 {
     /// <summary>
     /// ユーザーがツイートするテキストをあれこれ変換するやつ

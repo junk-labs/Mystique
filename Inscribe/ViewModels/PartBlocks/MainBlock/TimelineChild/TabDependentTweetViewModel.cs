@@ -22,6 +22,9 @@ using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 using Inscribe.Subsystems;
+using Inscribe.ViewModels.Behaviors.Messaging;
+using Inscribe.Core;
+using Inscribe.Filter.Filters.Text;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -58,6 +61,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
 
         #region Binding helper
+
         private double _tooltipWidth = 0;
         public double TooltipWidth
         {
@@ -77,6 +81,34 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             {
                 _isTextSelected = value;
                 RaisePropertyChanged(() => IsTextSelected);
+            }
+        }
+
+        public bool IsSelected
+        {
+            get { return !String.IsNullOrEmpty(_selectedText); }
+        }
+
+        private string _selectedText = null;
+        public string SelectedText
+        {
+            get { return _selectedText; }
+            set
+            {
+                _selectedText = value;
+                RaisePropertyChanged(() => SelectedText);
+                RaisePropertyChanged(() => IsSelected);
+            }
+        }
+
+        private bool _isExpanded = false;
+        public bool IsExpanded
+        {
+            get { return this._isExpanded; }
+            set
+            {
+                this._isExpanded = value;
+                RaisePropertyChanged(() => IsExpanded);
             }
         }
 
@@ -580,8 +612,121 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             });
         }
         #endregion
-      
-      
+
+        #region SurfaceClickCommand
+        private Livet.Commands.ViewModelCommand _SurfaceClickCommand;
+
+        public Livet.Commands.ViewModelCommand SurfaceClickCommand
+        {
+            get
+            {
+                if (_SurfaceClickCommand == null)
+                {
+                    _SurfaceClickCommand = new Livet.Commands.ViewModelCommand(SurfaceClick);
+                }
+                return _SurfaceClickCommand;
+            }
+        }
+
+        public void SurfaceClick()
+        {
+            // TODO:暫定
+            DeselectCommand.Execute();
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Context Menu Commands
+
+        #region SelectAllCommand
+        private ViewModelCommand _SelectAllCommand;
+
+        public ViewModelCommand SelectAllCommand
+        {
+            get
+            {
+                if (_SelectAllCommand == null)
+                {
+                    _SelectAllCommand = new ViewModelCommand(SelectAll);
+                }
+                return _SelectAllCommand;
+            }
+        }
+
+        public void SelectAll()
+        {
+            this.Messenger.Raise(new RichTextBoxMessage("RichTextBoxAction", RichTextActionType.SelectAll));
+        }
+        #endregion
+
+        #region CopyCommand
+        private Livet.Commands.ViewModelCommand _CopyCommand;
+
+        public Livet.Commands.ViewModelCommand CopyCommand
+        {
+            get
+            {
+                if (_CopyCommand == null)
+                {
+                    _CopyCommand = new Livet.Commands.ViewModelCommand(Copy);
+                }
+                return _CopyCommand;
+            }
+        }
+
+        public void Copy()
+        {
+            this.Messenger.Raise(new RichTextBoxMessage("RichTextBoxAction", RichTextActionType.Copy));
+        }
+        #endregion
+
+        #region SearchInKrileCommand
+        private ViewModelCommand _SearchInKrileCommand;
+
+        public ViewModelCommand SearchInKrileCommand
+        {
+            get
+            {
+                if (_SearchInKrileCommand == null)
+                {
+                    _SearchInKrileCommand = new ViewModelCommand(SearchInKrile);
+                }
+                return _SearchInKrileCommand;
+            }
+        }
+
+        public void SearchInKrile()
+        {
+            this.Parent.AddTopTimeline(
+                new[] { new Inscribe.Filter.Filters.Text.FilterText(this.SelectedText) });
+        }
+        #endregion
+
+
+        #region SearchGoogleCommand
+        private ViewModelCommand _SearchGoogleCommand;
+
+        public ViewModelCommand SearchGoogleCommand
+        {
+            get
+            {
+                if (_SearchGoogleCommand == null)
+                {
+                    _SearchGoogleCommand = new ViewModelCommand(SearchGoogle);
+                }
+                return _SearchGoogleCommand;
+            }
+        }
+
+        public void SearchGoogle()
+        {
+            Browser.Start(
+                "http://www.google.co.jp/search?q=" + this.SelectedText);
+        }
+        #endregion
+
         #endregion
 
         #region Timeline Action Commands
@@ -1058,7 +1203,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void Mute()
         {
-            var mvm = new MuteViewModel(this.Tweet);
+            var mvm = new MuteViewModel(this.Tweet, this.SelectedText);
             this.Messenger.Raise(new TransitionMessage(mvm, "Mute"));
         }
         #endregion
@@ -1093,6 +1238,48 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 .Cast<Match>().Skip(index).FirstOrDefault();
             if (m == null) return;
             Browser.Start(m.Value);
+        }
+
+        public void OpenIndexOfAction(int index)
+        {
+            Action a;
+            if ((a = GenerateActions(this.Tweet.TweetText).Skip(index).FirstOrDefault()) != null)
+                a();
+        }
+
+        public static IEnumerable<Action> GenerateActions(string text)
+        {
+            foreach (var tok in Tokenizer.Tokenize(text))
+            {
+                var ctt = tok.Text;
+                switch (tok.Kind)
+                {
+                    case TokenKind.AtLink:
+                        yield return new Action(() =>
+                        {
+                            if (KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn != null &&
+                                KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn.SelectedTabViewModel != null)
+                                KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn
+                                    .SelectedTabViewModel.AddTopUser(ctt);
+                        });
+                        break;
+                    case TokenKind.Hashtag:
+                        yield return new Action(() =>
+                        {
+                            if (KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn != null &&
+                                KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn.SelectedTabViewModel != null)
+                                KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn
+                                    .SelectedTabViewModel.AddTopTimeline(new[] { new FilterText(ctt) });
+                        });
+                        break;
+                    case TokenKind.Url:
+                        yield return new Action(() =>
+                        {
+                            Browser.Start(ctt);
+                        });
+                        break;
+                }
+            }
         }
 
         #endregion

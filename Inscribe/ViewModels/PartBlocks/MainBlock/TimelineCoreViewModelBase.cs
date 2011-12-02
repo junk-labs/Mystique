@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Livet;
 using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
-using Inscribe.Configuration;
+using Livet;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
