@@ -66,6 +66,7 @@
     <Compile Include="Communication\UserStreams\ConnectionManager.cs" />
     <Compile Include="Communication\UserStreams\UserStreamsConnection.cs" />
     <Compile Include="Configuration\Settings\MouseAssignProperty.cs" />
+    <Compile Include="Data\WrappingStream.cs" />
     <Compile Include="Filter\Filters\Text\FilterHashtagText.cs" />
     <Compile Include="Filter\Filters\Text\FilterUrlText.cs" />
     <Compile Include="Common\KeyAssignHelper.cs" />

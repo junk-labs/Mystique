@@ -12,12 +12,11 @@ namespace Mystique.Views.Common
 {
     public class LazyImage : Image
     {
-
-        static QueueTaskDispatcher taskrun;
+        static StackTaskDispatcher taskrun;
 
         static LazyImage()
         {
-            taskrun = new QueueTaskDispatcher(1);
+            taskrun = new StackTaskDispatcher(2);
             ThreadHelper.Halt += taskrun.Dispose;
         }
 
@@ -52,7 +51,11 @@ namespace Mystique.Views.Common
                 {
                     if (uri.Scheme == "pack")
                     {
-                        var bi = new BitmapImage(uri).AsFreeze();
+                        var bi = new BitmapImage();
+                        bi.BeginInit();
+                        bi.UriSource = uri;
+                        bi.CacheOption = BitmapCacheOption.OnLoad;
+                        bi.EndInit();
                         SetImage(img, bi, uri);
                     }
                     else
@@ -85,7 +88,7 @@ namespace Mystique.Views.Common
                         }
                         if (!hitCache)
                         {
-                            taskrun.Enqueue(() =>
+                            taskrun.Push(() =>
                             {
                                 try
                                 {

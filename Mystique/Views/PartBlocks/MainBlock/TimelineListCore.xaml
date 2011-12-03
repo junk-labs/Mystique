@@ -13,6 +13,7 @@
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pb="clr-namespace:Mystique.Views.Behaviors.Particular"
+             xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
              xmlns:tchild="clr-namespace:Mystique.Views.PartBlocks.MainBlock.TimelineChild"
              d:DesignHeight="300"
              d:DesignWidth="300"
@@ -37,23 +38,54 @@
         <cp:SourceToInlinesConverter x:Key="SourceInlinesConverter" />
         <cp:StringRemoveLineFeedConverter x:Key="SingleLineConverter" />
         <cp:CollectionExistToVisibleConverter x:Key="ExistVisibleConverter" />
-        <BitmapImage x:Key="Comment" UriSource="/Resources/comment_edit.png" />
-        <BitmapImage x:Key="Favorited" UriSource="/Resources/star.png" />
-        <BitmapImage x:Key="Retweeted" UriSource="/Resources/rt.png" />
-        <BitmapImage x:Key="Loading" UriSource="/Resources/refresh_large.png" />
-        <BitmapImage x:Key="Directmsg" UriSource="/Resources/heart.png" />
-        <BitmapImage x:Key="Conversation" UriSource="/Resources/conversation.png" />
-        <BitmapImage x:Key="Chevron" UriSource="/Resources/chevron.png" />
-        <BitmapImage x:Key="Favorite" UriSource="/Resources/star.png" />
-        <BitmapImage x:Key="Retweet" UriSource="/Resources/rt.png" />
-        <BitmapImage x:Key="UORetweet" UriSource="/Resources/rtp.png" />
-        <BitmapImage x:Key="QuoteTweet" UriSource="/Resources/qt.png" />
-        <BitmapImage x:Key="NG" UriSource="/Resources/delete.png" />
-        <BitmapImage x:Key="Delete" UriSource="/Resources/cancel.png" />
-        <BitmapImage x:Key="Lock" UriSource="/Resources/lock.png" />
-        <BitmapImage x:Key="Verified" UriSource="/Resources/tick.png" />
-        <BitmapImage x:Key="User" UriSource="/Resources/user.png" />
-        <BitmapImage x:Key="Spam" UriSource="/Resources/bug.png" />
+        <BitmapImage x:Key="Comment"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/comment_edit.png" />
+        <BitmapImage x:Key="Favorited"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/star.png" />
+        <BitmapImage x:Key="Loading"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/refresh_large.png" />
+        <BitmapImage x:Key="Directmsg"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/heart.png" />
+        <BitmapImage x:Key="Conversation"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/conversation.png" />
+        <BitmapImage x:Key="Chevron"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/chevron.png" />
+        <BitmapImage x:Key="Favorite"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/star.png" />
+        <BitmapImage x:Key="Retweet"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/rt.png" />
+        <BitmapImage x:Key="UORetweet"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/rtp.png" />
+        <BitmapImage x:Key="QuoteTweet"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/qt.png" />
+        <BitmapImage x:Key="NG"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/delete.png" />
+        <BitmapImage x:Key="Delete"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/cancel.png" />
+        <BitmapImage x:Key="Lock"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/lock.png" />
+        <BitmapImage x:Key="Verified"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/tick.png" />
+        <BitmapImage x:Key="User"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/user.png" />
+        <BitmapImage x:Key="Spam"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/bug.png" />
         <Style x:Key="SimpleButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
             <Setter Property="Background" Value="{StaticResource ButtonNormalBackground}" />
@@ -412,7 +444,7 @@
                                    VerticalAlignment="Center"
                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                                    SnapsToDevicePixels="True"
-                                   Source="{StaticResource Retweeted}" />
+                                   Source="{StaticResource Retweet}" />
                             <Button.ToolTip>Retweetする</Button.ToolTip>
                         </Button>
                     </Grid>
@@ -469,7 +501,7 @@
                                    VerticalAlignment="Center"
                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                                    SnapsToDevicePixels="True"
-                                   Source="{StaticResource Retweeted}" />
+                                   Source="{StaticResource Retweet}" />
                             <TextBlock Margin="2,2,2,2"
                                        VerticalAlignment="Center"
                                        Foreground="SeaGreen"
@@ -490,7 +522,7 @@
                            Height="16"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            SnapsToDevicePixels="True"
-                           Source="{StaticResource Retweeted}"
+                           Source="{StaticResource Retweet}"
                            Visibility="{Binding Path=Tweet.IsPublishedByRetweet,
                                                 Converter={StaticResource BoolVisibleConverter}}" />
                     <TextBlock Margin="4,2"
@@ -535,6 +567,7 @@
                     <Grid>
                         <com:LazyImage Width="48"
                                        Height="48"
+                                       DefaultImage="{StaticResource Loading}"
                                        UriSource="{Binding Path=Tweet,
                                                            Converter={StaticResource TweetUserImageConverter},
                                                            ConverterParameter=Suggested}">
@@ -577,6 +610,7 @@
                     <Grid HorizontalAlignment="Left" Visibility="{Binding Path=Tweet.IsPublishedByRetweet, Converter={StaticResource BoolVisibleConverter}}">
                         <com:LazyImage Width="40"
                                        Height="40"
+                                       DefaultImage="{StaticResource Loading}"
                                        UriSource="{Binding Path=Tweet,
                                                            Converter={StaticResource TweetUserImageConverter},
                                                            ConverterParameter=Retweeted}">
@@ -593,6 +627,7 @@
                     <Grid HorizontalAlignment="Left" Visibility="{Binding Path=Tweet.IsDirectMessage, Converter={StaticResource BoolVisibleConverter}}">
                         <com:LazyImage Width="40"
                                        Height="40"
+                                       DefaultImage="{StaticResource Loading}"
                                        UriSource="{Binding Path=Tweet,
                                                            Converter={StaticResource TweetUserImageConverter},
                                                            ConverterParameter=DirectMessageRecipient}">
@@ -697,6 +732,7 @@
                                     <DataTemplate>
                                         <com:LazyImage Width="22"
                                                        Height="22"
+                                                       DefaultImage="{StaticResource Loading}"
                                                        UriSource="{Binding Path=TwitterUser.ProfileImage}">
                                             <com:LazyImage.InputBindings>
                                                 <MouseBinding Command="{Binding Path=DataContext.OpenUserCommand,
@@ -747,6 +783,7 @@
                                     <DataTemplate>
                                         <com:LazyImage Width="22"
                                                        Height="22"
+                                                       DefaultImage="{StaticResource Loading}"
                                                        UriSource="{Binding Path=TwitterUser.ProfileImage}">
                                             <com:LazyImage.InputBindings>
                                                 <MouseBinding Command="{Binding Path=DataContext.OpenUserCommand,

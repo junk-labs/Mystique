@@ -116,9 +116,6 @@ namespace Inscribe.Storage
                     // キャッシュ更新を非同期で行っておく
                     Task.Factory.StartNew(() => DownloadImage(uri));
                 }
-                else
-                {
-                }
                 return cdata.Key;
             }
             else
@@ -163,27 +160,42 @@ namespace Inscribe.Storage
             {
                 var condata =
                     Http.WebConnect(
-                    Http.CreateRequest(uri, contentType: null),
+                    Http.CreateRequest(uri),
                     Http.StreamConverters.ReadStream);
                 var bi = new BitmapImage();
-                bi.BeginInit();
-                bi.CacheOption = BitmapCacheOption.OnLoad;
-                if (condata.Succeeded && condata.Data != null)
+                try
                 {
-                    bi.StreamSource = condata.Data;
-                }
-                else
-                {
-                    if (condata.ThrownException != null)
-                        NotifyStorage.Notify("画像のロードエラー(" + uri.OriginalString + ")");
+                    if (condata.Succeeded && condata.Data != null)
+                    {
+                        using (var ws = new WrappingStream(condata.Data))
+                        {
+                            bi.BeginInit();
+                            bi.CacheOption = BitmapCacheOption.OnLoad;
+                            bi.StreamSource = ws;
+                            bi.DecodePixelWidth = ImageMaxWidth;
+                            bi.EndInit();
+                        }
+                    }
                     else
-                        NotifyStorage.Notify(condata.ThrownException.Message);
-                    bi.UriSource = "Resources/failed.png".ToPackUri();
+                    {
+                        if (condata.ThrownException != null)
+                            NotifyStorage.Notify("画像のロードエラー(" + uri.OriginalString + ")");
+                        else
+                            NotifyStorage.Notify(condata.ThrownException.Message);
+                        bi.BeginInit();
+                        bi.CacheOption = BitmapCacheOption.OnLoad;
+                        bi.UriSource = "Resources/failed.png".ToPackUri();
+                        bi.DecodePixelWidth = ImageMaxWidth;
+                        bi.EndInit();
+                    }
+                    // Save the memory.
+                    bi.Freeze();
                 }
-                // Save the memory.
-                bi.DecodePixelWidth = ImageMaxWidth;
-                bi.EndInit();
-                bi.Freeze();
+                finally
+                {
+                    if (condata.Data != null)
+                        condata.Data.Dispose();
+                }
 
                 var newv = new KeyValuePair<BitmapImage, DateTime>(bi, DateTime.Now);
                 using (lockWrap.GetWriterLock())
