@@ -4,7 +4,7 @@ using System.Linq;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
-using Inscribe.Data;
+using Inscribe.Util;
 using System.Threading;
 using System.Threading.Tasks;
 

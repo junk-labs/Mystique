@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Livet;
 
-namespace Inscribe.Data
+namespace Inscribe.Util
 {
     [Serializable]
     public class ConcurrentObservable<T> : ReaderWriterLockBase, IList<T>, ICollection<T>, IEnumerable<T>, IList, ICollection, IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged

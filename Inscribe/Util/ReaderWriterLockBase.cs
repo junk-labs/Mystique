@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Inscribe.Data
+namespace Inscribe.Util
 {
     public abstract class ReaderWriterLockBase
     {

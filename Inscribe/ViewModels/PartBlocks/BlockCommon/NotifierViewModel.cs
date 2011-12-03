@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Inscribe.Configuration;
 using Inscribe.Storage;
 using Livet;
-using Inscribe.Data;
+using Inscribe.Util;
 
 namespace Inscribe.ViewModels.PartBlocks.BlockCommon
 {

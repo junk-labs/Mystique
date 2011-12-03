@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Inscribe.Data
+namespace Inscribe.Util
 {
     public class SafeLinkedList<T> : ReaderWriterLockBase, ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
     {

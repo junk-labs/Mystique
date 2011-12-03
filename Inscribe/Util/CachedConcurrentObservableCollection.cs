@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Livet;
 
-namespace Inscribe.Data
+namespace Inscribe.Util
 {
     public class CachedConcurrentObservableCollection<T>
         : INotifyCollectionChanged, ICollection<T>

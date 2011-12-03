@@ -7,7 +7,7 @@ using Dulcet.Twitter.Rest;
 using Inscribe.Authentication;
 using Inscribe.Common;
 using Inscribe.Configuration;
-using Inscribe.Data;
+using Inscribe.Util;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 
 namespace Inscribe.Storage

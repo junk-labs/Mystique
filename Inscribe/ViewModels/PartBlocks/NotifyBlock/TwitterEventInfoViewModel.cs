@@ -6,7 +6,7 @@ using Livet;
 using Inscribe.Storage;
 using Livet.Commands;
 using Inscribe.ViewModels.PartBlocks.BlockCommon;
-using Inscribe.Data;
+using Inscribe.Util;
 
 namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 {

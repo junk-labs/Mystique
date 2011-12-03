@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Inscribe.Data
+namespace Inscribe.Util
 {
     /// <summary>
     /// 内部にロック機構を持ち、また、そのロックを受けた上でのオペレーションを<para />

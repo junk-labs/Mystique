@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Inscribe.Data
+namespace Inscribe.Util
 {
     /// <summary>
     /// 外部に対してReaderWriterLockを提供します。<para />

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Inscribe.Data
+namespace Inscribe.Util
 {
     /// <summary>
     /// ストレージのベース実装

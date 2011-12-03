@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Inscribe.Configuration;
-using Inscribe.Data;
+using Inscribe.Util;
 using Livet;
 
 namespace Inscribe.Storage

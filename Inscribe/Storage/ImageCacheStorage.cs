@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 using Dulcet.Network;
 using Inscribe.Common;
 using Inscribe.Configuration;
-using Inscribe.Data;
+using Inscribe.Util;
 
 namespace Inscribe.Storage
 {
@@ -114,7 +114,11 @@ namespace Inscribe.Storage
                 if (DateTime.Now.Subtract(cdata.Value).TotalMilliseconds >= Setting.Instance.KernelProperty.ImageLifetime)
                 {
                     // キャッシュ更新を非同期で行っておく
-                    Task.Factory.StartNew(() => DownloadImage(uri));
+                    lock (semaphoreAccessLocker)
+                    {
+                        if (!semaphores.ContainsKey(uri)) // URLに対するDL予約があるなら何もしない
+                            Task.Factory.StartNew(() => DownloadImageData(uri));
+                    }
                 }
                 return cdata.Key;
             }

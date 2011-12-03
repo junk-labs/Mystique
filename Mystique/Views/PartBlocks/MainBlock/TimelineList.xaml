@@ -17,6 +17,7 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <BitmapImage x:Key="Search" UriSource="/Resources/find.png" />
+        <BitmapImage x:Key="User" UriSource="/Resources/user.png" />
         <BitmapImage x:Key="AddTab" UriSource="/Resources/tab_add.png" />
         <BitmapImage x:Key="Close" UriSource="/Resources/cross.png" />
         <BitmapImage x:Key="QueryInvalid" UriSource="/Resources/exclamation.png" />
@@ -53,6 +54,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -112,8 +114,20 @@
                     </Grid>
                 </Border>
                 <Button Grid.Column="2"
+                        Command="{Binding OpenUserCommand}"
+                        Style="{StaticResource FlatButtonStyle}"
+                        ToolTip="ユーザービューを開く"
+                        Visibility="{Binding IsUserScreenName,
+                                             Converter={StaticResource BoolVisibleConverter}}">
+                    <Image Width="12"
+                           Height="12"
+                           Margin="2"
+                           Source="{StaticResource User}" />
+                </Button>
+                <Button Grid.Column="3"
                         Command="{Binding CreateTabFromTopTimelineCommand}"
                         Style="{StaticResource FlatButtonStyle}"
+                        ToolTip="このタイムラインでタブを作る"
                         Visibility="{Binding IsStackTopUserPage,
                                              Converter={StaticResource BoolInvisibleConverter}}">
                     <Image Width="12"
@@ -121,9 +135,10 @@
                            Margin="2"
                            Source="{StaticResource AddTab}" />
                 </Button>
-                <Button Grid.Column="3"
+                <Button Grid.Column="4"
                         Command="{Binding RemoveTopTimelineCommand}"
-                        Style="{StaticResource FlatButtonStyle}">
+                        Style="{StaticResource FlatButtonStyle}"
+                        ToolTip="このタイムラインを閉じる">
                     <Image Width="12"
                            Height="12"
                            Margin="2"

@@ -6,7 +6,7 @@ using System.Windows;
 using Dulcet.Twitter;
 using Inscribe.Common;
 using Inscribe.Configuration;
-using Inscribe.Data;
+using Inscribe.Util;
 using Inscribe.Storage;
 using Livet;
 using Livet.Commands;

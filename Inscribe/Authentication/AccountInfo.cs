@@ -5,7 +5,7 @@ using System.Threading;
 using System.Xml.Serialization;
 using Dulcet.Twitter;
 using Inscribe.Configuration.Accounts;
-using Inscribe.Data;
+using Inscribe.Util;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;

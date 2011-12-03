@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Dulcet.Twitter;
 using Inscribe.Common;
 using Inscribe.Configuration;
-using Inscribe.Data;
+using Inscribe.Util;
 using Inscribe.Subsystems;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;

@@ -252,9 +252,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get { return this._queryTextBuffer; }
             set
             {
-                this._queryTextBuffer = value;
+                this._queryTextBuffer = value ?? String.Empty;
                 RaisePropertyChanged(() => QueryText);
-                Task.Factory.StartNew(() =>
+               Task.Factory.StartNew(() =>
                     {
                         Thread.Sleep(Setting.Instance.TimelineExperienceProperty.QueryApplyWait);
                         if (this._queryTextBuffer == value)
@@ -339,6 +339,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     break;
             }
             this.IsQueryValid = true;
+            RaisePropertyChanged(() => IsUserScreenName);
             CreateTabFromTopTimelineCommand.RaiseCanExecuteChanged();
             cf.TimelineListCoreViewModel.Sources = filter;
             Task.Factory.StartNew(() => cf.TimelineListCoreViewModel.InvalidateCache());
@@ -394,6 +395,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public bool IsStackTopUserPage
         {
             get { return this.CurrentForegroundTimeline is UserPageViewModel; }
+        }
+
+        public bool IsUserScreenName
+        {
+            get { return QueryText.StartsWith("@"); }
         }
 
         #endregion
@@ -504,6 +510,27 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
 
+        #region OpenUserCommand
+        private ViewModelCommand _OpenUserCommand;
+
+        public ViewModelCommand OpenUserCommand
+        {
+            get
+            {
+                if (_OpenUserCommand == null)
+                {
+                    _OpenUserCommand = new ViewModelCommand(OpenUser);
+                }
+                return _OpenUserCommand;
+            }
+        }
+
+        public void OpenUser()
+        {
+            this.AddTopUser(this.QueryText.Substring(1));
+        }
+        #endregion
+
         #region CreateTabFromTopTimelineCommand
         ViewModelCommand _CreateTabFromTopTimelineCommand;
 
@@ -552,7 +579,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.RemoveTopTimeline(false);
         }
         #endregion
-
 
         #region FavoriteThisTabAllCommand
         private Livet.Commands.ViewModelCommand _FavoriteThisTabAllCommand;
@@ -633,7 +659,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             });
         }
         #endregion
-
 
         #region EditTabCommand
         ViewModelCommand _EditTabCommand;

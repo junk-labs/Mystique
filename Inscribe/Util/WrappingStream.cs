@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace Inscribe.Data
+namespace Inscribe.Util
 {
     // http://code.logos.com/blog/2009/05/wrappingstream_implementation.html ?
 
