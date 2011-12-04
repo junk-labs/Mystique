@@ -116,7 +116,6 @@ namespace Inscribe.ViewModels.Dialogs.Common
             }
         }
 
-
         #region ShowLicenseCommand
         ViewModelCommand _ShowLicenseCommand;
 
@@ -135,7 +134,6 @@ namespace Inscribe.ViewModels.Dialogs.Common
             IsVisibleLicense = true;
         }
         #endregion
-
 
         #region HideLicenseCommand
         ViewModelCommand _HideLicenseCommand;
@@ -186,11 +184,9 @@ namespace Inscribe.ViewModels.Dialogs.Common
     public enum ReleaseKind
     {
         Stable,
-        ReleaseCandidate,
-        Beta,
         Daybreak,
-        Twilight,
         Midnight,
+        PitchDark,
         Special
     }
 }

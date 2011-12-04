@@ -22,14 +22,7 @@
     <i:Interaction.Behaviors>
         <b:TimelineScrollLockBehavior />
     </i:Interaction.Behaviors>
-    <i:Interaction.Triggers>
-        <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
-            <l:ConfirmationDialogInteractionMessageAction />
-        </l:InteractionMessageTrigger>
-        <l:InteractionMessageTrigger MessageKey="Mute" Messenger="{Binding Messenger}">
-            <ba:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type dlg:Mute}" />
-        </l:InteractionMessageTrigger>
-    </i:Interaction.Triggers>
+
     <UserControl.Resources>
         <cp:TextToInlinesConverter x:Key="TextFlowDocumentConverter" />
         <cp:TVMToUserNameConverter x:Key="TweetUserNameConverter" />
@@ -560,6 +553,14 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <i:Interaction.Triggers>
+                    <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
+                        <l:ConfirmationDialogInteractionMessageAction />
+                    </l:InteractionMessageTrigger>
+                    <l:InteractionMessageTrigger MessageKey="Mute" Messenger="{Binding Messenger}">
+                        <ba:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type dlg:Mute}" />
+                    </l:InteractionMessageTrigger>
+                </i:Interaction.Triggers>
                 <StackPanel Grid.RowSpan="3"
                             Grid.Column="0"
                             VerticalAlignment="Center"
@@ -725,9 +726,10 @@
                                        DockPanel.Dock="Left"
                                        Foreground="Goldenrod"
                                        Text="{Binding Path=Tweet.FavoredUsers,
+                                                      IsAsync=True,
                                                       Converter={StaticResource CollectionCountConverter},
                                                       FallbackValue=0}" />
-                            <ItemsControl ItemsSource="{Binding Path=Tweet.FavoredUsers}">
+                            <ItemsControl ItemsSource="{Binding Path=Tweet.FavoredUsers, IsAsync=True}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <com:LazyImage Width="22"
@@ -776,9 +778,10 @@
                                        DockPanel.Dock="Left"
                                        Foreground="SeaGreen"
                                        Text="{Binding Path=Tweet.RetweetedUsers,
+                                                      IsAsync=True,
                                                       Converter={StaticResource CollectionCountConverter},
                                                       FallbackValue=0}" />
-                            <ItemsControl ItemsSource="{Binding Path=Tweet.RetweetedUsers}">
+                            <ItemsControl ItemsSource="{Binding Path=Tweet.RetweetedUsers, IsAsync=True}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <com:LazyImage Width="22"

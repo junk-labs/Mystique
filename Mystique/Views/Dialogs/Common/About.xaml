@@ -44,7 +44,7 @@
                         </Setter.Value>
                     </Setter>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding ReleaseKind}" Value="Twilight">
+                <DataTrigger Binding="{Binding ReleaseKind}" Value="Midnight">
                     <Setter Property="Background">
                         <Setter.Value>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -54,7 +54,7 @@
                         </Setter.Value>
                     </Setter>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding ReleaseKind}" Value="Midnight">
+                <DataTrigger Binding="{Binding ReleaseKind}" Value="PitchDark">
                     <Setter Property="Background">
                         <Setter.Value>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

@@ -14,6 +14,8 @@ namespace Inscribe.Storage
 {
     public static class ImageCacheStorage
     {
+        private const double DefaultDpi = 96;
+
         public const int ImageMaxWidth = 48;
 
         private static ReaderWriterLockWrap lockWrap;
@@ -90,7 +92,6 @@ namespace Inscribe.Storage
 
         private static void RemoveCache(Uri key)
         {
-            KeyValuePair<BitmapImage, DateTime> kv;
             using(lockWrap.GetWriterLock())
             {
                 imageDataDictionary.Remove(key);
@@ -175,9 +176,11 @@ namespace Inscribe.Storage
                         {
                             bi.BeginInit();
                             bi.CacheOption = BitmapCacheOption.OnLoad;
-                            bi.StreamSource = ws;
+                            bi.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
                             bi.DecodePixelWidth = ImageMaxWidth;
+                            bi.StreamSource = ws;
                             bi.EndInit();
+                            bi.Freeze();
                         }
                     }
                     else
@@ -191,9 +194,8 @@ namespace Inscribe.Storage
                         bi.UriSource = "Resources/failed.png".ToPackUri();
                         bi.DecodePixelWidth = ImageMaxWidth;
                         bi.EndInit();
+                        bi.Freeze();
                     }
-                    // Save the memory.
-                    bi.Freeze();
                 }
                 finally
                 {
@@ -220,7 +222,7 @@ namespace Inscribe.Storage
             catch (Exception e)
             {
                 NotifyStorage.Notify("画像のロードエラー(" + uri.OriginalString + "):" + e.ToString());
-                return new BitmapImage("Resources/failed.png".ToPackUri());
+                return new BitmapImage("Resources/failed.png".ToPackUri()).AsFreeze();
             }
             finally
             {

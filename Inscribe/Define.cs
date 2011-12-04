@@ -31,15 +31,11 @@ namespace Inscribe
                 case 0:
                     return String.Empty;
                 case 1:
-                    return " rc";
-                case 2:
-                    return " beta";
-                case 3:
                     return " daybreak";
-                case 4:
-                    return " twilight";
-                case 5:
+                case 2:
                     return " midnight";
+                case 3:
+                    return " pitch-dark";
                 default:
                     return " Special build " + value;
             }

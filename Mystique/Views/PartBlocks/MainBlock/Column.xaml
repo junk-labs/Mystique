@@ -23,7 +23,6 @@
             <MenuItem Command="{Binding AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
             <MenuItem Command="{Binding RebirthTabCommand}" Header="最後に閉じたタブを元に戻す(_R)" />
         </ContextMenu>
-
         <Style x:Key="SelectorStyle" TargetType="{x:Type Border}">
             <Style.Resources>
                 <LinearGradientBrush x:Key="InactiveBack" StartPoint="0.5,0" EndPoint="0.5,1">

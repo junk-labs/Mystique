@@ -141,16 +141,18 @@ namespace Vanille.UpdateCore
                 double version;
                 try
                 {
-                    version = double.Parse(xmldoc.Element("update").Element("latests").Elements("version")
+                    version = xmldoc.Element("update").Element("latests").Elements("version")
                         .Where(xe => int.Parse(xe.Attribute("kind").Value) <= target)
-                        .Select(xe => xe.Attribute("ver").Value).FirstOrDefault());
+                        .Select(xe => xe.Attribute("ver").Value)
+                        .Select(s => double.Parse(s))
+                        .Max();
                 }
                 catch (Exception ex)
                 {
                     WriteLine("Parse error:" + ex.Message);
                     version = 0.0;
                 }
-                if (version == 0)
+                if (version <= origver)
                 {
                     WriteLine("ERR: New version file is not found!");
                     MessageBox.Show("新しいバージョンのKrileを見つけられませんでした。",
