@@ -180,10 +180,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             cacheInvalidator.Enqueue(() =>
             {
+                var stopwatch = new System.Diagnostics.Stopwatch();
+                stopwatch.Start();
                 using (var n = NotifyStorage.NotifyManually(this.TabProperty.Name + " - タイムラインを構築しています..."))
                 {
                     this.StackingTimelines.ToArray().ForEach(f => f.InvalidateCache());
                 }
+                stopwatch.Stop();
+                NotifyStorage.Notify(this.TabProperty.Name + " - タイムライン構築完了(" + stopwatch.ElapsedMilliseconds + "msec)");
             });
         }
 

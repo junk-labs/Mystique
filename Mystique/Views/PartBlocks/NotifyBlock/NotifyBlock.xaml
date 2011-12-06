@@ -111,16 +111,26 @@
         </StatusBarItem>
         <StatusBarItem Grid.Column="2"
                        HorizontalContentAlignment="Stretch"
+                       VerticalContentAlignment="Center"
                        Padding="0"
-                       ToolTip="現在の処理状態を示します。クリックすると、Twitterイベント履歴を表示します。"
-                       VerticalContentAlignment="Center">
-            <com:PopupButton Focusable="False"
-                             x:Name="EventPopupButton"
+                       ToolTip="現在の処理状態を示します。クリックすると、Twitterイベント履歴を表示します。">
+            <com:PopupButton x:Name="EventPopupButton"
                              HorizontalContentAlignment="Stretch"
+                             Focusable="False"
                              Style="{StaticResource FlatToggleButtonStyle}">
-                <TextBlock Margin="2" Text="{Binding StatusText, Converter={StaticResource StringRemoveLineConverter}}" />
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <ProgressBar Width="50"
+                                 Margin="4,2"
+                                 DockPanel.Dock="Right"
+                                 IsIndeterminate="True"
+                                 Visibility="{Binding IsLongRunning,
+                                                      Converter={StaticResource BoolVisibleConverter}}" />
+                    <TextBlock Margin="2" Text="{Binding StatusText, Converter={StaticResource StringRemoveLineConverter}, FallbackValue=Status}" />
+                </StackPanel>
                 <com:PopupButton.DropDownPopup>
-                    <Popup Placement="Top" StaysOpen="False" x:Name="EventPopup">
+                    <Popup x:Name="EventPopup"
+                           Placement="Top"
+                           StaysOpen="False">
                         <Border Background="White"
                                 BorderBrush="Gray"
                                 BorderThickness="1">

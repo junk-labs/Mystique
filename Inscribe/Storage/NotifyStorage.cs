@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Inscribe.Configuration;
 using Inscribe.Util;
@@ -61,7 +62,7 @@ namespace Inscribe.Storage
 
         public static NotifyItem NotifyManually(string message)
         {
-            var ni = new NotifyItem(message);
+            var ni = new NotifyItem(message, true);
             using (notifyLock.GetWriterLock())
             {
                 notificationStack.Push(ni);
@@ -146,6 +147,17 @@ namespace Inscribe.Storage
             SecondCallbackRaised();
         }
 
+        public static bool ContainsLongRunObject
+        {
+            get
+            {
+                using (notifyLock.GetReaderLock())
+                {
+                    return notificationStack.Where(i => i.IsLongRun).FirstOrDefault() != null;
+                }
+            }
+        }
+
         private class SecondNotifyItem : NotifyItem
         {
             int count = 0;
@@ -172,10 +184,12 @@ namespace Inscribe.Storage
     public class NotifyItem : IDisposable
     {
         public bool IsDisposed { get; set; }
-        public NotifyItem(string message)
+        public bool IsLongRun { get; private set; }
+        public NotifyItem(string message, bool isLongRun = false)
         {
             this.IsDisposed = false;
             this.message = message;
+            this.IsLongRun = isLongRun;
         }
 
         private string message;

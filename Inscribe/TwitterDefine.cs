@@ -65,6 +65,8 @@ namespace Inscribe
 
         public static readonly string TwilogUrl = "http://twilog.org/";
 
+        public static readonly int TimelineDispatchBlockCount = 2000;
+
         #endregion
     }
 }

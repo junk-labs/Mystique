@@ -23,7 +23,11 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             this.Parent = parent;
             // InformServer.EventRegistered += new InformServer.NotifyEventHandler(InformServer_EventRegistered);
             // InformServer.ReportRegistered += new InformServer.ReportRegisterHandler(InformServer_ReportRegistered);
-            ViewModelHelper.BindNotification(NotifyStorage.NotifyTextChangedEvent, this, (o, e) => RaisePropertyChanged(() => StatusText));
+            ViewModelHelper.BindNotification(NotifyStorage.NotifyTextChangedEvent, this, (o, e) =>
+            {
+                RaisePropertyChanged(() => StatusText);
+                RaisePropertyChanged(() => IsLongRunning);
+            });
             ViewModelHelper.BindNotification(ExceptionStorage.ExceptionUpdatedEvent, this, (o, e) => RaisePropertyChanged(() => State));
             ViewModelHelper.BindNotification(Statistics.WakeupTimeUpdatedEvent, this, (o, e) => RaisePropertyChanged(() => WakeupTime));
             ViewModelHelper.BindNotification(Statistics.TweetSpeedUpdatedEvent, this, (o, e) =>
@@ -65,6 +69,14 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             get
             {
                 return NotifyStorage.Message;
+            }
+        }
+
+        public bool IsLongRunning
+        {
+            get
+            {
+                return NotifyStorage.ContainsLongRunObject;
             }
         }
 

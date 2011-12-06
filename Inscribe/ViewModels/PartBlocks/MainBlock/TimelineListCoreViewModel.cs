@@ -222,12 +222,25 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 throw new InvalidOperationException("Can't invalidate cache on Dispatcher thread.");
             }
 
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            System.Diagnostics.Debug.WriteLine("watch start!");
             this._tweetsSource.Clear();
-            TweetStorage.GetAll(vm => CheckFilters(vm))
-                .Select(tvm => new TabDependentTweetViewModel(tvm, this.Parent))
-                .ForEach(t => this._tweetsSource.AddVolatile(t));
+            System.Diagnostics.Debug.WriteLine("elapsed clear:" + stopwatch.ElapsedMilliseconds);
+            stopwatch.Restart();
+            var tweets = TweetStorage.GetAll(vm => CheckFilters(vm)).ToArray();
+            System.Diagnostics.Debug.WriteLine("elapsed filter:" + stopwatch.ElapsedMilliseconds);
+            stopwatch.Restart();
+            tweets.Select(tvm => new TabDependentTweetViewModel(tvm, this.Parent))
+                .Block(TwitterDefine.TimelineDispatchBlockCount)
+                .ForEach(t => this._tweetsSource.AddRangeVolatile(t));
+            System.Diagnostics.Debug.WriteLine("elapsed addition:" + stopwatch.ElapsedMilliseconds);
+            stopwatch.Restart();
             this.Commit();
+            System.Diagnostics.Debug.WriteLine("elapsed commit:" + stopwatch.ElapsedMilliseconds);
+            stopwatch.Stop();
         }
+
 
         public void SetSelect(ListSelectionKind kind)
         {

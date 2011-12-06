@@ -184,6 +184,15 @@ namespace Inscribe.Util
             }
         }
 
+        public void AddRangeVolatile(IEnumerable<T> item)
+        {
+            lock (syncRoot)
+            {
+                item.Where(i => !this.BehindCollection.Contains(i))
+                    .ForEach(i => this.BehindCollection.AddFirst(i));
+            }
+        }
+
         public bool AddVolatile(T item)
         {
             lock (syncRoot)

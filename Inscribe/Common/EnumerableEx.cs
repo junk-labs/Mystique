@@ -58,6 +58,24 @@ namespace System.Linq
             }
         }
 
+        public static IEnumerable<IEnumerable<T>> Block<T>(this IEnumerable<T> collection, int count)
+        {
+            List<T> buffer = new List<T>();
+            int i = 0;
+            foreach (var item in collection)
+            {
+                buffer.Add(item);
+                i++;
+                if (i >= count)
+                {
+                    yield return buffer;
+                    buffer.Clear();
+                    i = 0;
+                }
+            }
+            yield return buffer;
+        }
+
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> execute)
         {
             foreach (var i in source)
