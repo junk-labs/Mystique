@@ -188,8 +188,7 @@ namespace Inscribe.Util
         {
             lock (syncRoot)
             {
-                item.Where(i => !this.BehindCollection.Contains(i))
-                    .ForEach(i => this.BehindCollection.AddFirst(i));
+                item.ForEach(i => this.BehindCollection.AddFirst(i));
             }
         }
 
@@ -207,6 +206,20 @@ namespace Inscribe.Util
                     return false;
                 }
             }
+        }
+
+        public void SortSingle<TKey>(bool ascend, Func<T, TKey> keySelector)
+        {
+            lock (syncRoot)
+            {
+                var array = this.BehindCollection.ToArray();
+                this.BehindCollection.Clear();
+                if (ascend)
+                    array.OrderBy(keySelector).Distinct().ForEach(i => this.BehindCollection.AddLast(i));
+                else
+                    array.OrderByDescending(keySelector).Distinct().ForEach(i => this.BehindCollection.AddLast(i));
+            }
+            this.Commit(true);
         }
 
         public void Sort<TKey>(bool ascend, Func<T, TKey> keySelector)

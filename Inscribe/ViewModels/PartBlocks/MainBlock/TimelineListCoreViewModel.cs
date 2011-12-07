@@ -136,7 +136,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public void Commit()
         {
-            this._tweetsSource.Sort(Setting.Instance.TimelineExperienceProperty.OrderByAscending,
+            this._tweetsSource.SortSingle(Setting.Instance.TimelineExperienceProperty.OrderByAscending,
                 t => t.Tweet.CreatedAt);
         }
 
