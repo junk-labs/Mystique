@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Voices
 {
     public static class Define
@@ -11,6 +7,6 @@ namespace Voices
 
         public static string BinName = "krile.exe";
 
-        public static string Version = "0.6";
+        public static string Version = "1.2";
     }
 }

@@ -53,7 +53,7 @@ namespace Inscribe
         public static readonly int IntervalLookPrevious = 10;
         public static readonly double MinDensity = 0.1;
         public static readonly int UserStreamsTimeout = 90;
-        public static readonly int UrlMaxLength = 19;
+        public static readonly int UrlMaxLength = 20;
 
         #endregion
 
@@ -65,7 +65,7 @@ namespace Inscribe
 
         public static readonly string TwilogUrl = "http://twilog.org/";
 
-        public static readonly int TimelineDispatchBlockCount = 2000;
+        public static readonly int TimelineDispatchBlockCount = 5000;
 
         #endregion
     }

@@ -57,40 +57,46 @@ namespace Voices
             this.Refresh();
             StringBuilder sb = new StringBuilder();
             sb.Append(ErrorLogData);
-            sendState.Text = "送信中...";
+            sendState.Text = "自己診断中...";
             this.Refresh();
             string err;
-            Task.Factory.StartNew(() =>
-            {
-                try
-                {
-                    if (!PostString(new Uri("http://krile.starwing.net/report.php"), sb.ToString(), out err))
-                    {
-                        if (String.IsNullOrEmpty(err))
-                            err = "何か不思議な力で失敗しました。もう一度試してみてください。";
-                        throw new Exception(err);
-                    }
-                    this.Invoke(new Action(() =>
-                    {
-                        sendState.Text = "送信完了しました。";
-                        sendProgress.Style = ProgressBarStyle.Continuous;
-                        this.Refresh();
-                    }));
-                }
-                catch (Exception ex)
-                {
-                    this.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show("アップロードエラー:" + ex.Message);
-                        sendState.Text = "送信に失敗しました。";
-                        sendProgress.Style = ProgressBarStyle.Continuous;
-                    }));
-                }
-            });
             var selfan = SelfAnalyzer.Analyze(ErrorLogData);
             if (selfan != null)
             {
                 MessageBox.Show(selfan, "Krile 自己診断", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                sendState.Text = "自己診断機能により解決しました。";
+                sendProgress.Style = ProgressBarStyle.Continuous;
+            }
+            else
+            {
+                sendState.Text = "自己診断できませんでした。データ送信中...";
+                Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        if (!PostString(new Uri("http://krile.starwing.net/report.php"), sb.ToString(), out err))
+                        {
+                            if (String.IsNullOrEmpty(err))
+                                err = "何か不思議な力で失敗しました。もう一度試してみてください。";
+                            throw new Exception(err);
+                        }
+                        this.Invoke(new Action(() =>
+                        {
+                            sendState.Text = "送信完了しました。";
+                            sendProgress.Style = ProgressBarStyle.Continuous;
+                            this.Refresh();
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            MessageBox.Show("アップロードエラー:" + ex.Message);
+                            sendState.Text = "送信に失敗しました。";
+                            sendProgress.Style = ProgressBarStyle.Continuous;
+                        }));
+                    }
+                });
             }
         }
 
