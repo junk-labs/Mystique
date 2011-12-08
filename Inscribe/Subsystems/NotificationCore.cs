@@ -21,6 +21,8 @@ namespace Inscribe.Subsystems
     /// </summary>
     public static class NotificationCore
     {
+        public static event EventHandler<EventDescriptionEventArgs> NotificationEvent;
+
         public static void Initialize()
         {
             EventStorage.EventRegistered += new EventHandler<EventDescriptionEventArgs>(EventStorage_EventRegistered);
@@ -32,41 +34,56 @@ namespace Inscribe.Subsystems
             {
                 case EventKind.Favorite:
                     if (Setting.Instance.NotificationProperty.NotifyFavorite)
+                    {
+                        NotificationEventRise(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
                             e.EventDescription.TargetTweet.Text, EventKind.Favorite);
+                    }
                     break;
                 case EventKind.Follow:
                     if (Setting.Instance.NotificationProperty.NotifyFollow)
+                    {
+                        NotificationEventRise(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
                             e.EventDescription.SourceUser.TwitterUser.Bio,
                             EventKind.Follow);
+                    }
                     break;
                 case EventKind.Mention:
                     if (Setting.Instance.NotificationProperty.NotifyMention)
+                    {
+                        NotificationEventRise(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
                             e.EventDescription.TargetTweet.Text,
                             EventKind.Mention);
+                    }
                     break;
                 case EventKind.Retweet:
                     if (Setting.Instance.NotificationProperty.NotifyRetweet)
+                    {
+                        NotificationEventRise(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
                             e.EventDescription.TargetTweet.Text,
                             EventKind.Retweet);
+                    }
                     break;
                 case EventKind.Unfavorite:
                     if (Setting.Instance.NotificationProperty.NotifyFavorite)
+                    {
+                        NotificationEventRise(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
                             e.EventDescription.TargetTweet.Text, EventKind.Unfavorite);
+                    }
                     break;
             }
         }
@@ -116,9 +133,20 @@ namespace Inscribe.Subsystems
                     var notify = waitings[tweet];
                     waitings.Remove(tweet);
                     if (notify != null)
-                        IssueNotification(UserStorage.Get(tweet.Status.User), null, tweet.Status.Text, EventKind.Undefined, notify);
+                    {
+                        UserViewModel source = UserStorage.Get(tweet.Status.User);
+                        NotificationEventRise(null, new EventDescriptionEventArgs(new EventDescription(EventKind.Undefined, source, null, tweet)));
+                        IssueNotification(source, null, tweet.Status.Text, EventKind.Undefined, notify);
+                    }
                 }
             }
+        }
+
+        private static void NotificationEventRise(object sender, EventDescriptionEventArgs e)
+        {
+            if (Setting.Instance.StateProperty.IsInSilentMode) return;
+            if (NotificationEvent == null) return;
+            NotificationEvent(sender, e);
         }
 
         /// <summary>
@@ -127,6 +155,7 @@ namespace Inscribe.Subsystems
         private static void IssueNotification(UserViewModel source, UserViewModel target, string text, EventKind eventKind, string soundPath = null)
         {
             if (Setting.Instance.StateProperty.IsInSilentMode) return;
+
             if (Setting.Instance.NotificationProperty.WindowNotificationStrategy != Configuration.Settings.NotificationStrategy.Disabled)
             {
                 DispatcherHelper.BeginInvoke(() =>
