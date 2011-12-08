@@ -73,6 +73,13 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 RaisePropertyChanged(() => Followers);
                 RaisePropertyChanged(() => Listed);
                 SetUserTimeline(value);
+                this.OpenLinkCommand.RaiseCanExecuteChanged();
+                this.OpenUserTwilogCommand.RaiseCanExecuteChanged();
+                this.OpenUserFavstarCommand.RaiseCanExecuteChanged();
+                this.OpenUserWebCommand.RaiseCanExecuteChanged();
+                this.CreateUserTabCommand.RaiseCanExecuteChanged();
+                this.ReceiveTimelineCommand.RaiseCanExecuteChanged();
+                this.ManageFollowCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -152,7 +159,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_OpenLinkCommand == null)
-                    _OpenLinkCommand = new ListenerCommand<string>(OpenLink);
+                    _OpenLinkCommand = new ListenerCommand<string>(OpenLink, () => this.User != null);
                 return _OpenLinkCommand;
             }
         }
@@ -175,13 +182,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_OpenUserTwilogCommand == null)
-                    _OpenUserTwilogCommand = new ViewModelCommand(OpenUserTwilog);
+                    _OpenUserTwilogCommand = new ViewModelCommand(OpenUserTwilog, () => this.User != null);
                 return _OpenUserTwilogCommand;
             }
         }
 
         private void OpenUserTwilog()
         {
+            if (User == null || User.TwitterUser == null) return;
             Browser.Start(TwitterDefine.TwilogUrl + User.TwitterUser.ScreenName);
         }
         #endregion
@@ -194,17 +202,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_OpenUserFavstarCommand == null)
-                    _OpenUserFavstarCommand = new ViewModelCommand(OpenUserFavstar);
+                    _OpenUserFavstarCommand = new ViewModelCommand(OpenUserFavstar, () => this.User != null);
                 return _OpenUserFavstarCommand;
             }
         }
 
         private void OpenUserFavstar()
         {
+            if (User == null || User.TwitterUser == null) return;
             Browser.Start(TwitterDefine.FavstarUrl + User.TwitterUser.ScreenName);
         }
         #endregion
-      
 
         #region OpenUserWebCommand
         ViewModelCommand _OpenUserWebCommand;
@@ -214,15 +222,15 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_OpenUserWebCommand == null)
-                    _OpenUserWebCommand = new ViewModelCommand(OpenUserWeb);
+                    _OpenUserWebCommand = new ViewModelCommand(OpenUserWeb, ()=>this.User != null);
                 return _OpenUserWebCommand;
             }
         }
 
         private void OpenUserWeb()
         {
-            if (User != null && User.TwitterUser.Web != null)
-                Browser.Start(User.TwitterUser.Web);
+            if (User == null || User.TwitterUser == null) return;
+            Browser.Start(User.TwitterUser.Web);
         }
         #endregion
 
@@ -304,13 +312,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_CreateUserTabCommand == null)
-                    _CreateUserTabCommand = new ViewModelCommand(CreateUserTab);
+                    _CreateUserTabCommand = new ViewModelCommand(CreateUserTab, () => this.User != null);
                 return _CreateUserTabCommand;
             }
         }
 
         private void CreateUserTab()
         {
+            if (User == null || User.TwitterUser == null) return;
             var desc = "@" + this.User.TwitterUser.ScreenName;
             var filt = new[]{ new FilterCluster(){
                  Filters = new[]{new FilterUserId(this.User.TwitterUser.NumericId)}}};
@@ -348,14 +357,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_ReceiveTimelineCommand == null)
-                    _ReceiveTimelineCommand = new ViewModelCommand(ReceiveTimeline);
+                    _ReceiveTimelineCommand = new ViewModelCommand(ReceiveTimeline, ()=>this.User != null);
                 return _ReceiveTimelineCommand;
             }
         }
 
         private void ReceiveTimeline()
         {
-            if (User == null) return;
+            if (User == null || User.TwitterUser == null) return;
             IsStandby = false;
             Task.Factory.StartNew(() =>
             {
@@ -395,13 +404,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_ManageFollowCommand == null)
-                    _ManageFollowCommand = new ViewModelCommand(ManageFollow);
+                    _ManageFollowCommand = new ViewModelCommand(ManageFollow, () => this.User != null);
                 return _ManageFollowCommand;
             }
         }
 
         private void ManageFollow()
         {
+            if (User == null || User.TwitterUser == null) return;
             this.Messenger.Raise(new TransitionMessage(new FollowManagerViewModel(this.User), "ShowFollowManager"));
         }
         #endregion
@@ -486,6 +496,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                                                 "ユーザーが存在しない可能性があります。",
                                                 "ユーザー情報取得エラー", System.Windows.MessageBoxImage.Warning,
                                                 "InformationMessage")));
+                                    this.User = null;
                                     return;
                                 }
                                 else
@@ -498,13 +509,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                             throw new Exception("ユーザー情報がありません。");
                         User = user;
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "ユーザー @" + screenName + " の情報を取得できませんでした。");
                         DispatcherHelper.BeginInvoke(() => this.Messenger.Raise(new Livet.Messaging.InformationMessage(
                                     "ユーザー @" + screenName + "の情報を取得できません。",
                                     "ユーザー情報取得エラー", System.Windows.MessageBoxImage.Warning,
                                     "InformationMessage")));
+                        this.User = null;
                     }
                     finally
                     {
