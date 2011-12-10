@@ -14,7 +14,7 @@ namespace Dulcet.Twitter.Rest
         {
             string partialUri = string.Format(partialUriFormat, id);
             List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
-            para.Add(new KeyValuePair<string, string>("include_entitis", "true"));
+            para.Add(new KeyValuePair<string, string>("include_entities", "true"));
             var doc = provider.RequestAPIv1(partialUri, method, para);
             if (doc == null)
                 return null;
