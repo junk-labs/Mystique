@@ -54,25 +54,26 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             set
             {
                 if (value == null ?
-                    _user == null :
-                    _user != null && _user.TwitterUser.ScreenName == value.TwitterUser.ScreenName)
-                    return;
-                _user = value;
-                RaisePropertyChanged(() => User);
-                RaisePropertyChanged(() => UserProfileImageUrl);
-                RaisePropertyChanged(() => ScreenName);
-                RaisePropertyChanged(() => Name);
-                RaisePropertyChanged(() => IsVerified);
-                RaisePropertyChanged(() => IsProtected);
-                RaisePropertyChanged(() => Location);
-                RaisePropertyChanged(() => ProfileUrl);
-                RaisePropertyChanged(() => Bio);
-                RaisePropertyChanged(() => Tweets);
-                RaisePropertyChanged(() => Favorites);
-                RaisePropertyChanged(() => Following);
-                RaisePropertyChanged(() => Followers);
-                RaisePropertyChanged(() => Listed);
-                SetUserTimeline(value);
+                    _user != null :
+                    _user == null || _user.TwitterUser.ScreenName != value.TwitterUser.ScreenName)
+                {
+                    _user = value;
+                    RaisePropertyChanged(() => User);
+                    RaisePropertyChanged(() => UserProfileImageUrl);
+                    RaisePropertyChanged(() => ScreenName);
+                    RaisePropertyChanged(() => Name);
+                    RaisePropertyChanged(() => IsVerified);
+                    RaisePropertyChanged(() => IsProtected);
+                    RaisePropertyChanged(() => Location);
+                    RaisePropertyChanged(() => ProfileUrl);
+                    RaisePropertyChanged(() => Bio);
+                    RaisePropertyChanged(() => Tweets);
+                    RaisePropertyChanged(() => Favorites);
+                    RaisePropertyChanged(() => Following);
+                    RaisePropertyChanged(() => Followers);
+                    RaisePropertyChanged(() => Listed);
+                    SetUserTimeline(value);
+                }
                 this.OpenLinkCommand.RaiseCanExecuteChanged();
                 this.OpenUserTwilogCommand.RaiseCanExecuteChanged();
                 this.OpenUserFavstarCommand.RaiseCanExecuteChanged();

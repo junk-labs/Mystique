@@ -15,7 +15,14 @@ namespace Inscribe.Communication.UserStreams
     /// </summary>
     public static class ConnectionManager
     {
-        private static ConcurrentDictionary<AccountInfo, UserStreamsConnection> connections = new ConcurrentDictionary<AccountInfo, UserStreamsConnection>();
+        /// <summary>
+        /// UserStreamsConnection ルックアップ
+        /// </summary>
+        /// <remarks>
+        /// 中にはValueとしてnullを持つものがあるため、十分注意すること！
+        /// </remarks>
+        private static ConcurrentDictionary<AccountInfo, UserStreamsConnection> connections = 
+            new ConcurrentDictionary<AccountInfo, UserStreamsConnection>();
 
         private static object _cmLocker = new object();
 
@@ -66,23 +73,18 @@ namespace Inscribe.Communication.UserStreams
                 foreach (var i in removes)
                 {
                     // 登録削除
-                    if (connections.ContainsKey(i))
+                    UserStreamsConnection ccon;
+                    if (connections.TryGetValue(i, out ccon))
                     {
-                        var ccon = connections[i];
                         connections.Remove(i);
-                        ccon.Dispose();
+                        if (ccon != null)
+                            ccon.Dispose();
                     }
                 }
                 Parallel.ForEach(keeps, i =>
                 {
                     RefreshConnection(i);
                 });
-                /*
-                foreach (var i in nones)
-                {
-                    i.ConnectionState = ConnectionState.Disconnected;
-                }
-                */
             }
         }
 
