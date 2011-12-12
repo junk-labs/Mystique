@@ -145,11 +145,21 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             get { return this.Info.RateLimitReset.ToLocalTime().ToString(); }
         }
 
+        private volatile bool isChunkUpdating = false;
         private void UpdatePostChunk()
         {
-            var chunk = PostOffice.GetUnderControlChunk(this.Info);
-            PostChunk = chunk.Item1;
-            PostCount = chunk.Item2.ToString();
+            if (isChunkUpdating) return;
+            isChunkUpdating = true;
+            try
+            {
+                var chunk = PostOffice.GetUnderControlChunk(this.Info);
+                PostChunk = chunk.Item1;
+                PostCount = chunk.Item2.ToString();
+            }
+            finally
+            {
+                isChunkUpdating = false;
+            }
         }
 
         private string _postCount = "取得中...";

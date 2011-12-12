@@ -271,7 +271,7 @@ namespace Inscribe.Communication.UserStreams
                         {
                             info.ConnectionState = ConnectionState.TryConnection;
                             ConnectionManager.OnConnectionStateChanged(EventArgs.Empty);
-                            System.Diagnostics.Debug.WriteLine("User Streams Connection with Track: " + track);
+                            System.Diagnostics.Debug.WriteLine(info.ScreenName + " - User Streams Connection with Track: " + track);
                             connection = streamingCore.ConnectNew(
                                 info, StreamingDescription.ForUserStreams(TwitterDefine.UserStreamsTimeout,
                                 track: track, repliesAll: info.AccountProperty.UserStreamsRepliesAll));

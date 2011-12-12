@@ -177,7 +177,6 @@ namespace Inscribe.ViewModels
             {
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine("Creating...");
                     if (Setting.Instance.StateProperty.TabInformations != null)
                     {
                         Setting.Instance.StateProperty.TabInformations.ForEach(c =>
@@ -187,14 +186,13 @@ namespace Inscribe.ViewModels
                         });
                         this.ColumnOwnerViewModel.GCColumn();
                     }
-                    System.Diagnostics.Debug.WriteLine("Create finish!");
                 }
                 finally
                 {
                     n.Dispose();
                     Initializer.StandbyApp();
                 }
-            }, DispatcherPriority.ApplicationIdle);
+            });
         }
         #endregion
     }

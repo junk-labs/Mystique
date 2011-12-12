@@ -3,6 +3,8 @@ using Inscribe.ViewModels.Dialogs.SettingSub;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging.Windows;
+using Inscribe.Communication.UserStreams;
+using System.Threading.Tasks;
 
 namespace Inscribe.ViewModels.Dialogs
 {
@@ -145,8 +147,9 @@ namespace Inscribe.ViewModels.Dialogs
         private void Close()
         {
             Messenger.Raise(new WindowActionMessage("Close", WindowAction.Close));
+            Task.Factory.StartNew(() => ConnectionManager.RefreshReceivers());
         }
         #endregion
-      
+
     }
 }

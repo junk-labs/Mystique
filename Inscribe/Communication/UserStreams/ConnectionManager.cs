@@ -56,6 +56,7 @@ namespace Inscribe.Communication.UserStreams
                 var addeds = infos.Except(exists).ToArray();
                 var removes = exists.Except(infos).ToArray();
                 var keeps = exists.Except(removes).ToArray();
+                var nones = AccountStorage.Accounts.Where(i => !i.AccountProperty.UseUserStreams);
                 Parallel.ForEach(addeds, i =>
                 {
                     // 新規接続
@@ -69,12 +70,19 @@ namespace Inscribe.Communication.UserStreams
                     {
                         var ccon = connections[i];
                         connections.Remove(i);
+                        ccon.Dispose();
                     }
                 }
                 Parallel.ForEach(keeps, i =>
                 {
                     RefreshConnection(i);
                 });
+                /*
+                foreach (var i in nones)
+                {
+                    i.ConnectionState = ConnectionState.Disconnected;
+                }
+                */
             }
         }
 
@@ -86,6 +94,8 @@ namespace Inscribe.Communication.UserStreams
         {
             if (info == null)
                 throw new ArgumentNullException("info", "AccountInfo is not set.");
+            if (!info.AccountProperty.UseUserStreams)
+                return false;
             var ncon = new UserStreamsConnection(info);
             if (connections.ContainsKey(info))
             {
@@ -246,7 +256,7 @@ namespace Inscribe.Communication.UserStreams
         {
             if (accountInfo == null)
                 throw new ArgumentException("accountInfo");
-            accountInfo.ConnectionState = Authentication.ConnectionState.Disconnected;
+            accountInfo.ConnectionState = ConnectionState.Disconnected;
             OnConnectionStateChanged(EventArgs.Empty);
 
             if (ThreadHelper.IsHalted) // アプリケーションが終了中
