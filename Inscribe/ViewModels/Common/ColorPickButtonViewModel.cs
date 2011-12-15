@@ -5,13 +5,11 @@ namespace Inscribe.ViewModels.Common
 {
     public class ColorPickButtonViewModel : ViewModel
     {
-        public ColorPickButtonViewModel(Color curColor, Color defColor)
+        public ColorPickButtonViewModel(Color curColor)
         {
             this._currentColor = curColor;
-            this._defaultColor = defColor;
         }
 
-        private Color _defaultColor;
         private Color _currentColor;
 
         public Color CurrentColor
@@ -36,14 +34,6 @@ namespace Inscribe.ViewModels.Common
             get
             {
                 return new SolidColorBrush(this.CurrentColor);
-            }
-        }
-
-        public Brush DefaultColorBrush
-        {
-            get
-            {
-                return new SolidColorBrush(this._defaultColor);
             }
         }
 

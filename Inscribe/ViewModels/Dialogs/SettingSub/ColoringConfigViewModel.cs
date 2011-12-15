@@ -1,44 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.ComponentModel;
-
-using Livet;
-using Livet.Commands;
-using Livet.Messaging;
-using Livet.Messaging.IO;
-using Livet.Messaging.Windows;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
 using Inscribe.ViewModels.Common;
+using Livet;
+using Livet.Commands;
+using Livet.Messaging;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
     public class ColoringConfigViewModel : ViewModel, IApplyable
     {
-        public IEnumerable<IApplyable> Applyables { get; private set; }
+        public IEnumerable<IApplyable> NameBackColors { get; private set; }
+        public IEnumerable<IApplyable> TextBackColors { get; private set; }
+        public IEnumerable<IApplyable> TextForeColors { get; private set; }
 
         public ColoringConfigViewModel()
         {
-            Applyables = new IApplyable[]{
-                Wrap(Setting.Instance.ColoringProperty.BaseColor, "基本色"),
-                Wrap(Setting.Instance.ColoringProperty.BaseLinkColor, "リンク色"),
-                Wrap(Setting.Instance.ColoringProperty.Selected, "選択ツイートと同じユーザーのツイート"),
-                Wrap(Setting.Instance.ColoringProperty.Retweeted, "リツイートされたツイート"),
-                Wrap(Setting.Instance.ColoringProperty.DirectMessage, "アクティブアカウントのDM"),
-                Wrap(Setting.Instance.ColoringProperty.DirectMessageToSub, "全アカウントのDM"),
-                Wrap(Setting.Instance.ColoringProperty.BaseHighlightColor, "基本ハイライト色"),
-                Wrap(Setting.Instance.ColoringProperty.Follower, "アクティブアカウントの片思われ"),
-                Wrap(Setting.Instance.ColoringProperty.FollowerAny, "全アカウントの片思われ"),
-                Wrap(Setting.Instance.ColoringProperty.Following, "アクティブアカウントの片思い"),
-                Wrap(Setting.Instance.ColoringProperty.FollowingAny, "全アカウントの片思い"),
-                Wrap(Setting.Instance.ColoringProperty.Friend, "アクティブアカウントの両想い"),
-                Wrap(Setting.Instance.ColoringProperty.FriendAny, "全アカウントの両想い"),
-                Wrap(Setting.Instance.ColoringProperty.InReplyToMeCurrent, "アクティブアカウントへの返信"),
-                Wrap(Setting.Instance.ColoringProperty.InReplyToMeSub, "全アカウントへの返信"),
-                Wrap(Setting.Instance.ColoringProperty.MyCurrentTweet, "アクティブアカウントのツイート"),
-                Wrap(Setting.Instance.ColoringProperty.MySubTweet, "全アカウントのツイート"),
+            NameBackColors = new IApplyable[]{
+                Wrap(Setting.Instance.ColoringProperty.DefaultNameColor, "基本色"),
+                Wrap(Setting.Instance.ColoringProperty.MyColor, "自分"),
+                Wrap(Setting.Instance.ColoringProperty.FriendColor, "相互フォローユーザー"),
+                Wrap(Setting.Instance.ColoringProperty.FollowingColor, "片思いユーザー"),
+                Wrap(Setting.Instance.ColoringProperty.FollowerColor, "片思われユーザー"),
+                Wrap(Setting.Instance.ColoringProperty.DirectMessageNameColor, "ダイレクトメッセージ"),
+            };
+            TextBackColors = new IApplyable[]{
+                Wrap(Setting.Instance.ColoringProperty.DefaultColor, "基本色"),
+                Wrap(Setting.Instance.ColoringProperty.RetweetedColor, "リツイート"),
+                Wrap(Setting.Instance.ColoringProperty.MentionColor, "@mention"),
+                Wrap(Setting.Instance.ColoringProperty.SelectedColor, "選択中のツイートと同じユーザー"),
+                Wrap(Setting.Instance.ColoringProperty.DirectMessageColor, "ダイレクトメッセージ"),
+            };
+            TextForeColors = new IApplyable[]{
+                Wrap(Setting.Instance.ColoringProperty.DefaultTextColor, "基本色"),
+                Wrap(Setting.Instance.ColoringProperty.DefaultLinkColor, "リンク文字色"),
+                Wrap(Setting.Instance.ColoringProperty.RetweetedTextColor, "リツイート"),
+                Wrap(Setting.Instance.ColoringProperty.MentionTextColor, "@mention"),
+                Wrap(Setting.Instance.ColoringProperty.SelectedTextColor, "選択中のツイートと同じユーザー"),
+                Wrap(Setting.Instance.ColoringProperty.DirectMessageTextColor, "ダイレクトメッセージ"),
             };
         }
 
@@ -62,10 +62,66 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             return new DisablablePairColorElementViewModel(desc, elem);
         }
 
+        #region SetDefaultColorCommand
+        private ListenerCommand<ConfirmationMessage> _SetDefaultColorCommand;
+
+        public ListenerCommand<ConfirmationMessage> SetDefaultColorCommand
+        {
+            get
+            {
+                if (_SetDefaultColorCommand == null)
+                {
+                    _SetDefaultColorCommand = new ListenerCommand<ConfirmationMessage>(SetDefaultColor);
+                }
+                return _SetDefaultColorCommand;
+            }
+        }
+
+        public void SetDefaultColor(ConfirmationMessage parameter)
+        {
+            if (parameter.Response.GetValueOrDefault())
+            {
+                // デフォルトカラーを設定
+                ApplyColoringProperty(new ColoringProperty());
+            }
+        }
+        #endregion
+
+        public void ApplyColoringProperty(ColoringProperty cp)
+        {
+            var nbcprops = new dynamic[] { cp.DefaultNameColor, cp.MyColor, cp.FriendColor, cp.FollowingColor, cp.FollowerColor, cp.DirectMessageNameColor };
+            var tbcprops = new dynamic[] { cp.DefaultColor, cp.RetweetedColor, cp.MentionColor, cp.SelectedColor, cp.DirectMessageColor };
+            var tfcprops = new dynamic[] { cp.DefaultTextColor, cp.DefaultLinkColor, cp.RetweetedTextColor, cp.MentionTextColor, cp.SelectedTextColor, cp.DirectMessageTextColor };
+            NameBackColors.Concat(TextBackColors).Concat(TextForeColors)
+                .Select(a => (dynamic)a)
+                .Zip(nbcprops.Concat(tbcprops).Concat(tfcprops),
+                    (a, e) => new { a, e })
+                .ForEach(v => RefreshValue(v.a, v.e));
+        }
+
+        private void RefreshValue(ColorElementViewModel vm, IColorElement ce)
+        {
+            vm.CPBViewModel.CurrentColor = ce.GetColor();
+        }
+
+        private void RefreshValue(PairColorElementViewModel vm, PairColorElement ce)
+        {
+            vm.LightViewModel.CPBViewModel.CurrentColor = ce.GetLightColor();
+            vm.DarkViewModel.CPBViewModel.CurrentColor = ce.GetDarkColor();
+        }
+
+        private void RefreshValue(DisablablePairColorElementViewModel vm, DisablablePairColorElement ce)
+        {
+            vm.LightViewModel.CPBViewModel.CurrentColor = ce.GetLightColor();
+            vm.DarkViewModel.CPBViewModel.CurrentColor = ce.GetDarkColor();
+        }
+
         public void Apply()
         {
-            foreach (var a in Applyables)
-                a.Apply();
+            NameBackColors
+                .Concat(TextBackColors)
+                .Concat(TextForeColors)
+                .ForEach(a => a.Apply());
         }
     }
 
@@ -75,7 +131,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             this._element = element;
             this._description = description;
-            this._cPBViewModel = new ColorPickButtonViewModel(element.GetColor(), element.GetDefaultColor());
+            this._cPBViewModel = new ColorPickButtonViewModel(element.GetColor());
         }
 
         private ColorElement _element;

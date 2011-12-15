@@ -8,66 +8,78 @@ namespace Inscribe.Configuration.Settings
     /// </summary>
     public class ColoringProperty
     {
-        public DisablableColorElement MyCurrentTweet =
-            new DisablableColorElement(Colors.LightSkyBlue, true);
+        #region NameBackColor
 
-        public DisablableColorElement MySubTweet =
-            new DisablableColorElement(Colors.LightSkyBlue, true);
+        public DisablableColorElement MyColor =
+            new DisablableColorElement(0x99, 0xcd, 0xff);
 
-        public DisablableColorElement InReplyToMeCurrent =
-            new DisablableColorElement(255, 190, 100, true);
+        public DisablableColorElement FriendColor =
+            new DisablableColorElement(0xff, 0xe0, 0x99);
 
-        public DisablableColorElement InReplyToMeSub =
-            new DisablableColorElement(255, 190, 100, true);
+        public DisablableColorElement FollowingColor =
+            new DisablableColorElement(0xaa, 0xff, 0x99);
 
-        public DisablableColorElement Friend =
-            new DisablableColorElement(240, 240, 180, true);
+        public DisablableColorElement FollowerColor =
+            new DisablableColorElement(0xff, 0x99, 0x99);
 
-        public DisablableColorElement Following =
-            new DisablableColorElement(120, 240, 180, true);
+        public DisablableColorElement DirectMessageNameColor =
+            new DisablableColorElement(0xff, 0x99, 0x99);
 
-        public DisablableColorElement Follower =
-            new DisablableColorElement(240, 120, 180, true);
+        public ColorElement DefaultNameColor =
+            new ColorElement(0xaa, 0xd0, 0xdd);
 
-        public DisablableColorElement FriendAny =
-            new DisablableColorElement(210, 210, 150, true);
+        #endregion
 
-        public DisablableColorElement FollowingAny =
-            new DisablableColorElement(50, 210, 150, true);
+        #region TextBackColor
 
-        public DisablableColorElement FollowerAny =
-            new DisablableColorElement(210, 50, 150, true);
-
-        public ColorElement BaseHighlightColor =
-            new ColorElement(Colors.Gray);
-
-        public DisablablePairColorElement Selected =
+        public DisablablePairColorElement RetweetedColor =
             new DisablablePairColorElement(
-                new DisablableColorElement(Colors.Khaki, true),
-                new DisablableColorElement(Colors.DarkOrange, false));
+                new DisablableColorElement(0xc3, 0xfe, 0xd5),
+                new DisablableColorElement(0x99, 0xff, 0xb7));
 
-        public DisablablePairColorElement Retweeted =
+        public DisablablePairColorElement DirectMessageColor =
             new DisablablePairColorElement(
-                new DisablableColorElement(200, 255, 200, true),
-                new DisablableColorElement(Colors.ForestGreen, true));
+                new DisablableColorElement(0xff, 0xd0, 0xd0),
+                new DisablableColorElement(0xff, 0xc0, 0xc0));
 
-        public DisablablePairColorElement DirectMessage =
+        public DisablablePairColorElement MentionColor =
             new DisablablePairColorElement(
-                new DisablableColorElement(Colors.MistyRose, true),
-                new DisablableColorElement(Colors.Red, true));
+                new DisablableColorElement(0xff, 0xee, 0xb0),
+                new DisablableColorElement(0xff, 0xd8, 0xa0));
 
-        public DisablablePairColorElement DirectMessageToSub =
+        public DisablablePairColorElement SelectedColor = 
             new DisablablePairColorElement(
-                new DisablableColorElement(Colors.MistyRose, true),
-                new DisablableColorElement(Colors.Salmon, true));
+                new DisablableColorElement(0xff, 0xff, 0xc0),
+                new DisablableColorElement(0xff, 0xff, 0xa0));
 
-        public PairColorElement BaseColor =
+        public PairColorElement DefaultColor =
             new PairColorElement(
                 new ColorElement(Colors.White),
-                new ColorElement(Colors.Black));
+                new DisablableColorElement(0xee, 0xff, 0xff));
 
-        public ColorElement BaseLinkColor =
+        #endregion
+
+        #region TextColor
+
+        public DisablableColorElement RetweetedTextColor =
+            new DisablableColorElement(0x00, 0x30, 0x0e);
+
+        public DisablableColorElement DirectMessageTextColor =
+            new DisablableColorElement(0x30, 0x00, 0x00);
+
+        public DisablableColorElement MentionTextColor =
+            new DisablableColorElement(0x30, 0x27, 0x00);
+
+        public DisablableColorElement SelectedTextColor =
+            new DisablableColorElement(0x70, 0x70, 0x00, false);
+
+        public ColorElement DefaultTextColor =
+            new ColorElement(Colors.Black);
+
+        public ColorElement DefaultLinkColor =
             new ColorElement(Colors.RoyalBlue);
+
+        #endregion
     }
 
     public interface IColorElement
@@ -103,7 +115,7 @@ namespace Inscribe.Configuration.Settings
             LightColor = new ColorElement(Colors.Transparent);
             DarkColor = new DisablableColorElement(Colors.Transparent, false);
         }
-        public PairColorElement(ColorElement light, ColorElement dark)
+        public PairColorElement(ColorElement light, DisablableColorElement dark)
         {
             LightColor = light;
             DarkColor = dark;
@@ -236,12 +248,11 @@ namespace Inscribe.Configuration.Settings
     /// <summary>
     /// ブラシ色指定プロパティ
     /// </summary>
-    public class ColorElement
+    public class ColorElement : IColorElement
     {
         public ColorElement() : this(0, 0, 0) { }
         public ColorElement(byte or, byte og, byte ob)
         {
-            defaults = new[] { or, og, ob };
             R = or;
             G = og;
             B = ob;
@@ -249,9 +260,6 @@ namespace Inscribe.Configuration.Settings
 
         public ColorElement(Color c)
             : this(c.R, c.G, c.B) { }
-
-        [XmlIgnore()]
-        public byte[] defaults = null;
 
         [XmlAttribute("R")]
         public byte R = 0;
@@ -269,18 +277,6 @@ namespace Inscribe.Configuration.Settings
         {
             return Color.FromRgb(R, G, B);
         }
-
-        public void SetDefault()
-        {
-            R = defaults[0];
-            G = defaults[1];
-            B = defaults[2];
-        }
-
-        public Color GetDefaultColor()
-        {
-            return Color.FromRgb(defaults[0], defaults[1], defaults[2]);
-        }
     }
 
     /// <summary>
@@ -289,18 +285,16 @@ namespace Inscribe.Configuration.Settings
     public class DisablableColorElement : ColorElement
     {
         public DisablableColorElement() : this(0, 0, 0, false) { }
+        public DisablableColorElement(byte or, byte og, byte ob) : this(or, og, ob, true) { }
         public DisablableColorElement(byte or, byte og, byte ob, bool act)
             : base(or, og, ob)
         {
-            this.OrigActivated = act;
             this.IsActivated = act;
         }
 
+        public DisablableColorElement(Color c) : this(c, true) { }
         public DisablableColorElement(Color c, bool act)
             : this(c.R, c.G, c.B, act) { }
-
-        [XmlIgnore()]
-        public bool OrigActivated = false;
 
         [XmlAttribute("IsActive")]
         public bool IsActivated = false;

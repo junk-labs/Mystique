@@ -1,33 +1,37 @@
-﻿<UserControl xmlns:my="clr-namespace:Mystique.Views.Common"  x:Class="Mystique.Views.Dialogs.SettingSub.ColoringConfig"
+﻿<UserControl x:Class="Mystique.Views.Dialogs.SettingSub.ColoringConfig"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ccvm="clr-namespace:Inscribe.ViewModels.Dialogs.SettingSub;assembly=core"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="400">
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:my="clr-namespace:Mystique.Views.Common"
+             d:DesignHeight="300"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type ccvm:ColorElementViewModel}">
             <DockPanel>
                 <Separator DockPanel.Dock="Bottom" />
-                <my:ColorPickButton DataContext="{Binding CPBViewModel}"
-                                    DockPanel.Dock="Right"
-                                    Width="40" />
-                <TextBlock Text="{Binding Description}"
+                <my:ColorPickButton Width="40"
+                                    DataContext="{Binding CPBViewModel}"
+                                    DockPanel.Dock="Right" />
+                <TextBlock Margin="2,1"
                            VerticalAlignment="Center"
-                           Margin="2,1" />
+                           Text="{Binding Description}" />
             </DockPanel>
         </DataTemplate>
         <DataTemplate DataType="{x:Type ccvm:DisablableColorElementViewModel}">
             <DockPanel>
                 <Separator DockPanel.Dock="Bottom" />
-                <my:ColorPickButton DataContext="{Binding CPBViewModel}"
-                                    DockPanel.Dock="Right"
-                                    Width="40" />
-                <CheckBox IsChecked="{Binding IsActivated}"
+                <my:ColorPickButton Width="40"
+                                    DataContext="{Binding CPBViewModel}"
+                                    DockPanel.Dock="Right" />
+                <CheckBox Margin="2,1"
                           VerticalAlignment="Center"
-                          Margin="2,1"
-                          DockPanel.Dock="Right">
+                          DockPanel.Dock="Right"
+                          IsChecked="{Binding IsActivated}">
                     <CheckBox.ToolTip>
                         <ToolTip>
                             <TextBlock Text="チェックを付けると、この色設定を使用します。" />
@@ -40,40 +44,40 @@
         <DataTemplate DataType="{x:Type ccvm:PairColorElementViewModel}">
             <DockPanel>
                 <Separator DockPanel.Dock="Bottom" />
-                <my:ColorPickButton DataContext="{Binding Path=DarkViewModel.CPBViewModel}"
-                                    DockPanel.Dock="Right"
-                                    Width="40" />
-                <my:ColorPickButton DataContext="{Binding Path=LightViewModel.CPBViewModel}"
-                                    DockPanel.Dock="Right"
-                                    Width="40" />
-                <TextBlock Text="{Binding Description}"
+                <my:ColorPickButton Width="40"
+                                    DataContext="{Binding Path=DarkViewModel.CPBViewModel}"
+                                    DockPanel.Dock="Right" />
+                <my:ColorPickButton Width="40"
+                                    DataContext="{Binding Path=LightViewModel.CPBViewModel}"
+                                    DockPanel.Dock="Right" />
+                <TextBlock Margin="2,1"
                            VerticalAlignment="Center"
-                           Margin="2,1" />
+                           Text="{Binding Description}" />
             </DockPanel>
         </DataTemplate>
         <DataTemplate DataType="{x:Type ccvm:DisablablePairColorElementViewModel}">
             <DockPanel>
                 <Separator DockPanel.Dock="Bottom" />
-                <my:ColorPickButton DataContext="{Binding Path=DarkViewModel.CPBViewModel}"
-                                    DockPanel.Dock="Right"
-                                    Width="40" />
-                <CheckBox IsChecked="{Binding Path=DarkViewModel.IsActivated}"
+                <my:ColorPickButton Width="40"
+                                    DataContext="{Binding Path=DarkViewModel.CPBViewModel}"
+                                    DockPanel.Dock="Right" />
+                <CheckBox Margin="2,1"
                           VerticalAlignment="Center"
-                          Margin="2,1"
-                          DockPanel.Dock="Right">
+                          DockPanel.Dock="Right"
+                          IsChecked="{Binding Path=DarkViewModel.IsActivated}">
                     <CheckBox.ToolTip>
                         <ToolTip>
                             <TextBlock Text="チェックを付けると、右側の色設定を有効にします。" />
                         </ToolTip>
                     </CheckBox.ToolTip>
                 </CheckBox>
-                <my:ColorPickButton DataContext="{Binding Path=LightViewModel.CPBViewModel}"
-                                    DockPanel.Dock="Right"
-                                    Width="40" />
-                <CheckBox IsChecked="{Binding Path=LightViewModel.IsActivated}"
+                <my:ColorPickButton Width="40"
+                                    DataContext="{Binding Path=LightViewModel.CPBViewModel}"
+                                    DockPanel.Dock="Right" />
+                <CheckBox Margin="2,1"
                           VerticalAlignment="Center"
-                          Margin="2,1"
-                          DockPanel.Dock="Right">
+                          DockPanel.Dock="Right"
+                          IsChecked="{Binding Path=LightViewModel.IsActivated}">
                     <CheckBox.ToolTip>
                         <ToolTip>
                             <TextBlock Text="チェックを付けると、左側の色設定を有効にします。" />
@@ -85,12 +89,55 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
-        <Border BorderBrush="Gray"
-                BorderThickness="1">
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding Applyables}" />
-            </ScrollViewer>
-        </Border>
+        <TabControl>
+            <TabItem Header="名前の背景色">
+                <Border Margin="4"
+                        BorderBrush="Gray"
+                        BorderThickness="1">
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding NameBackColors}" />
+                    </ScrollViewer>
+                </Border>
+            </TabItem>
+
+            <TabItem Header="本文の背景色">
+                <Border Margin="4"
+                        BorderBrush="Gray"
+                        BorderThickness="1">
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding TextBackColors}" />
+                    </ScrollViewer>
+                </Border>
+            </TabItem>
+
+            <TabItem Header="本文の色">
+                <Border Margin="4"
+                        BorderBrush="Gray"
+                        BorderThickness="1">
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding TextForeColors}" />
+                    </ScrollViewer>
+                </Border>
+            </TabItem>
+        </TabControl>
+        <Button HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Content="デフォルトに戻す"
+                Padding="6,2"
+                Style="{StaticResource FlatButtonStyle}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <l:ConfirmationDialogInteractionMessageAction>
+                        <l:DirectInteractionMessage CallbackCommand="{Binding SetDefaultColorCommand}">
+                            <l:ConfirmationMessage Button="OKCancel"
+                                                   Caption="配色のリセット"
+                                                   Image="Warning"
+                                                   Text="初期配色に戻します。よろしいですか？" />
+                        </l:DirectInteractionMessage>
+                    </l:ConfirmationDialogInteractionMessageAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
     </Grid>
 </UserControl>
 

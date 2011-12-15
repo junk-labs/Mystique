@@ -48,11 +48,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 case ItemInitStrategy.None:
                     break;
                 case ItemInitStrategy.DefaultColors:
-                    _lightningColorCache = Setting.Instance.ColoringProperty.BaseHighlightColor.GetColor();
-                    _foreColorCache = Setting.Instance.ColoringProperty.BaseColor.GetDarkColor();
-                    _backColorCache = Setting.Instance.ColoringProperty.BaseColor.GetLightColor();
-                    _foreBrushCache = new SolidColorBrush(_foreColorCache).CloneFreeze();
-                    _backBrushCache = new SolidColorBrush(_backColorCache).CloneFreeze();
+                    _nameBackColorCache = Setting.Instance.ColoringProperty.DefaultNameColor.GetColor();
+                    _lightColorCache = Setting.Instance.ColoringProperty.DefaultColor.GetDarkColor();
+                    _darkColorCache = Setting.Instance.ColoringProperty.DefaultColor.GetLightColor();
+                    _textColorCache = Setting.Instance.ColoringProperty.DefaultTextColor.GetColor();
+                    _nameBackBrushCache = new SolidColorBrush(_nameBackColorCache).CloneFreeze();
+                    _lightBrushCache = new SolidColorBrush(_lightColorCache).CloneFreeze();
+                    _darkBrushCache = new SolidColorBrush(_darkColorCache).CloneFreeze();
+                    _textBrushCache = new SolidColorBrush(_textColorCache).CloneFreeze();
                     break;
                 case ItemInitStrategy.Full:
                     CommitColorChanged(true);
@@ -76,17 +79,12 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         private bool _isTextSelected = false;
         public bool IsTextSelected
         {
-            get { return _isTextSelected; }
-            set
-            {
-                _isTextSelected = value;
-                RaisePropertyChanged(() => IsTextSelected);
-            }
+            get { return !String.IsNullOrEmpty(_selectedText); }
         }
 
         public bool IsSelected
         {
-            get { return !String.IsNullOrEmpty(_selectedText); }
+            get { return Parent.CurrentForegroundTimeline.SelectedTweetViewModel == this; }
         }
 
         private string _selectedText = null;
@@ -97,7 +95,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             {
                 _selectedText = value;
                 RaisePropertyChanged(() => SelectedText);
-                RaisePropertyChanged(() => IsSelected);
+                RaisePropertyChanged(() => IsTextSelected);
             }
         }
 
@@ -128,139 +126,133 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             this.isColorChanged = true;
             if (isRefreshBrightColor)
-                this.lightningColorChanged = true;
-            // RaisePropertyChanged(() => BackBrush);
+                this.nameBackColorChanged = true;
+            // RaisePropertyChanged(() => DarkBrush);
             // more speedy
-            RaisePropertyChanged("BackBrush");
+            // DarkかLightを見てるはずなので両方Raiseしとけば、まぁ。
+            RaisePropertyChanged("DarkBrush");
+            RaisePropertyChanged("LightBrush");
         }
 
         #region Coloring Property
 
-        private bool lightningColorChanged = true;
+        private bool nameBackColorChanged = true;
         private bool isColorChanged = true;
 
-        private Color _lightningColorCache;
-        public Color LightningColor
+        private Color _nameBackColorCache;
+        public Color NameBackColor
         {
             get
             {
                 TreatColorChange();
-                return _lightningColorCache;
+                return _nameBackColorCache;
             }
         }
 
-        private Color _foreColorCache;
-        public Color ForeColor
+        private Color _lightColorCache;
+        public Color LightColor
         {
             get
             {
                 TreatColorChange();
-                return _foreColorCache;
+                return _lightColorCache;
             }
         }
 
-        private Color _backColorCache;
-        public Color BackColor
+        private Color _darkColorCache;
+        public Color DarkColor
         {
             get
             {
                 TreatColorChange();
-                return _backColorCache;
+                return _darkColorCache;
             }
         }
 
-        private Brush _foreBrushCache;
-        public Brush ForeBrush
+        private Brush _lightBrushCache;
+        public Brush LightBrush
         {
             get
             {
                 TreatColorChange();
-                return _foreBrushCache;
+                return _lightBrushCache;
             }
         }
 
-        private Brush _backBrushCache;
-        public Brush BackBrush
+        private Brush _darkBrushCache;
+        public Brush DarkBrush
         {
             get
             {
                 TreatColorChange();
-                return _backBrushCache;
+                return _darkBrushCache;
             }
         }
 
-        private Color GetCurrentLightningColor()
+        private Brush _nameBackBrushCache;
+        public Brush NameBackBrush
+        {
+            get
+            {
+                TreatColorChange();
+                return _nameBackBrushCache;
+            }
+        }
+
+        private Color _textColorCache;
+        public Color TextColor
+        {
+            get
+            {
+                TreatColorChange();
+                return _textColorCache;
+            }
+        }
+
+        private Brush _textBrushCache;
+        public Brush TextBrush
+        {
+            get
+            {
+                TreatColorChange();
+                return _textBrushCache;
+            }
+        }
+
+        private Color GetCurrentNameBackColor()
         {
             var status = this.Tweet.Status as TwitterStatus;
             var ptv = this.Parent.TabProperty;
             if (status != null)
             {
 
-                if (Setting.Instance.ColoringProperty.MyCurrentTweet.IsActivated &&
+                if (Setting.Instance.ColoringProperty.MyColor.IsActivated &&
                     TwitterHelper.IsMyCurrentTweet(this.Tweet, ptv))
-                    return Setting.Instance.ColoringProperty.MyCurrentTweet.GetColor();
+                    return Setting.Instance.ColoringProperty.MyColor.GetColor();
 
-                if (Setting.Instance.ColoringProperty.MySubTweet.IsActivated &
-                    TwitterHelper.IsMyTweet(this.Tweet))
-                    return Setting.Instance.ColoringProperty.MySubTweet.GetColor();
+                var uvm = UserStorage.Get(TwitterHelper.GetSuggestedUser(this.Tweet.Status));
 
-                if (Setting.Instance.ColoringProperty.InReplyToMeCurrent.IsActivated &&
-                    TwitterHelper.IsInReplyToMeCurrent(this.Tweet, ptv))
-                    return Setting.Instance.ColoringProperty.InReplyToMeCurrent.GetColor();
-
-                if (Setting.Instance.ColoringProperty.InReplyToMeSub.IsActivated &&
-                    TwitterHelper.IsInReplyToMe(this.Tweet))
-                    return Setting.Instance.ColoringProperty.InReplyToMeSub.GetColor();
-
-                var uvm = UserStorage.Get(this.Tweet.Status.User);
-
-                if (Setting.Instance.ColoringProperty.Friend.IsActivated &&
+                if (Setting.Instance.ColoringProperty.FriendColor.IsActivated &&
                     TwitterHelper.IsFollowingCurrent(uvm, ptv) &&
                     TwitterHelper.IsFollowerCurrent(uvm, ptv))
-                    return Setting.Instance.ColoringProperty.Friend.GetColor();
+                    return Setting.Instance.ColoringProperty.FriendColor.GetColor();
 
-                if (Setting.Instance.ColoringProperty.Following.IsActivated &&
+                if (Setting.Instance.ColoringProperty.FollowingColor.IsActivated &&
                     TwitterHelper.IsFollowingCurrent(uvm, ptv))
-                    return Setting.Instance.ColoringProperty.Following.GetColor();
+                    return Setting.Instance.ColoringProperty.FollowingColor.GetColor();
 
-                if (Setting.Instance.ColoringProperty.Follower.IsActivated &&
+                if (Setting.Instance.ColoringProperty.FollowerColor.IsActivated &&
                     TwitterHelper.IsFollowerCurrent(uvm, ptv))
-                    return Setting.Instance.ColoringProperty.Follower.GetColor();
+                    return Setting.Instance.ColoringProperty.FollowerColor.GetColor();
 
-                if (Setting.Instance.ColoringProperty.Friend.IsActivated &&
-                    TwitterHelper.IsFollowingCurrent(uvm, ptv) &&
-                    TwitterHelper.IsFollowerCurrent(uvm, ptv))
-                    return Setting.Instance.ColoringProperty.Friend.GetColor();
-
-                if (Setting.Instance.ColoringProperty.Following.IsActivated &&
-                    TwitterHelper.IsFollowingCurrent(uvm, ptv))
-                    return Setting.Instance.ColoringProperty.Following.GetColor();
-
-                if (Setting.Instance.ColoringProperty.Follower.IsActivated &&
-                    TwitterHelper.IsFollowerCurrent(uvm, ptv))
-                    return Setting.Instance.ColoringProperty.Follower.GetColor();
-
-                if (Setting.Instance.ColoringProperty.FriendAny.IsActivated &&
-                    TwitterHelper.IsFollowingAny(uvm) &&
-                    TwitterHelper.IsFollowerAny(uvm))
-                    return Setting.Instance.ColoringProperty.FriendAny.GetColor();
-
-                if (Setting.Instance.ColoringProperty.FollowingAny.IsActivated &&
-                    TwitterHelper.IsFollowingAny(uvm))
-                    return Setting.Instance.ColoringProperty.FollowingAny.GetColor();
-
-                if (Setting.Instance.ColoringProperty.FollowerAny.IsActivated &&
-                    TwitterHelper.IsFollowerAny(uvm))
-                    return Setting.Instance.ColoringProperty.FollowerAny.GetColor();
-
-                return Setting.Instance.ColoringProperty.BaseHighlightColor.GetColor();
+                return Setting.Instance.ColoringProperty.DefaultNameColor.GetColor();
             }
             else
             {
-                if (Setting.Instance.ColoringProperty.DirectMessage.Activated)
-                    return Setting.Instance.ColoringProperty.DirectMessage.GetColor(false);
+                if (Setting.Instance.ColoringProperty.DirectMessageNameColor.IsActivated)
+                    return Setting.Instance.ColoringProperty.DirectMessageNameColor.GetColor();
                 else
-                    return Setting.Instance.ColoringProperty.BaseHighlightColor.GetColor();
+                    return Setting.Instance.ColoringProperty.DefaultNameColor.GetColor();
             }
         }
 
@@ -269,30 +261,37 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             try
             {
                 var pts = Parent.CurrentForegroundTimeline.SelectedTweetViewModel;
-                if ((Setting.Instance.ColoringProperty.Selected.IsDarkActivated ||
-                    Setting.Instance.ColoringProperty.Selected.IsLightActivated) &&
+                if ((Setting.Instance.ColoringProperty.SelectedColor.IsDarkActivated ||
+                    Setting.Instance.ColoringProperty.SelectedColor.IsLightActivated) &&
                     pts != null && pts.Tweet.Status.User.NumericId == this.Tweet.Status.User.NumericId &&
                     pts.Tweet.Status.Id != this.Tweet.Status.Id)
                 {
                     if (this.Tweet.Status is TwitterDirectMessage)
                     {
                         return RoutePairColor(dark,
-                            Setting.Instance.ColoringProperty.Selected,
-                            Setting.Instance.ColoringProperty.DirectMessage,
-                            Setting.Instance.ColoringProperty.BaseColor);
+                            Setting.Instance.ColoringProperty.SelectedColor,
+                            Setting.Instance.ColoringProperty.DirectMessageColor,
+                            Setting.Instance.ColoringProperty.DefaultColor);
                     }
                     else if (TwitterHelper.IsPublishedByRetweet(this.Tweet))
                     {
                         return RoutePairColor(dark,
-                            Setting.Instance.ColoringProperty.Selected,
-                            Setting.Instance.ColoringProperty.Retweeted,
-                            Setting.Instance.ColoringProperty.BaseColor);
+                            Setting.Instance.ColoringProperty.SelectedColor,
+                            Setting.Instance.ColoringProperty.RetweetedColor,
+                            Setting.Instance.ColoringProperty.DefaultColor);
+                    }
+                    else if (TwitterHelper.IsMentionOfMe(this.Tweet.Status))
+                    {
+                        return RoutePairColor(dark,
+                            Setting.Instance.ColoringProperty.SelectedColor,
+                            Setting.Instance.ColoringProperty.MentionColor,
+                            Setting.Instance.ColoringProperty.DefaultColor);
                     }
                     else
                     {
                         return RoutePairColor(dark,
-                            Setting.Instance.ColoringProperty.Selected,
-                            Setting.Instance.ColoringProperty.BaseColor);
+                            Setting.Instance.ColoringProperty.SelectedColor,
+                            Setting.Instance.ColoringProperty.DefaultColor);
                     }
                 }
                 else
@@ -300,21 +299,60 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     if (this.Tweet.Status is TwitterDirectMessage)
                     {
                         return RoutePairColor(dark,
-                            Setting.Instance.ColoringProperty.DirectMessage,
-                            Setting.Instance.ColoringProperty.BaseColor);
+                            Setting.Instance.ColoringProperty.DirectMessageColor,
+                            Setting.Instance.ColoringProperty.DefaultColor);
                     }
                     else if (TwitterHelper.IsPublishedByRetweet(this.Tweet))
                     {
                         return RoutePairColor(dark,
-                            Setting.Instance.ColoringProperty.Retweeted,
-                            Setting.Instance.ColoringProperty.BaseColor);
+                            Setting.Instance.ColoringProperty.RetweetedColor,
+                            Setting.Instance.ColoringProperty.DefaultColor);
+                    }
+                    else if (TwitterHelper.IsMentionOfMe(this.Tweet.Status))
+                    {
+                        return RoutePairColor(dark,
+                            Setting.Instance.ColoringProperty.MentionColor,
+                            Setting.Instance.ColoringProperty.DefaultColor);
                     }
                     else
                     {
                         return RoutePairColor(dark,
-                            Setting.Instance.ColoringProperty.BaseColor);
+                            Setting.Instance.ColoringProperty.DefaultColor);
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                ExceptionStorage.Register(e, ExceptionCategory.ConfigurationError,
+                    "色設定が破損しています。再試行を押すと、色設定を再作成します。",
+                    () => Setting.Instance.ColoringProperty = new ColoringProperty());
+                return Colors.Black;
+            }
+        }
+
+        private Color GetCurrentTextColor()
+        {
+            try
+            {
+                var pts = Parent.CurrentForegroundTimeline.SelectedTweetViewModel;
+                if (Setting.Instance.ColoringProperty.SelectedTextColor.IsActivated &&
+                    pts != null && pts.Tweet.Status.User.NumericId == this.Tweet.Status.User.NumericId &&
+                    pts.Tweet.Status.Id != this.Tweet.Status.Id)
+                    return Setting.Instance.ColoringProperty.SelectedTextColor.GetColor();
+
+                if (Setting.Instance.ColoringProperty.DirectMessageTextColor.IsActivated &&
+                    this.Tweet.Status is TwitterDirectMessage)
+                    return Setting.Instance.ColoringProperty.DirectMessageTextColor.GetColor();
+                if (Setting.Instance.ColoringProperty.RetweetedTextColor.IsActivated &&
+                    TwitterHelper.IsPublishedByRetweet(this.Tweet))
+                    return Setting.Instance.ColoringProperty.RetweetedTextColor.GetColor();
+
+
+                if (Setting.Instance.ColoringProperty.MentionTextColor.IsActivated &&
+                    TwitterHelper.IsMentionOfMe(this.Tweet.Status))
+                    return Setting.Instance.ColoringProperty.MentionTextColor.GetColor();
+
+                return Setting.Instance.ColoringProperty.DefaultTextColor.GetColor();
             }
             catch (Exception e)
             {
@@ -359,8 +397,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             bool change = isColorChanged;
             isColorChanged = false;
-            bool lchanged = lightningColorChanged;
-            lightningColorChanged = false;
+            bool lchanged = nameBackColorChanged;
+            nameBackColorChanged = false;
             if (change)
             {
                 // 色の更新があった
@@ -371,50 +409,66 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         /// <summary>
         /// このTweetViewModelの色設定を更新します。
         /// </summary>
-        private void CommitColorChanged(bool lightningColorUpdated)
+        private void CommitColorChanged(bool nameBackColorUpdated)
         {
             bool nlf = false;
-            if (lightningColorUpdated)
+            if (nameBackColorUpdated)
             {
-                var nlc = GetCurrentLightningColor();
-                if (_lightningColorCache != nlc)
+                var nlc = GetCurrentNameBackColor();
+                if (_nameBackColorCache != nlc)
                 {
-                    _lightningColorCache = nlc;
+                    _nameBackColorCache = nlc;
+                    _nameBackBrushCache = new SolidColorBrush(_nameBackColorCache).CloneFreeze();
                     nlf = true;
                 }
             }
 
             bool bcf = false;
-            var bcc = GetCurrentCommonColor(false);
-            if (_backColorCache != bcc)
+            var bcc = GetCurrentCommonColor(true);
+            if (_darkColorCache != bcc)
             {
-                _backColorCache = bcc;
-                _backBrushCache = new SolidColorBrush(_backColorCache).CloneFreeze();
+                _darkColorCache = bcc;
+                _darkBrushCache = new SolidColorBrush(_darkColorCache).CloneFreeze();
                 bcf = true;
             }
 
             bool fcf = false;
-            var fcc = GetCurrentCommonColor(true);
-            if (_foreColorCache != fcc)
+            var fcc = GetCurrentCommonColor(false);
+            if (_lightColorCache != fcc)
             {
-                _foreColorCache = fcc;
-                _foreBrushCache = new SolidColorBrush(_foreColorCache).CloneFreeze();
+                _lightColorCache = fcc;
+                _lightBrushCache = new SolidColorBrush(_lightColorCache).CloneFreeze();
                 fcf = true;
+            }
+
+            bool tcf = false;
+            var tcc = GetCurrentTextColor();
+            if (_textColorCache != tcc)
+            {
+                _textColorCache = tcc;
+                _textBrushCache = new SolidColorBrush(_textColorCache).CloneFreeze();
+                tcf = true;
             }
 
             if (nlf)
             {
-                RaisePropertyChanged(() => LightningColor);
+                RaisePropertyChanged(() => NameBackColor);
+                RaisePropertyChanged(() => NameBackBrush);
             }
             if (bcf)
             {
-                RaisePropertyChanged(() => BackColor);
-                RaisePropertyChanged(() => BackBrush);
+                RaisePropertyChanged(() => DarkColor);
+                RaisePropertyChanged(() => DarkBrush);
             }
             if (fcf)
             {
-                RaisePropertyChanged(() => ForeColor);
-                RaisePropertyChanged(() => ForeBrush);
+                RaisePropertyChanged(() => LightColor);
+                RaisePropertyChanged(() => LightBrush);
+            }
+            if (tcf)
+            {
+                RaisePropertyChanged(() => TextColor);
+                RaisePropertyChanged(() => TextBrush);
             }
         }
 
@@ -622,7 +676,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             {
                 if (_SurfaceClickCommand == null)
                 {
-                    _SurfaceClickCommand = new Livet.Commands.ViewModelCommand(SurfaceClick);
+                    _SurfaceClickCommand = new Livet.Commands.ViewModelCommand(SurfaceClick, () => !Setting.Instance.TweetExperienceProperty.UseFullLineView);
                 }
                 return _SurfaceClickCommand;
             }

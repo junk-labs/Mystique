@@ -118,10 +118,12 @@ namespace Mystique.Views.PartBlocks.MainBlock
             if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).DistanceDouble(ip) < 4 &&
                 captured)
             {
-                e.Handled = true;
                 var tm = ((FlowDocument)sender).DataContext as TabDependentTweetViewModel;
-                if (tm != null)
+                if (tm != null && tm.SurfaceClickCommand.CanExecute)
+                {
+                    e.Handled = true;
                     tm.SurfaceClickCommand.Execute();
+                }
                 captured = false;
             }
         }
@@ -180,7 +182,6 @@ namespace Mystique.Views.PartBlocks.MainBlock
             if (rtb == null) return;
             var tvm = rtb.DataContext as TabDependentTweetViewModel;
             if (tvm == null) return;
-            tvm.IsTextSelected = rtb.Selection != null && !String.IsNullOrEmpty(rtb.Selection.Text);
             tvm.SelectedText = rtb.Selection != null ? rtb.Selection.Text : null;
         }
 

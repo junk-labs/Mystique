@@ -271,13 +271,9 @@
             </MenuItem>
         </ContextMenu>
         <DataTemplate x:Key="NormalStatusTemplate">
-            <Grid Background="{Binding Path=BackBrush,
-                                       Mode=OneWay}"
-                  DataContextChanged="NormalLayoutRoot_DataContextChanged"
-                  SizeChanged="NormalLayoutRoot_SizeChanged">
+            <Grid DataContextChanged="NormalLayoutRoot_DataContextChanged" SizeChanged="NormalLayoutRoot_SizeChanged">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="{Binding Path=Tweet.NameAreaWidth, FallbackValue=Auto}" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -302,7 +298,7 @@
                             <DockPanel DockPanel.Dock="Top">
                                 <DockPanel.Background>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Offset="0" Color="{Binding BackColor}" />
+                                        <GradientStop Offset="0" Color="{Binding DarkColor}" />
                                         <GradientStop Offset="1" Color="Transparent" />
                                     </LinearGradientBrush>
                                 </DockPanel.Background>
@@ -360,105 +356,111 @@
                         </DockPanel>
                     </ToolTip>
                 </Grid.ToolTip>
-                <cpanel:FillPanel x:Name="UserImageOwner">
-                    <com:LazyImage x:Name="Owner"
-                                   VerticalAlignment="Center"
-                                   DefaultImage="{StaticResource Loading}"
-                                   Stretch="UniformToFill"
-                                   UriSource="{Binding Path=Tweet,
-                                                       Converter={StaticResource TweetUserImageConverter},
-                                                       ConverterParameter=Suggested}">
-                        <com:LazyImage.Style>
-                            <Style TargetType="com:LazyImage">
-                                <Setter Property="com:LazyImage.Width" Value="24" />
-                                <Setter Property="com:LazyImage.Height" Value="24" />
-                                <Setter Property="com:LazyImage.Margin" Value="0" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=Tweet.IsP3StyleIcon}" Value="True">
-                                        <Setter Property="com:LazyImage.Width" Value="48" />
-                                        <Setter Property="com:LazyImage.Height" Value="48" />
-                                        <Setter Property="com:LazyImage.Margin" Value="0, -12, 0, -12" />
-                                        <Setter Property="com:LazyImage.Clip">
-                                            <Setter.Value>
-                                                <RectangleGeometry Rect="0,12,48,24" />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </com:LazyImage.Style>
-                    </com:LazyImage>
-                    <Grid Visibility="{Binding Path=IsMouseOver, Converter={StaticResource BoolVisibleConverter}, ElementName=UserImageOwner, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0"
-                                Command="{Binding Path=MentionCommand,
-                                                  Mode=OneTime}"
-                                Style="{StaticResource SimpleButtonStyle}">
-                            <Image Width="16"
-                                   Height="16"
-                                   Margin="1"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                   SnapsToDevicePixels="True"
-                                   Source="{StaticResource Comment}" />
-                            <Button.ToolTip>返信</Button.ToolTip>
-                        </Button>
-                        <Button Grid.Column="1"
-                                Command="{Binding Path=FavoriteCommand,
-                                                  Mode=OneTime}"
-                                Style="{StaticResource SimpleButtonStyle}"
-                                Visibility="{Binding Path=Tweet.CanFavorite,
-                                                     Converter={StaticResource BoolVisibleConverter}}">
-                            <Image Width="16"
-                                   Height="16"
-                                   Margin="1"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                   SnapsToDevicePixels="True"
-                                   Source="{StaticResource Favorited}" />
-                            <Button.ToolTip>Favoriteに追加</Button.ToolTip>
-                        </Button>
-                        <Button Grid.Column="2"
-                                Command="{Binding Path=RetweetCommand,
-                                                  Mode=OneTime}"
-                                Style="{StaticResource SimpleButtonStyle}"
-                                Visibility="{Binding Path=Tweet.IsProtected,
-                                                     Converter={StaticResource BoolInvisibleConverter}}">
-                            <Image Width="16"
-                                   Height="16"
-                                   Margin="1"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                   SnapsToDevicePixels="True"
-                                   Source="{StaticResource Retweet}" />
-                            <Button.ToolTip>Retweetする</Button.ToolTip>
-                        </Button>
-                    </Grid>
-                </cpanel:FillPanel>
+                <Grid Background="{Binding NameBackBrush, Mode=OneWay}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="{Binding Path=Tweet.NameAreaWidth, FallbackValue=Auto}" />
+                    </Grid.ColumnDefinitions>
+                    <cpanel:FillPanel x:Name="UserImageOwner">
+                        <com:LazyImage x:Name="Owner"
+                                       VerticalAlignment="Center"
+                                       DefaultImage="{StaticResource Loading}"
+                                       Stretch="UniformToFill"
+                                       UriSource="{Binding Path=Tweet,
+                                                           Converter={StaticResource TweetUserImageConverter},
+                                                           ConverterParameter=Suggested}">
+                            <com:LazyImage.Style>
+                                <Style TargetType="com:LazyImage">
+                                    <Setter Property="com:LazyImage.Width" Value="24" />
+                                    <Setter Property="com:LazyImage.Height" Value="24" />
+                                    <Setter Property="com:LazyImage.Margin" Value="0" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Tweet.IsP3StyleIcon}" Value="True">
+                                            <Setter Property="com:LazyImage.Width" Value="48" />
+                                            <Setter Property="com:LazyImage.Height" Value="48" />
+                                            <Setter Property="com:LazyImage.Margin" Value="0, -12, 0, -12" />
+                                            <Setter Property="com:LazyImage.Clip">
+                                                <Setter.Value>
+                                                    <RectangleGeometry Rect="0,12,48,24" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </com:LazyImage.Style>
+                        </com:LazyImage>
+                        <Grid Visibility="{Binding Path=IsMouseOver, Converter={StaticResource BoolVisibleConverter}, ElementName=UserImageOwner, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0"
+                                    Command="{Binding Path=MentionCommand,
+                                                      Mode=OneTime}"
+                                    Style="{StaticResource SimpleButtonStyle}">
+                                <Image Width="16"
+                                       Height="16"
+                                       Margin="1"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       SnapsToDevicePixels="True"
+                                       Source="{StaticResource Comment}" />
+                                <Button.ToolTip>返信</Button.ToolTip>
+                            </Button>
+                            <Button Grid.Column="1"
+                                    Command="{Binding Path=FavoriteCommand,
+                                                      Mode=OneTime}"
+                                    Style="{StaticResource SimpleButtonStyle}"
+                                    Visibility="{Binding Path=Tweet.CanFavorite,
+                                                         Converter={StaticResource BoolVisibleConverter}}">
+                                <Image Width="16"
+                                       Height="16"
+                                       Margin="1"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       SnapsToDevicePixels="True"
+                                       Source="{StaticResource Favorited}" />
+                                <Button.ToolTip>Favoriteに追加</Button.ToolTip>
+                            </Button>
+                            <Button Grid.Column="2"
+                                    Command="{Binding Path=RetweetCommand,
+                                                      Mode=OneTime}"
+                                    Style="{StaticResource SimpleButtonStyle}"
+                                    Visibility="{Binding Path=Tweet.IsProtected,
+                                                         Converter={StaticResource BoolInvisibleConverter}}">
+                                <Image Width="16"
+                                       Height="16"
+                                       Margin="1"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       SnapsToDevicePixels="True"
+                                       Source="{StaticResource Retweet}" />
+                                <Button.ToolTip>Retweetする</Button.ToolTip>
+                            </Button>
+                        </Grid>
+                    </cpanel:FillPanel>
+                    <TextBlock Grid.Column="1"
+                               Margin="2"
+                               Foreground="{Binding Path=TextBrush}"
+                               Text="{Binding Path=Tweet,
+                                              Mode=OneTime,
+                                              ConverterParameter=ViewName,
+                                              Converter={StaticResource TweetUserNameConverter}}"
+                               TextTrimming="CharacterEllipsis" />
+                </Grid>
                 <TextBlock Grid.Column="1"
                            Margin="2"
-                           Foreground="{Binding Path=ForeBrush}"
-                           Text="{Binding Path=Tweet,
-                                          Mode=OneTime,
-                                          ConverterParameter=ViewName,
-                                          Converter={StaticResource TweetUserNameConverter}}"
-                           TextTrimming="CharacterEllipsis" />
-                <TextBlock Grid.Column="2"
-                           Margin="2"
                            Background="{x:Null}"
-                           Foreground="{Binding Path=ForeBrush}"
+                           Foreground="{Binding Path=TextBrush}"
                            Text="{Binding Path=Tweet.TweetText,
                                           Mode=OneTime,
                                           Converter={StaticResource SingleLineConverter}}"
                            TextTrimming="CharacterEllipsis" />
-                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Border Margin="1,0"
                             VerticalAlignment="Center"
                             Background="LightGoldenrodYellow"
@@ -526,21 +528,10 @@
                                               Mode=OneTime,
                                               StringFormat=HH:mm:ss}" />
                 </StackPanel>
-                <Rectangle Grid.Column="1"
-                           Grid.ColumnSpan="3"
-                           Height="6"
-                           VerticalAlignment="Bottom">
-                    <Rectangle.Fill>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0, 1">
-                            <GradientStop Offset="0" Color="Transparent" />
-                            <GradientStop Offset="1" Color="{Binding LightningColor}" />
-                        </LinearGradientBrush>
-                    </Rectangle.Fill>
-                </Rectangle>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SelectedStatusTemplate">
-            <Grid Background="{Binding BackBrush}" ContextMenu="{StaticResource TweetContextMenu}">
+            <Grid Background="{Binding LightBrush}" ContextMenu="{StaticResource TweetContextMenu}">
                 <Grid.InputBindings>
                     <MouseBinding Command="{Binding DeselectCommand}" MouseAction="LeftClick" />
                 </Grid.InputBindings>
@@ -561,7 +552,11 @@
                         <ba:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type dlg:Mute}" />
                     </l:InteractionMessageTrigger>
                 </i:Interaction.Triggers>
-                <StackPanel Grid.RowSpan="3"
+                <Rectangle Grid.Row="0"
+                           Grid.ColumnSpan="2"
+                           Fill="{Binding NameBackBrush}" />
+                <StackPanel Grid.Row="0"
+                            Grid.RowSpan="3"
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Orientation="Vertical">
@@ -643,13 +638,8 @@
                                Source="{StaticResource Directmsg}" />
                     </Grid>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <StackPanel.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Offset="0" Color="{Binding BackColor}" />
-                            <GradientStop Offset="1" Color="Transparent" />
-                        </LinearGradientBrush>
-                    </StackPanel.Background>
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal">
                     <TextBlock Margin="4,2" Foreground="Blue">
                         <Hyperlink Command="{Binding Path=ShowUserDetailCommand}">
                             <Bold>
@@ -689,7 +679,7 @@
                                                DocumentMouseUp="ItemMouseButtonUp"
                                                DynamicInline="{Binding Path=Tweet.TweetText,
                                                                        Converter={StaticResource TextFlowDocumentConverter}}"
-                                               Foreground="{Binding Path=ForeBrush}"
+                                               Foreground="{Binding Path=TextBrush}"
                                                InputMethod.IsInputMethodEnabled="False"
                                                IsDocumentEnabled="True"
                                                IsReadOnly="True"
@@ -978,35 +968,33 @@
                         </Border>
                     </StackPanel>
                 </DockPanel>
-                <Rectangle Grid.RowSpan="3"
-                           Grid.ColumnSpan="2"
-                           Height="6"
-                           VerticalAlignment="Bottom">
-                    <Rectangle.Fill>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0, 1">
-                            <GradientStop Offset="0" Color="Transparent" />
-                            <GradientStop Offset="1" Color="{Binding LightningColor}" />
-                        </LinearGradientBrush>
-                    </Rectangle.Fill>
-                </Rectangle>
+
             </Grid>
         </DataTemplate>
         <Style x:Key="ContainerStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Padding" Value="0" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="{Binding LightBrush}" />
+
             <Setter Property="ContentTemplate" Value="{StaticResource NormalStatusTemplate}" />
             <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="ContentTemplate" Value="{StaticResource SelectedStatusTemplate}" />
-                </Trigger>
                 <DataTrigger Binding="{Binding Path=Parent.IsFullLineView}" Value="True">
                     <Setter Property="ContentTemplate" Value="{StaticResource SelectedStatusTemplate}" />
+                    <Setter Property="Background" Value="{Binding DarkBrush}" />
                 </DataTrigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="ContentTemplate" Value="{StaticResource SelectedStatusTemplate}" />
+                    <Setter Property="Background" Value="{Binding LightBrush}" />
+                </Trigger>
+                <Trigger Property="ListBox.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="{Binding DarkBrush}" />
+                </Trigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
     <ListBox x:Name="List"
              HorizontalContentAlignment="Stretch"
+             AlternationCount="2"
              BorderThickness="0"
              InputMethod.IsInputMethodEnabled="False"
              ItemContainerStyle="{StaticResource ContainerStyle}"

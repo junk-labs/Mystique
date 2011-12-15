@@ -11,7 +11,7 @@ namespace Mystique.Views.Common
         {
             var hlink = new Hyperlink(new Run(surface));
             hlink.Foreground = Setting.IsInitialized ?
-                Setting.Instance.ColoringProperty.BaseLinkColor.GetBrush() :
+                Setting.Instance.ColoringProperty.DefaultLinkColor.GetBrush() :
                 new SolidColorBrush(Colors.DodgerBlue);
             hlink.PreviewMouseLeftButtonDown += (o, e) =>
             {
