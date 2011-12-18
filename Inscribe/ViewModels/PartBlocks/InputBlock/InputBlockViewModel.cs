@@ -563,7 +563,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 }
                 if (this.CurrentInputDescription.InputText.StartsWith(".@"))
                 {
-                    // multi reply mode
+                    // multi replication mode
                     string remain;
                     var screens = SplitTweet(this.CurrentInputDescription.InputText, out remain);
                     if (screens.FirstOrDefault(s => s.Equals(screen, StringComparison.CurrentCultureIgnoreCase)) != null)
@@ -590,17 +590,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     // single reply mode -> muliti reply mode
                     if (this.CurrentInputDescription.InReplyToId == sid)
                     {
-                        this.CurrentInputDescription.InputText = "." + this.CurrentInputDescription.InputText;
-                        this.CurrentInputDescription.InReplyToId = 0;
-                    }
-                    else
-                    {
                         string remain;
                         var screens = SplitTweet(this.CurrentInputDescription.InputText, out remain);
                         this.CurrentInputDescription.InputText = "." +
-                            screens.Select(s => "@" + s).JoinString(" ") + " " +
-                            "@" + screen +  " " +
-                            remain;
+                            screens.Select(s => "@" + s).Concat(new[] { "@" + screen }).Distinct().JoinString(" ")
+                            + " " + remain;
                         this.CurrentInputDescription.InReplyToId = 0;
                         this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                     }
@@ -637,11 +631,27 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         }
                         if (tweet.Status is TwitterStatus && AccountStorage.Contains(((TwitterStatus)tweet.Status).InReplyToUserScreenName))
                         {
-                            this.OverrideTarget(new[] { AccountStorage.Get(((TwitterStatus)tweet.Status).InReplyToUserScreenName) });
+                            var ainfo = AccountStorage.Get(((TwitterStatus)tweet.Status).InReplyToUserScreenName);
+                            if (ainfo != null && Setting.Instance.InputExperienceProperty.FallbackBackTracking)
+                                ainfo = FallbackBackTracking(ainfo);
+                            this.OverrideTarget(new[] { ainfo });
                         }
                     }
                 }
             }
+        }
+
+        private AccountInfo FallbackBackTracking(AccountInfo info, AccountInfo origin = null)
+        {
+            if (info == null)
+                throw new ArgumentNullException("info");
+            if (origin == null)
+                origin = info;
+            var parent = AccountStorage.Accounts.Where(i => i.AccountProperty.FallbackAccount == info.ScreenName).FirstOrDefault();
+            if (parent == null || parent == origin)
+                return info;
+            else
+                return FallbackBackTracking(parent, origin);
         }
 
         private IEnumerable<string> SplitTweet(string input, out string after)

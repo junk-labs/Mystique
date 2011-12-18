@@ -59,6 +59,14 @@
             </CheckBox.ToolTip>
         </CheckBox>
         <CheckBox Margin="4,2"
+                  Content="フォールバックアカウントの会話をオリジナルから行う(_O)"
+                  IsChecked="{Binding FallbackBackTracking}">
+            <CheckBox.ToolTip>
+                <TextBlock>
+                    <Run Text="フォールバック先に指定されているアカウントへのmentionに対して返信する時、フォールバック元を探索してそのアカウントからの返信を入力できるようにします。" /></TextBlock>
+            </CheckBox.ToolTip>
+        </CheckBox>
+        <CheckBox Margin="4,2"
                   Content="公式RTもフォールバックする(_O)"
                   IsChecked="{Binding UseOfficialRetweetFallback}">
             <CheckBox.ToolTip>

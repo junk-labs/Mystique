@@ -207,6 +207,9 @@
     <Compile Include="Views\Dialogs\TabEditor.xaml.cs">
       <DependentUpon>TabEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\TabQuickBuilder.xaml.cs">
+      <DependentUpon>TabQuickBuilder.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Notification.xaml.cs">
       <DependentUpon>Notification.xaml</DependentUpon>
     </Compile>
@@ -397,6 +400,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\TabEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\TabQuickBuilder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

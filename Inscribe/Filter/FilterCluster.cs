@@ -10,6 +10,14 @@ namespace Inscribe.Filter
     /// </summary>
     public class FilterCluster : IFilter
     {
+        public FilterCluster() { }
+        public FilterCluster(IEnumerable<IFilter> filters, bool negate = false, bool concatAnd = false)
+        {
+            this.Filters = filters;
+            this.Negate = negate;
+            this.ConcatenateAnd = concatAnd;
+        }
+
         /// <summary>
         /// 登録されているフィルタ
         /// </summary>

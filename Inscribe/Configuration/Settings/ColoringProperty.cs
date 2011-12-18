@@ -26,7 +26,7 @@ namespace Inscribe.Configuration.Settings
             new DisablableColorElement(0xff, 0x99, 0x99);
 
         public ColorElement DefaultNameColor =
-            new ColorElement(0xaa, 0xd0, 0xdd);
+            new ColorElement(Colors.White);
 
         #endregion
 
@@ -45,12 +45,12 @@ namespace Inscribe.Configuration.Settings
         public DisablablePairColorElement MentionColor =
             new DisablablePairColorElement(
                 new DisablableColorElement(0xff, 0xee, 0xb0),
-                new DisablableColorElement(0xff, 0xd8, 0xa0));
+                new DisablableColorElement(0xff, 0xe4, 0xa0));
 
         public DisablablePairColorElement SelectedColor = 
             new DisablablePairColorElement(
-                new DisablableColorElement(0xff, 0xff, 0xc0),
-                new DisablableColorElement(0xff, 0xff, 0xa0));
+                new DisablableColorElement(0xff, 0xff, 0x8c),
+                new DisablableColorElement(0xff, 0xff, 0x78));
 
         public PairColorElement DefaultColor =
             new PairColorElement(

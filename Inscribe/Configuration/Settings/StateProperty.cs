@@ -21,31 +21,23 @@ namespace Inscribe.Configuration.Settings
             WindowState = System.Windows.WindowState.Normal;
             this.TabInformations = new[]{
                 new[]{
-                    new TabProperty(){
-                        Name = "Home",
-                        TweetSources = new IFilter[]{
-                            new FilterFollowFrom("*"),
-                            new FilterMention("*"),
-                            new FilterUser("*")
-                        }
-                    },
-                    new TabProperty(){
-                        Name="Mentions",
-                        TweetSources = new IFilter[]{
-                            new FilterCluster(){
-                                Filters = new IFilter[]{
+                    new TabProperty("Home",
+                            new IFilter[]{
+                                new FilterFollowFrom("*"),
+                                new FilterMention("*"),
+                                new FilterUser("*"),
+                                new FilterDirectMessage()}),
+                    new TabProperty("Mentions",
+                        new IFilter[]{
+                            new FilterCluster(
+                                new IFilter[]{
                                     new FilterMention("*"),
                                     new FilterRetweeted(){ Negate = true }
-                                }, ConcatenateAnd = true
-                            }
-                        }
-                    },
-                    new TabProperty(){
-                        Name="Messages",
-                        TweetSources = new IFilter[]{
+                                }, concatAnd: true)}),
+                    new TabProperty("Messages",
+                        new IFilter[]{
                             new FilterDirectMessage()
-                        }
-                    }
+                        })
                 }
             };
         }

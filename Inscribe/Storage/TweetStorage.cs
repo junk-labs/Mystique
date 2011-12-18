@@ -378,22 +378,25 @@ namespace Inscribe.Storage
         {
             TweetViewModel remobj = null;
             using (elockWrap.GetWriterLock())
-            using (vmLockWrap.GetWriterLock())
+            {
+                empties.Remove(id);
+            }
             using (lockWrap.GetWriterLock())
             {
-                System.Diagnostics.Debug.WriteLine("rmv");
                 // 削除する
                 deleteReserveds.AddLast(id);
-                empties.Remove(id);
                 if (dictionary.TryGetValue(id, out remobj))
                 {
                     dictionary.Remove(id);
-                    viewmodels.Remove(remobj);
                     _count--;
                 }
             }
             if (remobj != null)
             {
+                using (vmLockWrap.GetWriterLock())
+                {
+                    viewmodels.Remove(remobj);
+                }
                 Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
                 // リツイート判定
                 var status = remobj.Status as TwitterStatus;

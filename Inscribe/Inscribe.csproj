@@ -66,6 +66,7 @@
     <Compile Include="Communication\UserStreams\ConnectionManager.cs" />
     <Compile Include="Communication\UserStreams\UserStreamsConnection.cs" />
     <Compile Include="Configuration\Settings\MouseAssignProperty.cs" />
+    <Compile Include="Filter\Filters\ScreenName\FilterTo.cs" />
     <Compile Include="Util\WrappingStream.cs" />
     <Compile Include="Filter\Filters\Text\FilterHashtagText.cs" />
     <Compile Include="Filter\Filters\Text\FilterUrlText.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="ViewModels\Dialogs\SettingSub\PluginConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\TimelineConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingSub\TweetViewConfigViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\TabQuickBuilderViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\ColumnOwnerViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\ColumnViewModel.cs" />

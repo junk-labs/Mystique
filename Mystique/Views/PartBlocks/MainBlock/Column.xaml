@@ -21,6 +21,7 @@
         <cp:NotZeroToVisibleConverter x:Key="NotZeroVisibleConverter" />
         <ContextMenu x:Key="TabParentContextMenu">
             <MenuItem Command="{Binding AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
+            <MenuItem Command="{Binding ShowTabQuickBuilderCommand}" Header="タブクイックビルダー(_Q)..." />
             <MenuItem Command="{Binding RebirthTabCommand}" Header="最後に閉じたタブを元に戻す(_R)" />
         </ContextMenu>
         <Style x:Key="SelectorStyle" TargetType="{x:Type Border}">
@@ -64,6 +65,7 @@
                         </MenuItem>
                         <Separator />
                         <MenuItem Command="{Binding Path=Parent.AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
+                        <MenuItem Command="{Binding Path=Parent.ShowTabQuickBuilderCommand}" Header="タブクイックビルダー(_Q)..." />
                         <MenuItem Command="{Binding Path=Parent.RebirthTabCommand}" Header="最後に閉じたタブを元に戻す(_R)" />
                         <Separator />
                         <MenuItem Command="{Binding Path=CloseCommand}" Header="タブを閉じる(_C)" />
@@ -135,6 +137,9 @@
         <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
             <l:ConfirmationDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="ShowTabQuickBuilder" Messenger="{Binding Messenger}">
+            <ba:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type dlg:TabQuickBuilder}" />
+        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
@@ -177,11 +182,12 @@
                      Grid.Column="0"
                      Grid.ColumnSpan="3"
                      Margin="0"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Stretch"
                      AllowDrop="True"
                      Background="Transparent"
                      BorderThickness="0"
                      ContextMenu="{StaticResource TabParentContextMenu}"
-                     HorizontalContentAlignment="Stretch"
                      InputMethod.IsInputMethodEnabled="False"
                      IsSynchronizedWithCurrentItem="True"
                      ItemContainerStyle="{StaticResource ContainerStyle}"
@@ -191,8 +197,7 @@
                      Padding="0"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                     SelectedItem="{Binding SelectedTabViewModel}"
-                     VerticalContentAlignment="Stretch">
+                     SelectedItem="{Binding SelectedTabViewModel}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">
                         <ba:InvokePassThruCommandAction Command="{Binding OnDropCommand}" />

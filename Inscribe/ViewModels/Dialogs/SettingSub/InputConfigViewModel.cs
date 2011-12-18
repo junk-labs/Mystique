@@ -12,6 +12,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this.TrimBeginSpace = Setting.Instance.InputExperienceProperty.TrimBeginSpace;
             this.UseActiveFallback = Setting.Instance.InputExperienceProperty.UseActiveFallback;
             this.EnableTemporarilyUserSelection = Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection;
+            this.FallbackBackTracking = Setting.Instance.InputExperienceProperty.FallbackBackTracking;
             this.UseOfficialRetweetFallback = Setting.Instance.InputExperienceProperty.OfficialRetweetFallback;
             this.TrimExceedChars = Setting.Instance.InputExperienceProperty.TrimExceedChars;
             this.AutoRetryOnError = Setting.Instance.InputExperienceProperty.AutoRetryOnError;
@@ -27,6 +28,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public bool EnableTemporarilyUserSelection { get; set; }
 
+        public bool FallbackBackTracking { get; set; }
+
         public bool UseOfficialRetweetFallback { get; set; }
 
         public bool TrimExceedChars { get; set; }
@@ -41,6 +44,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.InputExperienceProperty.TrimBeginSpace = this.TrimBeginSpace;
             Setting.Instance.InputExperienceProperty.UseActiveFallback = this.UseActiveFallback;
             Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection = this.EnableTemporarilyUserSelection;
+            Setting.Instance.InputExperienceProperty.FallbackBackTracking = this.FallbackBackTracking;
             Setting.Instance.InputExperienceProperty.OfficialRetweetFallback = this.UseOfficialRetweetFallback;
             Setting.Instance.InputExperienceProperty.TrimExceedChars = this.TrimExceedChars;
             Setting.Instance.InputExperienceProperty.AutoRetryOnError = this.AutoRetryOnError;

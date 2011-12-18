@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Inscribe.Storage;
-using Inscribe.Text;
 using System.Text.RegularExpressions;
+using Inscribe.Text;
 
 namespace Inscribe.Filter.Filters.ScreenName
 {
@@ -35,12 +32,12 @@ namespace Inscribe.Filter.Filters.ScreenName
 
         public override string Description
         {
-            get { return "指定ユーザーへの返信を含む"; }
+            get { return "指定ユーザーへの@mentionを含む"; }
         }
 
         public override string FilterStateString
         {
-            get { return "@" + this.needle + " への返信"; }
+            get { return "@" + this.needle + " へのmention"; }
         }
     }
 }

@@ -533,7 +533,7 @@
         <DataTemplate x:Key="SelectedStatusTemplate">
             <Grid Background="{Binding LightBrush}" ContextMenu="{StaticResource TweetContextMenu}">
                 <Grid.InputBindings>
-                    <MouseBinding Command="{Binding DeselectCommand}" MouseAction="LeftClick" />
+                    <MouseBinding Command="{Binding SurfaceClickCommand}" MouseAction="LeftClick" />
                 </Grid.InputBindings>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

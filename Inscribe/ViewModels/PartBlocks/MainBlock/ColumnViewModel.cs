@@ -403,6 +403,28 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
 
+        #region ShowTabQuickBuilderCommand
+        private ViewModelCommand _ShowTabQuickBuilderCommand;
+
+        public ViewModelCommand ShowTabQuickBuilderCommand
+        {
+            get
+            {
+                if (_ShowTabQuickBuilderCommand == null)
+                {
+                    _ShowTabQuickBuilderCommand = new ViewModelCommand(ShowTabQuickBuilder);
+                }
+                return _ShowTabQuickBuilderCommand;
+            }
+        }
+
+        public void ShowTabQuickBuilder()
+        {
+            this.Messenger.Raise(new TransitionMessage("ShowTabQuickBuilder"));
+        }
+        #endregion
+
+
         private TabProperty ShowTabEditor(TabProperty property = null)
         {
             if(property == null)

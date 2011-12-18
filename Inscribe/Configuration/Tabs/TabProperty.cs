@@ -28,6 +28,12 @@ namespace Inscribe.Configuration.Tabs
             this.IsUnreadCountEnabled = true;
         }
 
+        public TabProperty(String name, IEnumerable<IFilter> sources) : this()
+        {
+            this.Name = name;
+            this.TweetSources = sources;
+        }
+
         #region LinkAccountInfoChangedイベント
 
         public event EventHandler<EventArgs> LinkAccountInfoChanged;

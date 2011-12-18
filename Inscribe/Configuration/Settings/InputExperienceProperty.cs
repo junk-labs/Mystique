@@ -13,6 +13,7 @@ namespace Inscribe.Configuration.Settings
             UseInputSuggesting = true;
             UseActiveFallback = false;
             OfficialRetweetFallback = false;
+            FallbackBackTracking = true;
             IsEnabledTemporarilyUserSelection = false;
             TrimExceedChars = false;
             AutoRetryOnError = true;
@@ -34,6 +35,8 @@ namespace Inscribe.Configuration.Settings
         }
 
         public bool UseActiveFallback { get; set; }
+
+        public bool FallbackBackTracking { get; set; }
 
         public bool OfficialRetweetFallback { get; set; }
 
