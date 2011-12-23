@@ -9,6 +9,7 @@
              xmlns:dlg="clr-namespace:Mystique.Views.Dialogs"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ivm="clr-namespace:Inscribe.ViewModels.PartBlocks.InputBlock;assembly=core"
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:ma="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -55,6 +56,7 @@
         <BitmapImage x:Key="Failed" UriSource="/Resources/exclamation.png" />
         <BitmapImage x:Key="Warning" UriSource="/Resources/warning.png" />
         <cp:TweetStringToCountConverter x:Key="StringCountConverter" />
+        <cp:CollectionExistToVisibleConverter x:Key="ExistVisibleConverter" />
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
         <!--  Workers View  -->
@@ -317,6 +319,17 @@
                                   IsCheckable="True"
                                   IsChecked="{Binding IsSilentMode}" />
                         <MenuItem Command="{Binding ShowAssignViewerCommand}" Header="キーアサイン ビューア(_K)..." />
+                        <MenuItem Header="プラグイン(_P)"
+                                  ItemsSource="{Binding PluginMenu}"
+                                  Visibility="{Binding PluginMenu,
+                                                       Converter={StaticResource ExistVisibleConverter}}">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="{x:Type MenuItem}">
+                                    <Setter Property="Command" Value="{Binding ExecuteCommand}" />
+                                    <Setter Property="Header" Value="{Binding Name}" />
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
                         <MenuItem Command="{Binding ShowConfigCommand}" Header="設定(_C)..." />
                         <Separator />
                         <MenuItem Header="その他(_O)">
@@ -432,7 +445,8 @@
                             <TextBlock Margin="0, 2"
                                        VerticalAlignment="Center"
                                        Foreground="Tomato"
-                                       Text="{Binding DirectMessageTarget, StringFormat={}{0}へのダイレクトメッセージ}"
+                                       Text="{Binding DirectMessageTarget,
+                                                      StringFormat={}{0}へのダイレクトメッセージ}"
                                        TextTrimming="CharacterEllipsis" />
                         </DockPanel>
                     </Border>
@@ -485,10 +499,10 @@
                         <com:DropDownButton Grid.ColumnSpan="2"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
-                                            Focusable="False"
                                             HorizontalContentAlignment="Right"
-                                            Style="{StaticResource FlatToggleButtonStyle}"
-                                            VerticalContentAlignment="Center">
+                                            VerticalContentAlignment="Center"
+                                            Focusable="False"
+                                            Style="{StaticResource FlatToggleButtonStyle}">
                             <Image Width="6"
                                    Height="6"
                                    Margin="1,0"
@@ -524,10 +538,10 @@
                         <com:DropDownButton Grid.Column="2"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
-                                            Focusable="False"
                                             HorizontalContentAlignment="Right"
-                                            Style="{StaticResource FlatToggleButtonStyle}"
-                                            VerticalContentAlignment="Center">
+                                            VerticalContentAlignment="Center"
+                                            Focusable="False"
+                                            Style="{StaticResource FlatToggleButtonStyle}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="16"
                                        Height="16"

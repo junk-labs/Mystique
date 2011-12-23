@@ -58,6 +58,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\DPMatching\DPMatcher.cs" />
     <Compile Include="Common\FreezableEx.cs" />
     <Compile Include="Common\FilterHelper.cs" />
     <Compile Include="Common\Punycode.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="ViewModels\Dialogs\SettingSub\TweetViewConfigViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\TabQuickBuilderViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\BlockCommon\NotifierViewModel.cs" />
+    <Compile Include="ViewModels\PartBlocks\InputBlock\PluginMenuItem.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\ColumnOwnerViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\ColumnViewModel.cs" />
     <Compile Include="ViewModels\Common\Filter\FilterAdderViewModel.cs" />

@@ -62,6 +62,19 @@ namespace SookIkemen
                         ExceptionStorage.Register(e, ExceptionCategory.PluginError, "非常識RTに失敗しました: " + e.Message);
                     }
                 }));
+            KernelService.AddMenu("ｽｰｸｲｹﾒﾝﾅｰ", () =>
+                KeyAssignHelper.ExecuteTabAction(tab =>
+                {
+                    try
+                    {
+                        tab.TabProperty.LinkAccountInfos.ForEach(a =>
+                            PostOffice.UpdateTweet(a, "スークイケメンﾅｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰ #sook_ikemen"));
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionStorage.Register(e, ExceptionCategory.PluginError, "スークイケメンﾅｰｰｰｰｰｰｰｰｰｰｰｰｰｰに失敗しました: " + e.Message);
+                    }
+                }));
         }
 
         private string BuildSenseless(TwitterStatus ts)

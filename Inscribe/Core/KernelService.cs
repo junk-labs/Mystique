@@ -3,6 +3,7 @@ using System.Windows;
 using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.ViewModels;
+using Inscribe.ViewModels.PartBlocks.InputBlock;
 
 namespace Inscribe.Core
 {
@@ -41,6 +42,16 @@ namespace Inscribe.Core
         public static bool IsAppInShutdown
         {
             get { return _isInShutdown; }
+        }
+
+        public static void AddMenu(string header, Action command)
+        {
+            if (header == null)
+                throw new NullReferenceException("header");
+            if (command == null)
+                throw new NullReferenceException("command");
+            MainWindowViewModel.InputBlockViewModel.pluginMenus.Add(new PluginMenuItem(header, command));
+            MainWindowViewModel.InputBlockViewModel.RefreshPluginMenu();
         }
     }
 }

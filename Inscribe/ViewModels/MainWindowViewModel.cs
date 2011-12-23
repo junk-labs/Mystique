@@ -14,6 +14,7 @@ using Inscribe.ViewModels.PartBlocks.NotifyBlock;
 using Livet;
 using Livet.Commands;
 using System.Windows.Media;
+using System.Windows;
 
 namespace Inscribe.ViewModels
 {

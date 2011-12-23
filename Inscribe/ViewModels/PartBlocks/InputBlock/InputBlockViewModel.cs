@@ -423,6 +423,25 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
         #endregion
 
+        #region Plugin menu
+
+        internal List<PluginMenuItem> pluginMenus = new List<PluginMenuItem>();
+
+        public IEnumerable<PluginMenuItem> PluginMenu
+        {
+            get
+            {
+                return pluginMenus;
+            }
+        }
+
+        public void RefreshPluginMenu()
+        {
+            RaisePropertyChanged(() => PluginMenu);
+        }
+
+        #endregion
+
         #region Debug menus
 
         #region FullGCCommand
@@ -588,16 +607,13 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 else if (this.CurrentInputDescription.InReplyToId != 0 && this.CurrentInputDescription.InputText.StartsWith("@"))
                 {
                     // single reply mode -> muliti reply mode
-                    if (this.CurrentInputDescription.InReplyToId == sid)
-                    {
-                        string remain;
-                        var screens = SplitTweet(this.CurrentInputDescription.InputText, out remain);
-                        this.CurrentInputDescription.InputText = "." +
-                            screens.Select(s => "@" + s).Concat(new[] { "@" + screen }).Distinct().JoinString(" ")
-                            + " " + remain;
-                        this.CurrentInputDescription.InReplyToId = 0;
-                        this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
-                    }
+                    string remain;
+                    var screens = SplitTweet(this.CurrentInputDescription.InputText, out remain);
+                    this.CurrentInputDescription.InputText = "." +
+                        screens.Select(s => "@" + s).Concat(new[] { "@" + screen }).Distinct().JoinString(" ")
+                        + " " + remain;
+                    this.CurrentInputDescription.InReplyToId = 0;
+                    this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
                     this.overrideTargets = null;
                 }
                 else
@@ -624,7 +640,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                             this.CurrentInputDescription.InputText = sns.JoinString(" ") + " ";
                             this.SetInputCaretIndex(sns[0].Length + 1, sns.JoinString(" ").Length - sns[0].Length);
                         }
-                        else 
+                        else
                         {
                             this.CurrentInputDescription.InputText = "@" + screen + " ";
                             this.SetInputCaretIndex(this.CurrentInputDescription.InputText.Length);
