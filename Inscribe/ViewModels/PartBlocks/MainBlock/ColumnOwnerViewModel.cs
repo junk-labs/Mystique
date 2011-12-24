@@ -90,6 +90,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             RegisterKeyAssign();
         }
 
+
         private ObservableCollection<ColumnViewModel> _columns = new ObservableCollection<ColumnViewModel>();
         public ObservableCollection<ColumnViewModel> Columns { get { return this._columns; } }
 

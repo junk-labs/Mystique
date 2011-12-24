@@ -8,6 +8,7 @@
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:my="clr-namespace:Mystique.Views.PartBlocks.MainBlock"
+             Background="Transparent"
              d:DesignHeight="300"
              d:DesignWidth="300"
              InputMethod.IsInputMethodEnabled="False"

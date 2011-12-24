@@ -52,7 +52,11 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <Grid IsEnabled="{Binding IsActivateMain}">
+        <Grid.Background>
+            <ImageBrush ImageSource="{Binding BackgroundImagePath}"
+                        Stretch="UniformToFill" />
+        </Grid.Background>
+            <Grid IsEnabled="{Binding IsActivateMain}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

@@ -6,6 +6,7 @@ using Inscribe.ViewModels.Common;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using Livet.Messaging.IO;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
@@ -14,6 +15,16 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public IEnumerable<IApplyable> NameBackColors { get; private set; }
         public IEnumerable<IApplyable> TextBackColors { get; private set; }
         public IEnumerable<IApplyable> TextForeColors { get; private set; }
+        private string _backgroundImage;
+        public string BackgroundImage
+        {
+            get { return _backgroundImage; }
+            set
+            {
+                _backgroundImage = value;
+                RaisePropertyChanged(() => BackgroundImage);
+            }
+        }
 
         public ColoringConfigViewModel()
         {
@@ -40,6 +51,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 Wrap(Setting.Instance.ColoringProperty.SelectedTextColor, "選択中のツイートと同じユーザー"),
                 Wrap(Setting.Instance.ColoringProperty.DirectMessageTextColor, "ダイレクトメッセージ"),
             };
+            this.BackgroundImage = Setting.Instance.TimelineExperienceProperty.BackgroundImage;
         }
 
         private IApplyable Wrap(ColorElement elem, string desc)
@@ -61,6 +73,34 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             return new DisablablePairColorElementViewModel(desc, elem);
         }
+
+        #region OpenFileDialogCommand
+        private ViewModelCommand _OpenFileDialogCommand;
+
+        public ViewModelCommand OpenFileDialogCommand
+        {
+            get
+            {
+                if (_OpenFileDialogCommand == null)
+                {
+                    _OpenFileDialogCommand = new ViewModelCommand(OpenFileDialog);
+                }
+                return _OpenFileDialogCommand;
+            }
+        }
+
+        public void OpenFileDialog()
+        {
+            var msg = new OpeningFileSelectionMessage("OpenFile");
+            msg.Filter = "画像ファイル|*.jpg;*.jpeg;*.jpe;*.gif;*.png;*.bmp";
+            msg.Title = "背景画像を選択";
+            string resp;
+            if ((resp = this.Messenger.GetResponse(msg).Response) != null)
+            {
+                this.BackgroundImage = resp;
+            }
+        }
+        #endregion
 
         #region SetDefaultColorCommand
         private ListenerCommand<ConfirmationMessage> _SetDefaultColorCommand;
@@ -122,6 +162,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 .Concat(TextBackColors)
                 .Concat(TextForeColors)
                 .ForEach(a => a.Apply());
+            Setting.Instance.TimelineExperienceProperty.BackgroundImage = this.BackgroundImage;
         }
     }
 
@@ -147,6 +188,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._element.R = (byte)this._cPBViewModel.RValue;
             this._element.G = (byte)this._cPBViewModel.GValue;
             this._element.B = (byte)this._cPBViewModel.BValue;
+            this._element.A = (byte)this._cPBViewModel.AValue;
         }
     }
 

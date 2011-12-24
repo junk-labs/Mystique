@@ -22,9 +22,7 @@
         <BitmapImage x:Key="Close" UriSource="/Resources/cross.png" />
         <BitmapImage x:Key="QueryInvalid" UriSource="/Resources/exclamation.png" />
     </UserControl.Resources>
-    <Border Background="White"
-            BorderBrush="Gray"
-            BorderThickness="1">
+    <Border BorderBrush="Gray" BorderThickness="1">
         <DockPanel LastChildFill="True">
             <!--  This stacking view contains only one timeline.  -->
             <DockPanel DockPanel.Dock="{Binding SearchBarDock, FallbackValue=Top}" Visibility="{Binding IsContainsSingle, Converter={StaticResource BoolVisibleConverter}}">

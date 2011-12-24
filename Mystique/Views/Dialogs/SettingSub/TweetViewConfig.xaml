@@ -139,10 +139,8 @@
         <CheckBox Grid.Row="10"
                   Grid.ColumnSpan="2"
                   Margin="4,2"
-                  IsChecked="{Binding FullLineView}"
-                  Visibility="{Binding IsTranscender,
-                                       Converter={StaticResource BoolVisibleConverter}}">
-            <AccessText Text="常にツイートを展開状態で表示(_X)[非推奨、無サポート]" />
+                  IsChecked="{Binding FullLineView}">
+            <AccessText Text="縮小状態でも全文表示する(_X)" />
         </CheckBox>
     </Grid>
 </UserControl>

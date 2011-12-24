@@ -119,11 +119,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
-        public bool IsFullLineView
-        {
-            get { return Setting.Instance.TweetExperienceProperty.UseFullLineView; }
-        }
-
         public bool IsSearchBarBottom
         {
             get { return Setting.Instance.TimelineExperienceProperty.ShowSearchBarInBottom; }
@@ -159,7 +154,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         private void UpdateSettingValue()
         {
-            RaisePropertyChanged(() => IsFullLineView);
             RaisePropertyChanged(() => IsSearchBarBottom);
             RaisePropertyChanged(() => SearchBarDock);
             RaisePropertyChanged(() => IsTranscender);

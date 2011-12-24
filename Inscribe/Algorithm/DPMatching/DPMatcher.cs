@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Inscribe.Algorithm.DPMatching
 {
@@ -11,8 +13,8 @@ namespace Inscribe.Algorithm.DPMatching
         /// <summary>
         /// Run DPMatching and get errors between test and reference.
         /// </summary>
-        /// <param name="test">test string</param>
-        /// <param name="reference">reference string</param>
+        /// <param name="test">test sample</param>
+        /// <param name="reference">reference sample</param>
         /// <returns></returns>
         public static MatchingResult Matching(String test, String reference)
         {
@@ -21,12 +23,35 @@ namespace Inscribe.Algorithm.DPMatching
             return Trace(traceTable, dpv);
         }
 
+
+        /// <summary>
+        /// Run DPMatching, get distance.
+        /// </summary>
+        /// <param name="test">test sample</param>
+        /// <param name="reference">reference sample</param>
+        /// <param name="traceTable">result trace table</param>
+        /// <returns>distance between two samples.</returns>
+        public static double DPMatchingCore(String test, String reference)
+        {
+            int[,] _;
+            return DPMatchingCore(test, reference, out _);
+        }
+
+        /// <summary>
+        /// Run DPMatching, get distance and trace table.
+        /// </summary>
+        /// <param name="test">test sample</param>
+        /// <param name="reference">reference sample</param>
+        /// <param name="traceTable">result trace table</param>
+        /// <returns>distance between two samples.</returns>
         public static double DPMatchingCore(String test, String reference, out int[,] traceTable)
         {
-            traceTable = InitTraceTable(reference.Length, test.Length);
-            for (int ri = 0; ri < reference.Length; ri++)
+            int rl = reference.Length;
+            int tl = test.Length;
+            traceTable = InitTraceTable(rl, tl);
+            for (int ri = 0; ri < rl; ri++)
             {
-                for (int ti = 0; ti < test.Length; ti++)
+                for (int ti = 0; ti < tl; ti++)
                 {
                     int err = reference[ri] != test[ti] ? 1 : 0;
                     int min = traceTable[ri, ti] + err;
@@ -37,9 +62,15 @@ namespace Inscribe.Algorithm.DPMatching
                     traceTable[ri + 1, ti + 1] = err + min;
                 }
             }
-            return traceTable[reference.Length, test.Length] / (double)(reference.Length + test.Length);
+            return traceTable[rl, tl] / (double)(rl + tl);
         }
 
+        /// <summary>
+        /// Analyze trace table.
+        /// </summary>
+        /// <param name="traceTable">tracing target</param>
+        /// <param name="distance">distance of samples</param>
+        /// <returns>MatchingResult data.</returns>
         public static MatchingResult Trace(int[,] traceTable, double distance)
         {
             MatchingResult r = new MatchingResult();
@@ -70,6 +101,12 @@ namespace Inscribe.Algorithm.DPMatching
             return r;
         }
 
+        /// <summary>
+        /// Initializing trace table.
+        /// </summary>
+        /// <param name="rlen">reference sample length</param>
+        /// <param name="tlen">trace sample length</param>
+        /// <returns>trace table</returns>
         private static int[,] InitTraceTable(int rlen, int tlen)
         {
             var traceTable = new int[rlen + 1, tlen + 1];
@@ -80,12 +117,24 @@ namespace Inscribe.Algorithm.DPMatching
         }
     }
 
+    /// <summary>
+    /// Result data of DPMatching
+    /// </summary>
     public class MatchingResult
     {
+        /// <summary>
+        /// Distance two samples
+        /// </summary>
         public double Distance { get; set; }
 
+        /// <summary>
+        /// Insertion error
+        /// </summary>
         public int Insertions { get; set; }
 
+        /// <summary>
+        /// Deletion error
+        /// </summary>
         public int Deletions { get; set; }
 
         public override string ToString()

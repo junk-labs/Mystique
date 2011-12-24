@@ -16,7 +16,7 @@
     <Window.DataContext>
         <vm:TabQuickBuilderViewModel />
     </Window.DataContext>
-        <i:Interaction.Triggers>
+    <i:Interaction.Triggers>
         <l:InteractionMessageTrigger MessageKey="WindowAction" Messenger="{Binding Messenger}">
             <l:WindowInteractionMessageAction />
         </l:InteractionMessageTrigger>
@@ -186,7 +186,8 @@
             <TextBox Grid.Row="2"
                      Margin="2"
                      AcceptsReturn="True"
-                     Text="{Binding ExtractionKeywords}" />
+                     Text="{Binding ExtractionKeywords,
+                                    UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Row="3"
                     Margin="2"
                     HorizontalAlignment="Right"
@@ -200,7 +201,7 @@
                 VerticalAlignment="Bottom"
                 Command="{Binding CloseCommand}"
                 Content="キャンセル"
-                Padding="40,3"
-                IsCancel="True" />
+                IsCancel="True"
+                Padding="40,3" />
     </Grid>
 </Window>

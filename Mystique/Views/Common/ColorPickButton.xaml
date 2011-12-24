@@ -26,6 +26,7 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -83,6 +84,23 @@
                                         VerticalAlignment="Center"
                                         Maximum="255"
                                         Value="{Binding BValue}" />
+                                <TextBlock Grid.Row="3"
+                                           Margin="4,2"
+                                           VerticalAlignment="Center"
+                                           Text="A" />
+                                <TextBox Grid.Row="3"
+                                         Grid.Column="1"
+                                         Margin="4,2"
+                                         VerticalAlignment="Center"
+                                         bat:TextBoxExtension.IsNumeric="True"
+                                         Text="{Binding AString}" />
+                                <Slider Grid.Row="3"
+                                        Grid.Column="2"
+                                        Height="25"
+                                        Margin="2"
+                                        VerticalAlignment="Center"
+                                        Maximum="255"
+                                        Value="{Binding AValue}" />
                             </Grid>
                         </DockPanel>
                     </Border>

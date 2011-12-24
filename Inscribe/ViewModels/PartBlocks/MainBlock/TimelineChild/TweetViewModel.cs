@@ -232,6 +232,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             RaisePropertyChanged(() => Status);
             RaisePropertyChanged(() => NameAreaWidth);
             RaisePropertyChanged(() => CanFavorite);
+            RaisePropertyChanged(() => IsFullLineView);
+            RaisePropertyChanged(() => TextWrapping);
+            RaisePropertyChanged(() => TextTrimming);
         }
 
         public void RefreshInReplyToInfo()
@@ -378,6 +381,21 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             {
                 return AccountStorage.Get(this.Status.User.ScreenName) != null;
             }
+        }
+
+        public bool IsFullLineView
+        {
+            get { return Setting.Instance.TweetExperienceProperty.UseFullLineView; }
+        }
+
+        public TextWrapping TextWrapping
+        {
+            get { return IsFullLineView ? TextWrapping.Wrap : TextWrapping.NoWrap; }
+        }
+
+        public TextTrimming TextTrimming
+        {
+            get { return IsFullLineView ? TextTrimming.None : TextTrimming.CharacterEllipsis; }
         }
 
         public DateTime CreatedAt

@@ -15,6 +15,7 @@
              xmlns:pb="clr-namespace:Mystique.Views.Behaviors.Particular"
              xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
              xmlns:tchild="clr-namespace:Mystique.Views.PartBlocks.MainBlock.TimelineChild"
+             Background="Transparent"
              d:DesignHeight="300"
              d:DesignWidth="300"
              InputMethod.IsInputMethodEnabled="False"
@@ -22,7 +23,6 @@
     <i:Interaction.Behaviors>
         <b:TimelineScrollLockBehavior />
     </i:Interaction.Behaviors>
-
     <UserControl.Resources>
         <cp:TextToInlinesConverter x:Key="TextFlowDocumentConverter" />
         <cp:TVMToUserNameConverter x:Key="TweetUserNameConverter" />
@@ -108,94 +108,123 @@
             </Setter>
         </Style>
         <ContextMenu x:Key="TweetContextMenu">
-            <MenuItem Command="{Binding CopyCommand}"
+            <MenuItem Command="{Binding CopyCommand,
+                                        Mode=OneTime}"
                       Header="コピー(_C)"
                       Visibility="{Binding IsTextSelected,
+                                           Mode=OneWay,
                                            Converter={StaticResource BoolVisibleConverter}}" />
-            <MenuItem Command="{Binding SelectAllCommand}"
+            <MenuItem Command="{Binding SelectAllCommand,
+                                        Mode=OneTime}"
                       Header="すべて選択(_A)"
                       Visibility="{Binding IsTextSelected,
+                                           Mode=OneWay,
                                            Converter={StaticResource BoolVisibleConverter}}" />
-            <Separator Visibility="{Binding IsTextSelected, Converter={StaticResource BoolVisibleConverter}}" />
-            <MenuItem Command="{Binding SearchInKrileCommand}"
+            <Separator Visibility="{Binding IsTextSelected, Mode=OneWay, Converter={StaticResource BoolVisibleConverter}}" />
+            <MenuItem Command="{Binding SearchInKrileCommand,
+                                        Mode=OneTime}"
                       Header="_Krile内で検索..."
                       Visibility="{Binding IsTextSelected,
+                                           Mode=OneWay,
                                            Converter={StaticResource BoolVisibleConverter}}" />
-            <MenuItem Command="{Binding SearchGoogleCommand}"
+            <MenuItem Command="{Binding SearchGoogleCommand,
+                                        Mode=OneTime}"
                       Header="_Googleで検索..."
                       Visibility="{Binding IsTextSelected,
+                                           Mode=OneWay,
                                            Converter={StaticResource BoolVisibleConverter}}" />
-            <Separator Visibility="{Binding IsTextSelected, Converter={StaticResource BoolVisibleConverter}}" />
-            <MenuItem Command="{Binding MentionCommand}"
+            <Separator Visibility="{Binding IsTextSelected, Mode=OneWay, Converter={StaticResource BoolVisibleConverter}}" />
+            <MenuItem Command="{Binding MentionCommand,
+                                        Mode=OneTime}"
                       Header="返信(_R)"
-                      InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                      InputGestureText="{Binding Mode=OneTime,
+                                                 Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Mention}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Comment}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{Binding FavoriteCommand}"
+            <MenuItem Command="{Binding FavoriteCommand,
+                                        Mode=OneTime}"
                       Header="_Favorite"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
-                                                 ConverterParameter=Favorite}"
+                                                 ConverterParameter=Favorite,
+                                                 Mode=OneTime}"
                       Visibility="{Binding Path=Tweet.CanFavorite,
+                                           Mode=OneTime,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Favorite}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{Binding RetweetCommand}"
+            <MenuItem Command="{Binding RetweetCommand,
+                                        Mode=OneTime}"
                       Header="R_etweet"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 Mode=OneTime,
                                                  ConverterParameter=Retweet}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Retweet}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{Binding UnofficialRetweetCommand}"
+            <MenuItem Command="{Binding UnofficialRetweetCommand,
+                                        Mode=OneTime}"
                       Header="非公式RT(_N)"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 Mode=OneTime,
                                                  ConverterParameter=UnofficialRetweet}"
                       Visibility="{Binding Path=Tweet.ShowUnofficialRetweetButton,
+                                           Mode=OneWay,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource UORetweet}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{Binding QuoteCommand}"
+            <MenuItem Command="{Binding QuoteCommand,
+                                        Mode=OneTime}"
                       Header="_QT"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 Mode=OneTime,
                                                  ConverterParameter=QuoteTweet}"
                       Visibility="{Binding Path=Tweet.ShowQuoteButton,
+                                           Mode=OneWay,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource QuoteTweet}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{Binding DeleteCommand}"
+            <MenuItem Command="{Binding DeleteCommand,
+                                        Mode=OneTime}"
                       Header="ツイートを削除(_D)"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 Mode=OneWay,
                                                  ConverterParameter=Delete}"
                       Visibility="{Binding Path=Tweet.ShowDeleteButton,
+                                           Mode=OneTime,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Delete}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Header="複数アカウント(M)">
-                <MenuItem Command="{Binding FavoriteMultiUserCommand}"
+                <MenuItem Command="{Binding FavoriteMultiUserCommand,
+                                            Mode=OneTime}"
                           Header="_Favorite..."
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                     Mode=OneWay,
                                                      ConverterParameter=FavoriteMulti}"
                           Visibility="{Binding Path=Tweet.CanFavorite,
+                                               Mode=OneTime,
                                                Converter={StaticResource BoolVisibleConverter}}">
                     <MenuItem.Icon>
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Favorite}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding RetweetMultiUserCommand}"
+                <MenuItem Command="{Binding RetweetMultiUserCommand,
+                                            Mode=OneTime}"
                           Header="_Retweet..."
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                     Mode=OneWay,
                                                      ConverterParameter=RetweetMulti}">
                     <MenuItem.Icon>
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Retweet}" />
@@ -203,42 +232,52 @@
                 </MenuItem>
             </MenuItem>
             <Separator />
-            <MenuItem Command="{Binding OpenConversationCommand}"
+            <MenuItem Command="{Binding OpenConversationCommand,
+                                        Mode=OneTime}"
                       Header="返信先とこのユーザーの会話を表示(_.)"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 Mode=OneWay,
                                                  ConverterParameter=ShowConversation}"
                       Visibility="{Binding Path=Tweet.IsMention,
+                                           Mode=OneTime,
                                            Converter={StaticResource BoolVisibleConverter}}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Conversation}" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{Binding SelectAllCommand}"
+            <MenuItem Command="{Binding SelectAllCommand,
+                                        Mode=OneTime}"
                       Header="すべて選択(_A)"
                       Visibility="{Binding IsTextSelected,
+                                           Mode=OneWay,
                                            Converter={StaticResource BoolInvisibleConverter}}" />
             <Separator Visibility="{Binding Path=Tweet.IsMention, Converter={StaticResource BoolVisibleConverter}}" />
             <MenuItem Header="このツイート(_T)">
-                <MenuItem Command="{Binding Path=Tweet.CopySTOTCommand}"
+                <MenuItem Command="{Binding Path=Tweet.CopySTOTCommand,
+                                            Mode=OneTime}"
                           Header="_STOT形式でコピー"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                      ConverterParameter=CopySTOT}" />
-                <MenuItem Command="{Binding Path=Tweet.CopyWebUrlCommand}"
+                <MenuItem Command="{Binding Path=Tweet.CopyWebUrlCommand,
+                                            Mode=OneTime}"
                           Header="Web_URLをコピー"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                      ConverterParameter=CopyWebUrl}" />
-                <MenuItem Command="{Binding Path=Tweet.CopyScreenNameCommand}"
+                <MenuItem Command="{Binding Path=Tweet.CopyScreenNameCommand,
+                                            Mode=OneTime}"
                           Header="ユーザー@IDをコピー(_C)"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                      ConverterParameter=CopyScreenName}" />
                 <Separator />
-                <MenuItem Command="{Binding Path=Tweet.ShowTweetCommand}"
+                <MenuItem Command="{Binding Path=Tweet.ShowTweetCommand,
+                                            Mode=OneTime}"
                           Header="_Webを開く..."
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                      ConverterParameter=OpenTweetWeb}" />
             </MenuItem>
             <MenuItem Header="このユーザー(_U)">
-                <MenuItem Command="{Binding ShowUserDetailCommand}"
+                <MenuItem Command="{Binding ShowUserDetailCommand,
+                                            Mode=OneTime}"
                           Header="ユーザー情報を表示(_I)"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                      ConverterParameter=ShowUserDetail}">
@@ -246,12 +285,14 @@
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource User}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="{Binding DirectMessageCommand}"
+                <MenuItem Command="{Binding DirectMessageCommand,
+                                            Mode=OneTime}"
                           Header="ダイレクトメッセージを送信(_D)"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                      ConverterParameter=SendDirectMessage}" />
                 <Separator />
-                <MenuItem Command="{Binding ReportForSpamCommand}"
+                <MenuItem Command="{Binding ReportForSpamCommand,
+                                            Mode=OneTime}"
                           CommandParameter="Red"
                           Header="スパムとして報告(_R)"
                           InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
@@ -261,7 +302,8 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Command="{Binding MuteCommand}"
+            <MenuItem Command="{Binding MuteCommand,
+                                        Mode=OneTime}"
                       Header="ミュート(_X)..."
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Mute}">
@@ -341,6 +383,7 @@
                                            DockPanel.Dock="Left"
                                            Foreground="Gray"
                                            Visibility="{Binding Path=Tweet.IsDirectMessage,
+                                                                Mode=OneTime,
                                                                 Converter={StaticResource BoolVisibleConverter}}">
                                     <Run Text="direct message to: " />
                                     <Run Text="{Binding Path=Tweet, Converter={StaticResource TweetUserNameConverter}, ConverterParameter=DirectMessageTarget, Mode=OneWay, StringFormat=@{0}}" />
@@ -445,6 +488,7 @@
                     </cpanel:FillPanel>
                     <TextBlock Grid.Column="1"
                                Margin="2"
+                               VerticalAlignment="Center"
                                Foreground="{Binding Path=TextBrush}"
                                Text="{Binding Path=Tweet,
                                               Mode=OneTime,
@@ -454,12 +498,14 @@
                 </Grid>
                 <TextBlock Grid.Column="1"
                            Margin="2"
+                           VerticalAlignment="Center"
                            Background="{x:Null}"
                            Foreground="{Binding Path=TextBrush}"
                            Text="{Binding Path=Tweet.TweetText,
                                           Mode=OneTime,
                                           Converter={StaticResource SingleLineConverter}}"
-                           TextTrimming="CharacterEllipsis" />
+                           TextTrimming="{Binding Path=Tweet.TextTrimming}"
+                           TextWrapping="{Binding Path=Tweet.TextWrapping}" />
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Border Margin="1,0"
                             VerticalAlignment="Center"
@@ -554,7 +600,8 @@
                 </i:Interaction.Triggers>
                 <Rectangle Grid.Row="0"
                            Grid.ColumnSpan="2"
-                           Fill="{Binding NameBackBrush}" />
+                           Fill="{Binding NameBackBrush,
+                                          Mode=OneWay}" />
                 <StackPanel Grid.Row="0"
                             Grid.RowSpan="3"
                             Grid.Column="0"
@@ -638,8 +685,7 @@
                                Source="{StaticResource Directmsg}" />
                     </Grid>
                 </StackPanel>
-                <StackPanel Grid.Column="1"
-                            Orientation="Horizontal">
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock Margin="4,2" Foreground="Blue">
                         <Hyperlink Command="{Binding Path=ShowUserDetailCommand}">
                             <Bold>
@@ -972,16 +1018,15 @@
             </Grid>
         </DataTemplate>
         <Style x:Key="ContainerStyle" TargetType="{x:Type ListBoxItem}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+            </Style.Resources>
             <Setter Property="Padding" Value="0" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="Background" Value="{Binding LightBrush}" />
-
             <Setter Property="ContentTemplate" Value="{StaticResource NormalStatusTemplate}" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=Parent.IsFullLineView}" Value="True">
-                    <Setter Property="ContentTemplate" Value="{StaticResource SelectedStatusTemplate}" />
-                    <Setter Property="Background" Value="{Binding DarkBrush}" />
-                </DataTrigger>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="ContentTemplate" Value="{StaticResource SelectedStatusTemplate}" />
                     <Setter Property="Background" Value="{Binding LightBrush}" />
@@ -990,11 +1035,13 @@
                     <Setter Property="Background" Value="{Binding DarkBrush}" />
                 </Trigger>
             </Style.Triggers>
+
         </Style>
     </UserControl.Resources>
     <ListBox x:Name="List"
              HorizontalContentAlignment="Stretch"
              AlternationCount="2"
+             Background="Transparent"
              BorderThickness="0"
              InputMethod.IsInputMethodEnabled="False"
              ItemContainerStyle="{StaticResource ContainerStyle}"

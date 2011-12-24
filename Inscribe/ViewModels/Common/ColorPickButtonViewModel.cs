@@ -111,5 +111,30 @@ namespace Inscribe.ViewModels.Common
                 RaisePropertyChanged(() => CurrentColorBrush);
             }
         }
+
+        public string AString
+        {
+            get { return AValue.ToString(); }
+            set
+            {
+                byte pv;
+                if (byte.TryParse(value, out pv))
+                    this.AValue = pv;
+                else
+                    this.AValue = 0;
+            }
+        }
+        public int AValue
+        {
+            get { return this._currentColor.A; }
+            set
+            {
+                this._currentColor.A = (byte)value;
+                RaisePropertyChanged(() => AValue);
+                RaisePropertyChanged(() => AString);
+                RaisePropertyChanged(() => CurrentColor);
+                RaisePropertyChanged(() => CurrentColorBrush);
+            }
+        }
     }
 }

@@ -24,7 +24,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             this.Parent = parent;
             this._timelineListCoreViewModel = new TimelineListCoreViewModel(parent, sources);
-
         }
 
         private TimelineListCoreViewModel _timelineListCoreViewModel;

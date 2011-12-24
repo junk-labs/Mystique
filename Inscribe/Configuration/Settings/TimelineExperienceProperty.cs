@@ -21,6 +21,7 @@ namespace Inscribe.Configuration.Settings
             ShowTabInBottom = false;
             ShowTabInBottom = false;
             CanBlockMyself = false;
+            BackgroundImage = null;
         }
 
         public bool UseFastScrolling { get; set; }
@@ -65,6 +66,8 @@ namespace Inscribe.Configuration.Settings
         public bool ShowSearchBarInBottom { get; set; }
 
         public bool CanBlockMyself { get; set; }
+
+        public string BackgroundImage { get; set; }
     }
 
     /// <summary>

@@ -51,6 +51,7 @@ namespace Inscribe.ViewModels
                 RaisePropertyChanged(() => InputBlockColumn);
                 RaisePropertyChanged(() => FontFamily);
                 RaisePropertyChanged(() => FontSize);
+                RaisePropertyChanged(() => BackgroundImagePath);
             });
         }
 
@@ -83,6 +84,11 @@ namespace Inscribe.ViewModels
             {
                 return Setting.Instance.ExperienceProperty.FontSize;
             }
+        }
+
+        public string BackgroundImagePath
+        {
+            get { return Setting.Instance.TimelineExperienceProperty.BackgroundImage; }
         }
 
         private InputBlockViewModel _inputBlockViewModel;

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Livet;
 using Mystique.Views.Behaviors.Messages;
-using System.Threading;
+using Inscribe.Algorithm.DPMatching;
 
 namespace Inscribe.ViewModels.Common
 {
@@ -28,6 +29,17 @@ namespace Inscribe.ViewModels.Common
                 this._textBoxText = value;
                 RaisePropertyChanged(() => TextBoxText);
                 OnTextChanged(EventArgs.Empty);
+            }
+        }
+
+        private bool _isItemOpening;
+        public bool IsItemOpening
+        {
+            get { return _isItemOpening;}
+            set
+            {
+                _isItemOpening = value;
+                RaisePropertyChanged(() => IsItemOpening);
             }
         }
 
@@ -100,28 +112,40 @@ namespace Inscribe.ViewModels.Common
         {
             get
             {
+                var item = this._items ?? new IntelliSenseItemViewModel[0];
                 if (String.IsNullOrEmpty(this.CurrentToken))
                 {
-                    return this._items;
-                }
-                else if (this._items == null)
-                {
-                    return new IntelliSenseItemViewModel[0];
-                }
-                else if (this._items
-                    .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
-                        this.CurrentToken, this.SuggestTriggers))
-                    .Count() == 0)
-                {
-                    // 同じトークンで始まるものだけ選択
-                    return this._items.Where(s => s.ItemText.StartsWith(this.CurrentToken.Substring(0, 1)));
+                    return item;
                 }
                 else
                 {
-                    return this._items
-                        .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
-                            this.CurrentToken, this.SuggestTriggers));
+                    return item
+                        .Where(i => i.ItemText[0] == this.CurrentToken[0])
+                        .OrderBy(i => DPMatcher.DPMatchingCore(i.ItemText, this.CurrentToken));
                 }
+
+                //if (String.IsNullOrEmpty(this.CurrentToken))
+                //{
+                //    return this._items;
+                //}
+                //else if (this._items == null)
+                //{
+                //    return new IntelliSenseItemViewModel[0];
+                //}
+                //else if (this._items
+                //    .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
+                //        this.CurrentToken, this.SuggestTriggers))
+                //    .Count() == 0)
+                //{
+                //    // 同じトークンで始まるものだけ選択
+                //    return this._items.Where(s => s.ItemText.StartsWith(this.CurrentToken.Substring(0, 1)));
+                //}
+                //else
+                //{
+                //    return this._items
+                //        .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
+                //            this.CurrentToken, this.SuggestTriggers));
+                //}
             }
         }
 

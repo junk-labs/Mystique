@@ -47,7 +47,7 @@ namespace Inscribe.Configuration.Settings
                 new DisablableColorElement(0xff, 0xee, 0xb0),
                 new DisablableColorElement(0xff, 0xe4, 0xa0));
 
-        public DisablablePairColorElement SelectedColor = 
+        public DisablablePairColorElement SelectedColor =
             new DisablablePairColorElement(
                 new DisablableColorElement(0xff, 0xff, 0x8c),
                 new DisablableColorElement(0xff, 0xff, 0x78));
@@ -250,17 +250,20 @@ namespace Inscribe.Configuration.Settings
     /// </summary>
     public class ColorElement : IColorElement
     {
-        public ColorElement() : this(0, 0, 0) { }
-        public ColorElement(byte or, byte og, byte ob)
+        public ColorElement() : this(0, 0, 0, 0) { }
+        public ColorElement(byte oa, byte or, byte og, byte ob)
         {
+            A = oa;
             R = or;
             G = og;
             B = ob;
         }
 
         public ColorElement(Color c)
-            : this(c.R, c.G, c.B) { }
+            : this(c.A, c.R, c.G, c.B) { }
 
+        [XmlAttribute("A")]
+        public byte A = 0;
         [XmlAttribute("R")]
         public byte R = 0;
         [XmlAttribute("G")]
@@ -275,7 +278,7 @@ namespace Inscribe.Configuration.Settings
 
         public virtual Color GetColor()
         {
-            return Color.FromRgb(R, G, B);
+            return Color.FromArgb(A, R, G, B);
         }
     }
 
@@ -284,17 +287,19 @@ namespace Inscribe.Configuration.Settings
     /// </summary>
     public class DisablableColorElement : ColorElement
     {
-        public DisablableColorElement() : this(0, 0, 0, false) { }
-        public DisablableColorElement(byte or, byte og, byte ob) : this(or, og, ob, true) { }
-        public DisablableColorElement(byte or, byte og, byte ob, bool act)
-            : base(or, og, ob)
+        public DisablableColorElement() : this(0, 0, 0, 0, false) { }
+        public DisablableColorElement(byte or, byte og, byte ob) : this(0xff, or, og, ob, true) { }
+        public DisablableColorElement(byte oa, byte or, byte og, byte ob) : this(oa, or, og, ob, true) { }
+        public DisablableColorElement(byte or, byte og, byte ob, bool act) : this(0xff, or, og, ob, act) { }
+        public DisablableColorElement(byte oa, byte or, byte og, byte ob, bool act)
+            : base(oa, or, og, ob)
         {
             this.IsActivated = act;
         }
 
         public DisablableColorElement(Color c) : this(c, true) { }
         public DisablableColorElement(Color c, bool act)
-            : this(c.R, c.G, c.B, act) { }
+            : this(c.A, c.R, c.G, c.B, act) { }
 
         [XmlAttribute("IsActive")]
         public bool IsActivated = false;

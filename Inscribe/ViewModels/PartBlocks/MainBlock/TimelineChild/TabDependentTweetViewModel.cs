@@ -76,7 +76,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
 
-        private bool _isTextSelected = false;
         public bool IsTextSelected
         {
             get { return !String.IsNullOrEmpty(_selectedText); }
@@ -114,6 +113,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public void SettingValueChanged()
         {
+            System.Diagnostics.Debug.WriteLine("setting value changed.");
             PendingColorChanged(true);
             this.Tweet.SettingValueChanged();
         }
@@ -393,14 +393,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private static StackTaskDispatcher taskDispatcher;
 
+        private bool pending = false;
+
         private void TreatColorChange()
         {
             bool change = isColorChanged;
             isColorChanged = false;
             bool lchanged = nameBackColorChanged;
             nameBackColorChanged = false;
-            if (change)
+            if (change && !pending)
             {
+                pending = true;
                 // 色の更新があった
                 taskDispatcher.Push(() => CommitColorChanged(lchanged));
             }
@@ -411,6 +414,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         /// </summary>
         private void CommitColorChanged(bool nameBackColorUpdated)
         {
+            pending = false;
             bool nlf = false;
             if (nameBackColorUpdated)
             {

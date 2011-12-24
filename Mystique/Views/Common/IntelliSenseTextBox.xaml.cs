@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Inscribe.Configuration;
 using Inscribe.ViewModels.Common;
+using System.Windows.Data;
 
 namespace Mystique.Views.Common
 {
@@ -14,18 +14,40 @@ namespace Mystique.Views.Common
     /// </summary>
     public partial class IntelliSenseTextBox : UserControl
     {
+        #region Dependency property
+
+        public bool IsOpening
+        {
+            get { return (bool)GetValue(IsOpeningProperty); }
+            set { SetValue(IsOpeningProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsOpening.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsOpeningProperty =
+            DependencyProperty.Register("IsOpening", typeof(bool), typeof(IntelliSenseTextBox), new UIPropertyMetadata(false, IsOpeningChanged));
+
+        private static void IsOpeningChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        {
+            var item = o as IntelliSenseTextBox;
+            if (item == null) return;
+            if (item.intelliSensePopup.IsOpen != (bool)e.NewValue)
+                item.intelliSensePopup.IsOpen = (bool)e.NewValue;
+            System.Diagnostics.Debug.WriteLine("IsOpening" + e.NewValue);
+        }
+
+        #endregion
+
+        #region Constructors and public properties
+
         public IntelliSenseTextBox()
         {
             InitializeComponent();
             inputTextBox.TextChanged += new TextChangedEventHandler(InputTextBox_TextChanged);
             intelliSensePopup.Closed += new EventHandler(intelliSensePopup_Closed);
             intelliSenseList.SelectionChanged += new SelectionChangedEventHandler(intelliSenseList_SelectionChanged);
-        }
-
-        void intelliSenseList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(intelliSenseList.SelectedItem != null)
-                intelliSenseList.ScrollIntoView(intelliSenseList.SelectedItem);
+            Binding bind = new Binding("IsItemOpening");
+            bind.Mode = BindingMode.TwoWay;
+            this.SetBinding(IsOpeningProperty, bind);
         }
 
         private IntelliSenseTextBoxViewModel ViewModel
@@ -33,22 +55,14 @@ namespace Mystique.Views.Common
             get { return this.DataContext as IntelliSenseTextBoxViewModel; }
         }
 
-        private bool _isOpening = false;
-        private bool isOpening
-        {
-            get { return _isOpening; }
-            set
-            {
-                _isOpening = value;
-                if (this.intelliSensePopup.IsOpen != value)
-                    this.intelliSensePopup.IsOpen = value;
-            }
-        }
+        #endregion
+
+        #region Event callbacks
 
         string prevText = String.Empty;
         void InputTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (isOpening)
+            if (IsOpening)
             {
                 UpdateCurrentToken();
             }
@@ -69,42 +83,22 @@ namespace Mystique.Views.Common
             prevText = inputTextBox.Text;
         }
 
-        private void OpenIntelliSense(int selectionStart)
+
+        void intelliSenseList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.isOpening || !Setting.Instance.InputExperienceProperty.UseInputSuggesting) return;
-            if (selectionStart > 0)
-            {
-                // 現在選択されている文字の1つ前からスタート
-                selectionStart--;
-                // 開始トリガーのキャラクタを探す
-                var ctext = inputTextBox.Text;
-                while (selectionStart > 0)
-                {
-                    if (ViewModel.SuggestTriggers.Contains(ctext[selectionStart]) ||
-                        ViewModel.Splitters.Contains(ctext[selectionStart]))
-                        break;
-                }
-            }
-
-            // 位置のセット
-            intelliSensePopup.PlacementTarget = inputTextBox;
-            intelliSensePopup.PlacementRectangle = inputTextBox
-                .GetRectFromCharacterIndex(inputTextBox.CaretIndex - 1);
-
-            ViewModel.RaiseOnItemsOpening();
-            InitCurrentToken();
-            this.isOpening = true;
+            if (intelliSenseList.SelectedItem != null)
+                intelliSenseList.ScrollIntoView(intelliSenseList.SelectedItem);
         }
 
         void intelliSensePopup_Closed(object sender, EventArgs e)
         {
-            this.isOpening = false;
+            this.IsOpening = false;
         }
 
         private void inputTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             // IntelliSense キーをハンドリングする
-            if (this.isOpening)
+            if (this.IsOpening)
             {
                 if (e.Key == Key.Down || e.Key == Key.Up)
                 {
@@ -127,12 +121,14 @@ namespace Mystique.Views.Common
                 }
                 else if (e.Key == Key.Space)
                 {
+                    // スペースキーの打鍵ならサジェストを適用
                     ApplyIntelliSense();
                     // Handled しない
                 }
                 else if (e.Key == Key.Escape)
                 {
-                    this.isOpening = false;
+                    // エスケープキーの打鍵ならサジェストを撤去
+                    this.IsOpening = false;
                     e.Handled = true;
                 }
             }
@@ -141,7 +137,7 @@ namespace Mystique.Views.Common
                 // Ctrl+Space で補完を呼び出す
                 if (e.Key == Key.Space && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
                 {
-                    this.isOpening = true;
+                    this.IsOpening = true;
                     e.Handled = true;
                 }
             }
@@ -150,10 +146,45 @@ namespace Mystique.Views.Common
         private void inputTextBox_SelectionChanged(object sender, RoutedEventArgs e)
         {
             // トークンの更新
-            if (isOpening)
+            if (IsOpening)
             {
                 UpdateCurrentToken();
             }
+        }
+
+        private void intelliSenseList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // サジェスト内容の適用
+            ApplyIntelliSense();
+        }
+
+        #endregion
+
+        private void OpenIntelliSense(int selectionStart)
+        {
+            if (this.IsOpening || !Setting.Instance.InputExperienceProperty.UseInputSuggesting) return;
+            if (selectionStart > 0)
+            {
+                // 現在選択されている文字の1つ前からスタート
+                selectionStart--;
+                // 開始トリガーのキャラクタを探す
+                var ctext = inputTextBox.Text;
+                while (selectionStart > 0)
+                {
+                    if (ViewModel.SuggestTriggers.Contains(ctext[selectionStart]) ||
+                        ViewModel.Splitters.Contains(ctext[selectionStart]))
+                        break;
+                }
+            }
+
+            // 位置のセット
+            intelliSensePopup.PlacementTarget = inputTextBox;
+            intelliSensePopup.PlacementRectangle = inputTextBox
+                .GetRectFromCharacterIndex(inputTextBox.CaretIndex - 1);
+
+            ViewModel.RaiseOnItemsOpening();
+            InitCurrentToken();
+            this.IsOpening = true;
         }
 
         int tokenStartPoint;
@@ -169,7 +200,7 @@ namespace Mystique.Views.Common
         {
             if (this.inputTextBox.CaretIndex < this.tokenStartPoint)
             {
-                isOpening = false;
+                IsOpening = false;
             }
             else
             {
@@ -179,7 +210,7 @@ namespace Mystique.Views.Common
                 if (ctoken != otoken)
                 {
                     // 有効範囲が変わりました
-                    isOpening = false;
+                    IsOpening = false;
                 }
                 else
                 {
@@ -190,7 +221,7 @@ namespace Mystique.Views.Common
                         ViewModel.FilteredItems.Count() == 0 ||
                         ctoken.Length > ViewModel.FilteredItems.Select(t => t.ItemText.Length).Max())
                     {
-                        isOpening = false;
+                        IsOpening = false;
                     }
                     else
                     {
@@ -297,11 +328,14 @@ namespace Mystique.Views.Common
                 }
                 */
             }
-            isOpening = false;
+            IsOpening = false;
         }
 
         private int GetNearestIndex(string token, out string nearest)
         {
+            nearest = ViewModel.FilteredItems.First().ItemText;
+            return 0;
+            /*
             var items = ViewModel.FilteredItems.Select(i => i.ItemText).ToArray();
             var nitems = from item in items
                          let idx = IntelliSenseTextBoxUtil.CheckIndexOf(item, token, ViewModel.SuggestTriggers)
@@ -318,12 +352,9 @@ namespace Mystique.Views.Common
 
             nearest = null;
             return -1;
+            */
         }
 
-        private void intelliSenseList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            ApplyIntelliSense();
-        }
     }
 
 }

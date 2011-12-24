@@ -1225,8 +1225,15 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             KeyAssignCore.RegisterOperation("OpenInput", () => this.OpenInput());
             KeyAssignCore.RegisterOperation("CloseInput", () => 
             {
-                this.CloseInput();
-                this.Parent.ColumnOwnerViewModel.SetFocus();
+                if (this.IntelliSenseTextBoxViewModel.IsItemOpening)
+                {
+                    this.IntelliSenseTextBoxViewModel.IsItemOpening = false;
+                }
+                else
+                {
+                    this.CloseInput();
+                    this.Parent.ColumnOwnerViewModel.SetFocus();
+                }
             });
             KeyAssignCore.RegisterOperation("ToggleAutoBind", () => this.IsEnabledAutoBind = !this.IsEnabledAutoBind);
             KeyAssignCore.RegisterOperation("RemoveInReplyTo", () => this.RemoveInReplyTo());
