@@ -162,40 +162,68 @@ namespace Inscribe.Communication.Posting
 
         public static Tuple<DateTime, int> GetUnderControlChunk(AccountInfo info)
         {
+            // based on http://ltzz.info/alpha/twitter_kisei.html
+            // セクション(Under control chunk)を導出する
+
             // とりあえずこのユーザーの全ツイートを持ってくる
-            var times = TweetStorage.GetAll(
-                t => t.Status.User.ScreenName == info.ScreenName)
+            // 投稿時間配列にする
+            var times = TweetStorage.GetAll(t => t.Status.User.ScreenName == info.ScreenName)
                 .Select(t => t.Status.CreatedAt)
                 .OrderByDescending(t => t) // 新着順に並べる
                 .ToArray();
 
-            bool initPointFound = false;
-            // 規制がスタートされたポイントは、[i+127-1]が3h以内のとき
-            int i = 0;
-            // 二倍遡って、規制開始ポイントを正確に把握する
-            for (i = 0; i + TwitterDefine.UnderControlCount < times.Length && i < TwitterDefine.UnderControlCount; i++)
+            // 全ツイートのうち、3時間以上の投稿の空きがある部分を調べる
+            int initPoint = -1;
+            for (int i = 0; i < times.Length; i++)
             {
-                if (times[i] - times[i + TwitterDefine.UnderControlCount - 1] < TwitterDefine.UnderControlTimespan)
+                // 前のツイートまで、3時間以上の空きがあるとそこがチャンクの切れ目
+                if (i + 1 < times.Length && 
+                    times[i] - times[i + 1] > TwitterDefine.UnderControlTimespan)
                 {
-                    // i - 1 が規制ポイント
-                    // i < 0だと厄介なのでiで代用
-                    initPointFound = true;
+                    // ここがチャンクの切れ目
+                    initPoint = i;
                     break;
                 }
-                else if (times[i] - times[i + 1] > TwitterDefine.UnderControlTimespan)
+                else if (i + TwitterDefine.UnderControlCount < times.Length &&
+                    times[i + 1] - times[i + TwitterDefine.UnderControlCount] <
+                    TwitterDefine.UnderControlTimespan)
                 {
-                    // 三時間以上の間隔があいている
-                    initPointFound = true;
+                    // UnderControlTimespanの期間中、UnderControlCountを超える投稿がある
+                    // →チャンクの切れ目
+                    initPoint = i;
                     break;
                 }
             }
-            if (initPointFound && i >= 0)
+
+            while (initPoint >= 0 &&
+                DateTime.Now.Subtract(times[initPoint]) > TwitterDefine.UnderControlTimespan)
             {
-                // 規制開始ポイントが割り出せた
-                return new Tuple<DateTime, int>(times[i].Add(TwitterDefine.UnderControlTimespan), i);
+                // 導出したチャンクから現在消費中のチャンクを推測する
+                // チャンクのスタートポイントがチャンク時間内でない場合、チャンク時間後のツイートを順番に辿る
+                var chunkEnd = times[initPoint] + TwitterDefine.UnderControlTimespan;
+                bool found = false;
+                for (int i = initPoint; i >= 0; i--)
+                {
+                    if (times[initPoint] >= chunkEnd)
+                    {
+                        initPoint = i;
+                        found = true;
+                        break;
+                    }
+                }
+                // チャンクの導出ができないとは何事だ
+                if (!found)
+                    initPoint = -1;
+            }
+
+            if (initPoint >= 0)
+            {
+                // 結局チャンクの導出がしっかりできた
+                return new Tuple<DateTime, int>(times[initPoint].Add(TwitterDefine.UnderControlTimespan), initPoint);
             }
             else
             {
+                // なんかだめだった
                 // 規制開始ポイントが分からないので、とりあえずウィンドウタイムだけ遡る
                 var window = times.Where(d => d > DateTime.Now.Subtract(TwitterDefine.UnderControlTimespan))
                     .OrderBy(d => d);

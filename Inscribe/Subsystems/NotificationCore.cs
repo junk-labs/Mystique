@@ -35,7 +35,7 @@ namespace Inscribe.Subsystems
                 case EventKind.Favorite:
                     if (Setting.Instance.NotificationProperty.NotifyFavorite)
                     {
-                        NotificationEventRise(sender, e);
+                        RaiseNotificationEvent(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
@@ -45,7 +45,7 @@ namespace Inscribe.Subsystems
                 case EventKind.Follow:
                     if (Setting.Instance.NotificationProperty.NotifyFollow)
                     {
-                        NotificationEventRise(sender, e);
+                        RaiseNotificationEvent(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
@@ -56,7 +56,7 @@ namespace Inscribe.Subsystems
                 case EventKind.Mention:
                     if (Setting.Instance.NotificationProperty.NotifyMention)
                     {
-                        NotificationEventRise(sender, e);
+                        RaiseNotificationEvent(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
@@ -67,7 +67,7 @@ namespace Inscribe.Subsystems
                 case EventKind.Retweet:
                     if (Setting.Instance.NotificationProperty.NotifyRetweet)
                     {
-                        NotificationEventRise(sender, e);
+                        RaiseNotificationEvent(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
@@ -78,7 +78,7 @@ namespace Inscribe.Subsystems
                 case EventKind.Unfavorite:
                     if (Setting.Instance.NotificationProperty.NotifyFavorite)
                     {
-                        NotificationEventRise(sender, e);
+                        RaiseNotificationEvent(sender, e);
                         IssueNotification(
                             e.EventDescription.SourceUser,
                             e.EventDescription.TargetUser,
@@ -135,14 +135,14 @@ namespace Inscribe.Subsystems
                     if (notify != null)
                     {
                         UserViewModel source = UserStorage.Get(tweet.Status.User);
-                        NotificationEventRise(null, new EventDescriptionEventArgs(new EventDescription(EventKind.Undefined, source, null, tweet)));
+                        RaiseNotificationEvent(null, new EventDescriptionEventArgs(new EventDescription(EventKind.Undefined, source, null, tweet)));
                         IssueNotification(source, null, tweet.Status.Text, EventKind.Undefined, notify);
                     }
                 }
             }
         }
 
-        private static void NotificationEventRise(object sender, EventDescriptionEventArgs e)
+        private static void RaiseNotificationEvent(object sender, EventDescriptionEventArgs e)
         {
             if (Setting.Instance.StateProperty.IsInSilentMode) return;
             if (NotificationEvent == null) return;

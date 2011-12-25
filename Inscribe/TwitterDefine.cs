@@ -35,7 +35,7 @@ namespace Inscribe
 
         public static readonly int UnderControlCount = 127;
 
-        public static readonly int UnderControlWarningThreshold = 117;
+        public static readonly int UnderControlWarningThreshold = 122;
 
         #endregion
 
