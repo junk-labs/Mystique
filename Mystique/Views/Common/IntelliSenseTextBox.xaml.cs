@@ -6,6 +6,8 @@ using System.Windows.Input;
 using Inscribe.Configuration;
 using Inscribe.ViewModels.Common;
 using System.Windows.Data;
+using Inscribe.Algorithm.DPMatching;
+using Inscribe;
 
 namespace Mystique.Views.Common
 {
@@ -334,7 +336,11 @@ namespace Mystique.Views.Common
         private int GetNearestIndex(string token, out string nearest)
         {
             nearest = ViewModel.FilteredItems.First().ItemText;
-            return 0;
+            if (DPMatcher.DPMatchingCore(token, nearest) < Define.DPMatchingThreshold)
+                return 0;
+            else
+                return -1;
+
             /*
             var items = ViewModel.FilteredItems.Select(i => i.ItemText).ToArray();
             var nitems = from item in items

@@ -384,9 +384,10 @@ namespace Inscribe.Communication.UserStreams
             Dispose(false);
         }
 
-        bool disposed = false;
+        volatile bool disposed = false;
         private void Dispose(bool disposing)
         {
+            System.Diagnostics.Debug.WriteLine("Disposing:" + AccountInfo.ToString());
             if (this.disposed) return;
             this.disposed = true;
             if (this.connection != null)

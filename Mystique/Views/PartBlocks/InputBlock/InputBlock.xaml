@@ -14,6 +14,7 @@
              xmlns:ma="clr-namespace:Mystique.Views.Behaviors.Actions"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:v="clr-namespace:Mystique.Views"
+             Background="Transparent"
              d:DesignHeight="200"
              d:DesignWidth="500"
              KeyDown="UserControl_KeyDown"
@@ -58,7 +59,7 @@
         <cp:TweetStringToCountConverter x:Key="StringCountConverter" />
         <cp:CollectionExistToVisibleConverter x:Key="ExistVisibleConverter" />
     </UserControl.Resources>
-    <DockPanel LastChildFill="True">
+    <DockPanel Background="Transparent" LastChildFill="True">
         <!--  Workers View  -->
         <ScrollViewer MaxHeight="300"
                       DockPanel.Dock="{Binding WorkerViewDockOrientation}"
@@ -74,7 +75,10 @@
                                 </DoubleAnimationUsingKeyFrames>
                             </Storyboard>
                         </DataTemplate.Resources>
-                        <Grid x:Name="grid" RenderTransformOrigin="0.5,0.5">
+                        <Grid x:Name="grid"
+                              Background="{Binding TweetWorkerBackground,
+                                                   FallbackValue=Transparent}"
+                              RenderTransformOrigin="0.5,0.5">
                             <Grid.LayoutTransform>
                                 <TransformGroup>
                                     <ScaleTransform />
@@ -269,11 +273,15 @@
             <Border Grid.Column="1"
                     Margin="2"
                     VerticalAlignment="Center"
-                    BorderBrush="Gray"
+                    Background="{Binding PostBoxCloseBackground,
+                                         FallbackValue=Transparent}"
+                    BorderBrush="{Binding PostBoxBorder,
+                                          FallbackValue=Gray}"
                     BorderThickness="1"
                     CornerRadius="1">
                 <TextBlock Cursor="IBeam"
-                           Foreground="Gray"
+                           Foreground="{Binding PostBoxCloseForeground,
+                                                FallbackValue=Gray}"
                            Padding="2"
                            Text="What's happening?">
                     <TextBlock.InputBindings>
@@ -355,7 +363,8 @@
         <Grid DockPanel.Dock="Top" Visibility="{Binding IsOpenInput, Converter={StaticResource BoolVisibleConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
+                <ColumnDefinition Width="148*" />
+                <ColumnDefinition Width="304*" />
             </Grid.ColumnDefinitions>
             <com:PopupButton Grid.Column="0"
                              Width="40"
@@ -371,14 +380,18 @@
                 </com:PopupButton.DropDownPopup>
             </com:PopupButton>
             <Border Grid.Column="1"
+                    Grid.ColumnSpan="2"
                     Margin="2"
+                    Background="{Binding PostBoxOpenBackground, FallbackValue=White}"
                     VerticalAlignment="Center"
-                    BorderBrush="Gray"
+                    BorderBrush="{Binding PostBoxBorder,
+                                          FallbackValue=Gray}"
                     BorderThickness="1"
                     CornerRadius="1">
                 <StackPanel Orientation="Vertical">
                     <Border Background="OldLace"
-                            BorderBrush="Gray"
+                            BorderBrush="{Binding PostBoxBorder,
+                                                  FallbackValue=Gray}"
                             BorderThickness="0,0,0,1"
                             Visibility="{Binding Path=IsInReplyToEnabled,
                                                  Converter={StaticResource BoolVisibleConverter}}">
@@ -409,7 +422,8 @@
                         </DockPanel>
                     </Border>
                     <Border Background="#FFFFE6F0"
-                            BorderBrush="Gray"
+                            BorderBrush="{Binding PostBoxBorder,
+                                                  FallbackValue=Gray}"
                             BorderThickness="0,0,0,1"
                             Visibility="{Binding Path=IsSelectedAccountEmpty,
                                                  Converter={StaticResource BoolVisibleConverter}}">
@@ -430,7 +444,8 @@
                         </DockPanel>
                     </Border>
                     <Border Background="#FFFFE6F0"
-                            BorderBrush="Gray"
+                            BorderBrush="{Binding PostBoxBorder,
+                                                  FallbackValue=Gray}"
                             BorderThickness="0,0,0,1"
                             Visibility="{Binding Path=IsDirectMessage,
                                                  Converter={StaticResource BoolVisibleConverter}}">
@@ -450,12 +465,13 @@
                                        TextTrimming="CharacterEllipsis" />
                         </DockPanel>
                     </Border>
-                    <Grid Background="White" Cursor="IBeam">
+                    <Grid Cursor="IBeam">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <com:IntelliSenseTextBox MinHeight="38"
+                                                 Background="Transparent"
                                                  BorderThickness="0"
                                                  DataContext="{Binding IntelliSenseTextBoxViewModel}"
                                                  Padding="2" />
@@ -477,7 +493,7 @@
                                    VerticalAlignment="Bottom"
                                    FontSize="12"
                                    FontWeight="Bold"
-                                   Foreground="Gray"
+                                   Foreground="{Binding PostBoxCloseForeground}"
                                    Text="{Binding Path=CurrentInputDescription.InputText,
                                                   Mode=OneWay,
                                                   Converter={StaticResource StringCountConverter}}" />
@@ -492,7 +508,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Offset="0" Color="White" />
+                                <GradientStop Offset="0" Color="Transparent" />
                                 <GradientStop Offset="1" Color="Gainsboro" />
                             </LinearGradientBrush>
                         </Grid.Background>

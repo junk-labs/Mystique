@@ -30,6 +30,7 @@ namespace Inscribe.Communication
             SafeExec(() => info.GetFriendIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollowing(i)));
             SafeExec(() => info.GetFollowerIds(screenName: info.ScreenName).ForEach(i => info.RegisterFollower(i)));
             SafeExec(() => info.GetBlockingIds().ForEach(i => info.RegisterBlocking(i)));
+            // 基本タイムラインの受信
         }
 
         private static void SafeExec(Action action)

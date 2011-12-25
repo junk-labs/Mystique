@@ -54,6 +54,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (o, e) =>
             {
                 RaisePropertyChanged(() => WorkerViewDockOrientation);
+                RaisePropertyChanged(() => PostBoxOpenForeground);
+                RaisePropertyChanged(() => PostBoxOpenBackground);
+                RaisePropertyChanged(() => PostBoxCloseForeground);
+                RaisePropertyChanged(() => PostBoxCloseBackground);
+                RaisePropertyChanged(() => PostBoxBorder);
             });
         }
 
@@ -92,11 +97,36 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             get { return _imageStackingViewViewModel; }
         }
 
-        #region View layout
+        #region View layout and coloring
 
         public Dock WorkerViewDockOrientation
         {
             get { return Setting.Instance.InputExperienceProperty.ShowInputBlockInBottom ? Dock.Top : Dock.Bottom; }
+        }
+
+        public Brush PostBoxOpenForeground
+        {
+            get { return Setting.Instance.ColoringProperty.PostBoxOpenForeground.GetBrush(); }
+        }
+
+        public Brush PostBoxOpenBackground
+        {
+            get { return Setting.Instance.ColoringProperty.PostBoxOpenBackground.GetBrush(); }
+        }
+
+        public Brush PostBoxCloseForeground
+        {
+            get { return Setting.Instance.ColoringProperty.PostBoxCloseForeground.GetBrush(); }
+        }
+
+        public Brush PostBoxCloseBackground
+        {
+            get { return Setting.Instance.ColoringProperty.PostBoxCloseBackground.GetBrush(); }
+        }
+
+        public Brush PostBoxBorder
+        {
+            get { return Setting.Instance.ColoringProperty.PostBoxBorder.GetBrush(); }
         }
 
         #endregion

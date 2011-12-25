@@ -15,6 +15,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public IEnumerable<IApplyable> NameBackColors { get; private set; }
         public IEnumerable<IApplyable> TextBackColors { get; private set; }
         public IEnumerable<IApplyable> TextForeColors { get; private set; }
+        public IEnumerable<IApplyable> CommonColors { get; private set; }
+
         private string _backgroundImage;
         public string BackgroundImage
         {
@@ -50,6 +52,26 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 Wrap(Setting.Instance.ColoringProperty.MentionTextColor, "@mention"),
                 Wrap(Setting.Instance.ColoringProperty.SelectedTextColor, "選択中のツイートと同じユーザー"),
                 Wrap(Setting.Instance.ColoringProperty.DirectMessageTextColor, "ダイレクトメッセージ"),
+            };
+            CommonColors = new IApplyable[]{
+                Wrap(Setting.Instance.ColoringProperty.PostBoxOpenForeground, "投稿欄文字"),
+                Wrap(Setting.Instance.ColoringProperty.PostBoxOpenBackground, "投稿欄背景"),
+                Wrap(Setting.Instance.ColoringProperty.PostBoxCloseForeground, "投稿欄(閉)文字"),
+                Wrap(Setting.Instance.ColoringProperty.PostBoxCloseBackground, "投稿欄(閉)背景"),
+                Wrap(Setting.Instance.ColoringProperty.PostBoxBorder, "投稿欄枠線"),
+                Wrap(Setting.Instance.ColoringProperty.SearchBackground, "検索バー全体背景"),
+                Wrap(Setting.Instance.ColoringProperty.SearchForeground, "検索バー文字"),
+                Wrap(Setting.Instance.ColoringProperty.SearchInactiveForeground, "検索バーウォーターマーク"),
+                Wrap(Setting.Instance.ColoringProperty.SearchTextBackground, "検索バー入力背景"),
+                Wrap(Setting.Instance.ColoringProperty.SearchBorder, "検索バー枠線"),
+                Wrap(Setting.Instance.ColoringProperty.StatusBarBackground, "ステータスバー背景"),
+                Wrap(Setting.Instance.ColoringProperty.TweetWorkerNotifierBackground, "投稿進捗/通知背景"),
+                Wrap(Setting.Instance.ColoringProperty.TabBackground, "タブ背景"),
+                Wrap(Setting.Instance.ColoringProperty.TabHighlight, "タブハイライト"),
+                Wrap(Setting.Instance.ColoringProperty.TabSelectedBackground, "選択タブ背景"),
+                Wrap(Setting.Instance.ColoringProperty.TabSelectedHighlight, "選択タブハイライト"),
+                Wrap(Setting.Instance.ColoringProperty.UserProfileBackground, "ユーザープロフィール背景"),
+                Wrap(Setting.Instance.ColoringProperty.UserProfileDarkBackground, "ユーザープロフィール背景(暗)"),
             };
             this.BackgroundImage = Setting.Instance.TimelineExperienceProperty.BackgroundImage;
         }
@@ -129,12 +151,57 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public void ApplyColoringProperty(ColoringProperty cp)
         {
-            var nbcprops = new dynamic[] { cp.DefaultNameColor, cp.MyColor, cp.FriendColor, cp.FollowingColor, cp.FollowerColor, cp.DirectMessageNameColor };
-            var tbcprops = new dynamic[] { cp.DefaultColor, cp.RetweetedColor, cp.MentionColor, cp.SelectedColor, cp.DirectMessageColor };
-            var tfcprops = new dynamic[] { cp.DefaultTextColor, cp.DefaultLinkColor, cp.RetweetedTextColor, cp.MentionTextColor, cp.SelectedTextColor, cp.DirectMessageTextColor };
-            NameBackColors.Concat(TextBackColors).Concat(TextForeColors)
+            var nbcprops = new dynamic[]
+            {
+                cp.DefaultNameColor, 
+                cp.MyColor, 
+                cp.FriendColor, 
+                cp.FollowingColor, 
+                cp.FollowerColor, 
+                cp.DirectMessageNameColor
+            };
+            var tbcprops = new dynamic[] 
+            { 
+                cp.DefaultColor,
+                cp.RetweetedColor, 
+                cp.MentionColor,
+                cp.SelectedColor, 
+                cp.DirectMessageColor 
+            };
+            var tfcprops = new dynamic[] 
+            { 
+                cp.DefaultTextColor,
+                cp.DefaultLinkColor, 
+                cp.RetweetedTextColor, 
+                cp.MentionTextColor, 
+                cp.SelectedTextColor, 
+                cp.DirectMessageTextColor 
+            };
+            var ccprops = new dynamic[] 
+            {
+                cp.PostBoxOpenForeground,
+                cp.PostBoxOpenBackground,
+                cp.PostBoxCloseForeground,
+                cp.PostBoxCloseBackground,
+                cp.PostBoxBorder,
+                cp.SearchBackground,
+                cp.SearchForeground,
+                cp.SearchInactiveForeground,
+                cp.SearchTextBackground,
+                cp.SearchBorder,
+                cp.StatusBarBackground,
+                cp.TweetWorkerNotifierBackground,
+                cp.TabBackground,
+                cp.TabHighlight,
+                cp.TabSelectedBackground,
+                cp.TabSelectedHighlight,
+                cp.UserProfileBackground,
+                cp.UserProfileDarkBackground
+            };
+
+            NameBackColors.Concat(TextBackColors).Concat(TextForeColors).Concat(CommonColors)
                 .Select(a => (dynamic)a)
-                .Zip(nbcprops.Concat(tbcprops).Concat(tfcprops),
+                .Zip(nbcprops.Concat(tbcprops).Concat(tfcprops).Concat(ccprops),
                     (a, e) => new { a, e })
                 .ForEach(v => RefreshValue(v.a, v.e));
         }
@@ -161,6 +228,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             NameBackColors
                 .Concat(TextBackColors)
                 .Concat(TextForeColors)
+                .Concat(CommonColors)
                 .ForEach(a => a.Apply());
             Setting.Instance.TimelineExperienceProperty.BackgroundImage = this.BackgroundImage;
         }

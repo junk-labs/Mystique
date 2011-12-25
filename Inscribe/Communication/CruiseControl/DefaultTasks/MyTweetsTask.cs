@@ -16,14 +16,14 @@ namespace Inscribe.Communication.CruiseControl.DefaultTasks
             this._accountInfo = info;
         }
 
+        protected override IEnumerable<Dulcet.Twitter.TwitterStatusBase> GetTweets()
+        {
+            return InjectionPoint._GetMyTweetsInjection.Execute(AccountInfo);
+        }
+
         protected override int ReceiveCount
         {
             get { return TwitterDefine.HomeReceiveMaxCount; }
-        }
-
-        protected override IEnumerable<Dulcet.Twitter.TwitterStatusBase> GetTweets()
-        {
-            return InjectionPoint._GetFavoritesInjection.Execute(AccountInfo);
         }
     }
 }

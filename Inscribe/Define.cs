@@ -5,6 +5,14 @@ namespace Inscribe
 {
     public static class Define
     {
+        public static bool IsOperatingSystemSupported
+        {
+            get
+            {
+                return Environment.OSVersion.Version.Major == 6;
+            }
+        }
+
         public static string ExeFilePath
         {
             get
@@ -22,6 +30,14 @@ namespace Inscribe
         {
             var ver = GetVersion();
             return ver.FileMajorPart + "." + ver.FileMinorPart + "." + ver.FileBuildPart + FileKind(ver.FilePrivatePart);
+        }
+
+        public static bool IsNightlyVersion
+        {
+            get
+            {
+                return GetVersion().FilePrivatePart > 1;
+            }
         }
 
         private static string FileKind(int value)
@@ -78,6 +94,8 @@ namespace Inscribe
 
         public static readonly string ReleaseNoteUrl = "http://krile.starwing.net/updates.html";
 
+        public static readonly string NightlyReleaseNoteUrl = "http://krile.starwing.net/updates_nightly.html";
+
         public static readonly string FaqUrl = "http://krile.starwing.net/faq.html";
 
         public static readonly string FeedbackUrl = "https://github.com/karno/Mystique/issues";
@@ -85,6 +103,7 @@ namespace Inscribe
         public static string KampaUrl = "http://krile.starwing.net/kampa.html";
 
         public static readonly int SafeModeThreshold = 3;
+        public static double DPMatchingThreshold = 0.25;
 
     }
 }

@@ -256,5 +256,9 @@ namespace Inscribe.Authentication
 
         #endregion
 
+        public override string ToString()
+        {
+            return "Account " + this.ScreenName;
+        }
     }
 }

@@ -41,6 +41,12 @@ namespace Mystique.Views
             // コンテントロード完了
             if(Setting.Instance.KernelProperty.LastWriteVersion == 0)
             {
+                if (Define.IsOperatingSystemSupported)
+                {
+                    MessageBox.Show(this, "あなたのオペレーティングシステムでの動作は未確認です。" + Environment.NewLine +
+                        "Windows Vista/7 での実行を強くお勧めします。", "未確認のWindows", 
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 var result = MessageBox.Show(this,
                     "Twitterクライアント \"Krile\"(クルル) をダウンロードしていただき、ありがとうございます。" + Environment.NewLine +
                     "ご利用になる前に、FAQに目を通していただくことをお勧めします。" + Environment.NewLine +
@@ -61,7 +67,10 @@ namespace Mystique.Views
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                    Browser.Start(Define.ReleaseNoteUrl);
+                    if (Define.IsNightlyVersion)
+                        Browser.Start(Define.NightlyReleaseNoteUrl);
+                    else
+                        Browser.Start(Define.ReleaseNoteUrl);
                 }
             }
             else if (Setting.IsSafeMode)

@@ -29,6 +29,7 @@
         </LinearGradientBrush>
     </UserControl.Resources>
     <Border x:Name="border"
+            Background="{Binding Background}"
             BorderThickness="0,1"
             UseLayoutRounding="True">
         <Border.BorderBrush>
@@ -726,10 +727,10 @@
                     </TransformGroup>
                 </Grid.LayoutTransform>
                 <TextBlock Margin="4"
+                           Foreground="Black"
                            Text="{Binding SourceUser,
                                           Converter={StaticResource UVMToUserNameConverter},
                                           ConverterParameter=NotifyViewName}"
-                           Foreground="Black"
                            TextDecorations="Underline"
                            TextWrapping="NoWrap">
                     <i:Interaction.Triggers>
@@ -856,8 +857,7 @@
                            Text="{Binding Target,
                                           Converter={StaticResource StringRemoveLineConverter}}"
                            TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap">
-                </TextBlock>
+                           TextWrapping="NoWrap" />
                 <TextBlock Grid.Column="1"
                            Margin="4,0"
                            VerticalAlignment="Center"

@@ -10,6 +10,9 @@ using Inscribe.Util;
 using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
+using Inscribe.Text;
+using Inscribe.Plugin;
+using System.Threading.Tasks;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -117,6 +120,62 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     stat.RetweetedOriginal != null ?
                     "http://twitter.com/" + stat.User.ScreenName + "/status/" + stat.Id.ToString() :
                     "http://twitter.com/" + this.Status.User.ScreenName + "/status/" + this.Status.Id.ToString();
+            }
+        }
+
+        #endregion
+
+        #region Inline photos property
+
+        private bool _isPhotoResolving = false;
+
+        /// <summary>
+        /// 画像表示を解決中
+        /// </summary>
+        public bool IsPhotoResolving
+        {
+            get { return _isPhotoResolving; }
+            set
+            {
+                _isPhotoResolving = value;
+                RaisePropertyChanged(() => IsPhotoResolving);
+            }
+        }
+
+        private IEnumerable<PhotoThumbnailViewModel> _photoThumbUrls = null;
+        public IEnumerable<PhotoThumbnailViewModel> PhotoThumbnails
+        {
+            get
+            {
+                if (_photoThumbUrls == null && !IsPhotoResolving)
+                {
+                    Task.Factory.StartNew(() => ResolvePhotos());
+                }
+                return _photoThumbUrls ?? new PhotoThumbnailViewModel[0];
+            }
+        }
+
+        private void ResolvePhotos()
+        {
+            var tokens = Tokenizer.Tokenize(this.TweetText);
+            var uris = tokens
+                .Where(t => t.Kind == TokenKind.Url).ToArray();
+
+            if (uris.Length > 0)
+            {
+                IsPhotoResolving = true;
+                _photoThumbUrls = uris
+                    .Select(t => UploaderManager.TryResolve(ShortenManager.Extract(t.Text)))
+                    .Where(u => u != null)
+                    .Select(s => new PhotoThumbnailViewModel(new Uri(s)))
+                    .ToArray();
+                IsPhotoResolving = false;
+                RaisePropertyChanged(() => PhotoThumbnails);
+            }
+            else
+            {
+                _photoThumbUrls = new PhotoThumbnailViewModel[0];
+                IsPhotoResolving = false;
             }
         }
 

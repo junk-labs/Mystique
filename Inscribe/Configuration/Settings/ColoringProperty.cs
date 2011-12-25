@@ -80,6 +80,46 @@ namespace Inscribe.Configuration.Settings
             new ColorElement(Colors.RoyalBlue);
 
         #endregion
+
+        #region CommonColor
+
+        public ColorElement PostBoxOpenForeground = new ColorElement(Colors.Black);
+
+        public ColorElement PostBoxOpenBackground = new ColorElement(Colors.White);
+
+        public ColorElement PostBoxCloseForeground = new ColorElement(Colors.Gray);
+
+        public ColorElement PostBoxCloseBackground = new ColorElement(Colors.Transparent);
+
+        public ColorElement PostBoxBorder = new ColorElement(Colors.Gray);
+
+        public ColorElement StatusBarBackground = new ColorElement(Colors.WhiteSmoke);
+
+        public ColorElement TweetWorkerNotifierBackground = new ColorElement(Colors.Transparent);
+
+        public ColorElement TabSelectedBackground = new ColorElement(Colors.White);
+
+        public ColorElement TabSelectedHighlight = new ColorElement(0xA0, 0x87, 0xCE, 0xFA);
+
+        public ColorElement TabBackground = new ColorElement(Colors.Silver);
+
+        public ColorElement TabHighlight = new ColorElement(Colors.White);
+
+        public ColorElement UserProfileBackground = new ColorElement(Colors.White);
+
+        public ColorElement UserProfileDarkBackground = new ColorElement(Colors.WhiteSmoke);
+
+        public ColorElement SearchBackground = new ColorElement(Colors.White);
+
+        public ColorElement SearchForeground = new ColorElement(Colors.Black);
+
+        public ColorElement SearchTextBackground = new ColorElement(Colors.White);
+
+        public ColorElement SearchInactiveForeground = new ColorElement(Colors.Gray);
+
+        public ColorElement SearchBorder = new ColorElement(Colors.Silver);
+
+        #endregion
     }
 
     public interface IColorElement

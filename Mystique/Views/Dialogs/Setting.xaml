@@ -36,7 +36,7 @@
             <ListBoxItem Content="レイアウト" />
             <ListBoxItem Content="タイムライン" />
             <ListBoxItem Content="ツイートの表示" />
-            <ListBoxItem Content="ツイートの色" />
+            <ListBoxItem Content="色と背景" />
             <ListBoxItem Content="通知" />
             <ListBoxItem Content="通知の種類" />
             <ListBoxItem Content="入力" />

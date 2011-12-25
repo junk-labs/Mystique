@@ -5,6 +5,8 @@ using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
 using Inscribe.Communication.UserStreams;
+using System.Windows.Media;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
 {
@@ -38,6 +40,7 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             ViewModelHelper.BindNotification(PostOffice.OnUnderControlChangedEvent, this, (o, e) => RaisePropertyChanged(() => State));
             ViewModelHelper.BindNotification(TweetStorage.TweetStorageChangedEvent, this, (o, e) => RaisePropertyChanged(() => Tweets));
             ViewModelHelper.BindNotification(ConnectionManager.ConnectionStateChangedEvent, this, (o, e) => RaisePropertyChanged(() => State));
+            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (_, __) => RaisePropertyChanged(() => StatusBarBackground));
             ImageCacheStorage.DownloadingChanged += () => RaisePropertyChanged(() => ImageDownloading);
         }
 
@@ -47,6 +50,11 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
             Info,
             Warning,
             Error,
+        }
+
+        public Brush StatusBarBackground
+        {
+            get { return Setting.Instance.ColoringProperty.StatusBarBackground.GetBrush(); }
         }
 
         public StateImages State

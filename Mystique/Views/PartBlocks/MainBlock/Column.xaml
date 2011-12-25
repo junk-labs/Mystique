@@ -24,33 +24,12 @@
             <MenuItem Command="{Binding ShowTabQuickBuilderCommand}" Header="タブクイックビルダー(_Q)..." />
             <MenuItem Command="{Binding RebirthTabCommand}" Header="最後に閉じたタブを元に戻す(_R)" />
         </ContextMenu>
-        <Style x:Key="SelectorStyle" TargetType="{x:Type Border}">
-            <Style.Resources>
-                <LinearGradientBrush x:Key="InactiveBack" StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Offset="0.5" Color="Gainsboro" />
-                    <GradientStop Offset="1" Color="Silver" />
-                </LinearGradientBrush>
-                <LinearGradientBrush x:Key="ActiveBack" StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Offset="0.5" Color="Gainsboro" />
-                    <GradientStop Offset="1" Color="LightBlue" />
-                </LinearGradientBrush>
-            </Style.Resources>
-            <Style.Setters>
-                <Setter Property="Background" Value="{StaticResource InactiveBack}" />
-            </Style.Setters>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{StaticResource ActiveBack}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
         <DataTemplate x:Key="ItemTemplate">
             <Border x:Name="Border"
                     Margin="0"
                     BorderBrush="Gray"
                     BorderThickness="1"
-                    Padding="0"
-                    Style="{StaticResource SelectorStyle}">
+                    Padding="0">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">
                         <ba:InvokePassThruCommandAction Command="{Binding TabMouseDownCommand}" />
@@ -80,8 +59,8 @@
                 </i:Interaction.Behaviors>
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                        <GradientStop Offset="0.3" Color="White" />
-                        <GradientStop Offset="1" Color="Silver" />
+                        <GradientStop Offset="0.3" Color="{Binding TabBackgroundHighlight}" />
+                        <GradientStop Offset="1" Color="{Binding TabBackground}" />
                     </LinearGradientBrush>
                 </Border.Background>
                 <Grid>
@@ -96,8 +75,8 @@
                                                     Converter={StaticResource BoolVisibleConverter}}">
                         <Rectangle.Fill>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Offset="0" Color="#A087CEFA" />
-                                <GradientStop Offset="1" Color="#0087CEFA" />
+                                <GradientStop Offset="0" Color="{Binding TabSelectedHighlight}" />
+                                <GradientStop Offset="1" Color="{Binding TabSelectedTransparentHighlight}" />
                             </LinearGradientBrush>
                         </Rectangle.Fill>
                     </Rectangle>
@@ -118,7 +97,7 @@
             </Border>
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                    <Setter TargetName="Border" Property="Background" Value="White" />
+                    <Setter TargetName="Border" Property="Background" Value="{Binding TabSelectedBackground}" />
                     <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
                     <Setter TargetName="Border" Property="Padding" Value="0,0,0,1" />
                 </DataTrigger>
@@ -208,6 +187,7 @@
                     <Style>
                         <Style.Resources>
                             <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                            <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
                         </Style.Resources>
                     </Style>
                 </ListBox.Style>

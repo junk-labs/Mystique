@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using Inscribe.Authentication;
 using Inscribe.Communication.Posting;
 using Inscribe.Configuration;
@@ -12,7 +14,6 @@ using Inscribe.Storage;
 using Inscribe.Text;
 using Livet;
 using Livet.Commands;
-using System.Threading;
 
 namespace Inscribe.ViewModels.PartBlocks.InputBlock
 {
@@ -465,6 +466,15 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 RaisePropertyChanged(() => ExceptionString);
             }
         }
+
+        #region Coloring
+
+        public Brush TweetWorkerBackground
+        {
+            get { return Setting.Instance.ColoringProperty.TweetWorkerNotifierBackground.GetBrush(); }
+        }
+
+        #endregion
 
         #region CopyExceptionCommand
         ViewModelCommand _CopyExceptionCommand;

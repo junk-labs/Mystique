@@ -106,6 +106,5 @@ namespace Inscribe.Text
         Url,
         Hashtag,
         AtLink,
-        ImageInsertionLink
     }
 }

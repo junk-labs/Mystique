@@ -250,6 +250,7 @@
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputBlockViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\InputDescription.cs" />
     <Compile Include="ViewModels\PartBlocks\InputBlock\UpdateWorker.cs" />
+    <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineChild\PhotoThumbnailViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineCoreViewModelBase.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\TimelineListCoreViewModel.cs" />
     <Compile Include="ViewModels\PartBlocks\MainBlock\UserPageViewModel.cs" />

@@ -569,7 +569,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             var s = this.Tweet.Status as TwitterStatus;
             if (s == null)
                 return;
-            if (s.InReplyToStatusId == 0)
+            if (s.RetweetedOriginal != null)
                 s = s.RetweetedOriginal;
             if (s == null || s.InReplyToStatusId == 0)
                 return;

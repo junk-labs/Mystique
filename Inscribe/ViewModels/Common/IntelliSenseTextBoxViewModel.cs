@@ -5,6 +5,8 @@ using System.Threading;
 using Livet;
 using Mystique.Views.Behaviors.Messages;
 using Inscribe.Algorithm.DPMatching;
+using System.Windows.Media;
+using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.Common
 {
@@ -18,6 +20,11 @@ namespace Inscribe.ViewModels.Common
         public IEnumerable<char> Splitters
         {
             get { return new[] { '\r', '\n', ' ', '\t', ',', '.', '　', '、', '。' }; }
+        }
+
+        public IntelliSenseTextBoxViewModel()
+        {
+            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (_, __) => RaisePropertyChanged(() => Foreground));
         }
 
         private string _textBoxText = String.Empty;
@@ -42,6 +49,15 @@ namespace Inscribe.ViewModels.Common
                 RaisePropertyChanged(() => IsItemOpening);
             }
         }
+
+        #region Coloring
+
+        public Brush Foreground
+        {
+            get { return Setting.Instance.ColoringProperty.PostBoxOpenForeground.GetBrush(); }
+        }
+
+        #endregion
 
         #region TextChangedイベント
         public event EventHandler<EventArgs> TextChanged;
@@ -119,6 +135,10 @@ namespace Inscribe.ViewModels.Common
                 }
                 else
                 {
+                    System.Diagnostics.Debug.WriteLine("distance:" + item
+                        .Where(i => i.ItemText[0] == this.CurrentToken[0])
+                        .Select(i => DPMatcher.DPMatchingCore(i.ItemText, this.CurrentToken))
+                        .OrderBy(i => i).FirstOrDefault());
                     return item
                         .Where(i => i.ItemText[0] == this.CurrentToken[0])
                         .OrderBy(i => DPMatcher.DPMatchingCore(i.ItemText, this.CurrentToken));

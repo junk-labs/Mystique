@@ -12,6 +12,7 @@ using Inscribe.ViewModels.Dialogs.Common;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using System.Windows.Media;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -34,6 +35,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.Parent = parent;
             this._timelineListCoreViewModel = new TimelineListCoreViewModel(parent, new IFilter[0]);
             this.SetUser(userId);
+            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (_, __) =>
+            {
+                RaisePropertyChanged(() => UserProfileBackground);
+                RaisePropertyChanged(() => UserProfileDarkBackground);
+            });
         }
 
         private TimelineListCoreViewModel _timelineListCoreViewModel;
@@ -151,6 +157,20 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 return User != null ? User.TwitterUser.Web : String.Empty;
             }
         }
+
+        #region Coloring
+
+        public Brush UserProfileBackground
+        {
+            get { return Setting.Instance.ColoringProperty.UserProfileBackground.GetBrush(); }
+        }
+
+        public Brush UserProfileDarkBackground
+        {
+            get { return Setting.Instance.ColoringProperty.UserProfileDarkBackground.GetBrush(); }
+        }
+
+        #endregion
 
         #region OpenLinkCommand
         ListenerCommand<string> _OpenLinkCommand;

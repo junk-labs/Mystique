@@ -35,7 +35,7 @@
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <Grid IsEnabled="{Binding IsStandby}">
+        <Grid Background="{Binding UserProfileBackground, FallbackValue=White}" IsEnabled="{Binding IsStandby}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -139,7 +139,8 @@
                 </StackPanel>
                 <Border Grid.Row="1"
                         Grid.ColumnSpan="2"
-                        Background="WhiteSmoke"
+                        Background="{Binding UserProfileDarkBackground,
+                                             FallbackValue=WhiteSmoke}"
                         BorderBrush="DimGray"
                         BorderThickness="0,1,0,1"
                         Padding="4">
@@ -153,7 +154,7 @@
                                                Padding="0" />
                 </Border>
             </Grid>
-            <Grid Grid.Row="1" Background="WhiteSmoke">
+            <Grid Grid.Row="1" Background="{Binding UserProfileDarkBackground, FallbackValue=WhiteSmoke}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="4" />
                     <RowDefinition Height="Auto" />

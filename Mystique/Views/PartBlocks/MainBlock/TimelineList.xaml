@@ -25,7 +25,12 @@
     <Border BorderBrush="Gray" BorderThickness="1">
         <DockPanel LastChildFill="True">
             <!--  This stacking view contains only one timeline.  -->
-            <DockPanel DockPanel.Dock="{Binding SearchBarDock, FallbackValue=Top}" Visibility="{Binding IsContainsSingle, Converter={StaticResource BoolVisibleConverter}}">
+            <DockPanel Background="{Binding SearchBackground,
+                                            FallbackValue=Transparent}"
+                       DockPanel.Dock="{Binding SearchBarDock,
+                                                FallbackValue=Top}"
+                       Visibility="{Binding IsContainsSingle,
+                                            Converter={StaticResource BoolVisibleConverter}}">
                 <Image Width="16"
                        Height="16"
                        Margin="2"
@@ -33,12 +38,15 @@
                        Source="{StaticResource Search}" />
                 <Border Margin="2"
                         VerticalAlignment="Center"
-                        Background="White"
-                        BorderBrush="Silver"
+                        Background="{Binding SearchTextBackground,
+                                             FallbackValue=White}"
+                        BorderBrush="{Binding SearchBorder,
+                                              FallbackValue=Silver}"
                         BorderThickness="1"
                         CornerRadius="1">
                     <TextBlock Cursor="IBeam"
-                               Foreground="Gray"
+                               Foreground="{Binding SearchInactiveForeground,
+                                                    FallbackValue=Gray}"
                                Padding="2"
                                Text="Input here to search timeline...">
                         <TextBlock.InputBindings>
@@ -47,7 +55,12 @@
                     </TextBlock>
                 </Border>
             </DockPanel>
-            <Grid DockPanel.Dock="{Binding SearchBarDock, FallbackValue=Top}" Visibility="{Binding IsContainsSingle, Converter={StaticResource BoolInvisibleConverter}}">
+            <Grid Background="{Binding SearchBackground,
+                                       FallbackValue=Transparent}"
+                  DockPanel.Dock="{Binding SearchBarDock,
+                                           FallbackValue=Top}"
+                  Visibility="{Binding IsContainsSingle,
+                                       Converter={StaticResource BoolInvisibleConverter}}">
                 <!--  This stacking view contains two or more timelines.  -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -80,12 +93,16 @@
                 <Border Grid.Column="1"
                         Margin="2"
                         VerticalAlignment="Center"
-                        Background="White"
-                        BorderBrush="Silver"
+                        Background="{Binding SearchTextBackground,
+                                             FallbackValue=White}"
+                        BorderBrush="{Binding SearchBorder,
+                                              FallbackValue=Silver}"
                         BorderThickness="1"
                         CornerRadius="1">
                     <Grid>
-                        <TextBox BorderThickness="0"
+                        <TextBox Background="Transparent"
+                                 BorderThickness="0"
+                                 Foreground="{Binding SearchForeground}"
                                  KeyDown="TextBox_KeyDown"
                                  Padding="2"
                                  PreviewKeyDown="TextBox_PreviewKeyDown"
@@ -100,7 +117,8 @@
                             </i:Interaction.Triggers>
                         </TextBox>
                         <TextBlock Cursor="IBeam"
-                                   Foreground="Gray"
+                                   Foreground="{Binding SearchInactiveForeground,
+                                                        FallbackValue=Gray}"
                                    Padding="2"
                                    Text="Input here to search timeline..."
                                    Visibility="{Binding IsStackTopUserPage,

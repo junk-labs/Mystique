@@ -65,8 +65,10 @@ namespace Dulcet.Twitter.Streaming
             }
         }
 
+        private static int STGC = 0;
         private void StreamingThread()
         {
+                var cno = Interlocked.Increment(ref STGC);
             try
             {
                 using (var sr = new StreamReader(this.receiveStream))
@@ -74,7 +76,10 @@ namespace Dulcet.Twitter.Streaming
                     while (!sr.EndOfStream && !parentCore.IsDisposed && !disposed && !isTimeout)
                     {
                         timeoutCount = 0;
-                        this.parentCore.EnqueueReceivedObject(this.Provider, sr.ReadLine());
+                        String cline = sr.ReadLine();
+                        System.Diagnostics.Debug.WriteLine("thread: " + cno + " ( " + Provider.ToString() + " ) / " + cline);
+                        this.parentCore.EnqueueReceivedObject(this.Provider, cline);
+                        // sr.ReadLine());
                     }
                 }
             }
@@ -83,28 +88,15 @@ namespace Dulcet.Twitter.Streaming
             catch (Exception e)
             {
                 // ignore all errors when disposing
-                if (disposed) return;
-                parentCore.RaiseOnExceptionThrown(e);
+                if (!disposed)
+                {
+                    parentCore.RaiseOnExceptionThrown(e);
+                }
             }
             finally
             {
-                usedRequest.Abort();
-                try
-                {
-                    var rs = this.receiveStream;
-                    this.receiveStream = null;
-                    if (rs != null)
-                    {
-                        rs.Close();
-                        rs.Dispose();
-                    }
-                }
-                catch { }
-                finally
-                {
-                    this.parentCore.UnregisterConnection(this);
-                    this.parentCore.RaiseOnDisconnected(this);
-                }
+                System.Diagnostics.Debug.WriteLine("thread: ***DISCONNECTED*** " + cno + " ( " + Provider.ToString() + " ) ");
+                FinalizeStream();
             }
         }
 
@@ -130,7 +122,7 @@ namespace Dulcet.Twitter.Streaming
             this.Dispose(false);
         }
 
-        bool disposed = false;
+        private volatile bool disposed = false;
         /// <summary>
         /// Finalize streaming connection
         /// </summary>
@@ -138,10 +130,23 @@ namespace Dulcet.Twitter.Streaming
         protected virtual void Dispose(bool disposing)
         {
             if (this.disposed) return;
+            System.Diagnostics.Debug.WriteLine("Disposing:" + Provider.ToString());
+            this.disposed = true;
+            FinalizeStream();
+        }
+
+        private object finalizeLockObject = new object();
+        private volatile bool finalized = false;
+        private void FinalizeStream()
+        {
+            lock (finalizeLockObject)
+            {
+                if (finalized) return;
+                finalized = true;
+            }
+            usedRequest.Abort();
             try
             {
-                this.disposed = true;
-                usedRequest.Abort();
                 var rs = this.receiveStream;
                 this.receiveStream = null;
                 if (rs != null)
@@ -149,9 +154,8 @@ namespace Dulcet.Twitter.Streaming
                     rs.Close();
                     rs.Dispose();
                 }
-                streamReceiver.Abort();
-                streamReceiver = null;
             }
+            catch { }
             finally
             {
                 this.parentCore.UnregisterConnection(this);

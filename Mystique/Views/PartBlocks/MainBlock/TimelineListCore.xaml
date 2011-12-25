@@ -713,7 +713,9 @@
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="1">
+                <StackPanel Grid.Row="1"
+                            Grid.Column="1"
+                            Orientation="Vertical">
                     <tchild:DynamicRichTextBox x:Name="BodyText"
                                                Margin="2"
                                                HorizontalAlignment="Stretch"
@@ -741,6 +743,34 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </tchild:DynamicRichTextBox>
+                    <DockPanel>
+                        <com:Intermediate DockPanel.Dock="Left" Visibility="{Binding Path=Tweet.IsPhotoResolving, Converter={StaticResource BoolVisibleConverter}}" />
+                        <ItemsControl ItemsSource="{Binding Path=Tweet.PhotoThumbnails, IsAsync=True}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Image MinWidth="80"
+                                           MinHeight="80"
+                                           MaxWidth="160"
+                                           MaxHeight="160"
+                                           Source="{Binding PhotoUri,
+                                                            IsAsync=True}"
+                                           Stretch="Uniform">
+                                        <Image.InputBindings>
+                                            <MouseBinding Command="{Binding OpenUriCommand}" MouseAction="LeftClick" />
+                                        </Image.InputBindings>
+                                        <Image.ToolTip>
+                                            <TextBlock Text="{Binding Path=PhotoUri}" />
+                                        </Image.ToolTip>
+                                    </Image>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </DockPanel>
                     <Border Margin="4,2"
                             VerticalAlignment="Center"
                             Background="LightGoldenrodYellow"

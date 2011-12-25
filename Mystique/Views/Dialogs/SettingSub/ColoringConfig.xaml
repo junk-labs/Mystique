@@ -95,7 +95,7 @@
     </UserControl.Resources>
     <Grid>
         <TabControl>
-            <TabItem Header="名前の背景色">
+            <TabItem Header="名前欄">
                 <Border Margin="4"
                         BorderBrush="Gray"
                         BorderThickness="1">
@@ -105,7 +105,7 @@
                 </Border>
             </TabItem>
 
-            <TabItem Header="本文の背景色">
+            <TabItem Header="本文背景">
                 <Border Margin="4"
                         BorderBrush="Gray"
                         BorderThickness="1">
@@ -115,7 +115,7 @@
                 </Border>
             </TabItem>
 
-            <TabItem Header="本文の色">
+            <TabItem Header="文字色">
                 <Border Margin="4"
                         BorderBrush="Gray"
                         BorderThickness="1">
@@ -124,6 +124,17 @@
                     </ScrollViewer>
                 </Border>
             </TabItem>
+
+            <TabItem Header="その他">
+                <Border Margin="4"
+                        BorderBrush="Gray"
+                        BorderThickness="1">
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding CommonColors}" />
+                    </ScrollViewer>
+                </Border>
+            </TabItem>
+
             <TabItem Header="背景画像">
                 <StackPanel Margin="4,2" Orientation="Vertical">
                     <TextBlock Text="タイムラインリストの背景画像を設定できます。" />
@@ -139,7 +150,7 @@
         </TabControl>
         <Button HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Content="デフォルト"
+                Content="デフォルトに戻す"
                 Padding="6,2"
                 Style="{StaticResource FlatButtonStyle}">
             <i:Interaction.Triggers>

@@ -96,21 +96,30 @@ namespace Inscribe.Communication.UserStreams
         {
             if (info == null)
                 throw new ArgumentNullException("info", "AccountInfo is not set.");
-            if (!info.AccountProperty.UseUserStreams)
-                return false;
-            var ncon = new UserStreamsConnection(info);
-            if (connections.ContainsKey(info))
+
+            System.Diagnostics.Debug.WriteLine("Refresh connection: " + info.ToString());
+
+            UserStreamsConnection ncon;
+            lock (info)
             {
-                var pcon = connections[info];
-                // 以前の接続がある
-                connections[info] = ncon;
-                if (pcon != null)
-                    pcon.Dispose();
+                UserStreamsConnection prevCon;
+                // 旧接続の破棄
+                if (connections.TryGetValue(info, out prevCon))
+                {
+                    connections.Remove(info);
+                    if (prevCon != null)
+                        prevCon.Dispose();
+                }
+
+                // User Streams接続しない設定になっている
+                if (!info.AccountProperty.UseUserStreams)
+                    return false;
+
+                ncon = new UserStreamsConnection(info);
+                if (!connections.TryAdd(info, ncon))
+                    throw new InvalidOperationException("Connection refresh violation.");
             }
-            else
-            {
-                connections.AddOrUpdate(info, ncon);
-            }
+
             var queries = lookupDictionary.Where(v => v.Value == info).Select(v => v.Key).ToArray();
             try
             {

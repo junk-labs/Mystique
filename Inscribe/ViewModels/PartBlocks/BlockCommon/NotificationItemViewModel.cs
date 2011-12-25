@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
+using System.Windows.Media;
 using Dulcet.Twitter;
+using Inscribe.Configuration;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
@@ -80,6 +82,11 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
         }
 
         public bool EnableClose { get; private set; }
+
+        public Brush Background
+        {
+            get { return Setting.Instance.ColoringProperty.TweetWorkerNotifierBackground.GetBrush(); }
+        }
 
         #region RequireCloseイベント
 

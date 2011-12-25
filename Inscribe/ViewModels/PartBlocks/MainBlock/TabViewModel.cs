@@ -6,7 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Inscribe.Common;
+using Inscribe.Communication.Posting;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Tabs;
 using Inscribe.Filter;
@@ -15,11 +17,10 @@ using Inscribe.Filter.Filters.ScreenName;
 using Inscribe.Filter.Filters.Text;
 using Inscribe.Storage;
 using Inscribe.Subsystems;
+using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
-using Inscribe.Communication.Posting;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -157,6 +158,16 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             RaisePropertyChanged(() => IsSearchBarBottom);
             RaisePropertyChanged(() => SearchBarDock);
             RaisePropertyChanged(() => IsTranscender);
+            RaisePropertyChanged(() => TabBackground);
+            RaisePropertyChanged(() => TabBackgroundHighlight);
+            RaisePropertyChanged(() => TabSelectedBackground);
+            RaisePropertyChanged(() => TabSelectedHighlight);
+            RaisePropertyChanged(() => TabSelectedTransparentHighlight);
+            RaisePropertyChanged(() => SearchBackground);
+            RaisePropertyChanged(() => SearchBorder);
+            RaisePropertyChanged(() => SearchForeground);
+            RaisePropertyChanged(() => SearchInactiveForeground);
+            RaisePropertyChanged(() => SearchTextBackground);
         }
 
         /// <summary>
@@ -449,6 +460,65 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             RaisePropertyChanged(() => IsContainsSingle);
             RaisePropertyChanged(() => IsStackTopUserPage);
         }
+
+        #region Coloring property
+
+        public Brush TabSelectedBackground
+        {
+            get { return Setting.Instance.ColoringProperty.TabSelectedBackground.GetBrush(); }
+        }
+
+        public Color TabSelectedHighlight
+        {
+            get { return Setting.Instance.ColoringProperty.TabSelectedHighlight.GetColor(); }
+        }
+
+        public Color TabSelectedTransparentHighlight
+        {
+            get
+            {
+                var color = Setting.Instance.ColoringProperty.TabSelectedHighlight.GetColor();
+                color.A = 0;
+                return color;
+            }
+        }
+
+        public Color TabBackground
+        {
+            get { return Setting.Instance.ColoringProperty.TabBackground.GetColor(); }
+        }
+
+        public Color TabBackgroundHighlight
+        {
+            get { return Setting.Instance.ColoringProperty.TabHighlight.GetColor(); }
+        }
+
+        public Brush SearchBackground
+        {
+            get { return Setting.Instance.ColoringProperty.SearchBackground.GetBrush(); }
+        }
+
+        public Brush SearchForeground
+        {
+            get { return Setting.Instance.ColoringProperty.SearchForeground.GetBrush(); }
+        }
+
+        public Brush SearchTextBackground
+        {
+            get { return Setting.Instance.ColoringProperty.SearchTextBackground.GetBrush(); }
+        }
+
+        public Brush SearchInactiveForeground
+        {
+            get { return Setting.Instance.ColoringProperty.SearchInactiveForeground.GetBrush(); }
+        }
+
+        public Brush SearchBorder
+        {
+            get { return Setting.Instance.ColoringProperty.SearchBorder.GetBrush(); }
+        }
+
+        #endregion
 
         #region MoveFocusToThisCommand
         ViewModelCommand _MoveFocusToThisCommand;

@@ -29,7 +29,7 @@
         <BitmapImage x:Key="Shuttle" UriSource="/Resources/orbiter.png" />
         <BitmapImage x:Key="Chevron" UriSource="/Resources/chevron.png" />
     </UserControl.Resources>
-    <StatusBar>
+    <StatusBar Background="{Binding StatusBarBackground, FallbackValue=WhiteSmoke}">
         <StatusBar.ItemsPanel>
             <ItemsPanelTemplate>
                 <Grid>
