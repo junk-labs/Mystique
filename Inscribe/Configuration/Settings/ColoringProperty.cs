@@ -263,13 +263,13 @@ namespace Inscribe.Configuration.Settings
             : this(c.A, c.R, c.G, c.B) { }
 
         [XmlAttribute("A")]
-        public byte A = 0;
+        public byte A = 0xFF;
         [XmlAttribute("R")]
-        public byte R = 0;
+        public byte R = 0xFF;
         [XmlAttribute("G")]
-        public byte G = 0;
+        public byte G = 0xFF;
         [XmlAttribute("B")]
-        public byte B = 0;
+        public byte B = 0xFF;
 
         public virtual Brush GetBrush()
         {

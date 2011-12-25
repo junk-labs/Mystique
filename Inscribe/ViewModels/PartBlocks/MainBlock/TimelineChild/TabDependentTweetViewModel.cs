@@ -680,7 +680,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             {
                 if (_SurfaceClickCommand == null)
                 {
-                    _SurfaceClickCommand = new Livet.Commands.ViewModelCommand(SurfaceClick, () => !Setting.Instance.TweetExperienceProperty.UseFullLineView);
+                    _SurfaceClickCommand = new Livet.Commands.ViewModelCommand(SurfaceClick);
                 }
                 return _SurfaceClickCommand;
             }
