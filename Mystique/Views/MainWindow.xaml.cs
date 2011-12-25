@@ -41,7 +41,7 @@ namespace Mystique.Views
             // コンテントロード完了
             if(Setting.Instance.KernelProperty.LastWriteVersion == 0)
             {
-                if (Define.IsOperatingSystemSupported)
+                if (!Define.IsOperatingSystemSupported)
                 {
                     MessageBox.Show(this, "あなたのオペレーティングシステムでの動作は未確認です。" + Environment.NewLine +
                         "Windows Vista/7 での実行を強くお勧めします。", "未確認のWindows", 
