@@ -44,7 +44,7 @@
                                                      ConverterParameter=Keyword}" />
                 </Border>
                 <StackPanel Orientation="Vertical" Visibility="{Binding ElementName=Keyword, Path=IsChecked, Converter={StaticResource BoolVisibleConverter}}">
-                    <TextBlock Margin="6,2" Text="除外するキーワードを入力してください。" />
+                    <TextBlock Margin="6,2" Text="ミュートしたいキーワードを入力してください:" />
                     <TextBox Margin="6,2" Text="{Binding MuteText}" />
                 </StackPanel>
                 <Border Background="Gainsboro"
@@ -59,7 +59,7 @@
                                                      ConverterParameter=ClientName}" />
                 </Border>
                 <StackPanel Orientation="Vertical" Visibility="{Binding ElementName=ClientName, Path=IsChecked, Converter={StaticResource BoolVisibleConverter}}">
-                    <TextBlock Margin="6,2" Text="以下と同じクライアント名を除外条件に追加します。" />
+                    <TextBlock Margin="6,2" Text="以下と同じクライアントからのツイートをミュートします:" />
                     <TextBlock Margin="6,2" Text="{Binding ClientNameText}" />
                 </StackPanel>
                 <Border Background="Gainsboro"
@@ -75,9 +75,9 @@
                 </Border>
                 <StackPanel Orientation="Vertical" Visibility="{Binding ElementName=UserName, Path=IsChecked, Converter={StaticResource BoolVisibleConverter}}">
                     <TextBlock Margin="6, 2">
-                        <Run>ユーザーID @</Run>
+                        <Run>ユーザー @</Run>
                         <Run Text="{Binding UserScreenName, Mode=OneWay}" />
-                        <Run>を除外条件に追加します。</Run>
+                        <Run>からのツイートをミュートします。</Run>
                     </TextBlock>
                 </StackPanel>
             </StackPanel>

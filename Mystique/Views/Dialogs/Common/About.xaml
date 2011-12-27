@@ -176,7 +176,7 @@
                        Source="{StaticResource Ready}" />
                 <TextBlock Margin="2"
                            VerticalAlignment="Center"
-                           Text="Krileは次回起動時に更新されます。" />
+                           Text="次回起動時にKrileを自動更新します。" />
                 <Button Command="{Binding AppUpdateCommand}"
                         Content="今すぐにKrileを更新"
                         Padding="4,2" />

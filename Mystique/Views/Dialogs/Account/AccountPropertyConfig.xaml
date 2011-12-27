@@ -72,9 +72,9 @@
                         <CheckBox.ToolTip>
                             <ToolTip>
                                 <TextBlock>
-                                    <Run Text="User Streamsを使うと、ツイートをリアルタイムに受信できます。" />
+                                    <Run Text="User Streamsを使うと、ツイートをリアルタイムに取得します。" />
                                     <LineBreak />
-                                    <Run Text="Krileのすべての機能を使うには、User Streamsを使う必要があります。" />
+                                    <Run Text="User Streamsがオフの場合、Krileの一部機能が動作しなくなります。" />
                                     <LineBreak />
                                     <Run Text="User Streamsについての詳しい情報は、" />
                                     <Hyperlink NavigateUri="http://dev.twitter.com/pages/user_streams">
@@ -93,11 +93,13 @@
                         <CheckBox.ToolTip>
                             <ToolTip>
                                 <TextBlock>
-                                    <Run Text="あなたがフォローしていないユーザーから、あなたがフォローしているユーザーへ送信された返信を含めるようにします。" />
+                                    <Run Text="フォローしているユーザーへの返信を取得するようにします。" />
+                                    <LineBreak />
+                                    <Run Text="フォローしていないユーザーのツイートが含まれるようになります。" />
                                     <LineBreak />
                                     <Run Text="多くのフォロワーがいるユーザーをフォローしている場合、この機能はオフにしておくことをお勧めします。" />
                                     <LineBreak />
-                                    <Run Text="なお、この機能はUser Streams有効時のみ作用します。" />
+                                    <Run Text="なお、この機能はUser Streamsが有効な時のみ動作します。" />
                                 </TextBlock>
                             </ToolTip>
                         </CheckBox.ToolTip>
@@ -139,55 +141,14 @@
                                VerticalAlignment="Top"
                                Foreground="DimGray"
                                TextWrapping="Wrap">
-                        <Run Text="このアカウントがPOST規制されて投稿できないことを検知した時に、自動で別のアカウントでのツイートを試みます。フォールバックは連鎖します。" />
+                        <Run Text="このアカウントがPOST規制されて投稿できないことを検知した時に、自動で別のアカウントでのツイートを試みます。" />
+                        <LineBreak />
+                        <Run Text="そのアカウントでもツイート出来ない場合、そのアカウントのフォールバック先アカウントで試行します。つまり、フォールバックはどんどん連鎖します。" />
+                        <LineBreak />
+                        <Run Text="フォールバックをループさせると、想定外の動作をすることがあります。" Foreground="Red" />
                     </TextBlock>
                 </Grid>
             </TabItem>
-            <!--  Below configuration is no longer supported (but still existed in AccountProperty).  -->
-            <!--
-                <TabItem Header="クエリー">
-                <Grid>
-                <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                </Grid.RowDefinitions>
-                <TextBlock Margin="4,2">
-                <Run Text="指定の文字列を含むツイートを追加で受信します。" />
-                <LineBreak />
-                <Run Text="英語のみ指定可能です。User Streams接続が必要です。" />
-                </TextBlock>
-                <DockPanel Grid.Row="1" Margin="4,0">
-                <Button Width="80"
-                Command="{Binding AddQueryCommand}"
-                Content="追加"
-                DockPanel.Dock="Right" />
-                <TextBox VerticalAlignment="Center" Text="{Binding AddQueryCandidate, UpdateSourceTrigger=PropertyChanged}" />
-                </DockPanel>
-                <ListBox Grid.Row="2"
-                Margin="4,2"
-                HorizontalContentAlignment="Stretch"
-                ItemsSource="{Binding Queries}">
-                <ListBox.ItemTemplate>
-                <DataTemplate>
-                <DockPanel>
-                <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                AncestorType={x:Type ListBox}},
-                Path=DataContext.RemoveQueryCommand}"
-                CommandParameter="{Binding}"
-                DockPanel.Dock="Right">
-                <Image Width="16"
-                Height="16"
-                Source="{StaticResource Delete}" />
-                </Button>
-                <TextBlock VerticalAlignment="Center" Text="{Binding}" />
-                </DockPanel>
-                </DataTemplate>
-                </ListBox.ItemTemplate>
-                </ListBox>
-                </Grid>
-                </TabItem>
-            -->
             <TabItem Header="詳細設定">
                 <Grid>
                     <TextBlock Margin="6,9,0,0"
@@ -196,9 +157,9 @@
                                Text="REST API 最大使用率:">
                         <TextBlock.ToolTip>
                             <TextBlock>
-                                <Run Text="自動で受信管理をする際に、APIをどこまで使い切るかをパーセントで指定できます。" />
+                                <Run Text="REST APIを用いてツイートを取得する際に、APIを何パーセント使うか指定できます。" />
                                 <LineBreak />
-                                <Run Text="なお、KrileはAPI受信を自動で管理します。受信間隔を設定することはできません。" />
+                                <Run Text="※Krileはツイートの取得を全自動で行います。取得間隔を設定することはできません。" />
                             </TextBlock>
                         </TextBlock.ToolTip>
                     </TextBlock>
@@ -228,13 +189,13 @@
                             <TextBlock VerticalAlignment="Center" Text="Cruise Control μ:">
                                 <TextBlock.ToolTip>
                                     <TextBlock>
-                                        <Run Text="クルーズコントロールのμ値(0-100)を指定します。" />
+                                        <Run Text="自動取得のパラメータ値(0-100)を指定します。" />
                                         <LineBreak />
-                                        <Run Text="値を大きくすればAPI消費が少なくなりますが、受信頻度が下がります。また、タイムライン速度の変動に追従しづらくなります。" />
+                                        <Run Text="値を大きくすれば平均的なAPI消費数が少なくなりますが、取得頻度が下がります。また、タイムライン速度の変動に追従しづらくなります。" />
                                         <LineBreak />
-                                        <Run Text="逆に値を小さくすると、受信頻度が上がり、タイムライン速度の変動に追従しやすくなりますが、API消費が上がります。" />
+                                        <Run Text="逆に値を小さくすると、取得頻度が上がり、タイムライン速度の変動に追従しやすくなりますが、平均的なAPI消費数が上がります。" />
                                         <LineBreak />
-                                        <Run Text="User Streams接続時もバックグラウンドで受信され続けますが、頻度が徐々に落ちていきます。" />
+                                        <Run Text="User Streamsで接続中もバックグラウンドで取得し続けますが、取得頻度は少なくなります。" />
                                     </TextBlock>
                                 </TextBlock.ToolTip>
                             </TextBlock>

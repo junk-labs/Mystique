@@ -63,23 +63,7 @@ namespace Mystique
 
             #endregion
 
-            if (Environment.OSVersion.Version.Major < 6)
-            {
-                // WinXPでβ以上の場合は何も吐かずに落ちる
-                if (Define.GetVersion().FileBuildPart > 2)
-                {
-                    var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "krile_trace_" + Path.GetRandomFileName() + ".txt");
-                    using (var sw = new StreamWriter(path))
-                    {
-                        sw.WriteLine(body.ToString());
-                    }
-                    MessageBox.Show("エラーが発生し、Krileの動作の継続が不可能になりました。" + Environment.NewLine +
-                            "ご利用のオペレーティングシステムは自動フィードバックシステムをご利用できません。" + Environment.NewLine +
-                            "お手数ですが、デスクトップに生成されるエラートレースを@karnoまでお知らせください。",
-                            "サポート対象外のOS", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            else
+            if (Define.IsOperatingSystemSupported)
             {
                 var tpath = Path.GetTempFileName();
                 using (var sw = new StreamWriter(tpath))
@@ -89,6 +73,22 @@ namespace Mystique
                 var apppath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
                 System.Diagnostics.Process.Start(Path.Combine(apppath, Define.FeedbackAppName), tpath);
                 Environment.Exit(1);
+            }
+            else
+            {
+                // WinXPでβ以上の場合は何も吐かずに落ちる
+                if (Define.IsNightlyVersion)
+                {
+                    var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "krile_trace_" + Path.GetRandomFileName() + ".txt");
+                    using (var sw = new StreamWriter(path))
+                    {
+                        sw.WriteLine(body.ToString());
+                    }
+                    MessageBox.Show("エラーが発生し、Krileの動作を継続できなくなりました。" + Environment.NewLine +
+                            "ご利用のオペレーティングシステムでは自動フィードバックシステムを利用できません。" + Environment.NewLine +
+                            "お手数ですが、デスクトップに生成されるエラートレースを@karnoまでお知らせください。",
+                            "サポート対象外のOS", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
     }

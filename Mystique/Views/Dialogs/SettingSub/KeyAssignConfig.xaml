@@ -32,11 +32,11 @@
                    Margin="4,2"
                    Foreground="DimGray"
                    TextWrapping="Wrap">
-            <Run Text="キーアサインの設定を完全に反映するには、Krileのリスタートが必要です。" />
+            <Run Text="キーアサインの設定を完全に反映するには、Krileの再起動が必要です。" />
             <LineBreak />
             <Run Text="キーアサインを追加するには、krile.exeが存在するフォルダ内のassignsフォルダにキーアサイン定義ファイルを追加してください。" />
             <LineBreak />
-            <Run Text="default.xmlを直接編集するのではなく、コピーを行って編集をして、この設定でファイルを切り替えることをお勧めします。" />
+            <Run Foreground="Red" Text="既に存在するxmlファイルを直接編集するのではなく、ファイルの複製を行い、複製先のファイルで編集をして、この設定でファイルを切り替えてください。そうしないと、自動アップデート時に編集内容が消失する可能性があります。" />
         </TextBlock>
         <Button Margin="4,2" Content="アサインビューアを開く(_V)..." Grid.Row="2" Grid.ColumnSpan="2">
             <i:Interaction.Triggers>

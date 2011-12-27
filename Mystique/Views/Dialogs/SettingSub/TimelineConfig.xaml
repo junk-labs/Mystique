@@ -49,6 +49,13 @@
             <StackPanel Orientation="Horizontal">
                 <AccessText Text="高速スクロールを使う(_F)" />
             </StackPanel>
+            <CheckBox.ToolTip>
+                <TextBlock>
+                    <Run Text="マウスホイールでのスクロール速度を向上させます。" />
+                    <LineBreak />
+                    <Run Text="具体的には、スクロール量をΔ^2に比例するようにします。" />
+                </TextBlock>
+            </CheckBox.ToolTip>
         </CheckBox>
         <GroupBox Grid.Row="4"
                   Grid.ColumnSpan="2"
@@ -111,7 +118,7 @@
                            Margin="4,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
-                           Text="ツイート表示の初期化方法" />
+                           Text="ツイートカラーの初期化方法" />
                 <ComboBox Grid.Row="4"
                           Grid.Column="1"
                           Margin="4,2"

@@ -186,7 +186,7 @@
                       IsChecked="{Binding IsNegate}">
                 <AccessText Text="否定条件にする(_N)" />
                 <CheckBox.ToolTip>
-                    <TextBlock Text="このフィルタにマッチしたツイートを含めないようにします。" />
+                    <TextBlock Text="このフィルタに当てはまるツイートを含めないようにします。" />
                 </CheckBox.ToolTip>
             </CheckBox>
             <Button Grid.Column="1"

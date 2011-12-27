@@ -23,9 +23,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Background="Gainsboro" Padding="4, 2">
-            <Run Text="キーアサインの設定を確認できます。" />
+            <Run Text="現在のキーアサインの設定値を表示しています。" />
             <LineBreak />
-            <Run Text="このウィンドウでキーを入力すると、最下部に入力キーが表示されます。" />
+            <Run Text="このウィンドウでキーを入力すると、最下部に入力したキーが表示されます。" />
         </TextBlock>
         <TextBox Grid.Row="1"
                  IsReadOnly="True"

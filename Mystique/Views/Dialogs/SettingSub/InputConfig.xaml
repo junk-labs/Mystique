@@ -18,13 +18,14 @@
                   ToolTip="@や#を入力した場合、入力候補を表示して簡単に入力ができるようにします。" />
 
         <CheckBox Margin="4,2"
-                  Content="入力中のユーザー選択はその投稿にのみ使用する(_U)"
+                  Content="投稿ボックス展開中のユーザー選択はその投稿にのみ使用する(_U)"
                   IsChecked="{Binding EnableTemporarilyUserSelection}">
             <CheckBox.ToolTip>
                 <TextBlock>
-                    <Run Text="新しいツイートを入力中に選択したユーザーを保持し続けないようにします。" />
+                    <Run Text="投稿ボックスを展開中に選択したユーザーを、投稿ボックスを閉じる時に元に戻すようにします。" />
                     <LineBreak />
-                    <Run Text="頻繁にアカウントを切り替える方におすすめです。" /></TextBlock>
+                    <Run Text="頻繁にアカウントを切り替える方におすすめです。" />
+                </TextBlock>
             </CheckBox.ToolTip>
         </CheckBox>
         <CheckBox Margin="4,2"
@@ -35,15 +36,15 @@
                   IsChecked="{Binding TrimBeginSpace}"
                   ToolTip=" RT @～のように、先頭が空白文字で始まるツイートを投稿するとき、先頭の空白を削除します。" />
         <CheckBox Margin="4,2"
-                  Content="文字数制限を超えた分はトリムする(_T)"
+                  Content="文字数制限を超えた分はカットする(_T)"
                   IsChecked="{Binding TrimExceedChars}">
             <CheckBox.ToolTip>
                 <TextBlock>
                     <Run Text="ツイート時、ツイート上限(140文字)を超えた部分を自動でカットします。" />
                     <LineBreak />
-                    <Run Text="ただ機械的に削除を行うため、URLなどが破壊されることがあります。" />
+                    <Run Text="ただ機械的に削除を行うため、URLやハッシュタグなどが破壊されることがあります。" />
                     <LineBreak />
-                    <Run Text="URLを破壊しないようにするには、このオプションをオフにして自分でトリムすることをお勧めします。" />
+                    <Run Text="破壊しないようにするには、このオプションをオフにして自分で調整することをお勧めします。" />
                 </TextBlock>
             </CheckBox.ToolTip>
         </CheckBox>
@@ -59,11 +60,14 @@
             </CheckBox.ToolTip>
         </CheckBox>
         <CheckBox Margin="4,2"
-                  Content="フォールバックアカウントの会話をオリジナルから行う(_O)"
+                  Content="フォールバックアカウントでの会話をフォールバック元から行う(_O)"
                   IsChecked="{Binding FallbackBackTracking}">
             <CheckBox.ToolTip>
                 <TextBlock>
-                    <Run Text="フォールバック先に指定されているアカウントへのmentionに対して返信する時、フォールバック元を探索してそのアカウントからの返信を入力できるようにします。" /></TextBlock>
+                    <Run Text="フォールバック先に指定されているアカウントへのmentionに対して返信する時、フォールバック元を探索してそのアカウントからの返信を入力できるようにします。" />
+                    <LineBreak />
+                    <Run Text="頻繁に規制される方におすすめです。" />
+                </TextBlock>
             </CheckBox.ToolTip>
         </CheckBox>
         <CheckBox Margin="4,2"

@@ -51,9 +51,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public void InvalidateTabProperty()
         {
-                RaisePropertyChanged(() => TabProperty);
-                RaisePropertyChanged(() => NewTweetsCount);
-                RaisePropertyChanged(() => Name);
+            RaisePropertyChanged(() => TabProperty);
+            RaisePropertyChanged(() => NewTweetsCount);
+            RaisePropertyChanged(() => Name);
         }
 
         public string Name
@@ -263,14 +263,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             {
                 this._queryTextBuffer = value ?? String.Empty;
                 RaisePropertyChanged(() => QueryText);
-               Task.Factory.StartNew(() =>
-                    {
-                        Thread.Sleep(Setting.Instance.TimelineExperienceProperty.QueryApplyWait);
-                        if (this._queryTextBuffer == value)
-                        {
-                            this.AnalyzeCurrentQuery();
-                        }
-                    });
+                Task.Factory.StartNew(() =>
+                     {
+                         Thread.Sleep(Setting.Instance.TimelineExperienceProperty.QueryApplyWait);
+                         if (this._queryTextBuffer == value)
+                         {
+                             this.AnalyzeCurrentQuery();
+                         }
+                     });
             }
         }
 
@@ -765,7 +765,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             Parent.CloseTab(this);
         }
         #endregion
-        
+
         #region TabMouseDownCommand
         ListenerCommand<MouseEventArgs> _TabMouseDownCommand;
 
@@ -788,7 +788,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
         #endregion
-      
+
         internal void NotifyNewTweetReceived(TimelineListCoreViewModel timelineListCoreViewModel, TimelineChild.TweetViewModel tweetViewModel)
         {
             if (AccountStorage.Contains(tweetViewModel.Status.User.ScreenName) || !this.IsAlive)

@@ -14,7 +14,7 @@
              mc:Ignorable="d">
     <StackPanel Orientation="Vertical">
         <CheckBox Margin="4,2"
-                  Content="入力ブロックを下側に表示する(_I)"
+                  Content="入力ボックスを下側に表示する(_I)"
                   IsChecked="{Binding ShowInputBlockInBottom}" />
         <CheckBox Margin="4,2"
                   Content="通知バーを下側に表示する(_U)"

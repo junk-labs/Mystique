@@ -17,7 +17,7 @@
         <my:FilterEditor Grid.Row="1" DataContext="{Binding FilterEditorViewModel}" />
         <CheckBox Grid.Row="2"
                   Margin="4"
-                  Content="ブロックユーザーをミュートする(_B)"
+                  Content="ブロックしているユーザーをミュートする(_B)"
                   IsChecked="{Binding MuteBlockedUsers}"
                   ToolTip="Krileに登録されているアカウントのうちどれかからブロックされていたらミュートします。" />
     </Grid>

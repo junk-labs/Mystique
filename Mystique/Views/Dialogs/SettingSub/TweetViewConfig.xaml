@@ -50,7 +50,7 @@
             <TextBlock Margin="0,0,4,0"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
-                       Text="チップヘルプ表示時間(ms)" />
+                       Text="チップヘルプ表示時間(msec)" />
             <TextBox Grid.Column="1"
                      Margin="4,0,0,0"
                      bat:TextBoxExtension.IsNumeric="True"

@@ -72,7 +72,7 @@
                           IsChecked="{Binding Path=DarkViewModel.IsActivated}">
                     <CheckBox.ToolTip>
                         <ToolTip>
-                            <TextBlock Text="チェックを付けると、右側の色設定を有効にします。" />
+                            <TextBlock Text="チェックを付けると、右側の色設定を使用します。" />
                         </ToolTip>
                     </CheckBox.ToolTip>
                 </CheckBox>
@@ -85,7 +85,7 @@
                           IsChecked="{Binding Path=LightViewModel.IsActivated}">
                     <CheckBox.ToolTip>
                         <ToolTip>
-                            <TextBlock Text="チェックを付けると、左側の色設定を有効にします。" />
+                            <TextBlock Text="チェックを付けると、左側の色設定を使用します。" />
                         </ToolTip>
                     </CheckBox.ToolTip>
                 </CheckBox>
