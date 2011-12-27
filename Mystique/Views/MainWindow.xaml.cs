@@ -33,6 +33,18 @@ namespace Mystique.Views
                 Nightmare.WinAPI.NativeWindowControl.SetWindowPlacement(this, Setting.Instance.StateProperty.WindowPosition);
                 this.WindowState = Setting.Instance.StateProperty.WindowState;
             }
+            // 設定のバリデーション
+            if (Setting.Instance.ColoringProperty.DefaultTextColor.A == 0x0)
+            {
+                var result = MessageBox.Show(this,
+                    "色設定が破損している可能性があります。(本文のα値が0です)" + Environment.NewLine +
+                    "配色設定を初期化しますか？", "色設定の復元", MessageBoxButton.YesNo, MessageBoxImage.Error);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Setting.Instance.ColoringProperty = new Inscribe.Configuration.Settings.ColoringProperty();
+                    Setting.RaiseSettingValueChanged();
+                }
+            }
 
         }
 

@@ -48,7 +48,7 @@
                                Foreground="{Binding SearchInactiveForeground,
                                                     FallbackValue=Gray}"
                                Padding="2"
-                               Text="Input here to search timeline...">
+                               Text="Search by words, @user, q:query...">
                         <TextBlock.InputBindings>
                             <MouseBinding Command="{Binding CreateTopTimelineCommand}" MouseAction="LeftClick" />
                         </TextBlock.InputBindings>
@@ -120,7 +120,7 @@
                                    Foreground="{Binding SearchInactiveForeground,
                                                         FallbackValue=Gray}"
                                    Padding="2"
-                                   Text="Input here to search timeline..."
+                                   Text="Search by words, @user, q:query..."
                                    Visibility="{Binding IsStackTopUserPage,
                                                         Converter={StaticResource BoolVisibleConverter}}">
                             <TextBlock.InputBindings>
