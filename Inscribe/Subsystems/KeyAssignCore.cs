@@ -184,6 +184,7 @@ namespace Inscribe.Subsystems
             }
             else if (e.Key == Key.ImeProcessed)
             {
+                // clear
                 InputMethod.Current.ImeState = InputMethodState.Off;
                 return e.ImeProcessedKey;
             }

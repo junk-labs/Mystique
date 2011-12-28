@@ -517,7 +517,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\plus.png" />
-    <Resource Include="Resources\112_Plus_Green_24x24_72.png" />
     <Resource Include="Resources\favrt.png" />
     <None Include="assigns\tween.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

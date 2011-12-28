@@ -762,7 +762,7 @@
                         <ItemsControl ItemsSource="{Binding Path=Tweet.PhotoThumbnails, IsAsync=True}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Image MinHeight="160"
+                                    <Image MaxHeight="300"
                                            Source="{Binding PhotoUri,
                                                             IsAsync=True}"
                                            Stretch="Uniform">

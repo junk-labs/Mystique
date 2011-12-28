@@ -100,7 +100,7 @@
                         BorderThickness="1"
                         CornerRadius="1">
                     <Grid>
-                        <TextBox Background="Transparent"
+                        <TextBox Background="{Binding InputBackground}"
                                  BorderThickness="0"
                                  Foreground="{Binding SearchForeground}"
                                  KeyDown="TextBox_KeyDown"

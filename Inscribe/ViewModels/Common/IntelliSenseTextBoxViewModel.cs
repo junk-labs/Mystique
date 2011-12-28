@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Windows.Media;
+using Inscribe.Algorithm.DPMatching;
+using Inscribe.Configuration;
 using Livet;
 using Mystique.Views.Behaviors.Messages;
-using Inscribe.Algorithm.DPMatching;
-using System.Windows.Media;
-using Inscribe.Configuration;
 
 namespace Inscribe.ViewModels.Common
 {
@@ -46,7 +46,7 @@ namespace Inscribe.ViewModels.Common
         private bool _isItemOpening;
         public bool IsItemOpening
         {
-            get { return _isItemOpening;}
+            get { return _isItemOpening; }
             set
             {
                 _isItemOpening = value;
@@ -115,7 +115,32 @@ namespace Inscribe.ViewModels.Common
             ItemsOpeningEvent.Raise(e);
         }
         #endregion
-      
+
+        #region FileDropイベント
+        public event EventHandler<FileDropEventArgs> FileDrop;
+        private Notificator<FileDropEventArgs> _FileDropEvent;
+        public Notificator<FileDropEventArgs> FileDropEvent
+        {
+            get
+            {
+                if (_FileDropEvent == null)
+                    _FileDropEvent = new Notificator<FileDropEventArgs>();
+                return _FileDropEvent;
+            }
+            set { _FileDropEvent = value; }
+        }
+
+        protected virtual void OnFileDrop(FileDropEventArgs e)
+        {
+            var threadSafeHandler = Interlocked.CompareExchange(ref FileDrop, null, null);
+            if (threadSafeHandler != null)
+            {
+                threadSafeHandler(this, e);
+            }
+            FileDropEvent.Raise(e);
+        }
+        #endregion
+
         public void RaiseOnItemsOpening()
         {
             OnItemsOpening(EventArgs.Empty);
@@ -208,6 +233,16 @@ namespace Inscribe.ViewModels.Common
             var cmsg = new TextBoxSetCaretMessage("SetCaret", selStart, selLength);
             this.Messenger.Raise(cmsg);
         }
+
+        public void RaiseOnDrop(string file)
+        {
+            OnFileDrop(new FileDropEventArgs { FilePath = file });
+        }
+    }
+
+    public class FileDropEventArgs : EventArgs
+    {
+        public string FilePath { get; set; }
     }
 
     public class IntelliSenseItemViewModel : ViewModel

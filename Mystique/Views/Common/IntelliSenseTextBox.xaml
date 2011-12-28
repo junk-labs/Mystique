@@ -14,10 +14,14 @@
     <Grid>
         <TextBox Name="inputTextBox"
                  AcceptsReturn="True"
+                 AllowDrop="True"
                  Background="Transparent"
                  BorderThickness="0"
+                 DragOver="inputTextBox_DragOver"
+                 Drop="inputTextBox_Drop"
                  Foreground="{Binding Foreground,
                                       FallbackValue=Black}"
+                 PreviewDragOver="inputTextBox_PreviewDragOver"
                  PreviewKeyDown="inputTextBox_PreviewKeyDown"
                  SelectionChanged="inputTextBox_SelectionChanged"
                  Text="{Binding TextBoxText,

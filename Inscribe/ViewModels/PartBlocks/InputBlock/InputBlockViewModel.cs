@@ -48,6 +48,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             this._intelliSenseTextBoxViewModel.TextChanged += (o, e) => RaisePropertyChanged(() => DirectMessageTarget);
             this._intelliSenseTextBoxViewModel.TextChanged += (o, e) => RaisePropertyChanged(() => IsInReplyToEnabled);
             this._intelliSenseTextBoxViewModel.ItemsOpening += (o, e) => _intelliSenseTextBoxViewModel_OnItemsOpening();
+            this._intelliSenseTextBoxViewModel.FileDrop += (o, e) => AttachImage(e.FilePath);
             // Listen changing tab
             this.Parent.ColumnOwnerViewModel.CurrentTabChanged += new Action<TabViewModel>(CurrentTabChanged);
             RegisterKeyAssign();
@@ -1114,9 +1115,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 var ret = this.Messenger.GetResponse(ofm);
                 if (ret.Response != null)
                 {
-                    this.CurrentInputDescription.AttachedImage = ret.Response;
+                    AttachImage(ret.Response);
                 }
             }
+        }
+
+        private void AttachImage(string file)
+        {
+            this.CurrentInputDescription.AttachedImage = file;
         }
         #endregion
 

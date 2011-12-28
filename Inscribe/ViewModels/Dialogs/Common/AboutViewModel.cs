@@ -15,6 +15,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
             new ContributorViewModel("そらん", "dasoran"),
             new ContributorViewModel("佐々木＠くっくっ。", "ssk_uo"),
             new ContributorViewModel("るみぃ", "lummy_ts"),
+            new ContributorViewModel("たけしけー", "takeshik"),
         };
 
         public AboutViewModel()

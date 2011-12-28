@@ -361,6 +361,24 @@ namespace Mystique.Views.Common
             */
         }
 
+        private void inputTextBox_DragOver(object sender, DragEventArgs e)
+        {
+        }
+
+        private void inputTextBox_Drop(object sender, DragEventArgs e)
+        {
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files != null)
+            {
+                ViewModel.RaiseOnDrop(files[0]);
+            }
+        }
+
+        private void inputTextBox_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = e.Data.GetDataPresent(DataFormats.FileDrop);
+        }
+
     }
 
 }

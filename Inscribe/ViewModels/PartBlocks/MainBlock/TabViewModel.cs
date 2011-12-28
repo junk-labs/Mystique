@@ -168,6 +168,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             RaisePropertyChanged(() => SearchForeground);
             RaisePropertyChanged(() => SearchInactiveForeground);
             RaisePropertyChanged(() => SearchTextBackground);
+            RaisePropertyChanged(() => InputBackground);
         }
 
         /// <summary>
@@ -516,6 +517,17 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public Brush SearchBorder
         {
             get { return Setting.Instance.ColoringProperty.SearchBorder.GetBrush(); }
+        }
+
+        public Brush InputBackground
+        {
+            get
+            {
+                if (Setting.Instance.ColoringProperty.SetSearchCaretColorWhite)
+                    return new SolidColorBrush(Color.FromArgb(0x00, 0x00, 0x00, 0x00));
+                else
+                    return new SolidColorBrush(Color.FromArgb(0x00, 0xff, 0xff, 0xff));
+            }
         }
 
         #endregion
