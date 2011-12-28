@@ -7,6 +7,7 @@ using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 using Livet.Messaging.IO;
+using Inscribe.Common;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
@@ -16,6 +17,10 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public IEnumerable<IApplyable> TextBackColors { get; private set; }
         public IEnumerable<IApplyable> TextForeColors { get; private set; }
         public IEnumerable<IApplyable> CommonColors { get; private set; }
+
+        public bool SetInputCaretColorWhite { get; set; }
+
+        public bool SetSearchCaretColorWhite { get; set; }
 
         private string _backgroundImage;
         public string BackgroundImage
@@ -30,6 +35,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public ColoringConfigViewModel()
         {
+            SetInputCaretColorWhite = Setting.Instance.ColoringProperty.SetInputCaretColorWhite;
+            SetSearchCaretColorWhite = Setting.Instance.ColoringProperty.SetSearchCaretColorWhite;
             NameBackColors = new IApplyable[]{
                 Wrap(Setting.Instance.ColoringProperty.DefaultNameColor, "基本色"),
                 Wrap(Setting.Instance.ColoringProperty.MyColor, "自分"),
@@ -199,6 +206,9 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 cp.UserProfileDarkBackground
             };
 
+            SetInputCaretColorWhite = cp.SetInputCaretColorWhite;
+            SetSearchCaretColorWhite = cp.SetSearchCaretColorWhite;
+
             NameBackColors.Concat(TextBackColors).Concat(TextForeColors).Concat(CommonColors)
                 .Select(a => (dynamic)a)
                 .Zip(nbcprops.Concat(tbcprops).Concat(tfcprops).Concat(ccprops),
@@ -223,6 +233,88 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             vm.DarkViewModel.CPBViewModel.CurrentColor = ce.GetDarkColor();
         }
 
+        #region FileImportCommand
+        private ViewModelCommand _FileImportCommand;
+
+        public ViewModelCommand FileImportCommand
+        {
+            get
+            {
+                if (_FileImportCommand == null)
+                {
+                    _FileImportCommand = new ViewModelCommand(FileImport);
+                }
+                return _FileImportCommand;
+            }
+        }
+
+        public void FileImport()
+        {
+            var ofm = new OpeningFileSelectionMessage("OpenFile");
+            ofm.Title = "色設定ファイルを選択";
+            ofm.Filter = "色設定ファイル|*.kcx";
+            this.Messenger.Raise(ofm);
+            if (ofm.Response != null)
+            {
+                try
+                {
+                    var data = XMLSerializer.LoadXML<ColoringProperty>(ofm.Response, true);
+                    ApplyColoringProperty(data);
+                }
+                catch
+                {
+                    this.Messenger.Raise(new InformationMessage("ファイルを読み込めません。",
+                        "色設定ファイルのロードエラー", System.Windows.MessageBoxImage.Error, "Message"));
+                }
+            }
+        }
+        #endregion
+
+        #region FileExportCommand
+        private ViewModelCommand _FileExportCommand;
+
+        public ViewModelCommand FileExportCommand
+        {
+            get
+            {
+                if (_FileExportCommand == null)
+                {
+                    _FileExportCommand = new ViewModelCommand(FileExport);
+                }
+                return _FileExportCommand;
+            }
+        }
+
+        public void FileExport()
+        {
+            var cm = new ConfirmationMessage(
+                "色設定をエクスポートすると、現在の設定内容がKrileの設定に反映されます。" +
+                "よろしいですか？", "色設定保存", System.Windows.MessageBoxImage.Warning,
+                 System.Windows.MessageBoxButton.YesNo, "Confirm");
+            this.Messenger.Raise(cm);
+            if (cm.Response.GetValueOrDefault())
+            {
+                var sfm = new SavingFileSelectionMessage("SaveFile");
+                sfm.Title = "色設定ファイルの保存";
+                sfm.Filter = "色設定ファイル|*.kcx";
+                this.Messenger.Raise(sfm);
+                if (sfm.Response != null)
+                {
+                    try
+                    {
+                        Apply();
+                        XMLSerializer.SaveXML<ColoringProperty>(sfm.Response, Setting.Instance.ColoringProperty);
+                    }
+                    catch
+                    {
+                        this.Messenger.Raise(new InformationMessage("ファイルを読み込めません。",
+                            "色設定ファイルのロードエラー", System.Windows.MessageBoxImage.Error, "Message"));
+                    }
+                }
+            }
+        }
+        #endregion
+
         public void Apply()
         {
             NameBackColors
@@ -230,6 +322,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 .Concat(TextForeColors)
                 .Concat(CommonColors)
                 .ForEach(a => a.Apply());
+            Setting.Instance.ColoringProperty.SetInputCaretColorWhite = SetInputCaretColorWhite;
+            Setting.Instance.ColoringProperty.SetSearchCaretColorWhite = SetSearchCaretColorWhite;
             Setting.Instance.TimelineExperienceProperty.BackgroundImage = this.BackgroundImage;
         }
     }

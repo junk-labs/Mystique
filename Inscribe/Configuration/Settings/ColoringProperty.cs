@@ -120,6 +120,10 @@ namespace Inscribe.Configuration.Settings
         public ColorElement SearchBorder = new ColorElement(Colors.Silver);
 
         #endregion
+
+        public bool SetInputCaretColorWhite = false;
+
+        public bool SetSearchCaretColorWhite = false;
     }
 
     public interface IColorElement

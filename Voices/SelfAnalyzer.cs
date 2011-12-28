@@ -17,13 +17,13 @@ namespace Voices
                     "(ERR: FileOrDirNotFound)";
             }
 
-            if (error.Contains("System.MissingMethodException"))
+            if (error.Contains("System.MissingMethodException") || error.Contains("System.MissingFieldException"))
             {
                 return "使用しているプラグインの互換性が無い可能性があります。" + Environment.NewLine +
                     "後から導入したプラグインをいったん削除して起動してみてください。" + Environment.NewLine +
                     "それでも起動しない場合は、Krileのファイル構成が壊れている可能性があります。" + Environment.NewLine +
                     "Krile 公式サイトより最新版をダウンロードして上書きしてみてください。" + Environment.NewLine +
-                    "(ERR: MissingMethod)";
+                    "(ERR: MissingFieldOrMethod)";
             }
 
             List<String> errors = new List<string>();

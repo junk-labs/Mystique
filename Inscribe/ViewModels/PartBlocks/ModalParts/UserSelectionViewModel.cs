@@ -37,10 +37,16 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
             this._kind = kind;
             curInteract = interact;
             _userSelectorViewModel.LinkElements = defaultSelect;
+            RaisePropertyChanged(() => IsFavoriteAndRetweet);
             RaisePropertyChanged(() => IsFavorite);
             RaisePropertyChanged(() => IsRetweet);
             RaisePropertyChanged(() => SelectedUsers);
             OkCommand.RaiseCanExecuteChanged();
+        }
+
+        public bool IsFavoriteAndRetweet
+        {
+            get { return this._kind == SelectionKind.FavoriteAndRetweet; }
         }
 
         public bool IsFavorite
@@ -111,6 +117,7 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
 
     public enum SelectionKind
     {
+        FavoriteAndRetweet,
         Favorite,
         Retweet,
     }

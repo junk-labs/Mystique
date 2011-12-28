@@ -35,13 +35,13 @@
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <Grid Background="{Binding UserProfileBackground, FallbackValue=White}" IsEnabled="{Binding IsStandby}">
+        <Grid IsEnabled="{Binding IsStandby}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Grid>
+            <Grid Background="{Binding UserProfileBackground, FallbackValue=White}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
@@ -154,7 +154,7 @@
                                                Padding="0" />
                 </Border>
             </Grid>
-            <Grid Grid.Row="1" Background="{Binding UserProfileDarkBackground, FallbackValue=WhiteSmoke}">
+            <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="4" />
                     <RowDefinition Height="Auto" />
@@ -168,6 +168,10 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="6" />
                 </Grid.ColumnDefinitions>
+                <Rectangle Grid.RowSpan="2"
+                           Grid.ColumnSpan="6"
+                           Fill="{Binding UserProfileDarkBackground,
+                                          FallbackValue=WhiteSmoke}" />
                 <TextBlock Grid.Row="1" Grid.Column="1">
                     <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="favorites">
                         <Run Text="{Binding Favorites, Mode=OneWay}" />
@@ -203,6 +207,8 @@
                         Padding="0">
                     <DockPanel Margin="0, 0, 0, -1">
                         <Button Margin="0,0,0,1"
+                                Background="{Binding UserProfileDarkBackground,
+                                                     FallbackValue=WhiteSmoke}"
                                 Command="{Binding ManageFollowCommand}"
                                 DockPanel.Dock="Right"
                                 Style="{DynamicResource FlatButtonStyle}">
@@ -214,7 +220,8 @@
                                 <TextBlock Text="フォローの管理..." />
                             </StackPanel>
                         </Button>
-                        <Border Background="White"
+                        <Border Background="{Binding UserProfileBackground,
+                                                     FallbackValue=White}"
                                 BorderBrush="DimGray"
                                 BorderThickness="1, 1, 1, 0">
                             <DockPanel>

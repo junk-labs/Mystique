@@ -24,7 +24,11 @@ namespace Inscribe.ViewModels.Common
 
         public IntelliSenseTextBoxViewModel()
         {
-            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (_, __) => RaisePropertyChanged(() => Foreground));
+            ViewModelHelper.BindNotification(Setting.SettingValueChangedEvent, this, (_, __) =>
+            {
+                RaisePropertyChanged(() => Foreground);
+                RaisePropertyChanged(() => Background);
+            });
         }
 
         private string _textBoxText = String.Empty;
@@ -55,6 +59,17 @@ namespace Inscribe.ViewModels.Common
         public Brush Foreground
         {
             get { return Setting.Instance.ColoringProperty.PostBoxOpenForeground.GetBrush(); }
+        }
+
+        public Brush Background
+        {
+            get
+            {
+                if (Setting.Instance.ColoringProperty.SetInputCaretColorWhite)
+                    return new SolidColorBrush(Color.FromArgb(0x00, 0x00, 0x00, 0x00));
+                else
+                    return new SolidColorBrush(Color.FromArgb(0x00, 0xff, 0xff, 0xff));
+            }
         }
 
         #endregion

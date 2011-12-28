@@ -36,7 +36,9 @@ namespace Mystique.Views
             InitializeComponent();
             this.Identifier = Interlocked.Increment(ref globalIdentifierCount);
             MeasureLocation();
-            this.Owner = Application.Current.MainWindow;
+            // 何故かこのウィンドウがメインウィンドウになってしまうことがあるらしい
+            if (this != Application.Current.MainWindow)
+                this.Owner = Application.Current.MainWindow;
             Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(Setting.Instance.NotificationProperty.NotifyWindowShowLength);

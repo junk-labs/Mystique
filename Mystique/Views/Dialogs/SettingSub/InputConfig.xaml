@@ -60,7 +60,7 @@
             </CheckBox.ToolTip>
         </CheckBox>
         <CheckBox Margin="4,2"
-                  Content="フォールバックアカウントでの会話をフォールバック元から行う(_O)"
+                  Content="フォールバックアカウントでの会話をフォールバック元から行う(_B)"
                   IsChecked="{Binding FallbackBackTracking}">
             <CheckBox.ToolTip>
                 <TextBlock>
@@ -82,7 +82,7 @@
         <CheckBox Margin="4,2"
                   Content="ツイートに失敗した際に自動で再試行する(_N)"
                   IsChecked="{Binding AutoRetryOnError}" />
-        <Button Margin="4,2" Content="ハッシュタグ自動バインド設定(_A)...">
+        <Button Margin="4,2" Content="ハッシュタグ自動バインド設定(_H)...">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <ma:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type bcd:AutoBindConfig}">
@@ -93,5 +93,8 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
+        <CheckBox Margin="4,2"
+                  Content="返信中はハッシュタグ自動バインドを行わない(_S)"
+                  IsChecked="{Binding SuspendAutoBindInReply}" />
     </StackPanel>
 </UserControl>

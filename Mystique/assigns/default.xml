@@ -61,8 +61,8 @@
       <Assign Action="Mention" Key="Space" Preview="True" />
       <Assign Action="MentionMulti" Key="Shift+Space" Preview="True" />
       <Assign Action="Favorite" Key="F" />
-      <Assign Action="Favorite" Key="Oem1" />
-      <!-- SEMICOLON -->
+      <Assign Action="FavoriteAndRetweet" Key="Ctrl+F" />
+      <Assign Action="Favorite" Key="Oem1" /><!-- SEMICOLON -->
       <Assign Action="FavoriteSelect" Key="Shift+F" />
       <Assign Action="Retweet" Key="Ctrl+R" />
       <Assign Action="RetweetSelect" Key="Ctrl+Shift+R" />

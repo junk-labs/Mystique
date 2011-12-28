@@ -14,6 +14,15 @@
         <l:InteractionMessageTrigger MessageKey="OpenFile" Messenger="{Binding Messenger}">
             <l:OpenFileDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="SaveFile" Messenger="{Binding Messenger}">
+            <l:SaveFileDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="Message" Messenger="{Binding Messenger}">
+            <l:InformationDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="Confirm" Messenger="{Binding Messenger}">
+            <l:ConfirmationDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type ccvm:ColorElementViewModel}">
@@ -125,7 +134,7 @@
                 </Border>
             </TabItem>
 
-            <TabItem Header="その他">
+            <TabItem Header="詳細">
                 <Border Margin="4"
                         BorderBrush="Gray"
                         BorderThickness="1">
@@ -135,7 +144,7 @@
                 </Border>
             </TabItem>
 
-            <TabItem Header="背景画像">
+            <TabItem Header="その他">
                 <StackPanel Margin="4,2" Orientation="Vertical">
                     <TextBlock Text="タイムラインリストの背景画像を設定できます。" />
                     <TextBlock Text="※背景色の透過を設定しないと画像を表示できません。" />
@@ -145,27 +154,41 @@
                                 DockPanel.Dock="Right" />
                         <TextBox Text="{Binding BackgroundImage}" />
                     </DockPanel>
+                    <CheckBox Margin="0,4" IsChecked="{Binding SetInputCaretColorWhite}">
+                        <AccessText Text="入力ボックスのキャレットを白くする(_W)" />
+                    </CheckBox>
+                    <CheckBox Margin="0,4" IsChecked="{Binding SetSearchCaretColorWhite}">
+                        <AccessText Text="検索ボックスのキャレットを白くする(_W)" />
+                    </CheckBox>
                 </StackPanel>
             </TabItem>
         </TabControl>
-        <Button HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Content="デフォルトに戻す"
-                Padding="6,2"
-                Style="{StaticResource FlatButtonStyle}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <l:ConfirmationDialogInteractionMessageAction>
-                        <l:DirectInteractionMessage CallbackCommand="{Binding SetDefaultColorCommand}">
-                            <l:ConfirmationMessage Button="OKCancel"
-                                                   Caption="配色のリセット"
-                                                   Image="Warning"
-                                                   Text="初期配色に戻します。よろしいですか？" />
-                        </l:DirectInteractionMessage>
-                    </l:ConfirmationDialogInteractionMessageAction>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Button>
+        <my:DropDownButton HorizontalAlignment="Right"
+                           VerticalAlignment="Top"
+                           Content="一括設定"
+                           Padding="6,2,6,1"
+                           Style="{StaticResource FlatToggleButtonStyle}">
+            <my:DropDownButton.DropDownMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding FileImportCommand}" Header="色定義ファイルのインポート(_I)..." />
+                    <MenuItem Command="{Binding FileExportCommand}" Header="色定義ファイルのエクスポート(_X)..." />
+                    <MenuItem Header="デフォルトの色設定に戻す(_D)">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <l:ConfirmationDialogInteractionMessageAction>
+                                    <l:DirectInteractionMessage CallbackCommand="{Binding SetDefaultColorCommand}">
+                                        <l:ConfirmationMessage Button="OKCancel"
+                                                               Caption="配色のリセット"
+                                                               Image="Warning"
+                                                               Text="初期配色に戻します。よろしいですか？" />
+                                    </l:DirectInteractionMessage>
+                                </l:ConfirmationDialogInteractionMessageAction>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </MenuItem>
+                </ContextMenu>
+            </my:DropDownButton.DropDownMenu>
+        </my:DropDownButton>
     </Grid>
 </UserControl>
 

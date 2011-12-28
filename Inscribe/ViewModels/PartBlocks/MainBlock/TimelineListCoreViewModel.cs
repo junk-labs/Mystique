@@ -219,7 +219,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             if (DispatcherHelper.UIDispatcher.CheckAccess())
             {
                 // ディスパッチャ スレッドではInvalidateCacheを行わない
-                throw new InvalidOperationException("Can't invalidate cache on Dispatcher thread.");
+                throw new InvalidOperationException("Can't invalidate cache on the Dispatcher thread.");
             }
 
             this._tweetsSource.Clear();

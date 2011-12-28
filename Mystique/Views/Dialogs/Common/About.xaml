@@ -127,12 +127,15 @@
                 <Run Text="Mark James" />
             </Hyperlink>
             <LineBreak /><Run Text="krile-tan design: ichimy" />
-            <LineBreak />
             <LineBreak /><Run Text="Built with" />
             <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://ugaya40.net/livet">
                 <Run Text="Livet" />
             </Hyperlink>
             <Run Text="." />
+            <LineBreak />
+            <Hyperlink Command="{Binding ShowContributorsCommand}">
+                <Run FontWeight="Bold" Text="Show contributors" />
+            </Hyperlink>
         </TextBlock>
         <TextBlock Margin="0,0,5,25"
                    HorizontalAlignment="Right"
@@ -220,5 +223,62 @@
                 </Hyperlink>
             </TextBlock>
         </ScrollViewer>
+        <DockPanel Background="#E0FFFFFF" Visibility="{Binding IsVisibleContributors, Converter={StaticResource BoolVisibleConverter}}">
+            <TextBlock Background="#3300dd99"
+                       DockPanel.Dock="Top"
+                       Padding="8"
+                       TextWrapping="Wrap">
+                <Bold>
+                    <Run FontSize="16"
+                         Foreground="ForestGreen"
+                         Text="Contributors of Krile" />
+                </Bold>
+                <LineBreak />
+                <Run Text="以下の方々を含む多くの方の寄付により、Krileの開発が継続されています。" />
+            </TextBlock>
+            <DockPanel Background="#66ff9900" DockPanel.Dock="Bottom">
+                <TextBlock DockPanel.Dock="Right"
+                           Padding="6,4"
+                           TextWrapping="Wrap">
+                    <Bold>
+                        <Hyperlink Command="{Binding HideContributorsCommand}">
+                            <Run Text="閉じる" />
+                        </Hyperlink>
+                    </Bold>
+                </TextBlock>
+                <TextBlock DockPanel.Dock="Bottom"
+                           Padding="6,4"
+                           TextWrapping="Wrap">
+                    <Bold>
+                        <Hyperlink Command="{Binding ShowBrowserCommand}" CommandParameter="http://krile.starwing.net/kampa.html">
+                            <Run Text="カンパについてはこちらをご覧ください..." />
+                        </Hyperlink>
+                    </Bold>
+                </TextBlock>
+            </DockPanel>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl Margin="4" ItemsSource="{Binding Contributors}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Margin="2,2" Visibility="{Binding IsLinkEnabled, Converter={StaticResource BoolVisibleConverter}}">
+                                    <Hyperlink Command="{Binding OpenLinkCommand}">
+                                        <Run Text="{Binding Name, Mode=OneWay}" />
+                                    </Hyperlink>
+                                </TextBlock>
+                                <TextBlock Margin="2,2" Visibility="{Binding IsLinkEnabled, Converter={StaticResource BoolInvisibleConverter}}">
+                                    <Run Text="{Binding Name, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
     </Grid>
 </Window>

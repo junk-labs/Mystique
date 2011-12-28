@@ -577,13 +577,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             string description = String.Empty;
             if (Setting.Instance.TimelineExperienceProperty.IsShowConversationAsTree)
             {
-                filter = new[] { new FilterMentionTree(this.Tweet.Status.Id) };
-                description = "@#" + this.Tweet.Status.Id.ToString();
+                filter = new[] { new FilterMentionTree(s.Id) };
+                description = "@"+ s.User.ScreenName + "#" + s.Id;
             }
             else
             {
-                filter = new[] { new FilterConversation(this.Tweet.Status.User.ScreenName, ((TwitterStatus)this.Tweet.Status).InReplyToUserScreenName) };
-                description = "Cv:@" + this.Tweet.Status.User.ScreenName + "&@" + ((TwitterStatus)this.Tweet.Status).InReplyToUserScreenName;
+                filter = new[] { new FilterConversation(s.User.ScreenName,
+                    s.InReplyToUserScreenName) };
+                description = "Cv:@" + s.User.ScreenName + "&@" + s.InReplyToUserScreenName;
             }
             switch (Setting.Instance.TimelineExperienceProperty.ConversationTransition)
             {
@@ -891,6 +892,90 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             if (!this.Tweet.CanFavorite) return;
             PostOffice.UnfavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
         }
+
+
+        #region FavoriteAndRetweetCommand
+        private ViewModelCommand _FavoriteAndRetweetCommand;
+
+        public ViewModelCommand FavoriteAndRetweetCommand
+        {
+            get
+            {
+                if (_FavoriteAndRetweetCommand == null)
+                {
+                    _FavoriteAndRetweetCommand = new ViewModelCommand(FavoriteAndRetweet, CanFavoriteAndRetweet);
+                }
+                return _FavoriteAndRetweetCommand;
+            }
+        }
+
+        public bool CanFavoriteAndRetweet()
+        {
+            return this.Tweet.CanFavorite;
+        }
+
+        public void FavoriteAndRetweet()
+        {
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                FavoriteAndRetweetMultiUser();
+            else
+                ToggleFavoriteAndRetweet();
+        }
+        #endregion
+
+        public void ToggleFavoriteAndRetweet()
+        {
+            if (!this.Tweet.CanFavorite) return;
+            if (this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
+                .All(u => this.Tweet.FavoredUsers.Contains(u) && this.Tweet.RetweetedUsers.Contains(u)))
+            {
+                // all account favored and retweeted
+                Unretweet();
+                Unfavorite();
+            }
+            else
+            {
+                Retweet();
+                Favorite();
+            }
+        }
+
+        #region FavoriteAndRetweetMultiUserCommand
+        private ViewModelCommand _FavoriteAndRetweetMultiUserCommand;
+
+        public ViewModelCommand FavoriteAndRetweetMultiUserCommand
+        {
+            get
+            {
+                if (_FavoriteAndRetweetMultiUserCommand == null)
+                {
+                    _FavoriteAndRetweetMultiUserCommand = new ViewModelCommand(FavoriteAndRetweetMultiUser, CanFavoriteAndRetweetMultiUser);
+                }
+                return _FavoriteAndRetweetMultiUserCommand;
+            }
+        }
+
+        public bool CanFavoriteAndRetweetMultiUser()
+        {
+            return this.Tweet.CanFavorite;
+        }
+
+        public void FavoriteAndRetweetMultiUser()
+        {
+            if (!this.Tweet.CanFavorite) return;
+            var favrted = AccountStorage.Accounts.Where(a => this.Tweet.FavoredUsers.Contains(a.UserViewModel) && this.Tweet.RetweetedUsers.Contains(a.UserViewModel)).ToArray();
+            this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.FavoriteAndRetweet,
+                favrted,
+                u =>
+                {
+                    PostOffice.Retweet(u.Except(favrted), this.Tweet);
+                    PostOffice.FavTweet(u.Except(favrted), this.Tweet);
+                    PostOffice.UnfavTweet(favrted.Except(u), this.Tweet);
+                    PostOffice.Unretweet(favrted.Except(u), this.Tweet);
+                });
+        }
+        #endregion
+
 
         #region FavoriteMultiUserCommand
         ViewModelCommand _FavoriteMultiUserCommand;

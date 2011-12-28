@@ -11,6 +11,7 @@ namespace Inscribe.Configuration.Settings
             OfficialRetweetInReplyToRetweeter = false;
             TrimBeginSpace = true;
             UseInputSuggesting = true;
+            SuspendAutoBindInReply = true;
             UseActiveFallback = false;
             OfficialRetweetFallback = false;
             FallbackBackTracking = true;
@@ -33,6 +34,8 @@ namespace Inscribe.Configuration.Settings
             get { return _hashtagAutoBindDescriptions ?? new HashtagAutoBindDescription[0]; }
             set { _hashtagAutoBindDescriptions = value; }
         }
+
+        public bool SuspendAutoBindInReply { get; set; }
 
         public bool UseActiveFallback { get; set; }
 

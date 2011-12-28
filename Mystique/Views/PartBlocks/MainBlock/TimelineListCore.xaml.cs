@@ -97,6 +97,8 @@ namespace Mystique.Views.PartBlocks.MainBlock
                     origEventArgs = e;
                     captured = true;
                     ip = e.GetPosition(this);
+                    // フォーカスすると一発で選択可能になる
+                    ((FlowDocument)sender).Focus();
                     e.Handled = true;
                 }
             }

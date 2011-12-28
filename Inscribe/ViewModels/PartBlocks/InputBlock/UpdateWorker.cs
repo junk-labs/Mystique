@@ -35,8 +35,14 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         private string[] tags;
         public AccountInfo fallbackOriginalAccount;
 
+        // state control
+        private bool isImageAttached;
+        private bool isBodyStandby;
+
         public TweetWorker(InputBlockViewModel parent, AccountInfo info, string body, long inReplyToId, string attachedImage, string[] tag)
         {
+            isImageAttached = false;
+            isBodyStandby = false;
             if (info == null)
                 throw new ArgumentNullException("info");
             this.parent = parent;
@@ -71,15 +77,13 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             {
                 try
                 {
-                    var match = RegularExpressions.DirectMessageSendRegex.Match(body);
-                    if (!match.Success)
-                        throw new InvalidOperationException("アサーション失敗(DM-postcheck)");
-                    String target = match.Groups[1].Value;
-                    body = match.Groups[2].Value;
+                    var pmatch = RegularExpressions.DirectMessageSendRegex.Match(body);
+                    if (!pmatch.Success)
+                        throw new InvalidOperationException("プレチェック失敗(DM-precheck)");
                     // build text
 
                     // attach image
-                    if (!String.IsNullOrEmpty(this.attachImagePath))
+                    if (!String.IsNullOrEmpty(this.attachImagePath) && !isImageAttached)
                     {
                         if (File.Exists(this.attachImagePath))
                         {
@@ -89,6 +93,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                                 if (upl == null)
                                     throw new InvalidOperationException("画像のアップローダ―が指定されていません。");
                                 body += " " + upl.UploadImage(this.accountInfo, this.attachImagePath, this.body);
+                                isImageAttached = true;
                             }
                             catch (Exception e)
                             {
@@ -101,6 +106,12 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         }
                     }
 
+                    // generate body string
+                    var match = RegularExpressions.DirectMessageSendRegex.Match(body);
+                    if (!match.Success)
+                        throw new InvalidOperationException("ポストアサーション失敗(DM-postcheck)");
+                    String target = pmatch.Groups[1].Value;
+                    body = pmatch.Groups[2].Value;
 
                     if (TweetTextCounter.Count(body) > TwitterDefine.TweetMaxLength)
                     {
@@ -160,7 +171,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     // build text
 
                     // attach image
-                    if (!String.IsNullOrEmpty(this.attachImagePath))
+                    if (!String.IsNullOrEmpty(this.attachImagePath) && !isImageAttached)
                     {
                         if (File.Exists(this.attachImagePath))
                         {
@@ -170,6 +181,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                                 if (upl == null)
                                     throw new InvalidOperationException("画像のアップローダ―が指定されていません。");
                                 body += " " + upl.UploadImage(this.accountInfo, this.attachImagePath, this.body);
+                                isImageAttached = true;
                             }
                             catch (Exception e)
                             {
@@ -199,49 +211,52 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     }
 
 
-                    // is Unoffocial RT
-                    bool isQuoting = false;
-                    string quoteBody = String.Empty;
-                    // split "unofficial RT"
-                    var quoteindex = -1;
-
-                    var rtidx = body.IndexOf("RT @");
-                    if (rtidx >= 0)
-                        quoteindex = rtidx;
-
-                    var qtidx = body.IndexOf("QT @");
-                    if (qtidx >= 0 && (quoteindex == -1 || qtidx < quoteindex))
-                        quoteindex = qtidx;
-
-                    if (quoteindex >= 0)
+                    if (!isBodyStandby)
                     {
-                        isQuoting = true;
-                        quoteBody = body.Substring(quoteindex);
-                        body = body.Substring(0, quoteindex);
-                    }
+                        // is Unoffocial RT
+                        bool isQuoting = false;
+                        string quoteBody = String.Empty;
+                        // split "unofficial RT"
+                        var quoteindex = -1;
 
-                    // add footer (when is in not "unofficial RT")
-                    if (!isQuoting &&
-                        !String.IsNullOrEmpty(accountInfo.AccountProperty.FooterString) &&
-                        TweetTextCounter.Count(body) + TweetTextCounter.Count(accountInfo.AccountProperty.FooterString) + 1 <= TwitterDefine.TweetMaxLength)
-                        body += " " + accountInfo.AccountProperty.FooterString;
+                        var rtidx = body.IndexOf("RT @");
+                        if (rtidx >= 0)
+                            quoteindex = rtidx;
 
+                        var qtidx = body.IndexOf("QT @");
+                        if (qtidx >= 0 && (quoteindex == -1 || qtidx < quoteindex))
+                            quoteindex = qtidx;
 
-                    // bind tag
-                    if (tags != null && tags.Count() > 0)
-                    {
-                        foreach (var tag in tags.Select(t => t.StartsWith("#") ? t : "#" + t))
+                        if (quoteindex >= 0)
                         {
-                            if (TweetTextCounter.Count(body) + TweetTextCounter.Count(quoteBody) +  tag.Length + 1 <= TwitterDefine.TweetMaxLength)
-                                body += " " + tag;
+                            isQuoting = true;
+                            quoteBody = body.Substring(quoteindex);
+                            body = body.Substring(0, quoteindex);
                         }
-                        if (isQuoting)
-                            body += " ";
+
+                        // add footer (when is in not "unofficial RT")
+                        if (!isQuoting &&
+                            !String.IsNullOrEmpty(accountInfo.AccountProperty.FooterString) &&
+                            TweetTextCounter.Count(body) + TweetTextCounter.Count(accountInfo.AccountProperty.FooterString) + 1 <= TwitterDefine.TweetMaxLength)
+                            body += " " + accountInfo.AccountProperty.FooterString;
+
+
+                        // bind tag
+                        if (tags != null && tags.Count() > 0)
+                        {
+                            foreach (var tag in tags.Select(t => t.StartsWith("#") ? t : "#" + t))
+                            {
+                                if (TweetTextCounter.Count(body) + TweetTextCounter.Count(quoteBody) + tag.Length + 1 <= TwitterDefine.TweetMaxLength)
+                                    body += " " + tag;
+                            }
+                            if (isQuoting)
+                                body += " ";
+                        }
+
+                        // join quote
+                        body += quoteBody;
+                        isBodyStandby = true;
                     }
-
-                    // join quote
-                    body += quoteBody;
-
                     this.TweetSummary = body;
 
                     // ready

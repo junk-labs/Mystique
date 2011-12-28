@@ -595,7 +595,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
 
         public void OpenUser()
         {
-            this.AddTopUser(this.QueryText.Substring(1));
+            var qtext = this.QueryText;
+            if (qtext.Length == 0) return;
+            this.AddTopUser(qtext.Substring(1));
         }
         #endregion
 

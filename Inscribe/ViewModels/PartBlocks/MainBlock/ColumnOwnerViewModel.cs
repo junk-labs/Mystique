@@ -277,11 +277,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 this.SetFocus();
             }));
             KeyAssignCore.RegisterOperation("SendDirectMessage", () => ExecTVMAction(vm => vm.DirectMessageCommand.Execute()));
-            KeyAssignCore.RegisterOperation("FavoriteAndRetweet", () => ExecTVMAction(vm =>
-            {
-                vm.Favorite();
-                vm.Retweet();
-            }));
             KeyAssignCore.RegisterOperation("FavoriteThisTabAll", () => ExecTabAction(vm => vm.FavoriteThisTabAll()));
             KeyAssignCore.RegisterOperation("RetweetThisTabAll", () => ExecTabAction(vm => vm.RetweetThisTabAll()));
 
@@ -303,6 +298,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 Configuration.Settings.FavMouseActionCandidates.FavAddWithSpecificAccount, acc)));
             KeyAssignCore.RegisterOperation("FavoriteRemoveSpecific", acc => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
                 Configuration.Settings.FavMouseActionCandidates.FavRemoveWithSpecificAccount, acc)));
+            KeyAssignCore.RegisterOperation("FavoriteAndRetweet", () => ExecTVMAction(vm => vm.ToggleFavoriteAndRetweet()));
 
             KeyAssignCore.RegisterOperation("Retweet", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
                 Configuration.Settings.RetweetMouseActionCandidates.RetweetToggle, null)));

@@ -52,6 +52,9 @@
         <BitmapImage x:Key="Favorite"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/star.png" />
+        <BitmapImage x:Key="FavoriteRetweet"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/favrt.png" />
         <BitmapImage x:Key="Retweet"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/rt.png" />
@@ -142,6 +145,17 @@
                                                  ConverterParameter=Mention}">
                 <MenuItem.Icon>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Comment}" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Command="{Binding FavoriteAndRetweetCommand,
+                                        Mode=OneTime}"
+                      Header="Favorite A_nd Retweet"
+                      InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 Mode=OneTime,
+                                                 ConverterParameter=FavoriteAndRetweet}">
+                <MenuItem.Icon>
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+                           Source="{StaticResource FavoriteRetweet}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding FavoriteCommand,
@@ -748,10 +762,7 @@
                         <ItemsControl ItemsSource="{Binding Path=Tweet.PhotoThumbnails, IsAsync=True}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Image MinWidth="80"
-                                           MinHeight="80"
-                                           MaxWidth="160"
-                                           MaxHeight="160"
+                                    <Image MinHeight="160"
                                            Source="{Binding PhotoUri,
                                                             IsAsync=True}"
                                            Stretch="Uniform">
@@ -883,6 +894,33 @@
                                                                                     AncestorType={x:Type ListBoxItem}},
                                                      Path=IsSelected,
                                                      Converter={StaticResource BoolVisibleConverter}}">
+                        <Grid VerticalAlignment="Center"
+                              Visibility="{Binding Path=Tweet.CanFavorite, Converter={StaticResource BoolVisibleConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="11" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding FavoriteAndRetweetMultiUserCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       Source="{StaticResource Chevron}" />
+                                <Button.ToolTip>多重FavRT...</Button.ToolTip>
+                            </Button>
+                            <Button VerticalAlignment="Center"
+                                    Command="{Binding FavoriteAndRetweetCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       Source="{StaticResource FavoriteRetweet}" />
+                                <Button.ToolTip>Favorite and Retweet</Button.ToolTip>
+                            </Button>
+                        </Grid>
                         <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.CanFavorite, Converter={StaticResource BoolVisibleConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />

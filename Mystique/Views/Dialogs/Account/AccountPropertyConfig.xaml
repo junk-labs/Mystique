@@ -62,7 +62,7 @@
             <TextBlock VerticalAlignment="Center" Text="{Binding ScreenName, StringFormat=@{0}}" />
         </DockPanel>
         <TabControl Grid.Row="1" Margin="4">
-            <TabItem Header="一般設定">
+            <TabItem Header="接続と投稿">
                 <Grid>
                     <CheckBox Margin="6,6,0,0"
                               HorizontalAlignment="Left"
@@ -124,32 +124,32 @@
                              VerticalAlignment="Top"
                              Text="{Binding Footer,
                                             UpdateSourceTrigger=PropertyChanged}" />
-                    <DockPanel Width="408"
-                               Margin="6,84,0,0"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Top">
-                        <TextBlock Margin="0,0,4,0"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Center"
-                                   Text="POSTフォールバック先アカウント" />
-                        <ComboBox VerticalAlignment="Center"
-                                  ItemsSource="{Binding AccountInformations}"
-                                  SelectedIndex="{Binding FallbackIndex}" />
-                    </DockPanel>
-                    <TextBlock Margin="6,109,0,0"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Top"
-                               Foreground="DimGray"
-                               TextWrapping="Wrap">
-                        <Run Text="このアカウントがPOST規制されて投稿できないことを検知した時に、自動で別のアカウントでのツイートを試みます。" />
-                        <LineBreak />
-                        <Run Text="そのアカウントでもツイート出来ない場合、そのアカウントのフォールバック先アカウントで試行します。つまり、フォールバックはどんどん連鎖します。" />
-                        <LineBreak />
-                        <Run Text="フォールバックをループさせると、想定外の動作をすることがあります。" Foreground="Red" />
-                    </TextBlock>
+
                 </Grid>
             </TabItem>
-            <TabItem Header="詳細設定">
+            <TabItem Header="POSTフォールバック">
+                <Grid>
+                    <DockPanel HorizontalAlignment="Left"
+                               Margin="6,7,0,0"
+                               VerticalAlignment="Top"
+                               Width="408">
+                        <TextBlock HorizontalAlignment="Left"
+                                   Margin="0,0,4,0"
+                                   Text="POSTフォールバック先アカウント"
+                                   VerticalAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding AccountInformations}"
+                                  SelectedIndex="{Binding FallbackIndex}"
+                                  VerticalAlignment="Center" />
+                    </DockPanel>
+                    <TextBlock Foreground="DimGray"
+                               HorizontalAlignment="Left"
+                               Margin="6,32,0,0"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Top"><Run Text="このアカウントがPOST規制されて投稿できないことを検知した時に、自動で別のアカウントでのツイートを試みます。" /><LineBreak /><Run Text="そのアカウントでもツイート出来ない場合、そのアカウントのフォールバック先アカウントで試行します。つまり、フォールバックはどんどん連鎖します。" /><LineBreak /><Run Foreground="Red"
+                                                                                                                                                                                                                                                 Text="フォールバックをループさせると、想定外の動作をすることがあります。" /></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="詳細">
                 <Grid>
                     <TextBlock Margin="6,9,0,0"
                                HorizontalAlignment="Left"

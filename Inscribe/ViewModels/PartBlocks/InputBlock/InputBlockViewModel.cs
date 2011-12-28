@@ -551,6 +551,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     System.Diagnostics.Debug.WriteLine("input description initialized");
                     this._currentInputDescription = new InputDescription(this._intelliSenseTextBoxViewModel);
                     this._currentInputDescription.PropertyChanged += (o, e) => UpdateCommand.RaiseCanExecuteChanged();
+                    this._currentInputDescription.PropertyChanged += (o, e) => RaisePropertyChanged(() => IsEnabledAutoBind);
                     this._currentInputDescription.PropertyChanged += (o, e) => RaisePropertyChanged(() => IsInReplyToEnabled);
                 }
                 return this._currentInputDescription;
@@ -695,7 +696,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 origin = info;
             var parent = AccountStorage.Accounts.Where(i => i.AccountProperty.FallbackAccount == info.ScreenName).FirstOrDefault();
             if (parent == null || parent == origin)
-                return info;
+                return origin;
             else
                 return FallbackBackTracking(parent, origin);
         }
@@ -873,7 +874,11 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         private bool _isEnabledAutoBind = true;
         public bool IsEnabledAutoBind
         {
-            get { return this._isEnabledAutoBind && !this.IsDirectMessage; }
+            get
+            {
+                return this._isEnabledAutoBind && !this.IsDirectMessage && (!Setting.Instance.InputExperienceProperty.SuspendAutoBindInReply ||
+                    (this._currentInputDescription == null || this._currentInputDescription.InReplyToId == 0));
+            }
             set
             {
                 this._isEnabledAutoBind = value;
@@ -1181,7 +1186,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
         private void Update()
         {
             if (!this.CanUpdate()) return;
-            var boundTags = this.automaticBoundTags.Concat(this.bindingTags).Distinct().ToArray();
+            var boundTags = (IsEnabledAutoBind ? (IEnumerable<String>)this.automaticBoundTags : new string[0])
+                .Concat(this.bindingTags).Distinct().ToArray();
             var targets = this.overrideTargets;
             if (targets == null)
                 targets = this.UserSelectorViewModel.LinkElements;
@@ -1238,7 +1244,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 }
             });
         }
-
 
         ObservableCollection<TweetWorker> _updateWorkers = new ObservableCollection<TweetWorker>();
         public ObservableCollection<TweetWorker> UpdateWorkers

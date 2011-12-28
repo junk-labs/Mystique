@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <BitmapImage x:Key="RetweetLarge" UriSource="/Resources/refresh_large.png" />
         <BitmapImage x:Key="FavoriteLarge" UriSource="/Resources/star_large.png" />
+        <BitmapImage x:Key="Plus" UriSource="/Resources/plus.png" />
     </UserControl.Resources>
     <Border Width="350"
             HorizontalAlignment="Center"
@@ -44,6 +45,16 @@
                            Foreground="Orange"
                            Text="Favorite" />
             </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding IsFavoriteAndRetweet, Converter={StaticResource BoolVisibleConverter}}">
+                <Image Source="{StaticResource FavoriteLarge}" Stretch="None" />
+                <Image Source="{StaticResource Plus}" Stretch="None" />
+                <Image Source="{StaticResource RetweetLarge}" Stretch="None" />
+                <TextBlock Margin="4"
+                           VerticalAlignment="Center"
+                           FontSize="40"
+                           Foreground="Green"
+                           Text="FavRT" />
+            </StackPanel>
             <my:UserSelector Grid.Row="1"
                              MaxWidth="320"
                              HorizontalAlignment="Center"
@@ -51,7 +62,8 @@
             <TextBlock Grid.Row="2"
                        Margin="4"
                        Text="{Binding SelectedUsers,
-                                      Mode=OneWay, StringFormat=With:{0}}" />
+                                      Mode=OneWay,
+                                      StringFormat=With:{0}}" />
             <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -62,14 +74,14 @@
                         Width="90"
                         Command="{Binding OkCommand}"
                         Content="OK"
-                        Padding="4,2"
-                        IsDefault="True" />
+                        IsDefault="True"
+                        Padding="4,2" />
                 <Button Grid.Column="2"
                         Width="90"
                         Command="{Binding CancelCommand}"
                         Content="キャンセル"
-                        Padding="4,2"
-                        IsCancel="True" />
+                        IsCancel="True"
+                        Padding="4,2" />
             </Grid>
         </Grid>
     </Border>
