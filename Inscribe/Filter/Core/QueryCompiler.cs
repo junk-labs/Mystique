@@ -9,7 +9,7 @@ namespace Inscribe.Filter.Core
     /// </summary>
     public static class QueryCompiler
     {
-        #region Querification
+        #region Compilation
 
         /// <summary>
         /// クエリ文字をフィルタ化します。

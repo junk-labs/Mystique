@@ -40,11 +40,14 @@ namespace Inscribe.Plugin
                     UploaderManager.RegisterResolver(r);
                 }
 
+            // shorteners are no longer supported.
+            /*
             if(pload.shorteners != null)
                 foreach (var s in pload.shorteners)
                 {
                     ShortenManager.RegisterShortener(s);
                 }
+            */
 
             if(pload.extractors != null)
                 foreach (var e in pload.extractors)

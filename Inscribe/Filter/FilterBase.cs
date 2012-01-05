@@ -66,6 +66,11 @@ namespace Inscribe.Filter
         /// </summary>
         public abstract string Identifier { get; }
 
+        /// <summary>
+        /// 識別文字の別名です。
+        /// </summary>
+        public virtual IEnumerable<string> Aliases { get { yield break; } }
+
         public string ToQuery()
         {
             var arg = String.Join(", ", from a in this.GetArgumentsForQueryify() select this.GetQueryString(a));

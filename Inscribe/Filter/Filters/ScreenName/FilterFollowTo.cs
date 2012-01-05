@@ -22,6 +22,15 @@ namespace Inscribe.Filter.Filters.ScreenName
             get { return "follow_to"; }
         }
 
+        public override System.Collections.Generic.IEnumerable<string> Aliases
+        {
+            get
+            {
+                yield return "follower";
+                yield return "followers";
+            }
+        }
+
         public override string Description
         {
             get { return "指定アカウントのフォロワー"; }

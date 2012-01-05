@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Dulcet.Twitter;
+using Inscribe.Text;
 
 namespace Inscribe.Filter.Filters.ScreenName
 {
@@ -16,10 +19,11 @@ namespace Inscribe.Filter.Filters.ScreenName
             var s = status as TwitterStatus;
             if (s != null)
             {
-                if (String.IsNullOrEmpty(s.InReplyToUserScreenName))
-                    return false;
-                else
+                if (!String.IsNullOrEmpty(s.InReplyToUserScreenName))
                     return Match(s.InReplyToUserScreenName, this.needle);
+                else
+                    return RegularExpressions.AtRegex.Matches(status.Text)
+                        .Cast<Match>().Any(m => Match(m.Groups[1].Value, needle));
             }
             var dm = status as TwitterDirectMessage;
             if (dm != null)
@@ -34,9 +38,14 @@ namespace Inscribe.Filter.Filters.ScreenName
             get { return "to"; }
         }
 
+        public override System.Collections.Generic.IEnumerable<string> Aliases
+        {
+            get { yield return "mention"; }
+        }
+
         public override string Description
         {
-            get { return "ツイートやDMの返信先アカウント"; }
+            get { return "ツイートやDMの返信先ユーザー"; }
         }
 
         public override string FilterStateString

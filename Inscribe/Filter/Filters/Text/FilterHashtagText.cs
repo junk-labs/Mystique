@@ -24,7 +24,12 @@ namespace Inscribe.Filter.Filters.Text
 
         public override string Identifier
         {
-            get { return "hashtag"; }
+            get { return "tag"; }
+        }
+
+        public override System.Collections.Generic.IEnumerable<string> Aliases
+        {
+            get { yield return "hashtag"; }
         }
 
         public override string Description

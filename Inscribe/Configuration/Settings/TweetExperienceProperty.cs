@@ -16,6 +16,7 @@ namespace Inscribe.Configuration.Settings
             ShowTweetTooltip = true;
             UseFullLineView = false;
             CanFavoriteMyTweet = false;
+            QuickFavAndRetweet = false;
         }
 
         public bool ShowUnofficialRetweetButton { get; set; }
@@ -39,6 +40,8 @@ namespace Inscribe.Configuration.Settings
         public bool UseFullLineView { get; set; }
 
         public bool CanFavoriteMyTweet { get; set; }
+
+        public bool QuickFavAndRetweet { get; set; }
     }
 
     public enum NameView

@@ -1,9 +1,7 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Inscribe.Filter.Core;
 using Inscribe.Storage;
-using Inscribe.Filter.Filters.Text;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
 
 namespace Inscribe.Filter.Filters.ScreenName
 {

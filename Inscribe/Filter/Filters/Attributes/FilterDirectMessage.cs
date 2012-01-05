@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Dulcet.Twitter;
 
 namespace Inscribe.Filter.Filters.Attributes
@@ -15,7 +12,12 @@ namespace Inscribe.Filter.Filters.Attributes
 
         public override string Identifier
         {
-            get { return "dmsg"; }
+            get { return "dm"; }
+        }
+
+        public override IEnumerable<string> Aliases
+        {
+            get { yield return "dmsg"; }
         }
 
         public override IEnumerable<object> GetArgumentsForQueryify()

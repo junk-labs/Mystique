@@ -29,6 +29,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._fullLineView = Setting.Instance.TweetExperienceProperty.UseFullLineView;
             this._canFavMyTweet = Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet;
             this._showTweetTooltip = Setting.Instance.TweetExperienceProperty.ShowTweetTooltip;
+            this._quickFavAndRetweet = Setting.Instance.TweetExperienceProperty.QuickFavAndRetweet;
         }
 
         private int _resolveStrategyIndex;
@@ -159,6 +160,18 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+        private bool _quickFavAndRetweet;
+
+        public bool QuickFavAndRetweet
+        {
+            get { return _quickFavAndRetweet; }
+            set
+            {
+                _quickFavAndRetweet = value;
+                RaisePropertyChanged(() => QuickFavAndRetweet);
+            }
+        }
+
         public void Apply()
         {
             try
@@ -174,6 +187,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 Setting.Instance.TweetExperienceProperty.UseFullLineView = this._fullLineView;
                 Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet = this._canFavMyTweet;
                 Setting.Instance.TweetExperienceProperty.ShowTweetTooltip = this._showTweetTooltip;
+                Setting.Instance.TweetExperienceProperty.QuickFavAndRetweet = this._quickFavAndRetweet;
             }
             catch (Exception ex)
             {

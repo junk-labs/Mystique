@@ -49,7 +49,12 @@ namespace Inscribe.Filter.Filters.Numeric
 
         public override string Identifier
         {
-            get { return "fav_count"; }
+            get { return "favs"; }
+        }
+
+        public override IEnumerable<string> Aliases
+        {
+            get { yield return "fav_count"; }
         }
 
         public override IEnumerable<object> GetArgumentsForQueryify()

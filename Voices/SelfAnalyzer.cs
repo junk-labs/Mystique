@@ -10,14 +10,25 @@ namespace Voices
     {
         public static string Analyze(string error)
         {
-            if (error.Contains("System.IO.DirectoryNotFoundException") || error.Contains("System.IO.FileNotFoundException"))
+            if (error.Contains("System.IO.DirectoryNotFoundException") ||
+                error.Contains("System.IO.FileNotFoundException"))
             {
                 return "Krileのファイル構成が壊れている可能性があります。" + Environment.NewLine +
                     "Krile 公式サイトより最新版をダウンロードして上書きしてみてください。" + Environment.NewLine +
                     "(ERR: FileOrDirNotFound)";
             }
 
-            if (error.Contains("System.MissingMethodException") || error.Contains("System.MissingFieldException"))
+
+            if (error.Contains("KrilePluginException"))
+            {
+                return "使用しているプラグインの互換性が無い可能性があります。" + Environment.NewLine +
+                    "後から導入したプラグインをいったん削除して起動してみてください。" + Environment.NewLine +
+                    "それでも起動しない場合は、Krileのファイル構成が壊れている可能性があります。" + Environment.NewLine +
+                    "Krile 公式サイトより最新版をダウンロードして上書きしてみてください。" + Environment.NewLine +
+                    "(ERR: PluginAsserted)";
+            }
+            if (error.Contains("System.MissingMethodException") ||
+                error.Contains("System.MissingFieldException"))
             {
                 return "使用しているプラグインの互換性が無い可能性があります。" + Environment.NewLine +
                     "後から導入したプラグインをいったん削除して起動してみてください。" + Environment.NewLine +

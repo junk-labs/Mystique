@@ -66,12 +66,6 @@ namespace Inscribe.Configuration
             }
         }
 
-        private static bool _isSafeMode = false;
-        public static bool IsSafeMode
-        {
-            get { return _isSafeMode; }
-        }
-
         public static void Initialize()
         {
             if (_instance == null)
@@ -86,9 +80,6 @@ namespace Inscribe.Configuration
                 }
                 finally
                 {
-                    if (_instance.KernelProperty.KillByErrorCount >= Define.SafeModeThreshold)
-                        _isSafeMode = true;
-                    _instance.KernelProperty.KillByErrorCount++;
                     while (afterInitializeInvoke.Count > 0)
                         afterInitializeInvoke.Pop()();
                 }

@@ -49,7 +49,8 @@
                                         Margin="2"
                                         VerticalAlignment="Center"
                                         Maximum="255"
-                                        Value="{Binding RValue}" />
+                                        Value="{Binding RValue,
+                                                        UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock Grid.Row="1"
                                            Margin="4,2"
                                            VerticalAlignment="Center"
@@ -66,7 +67,8 @@
                                         Margin="2"
                                         VerticalAlignment="Center"
                                         Maximum="255"
-                                        Value="{Binding GValue}" />
+                                        Value="{Binding GValue,
+                                                        UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock Grid.Row="2"
                                            Margin="4,2"
                                            VerticalAlignment="Center"
@@ -83,7 +85,8 @@
                                         Margin="2"
                                         VerticalAlignment="Center"
                                         Maximum="255"
-                                        Value="{Binding BValue}" />
+                                        Value="{Binding BValue,
+                                                        UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock Grid.Row="3"
                                            Margin="4,2"
                                            VerticalAlignment="Center"
@@ -100,7 +103,8 @@
                                         Margin="2"
                                         VerticalAlignment="Center"
                                         Maximum="255"
-                                        Value="{Binding AValue}" />
+                                        Value="{Binding AValue,
+                                                        UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </DockPanel>
                     </Border>

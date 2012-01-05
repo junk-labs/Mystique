@@ -19,11 +19,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"
                    Margin="4,2"
@@ -106,41 +101,33 @@
                      Text="{Binding UserNameAreaWidthString,
                                     UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
-        <CheckBox Grid.Row="5"
-                  Grid.ColumnSpan="2"
-                  Margin="4,2"
-                  IsChecked="{Binding P3StyleIcon}">
-            <AccessText Text="P3スタイルのアイコン表示(_P)[アイコンの上下端をカットします]" />
-        </CheckBox>
-        <CheckBox Grid.Row="6"
-                  Grid.ColumnSpan="2"
-                  Margin="4,2"
-                  IsChecked="{Binding ShowUnofficialRTButton}">
-            <AccessText Text="非公式RTを使う(_R)" />
-        </CheckBox>
-        <CheckBox Grid.Row="7"
-                  Grid.ColumnSpan="2"
-                  Margin="4,2"
-                  IsChecked="{Binding ShowQuoteTweetButton}">
-            <AccessText Text="QTを使う(_Q)" />
-        </CheckBox>
-        <CheckBox Grid.Row="8"
-                  Grid.ColumnSpan="2"
-                  Margin="4,2"
-                  IsChecked="{Binding CanFavMyTweet}">
-            <AccessText Text="自分のツイートもFav可能にする(_M)" />
-        </CheckBox>
-        <CheckBox Grid.Row="9"
-                  Grid.ColumnSpan="2"
-                  Margin="4,2"
-                  IsChecked="{Binding ShowTweetTooltip}">
-            <AccessText Text="ツイートツールチップを表示する(_T)" />
-        </CheckBox>
-        <CheckBox Grid.Row="10"
-                  Grid.ColumnSpan="2"
-                  Margin="4,2"
-                  IsChecked="{Binding FullLineView}">
-            <AccessText Text="縮小状態でも全文表示する(_X)" />
-        </CheckBox>
+        <StackPanel Grid.Row="5"
+                    Grid.ColumnSpan="2"
+                    Orientation="Vertical">
+            <CheckBox Margin="4,2" IsChecked="{Binding P3StyleIcon}">
+                <AccessText Text="P3スタイルのアイコン表示(_P)[アイコンの上下端をカットします]" />
+            </CheckBox>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Margin="4,2" IsChecked="{Binding ShowUnofficialRTButton}">
+                    <AccessText Text="非公式RTを使う(_R)" />
+                </CheckBox>
+                <CheckBox Margin="4,2" IsChecked="{Binding ShowQuoteTweetButton}">
+                    <AccessText Text="QTを使う(_Q)" />
+                </CheckBox>
+
+            </StackPanel>
+            <CheckBox Margin="4,2" IsChecked="{Binding CanFavMyTweet}">
+                <AccessText Text="自分のツイートもFav可能にする(_F)" />
+            </CheckBox>
+            <CheckBox Margin="4,2" IsChecked="{Binding ShowTweetTooltip}">
+                <AccessText Text="ツイートツールチップを表示する(_T)" />
+            </CheckBox>
+            <CheckBox Margin="4,2" IsChecked="{Binding FullLineView}">
+                <AccessText Text="縮小状態でも全文表示する(_X)" />
+            </CheckBox>
+            <CheckBox Margin="4,2" IsChecked="{Binding QuickFavAndRetweet}">
+                <AccessText Text="クイックRTボタンをFav+RTにする(_A)" />
+            </CheckBox>
+        </StackPanel>
     </Grid>
 </UserControl>

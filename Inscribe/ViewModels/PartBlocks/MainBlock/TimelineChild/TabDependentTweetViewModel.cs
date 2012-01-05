@@ -865,7 +865,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
         #endregion
 
-
         public void ToggleFavorite()
         {
             if (!this.Tweet.CanFavorite) return;
@@ -892,7 +891,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             if (!this.Tweet.CanFavorite) return;
             PostOffice.UnfavTweet(this.Parent.TabProperty.LinkAccountInfos, this.Tweet);
         }
-
 
         #region FavoriteAndRetweetCommand
         private ViewModelCommand _FavoriteAndRetweetCommand;
@@ -926,8 +924,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         public void ToggleFavoriteAndRetweet()
         {
             if (!this.Tweet.CanFavorite) return;
-            if (this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
-                .All(u => this.Tweet.FavoredUsers.Contains(u) && this.Tweet.RetweetedUsers.Contains(u)))
+            var favored = this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
+                .All(u => this.Tweet.FavoredUsers.Contains(u));
+            var retweeted = this.Parent.TabProperty.LinkAccountInfos.Select(ai => ai.UserViewModel)
+                .All(u => this.Tweet.RetweetedUsers.Contains(u));
+            if (favored && retweeted)
             {
                 // all account favored and retweeted
                 Unretweet();
@@ -935,8 +936,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
             else
             {
-                Retweet();
-                Favorite();
+                if (!retweeted)
+                    Retweet();
+                if (!favored)
+                    Favorite();
             }
         }
 
@@ -963,19 +966,21 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         public void FavoriteAndRetweetMultiUser()
         {
             if (!this.Tweet.CanFavorite) return;
-            var favrted = AccountStorage.Accounts.Where(a => this.Tweet.FavoredUsers.Contains(a.UserViewModel) && this.Tweet.RetweetedUsers.Contains(a.UserViewModel)).ToArray();
+            var favored = AccountStorage.Accounts.Where(a => this.Tweet.FavoredUsers.Contains(a.UserViewModel)).ToArray();
+            var retweeted = AccountStorage.Accounts.Where(a => this.Tweet.RetweetedUsers.Contains(a.UserViewModel)).ToArray();
+            var favrted = AccountStorage.Accounts.Where(a => this.Tweet.FavoredUsers.Contains(a.UserViewModel) &&
+                this.Tweet.RetweetedUsers.Contains(a.UserViewModel)).ToArray();
             this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.FavoriteAndRetweet,
                 favrted,
                 u =>
                 {
-                    PostOffice.Retweet(u.Except(favrted), this.Tweet);
-                    PostOffice.FavTweet(u.Except(favrted), this.Tweet);
+                    PostOffice.Retweet(u.Except(retweeted), this.Tweet);
+                    PostOffice.FavTweet(u.Except(favored), this.Tweet);
                     PostOffice.UnfavTweet(favrted.Except(u), this.Tweet);
                     PostOffice.Unretweet(favrted.Except(u), this.Tweet);
                 });
         }
         #endregion
-
 
         #region FavoriteMultiUserCommand
         ViewModelCommand _FavoriteMultiUserCommand;

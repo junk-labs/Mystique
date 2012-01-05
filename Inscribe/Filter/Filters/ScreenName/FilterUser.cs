@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Inscribe.Filter.Filters.ScreenName
 {
     public class FilterUser : ScreenNameFilterBase
@@ -22,6 +18,11 @@ namespace Inscribe.Filter.Filters.ScreenName
         public override string Identifier
         {
             get { return "user"; }
+        }
+
+        public override System.Collections.Generic.IEnumerable<string> Aliases
+        {
+            get { yield return "u"; }
         }
 
         public override string Description

@@ -15,7 +15,7 @@
         <TextBox Name="inputTextBox"
                  AcceptsReturn="True"
                  AllowDrop="True"
-                 Background="Transparent"
+                 Background="{Binding Background}"
                  BorderThickness="0"
                  DragOver="inputTextBox_DragOver"
                  Drop="inputTextBox_Drop"

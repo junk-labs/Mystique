@@ -28,6 +28,9 @@ namespace Inscribe.Core
             Dulcet.Network.Http.MaxConnectionLimit = Int32.MaxValue;
             Dulcet.Network.Http.TimeoutInterval = 8000;
 
+            // プラグインのロード
+            PluginLoader.Load();
+
             // 設定のロード
             Setting.Initialize();
 
@@ -86,11 +89,7 @@ namespace Inscribe.Core
                 }
             }
 
-            if (!Setting.IsSafeMode)
-            {
-                // プラグインのロード
-                PluginLoader.Load();
-            }
+
             UpdateReceiver.StartSchedule();
             Application.Current.Exit += new ExitEventHandler(AppExit);
         }
@@ -117,7 +116,6 @@ namespace Inscribe.Core
 
         static void AppExit(object sender, ExitEventArgs e)
         {
-            Setting.Instance.KernelProperty.KillByErrorCount = 0;
             Setting.Instance.Save();
         }
     }

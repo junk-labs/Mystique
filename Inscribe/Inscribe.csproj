@@ -156,7 +156,6 @@
     <Compile Include="Filter\Filters\ScreenName\FilterFavoriteFrom.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterFollowFrom.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterFollowTo.cs" />
-    <Compile Include="Filter\Filters\ScreenName\FilterMention.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterRetweetFrom.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterUser.cs" />
     <Compile Include="Filter\Filters\Text\FilterText.cs" />

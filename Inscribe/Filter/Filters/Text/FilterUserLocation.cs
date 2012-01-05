@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Inscribe.Filter.Filters.Text
 {
     public class FilterUserLocation : TextFilterBase

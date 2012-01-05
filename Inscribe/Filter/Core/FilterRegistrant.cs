@@ -37,18 +37,13 @@ namespace Inscribe.Filter.Core
         }
 
         /// <summary>
-        /// 指定した名前空間とクラスを持つフィルタ型を取得します。
+        /// 指定したID/エイリアスを持つフィルタを取得します。
         /// </summary>
-        /// <param name="ns">名前空間</param>
-        /// <param name="cls">クラス名</param>
-        /// <returns>名前空間とクラス名が一致する型</returns>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
         public static IEnumerable<Type> GetFilter(string identifier)
         {
-            foreach (var fl in filterLookup)
-            {
-                if (fl.Item2 == identifier)
-                    yield return fl.Item1;
-            }
+            return filterLookup.Where(i => i.Item2 == identifier).Select(i => i.Item1);
         }
 
         /// <summary>
@@ -90,6 +85,10 @@ namespace Inscribe.Filter.Core
                 System.Diagnostics.Debug.WriteLine("Join:" + type.ToString());
                 filterTypes.Add(type);
                 filterLookup.Add(new Tuple<Type, string>(type, inst.Identifier));
+                foreach (var alias in inst.Aliases ?? new string[0])
+                {
+                    filterLookup.Add(new Tuple<Type, string>(type, alias));
+                }
                 return true;
             }
             else

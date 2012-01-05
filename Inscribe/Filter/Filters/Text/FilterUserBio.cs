@@ -23,6 +23,15 @@ namespace Inscribe.Filter.Filters.Text
             get { return "bio"; }
         }
 
+        public override System.Collections.Generic.IEnumerable<string> Aliases
+        {
+            get
+            {
+                yield return "desc";
+                yield return "description";
+            }
+        }
+
         public override string Description
         {
             get { return "ユーザーのBio(Description)"; }

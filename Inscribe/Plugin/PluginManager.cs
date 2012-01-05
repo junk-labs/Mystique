@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Acuerdo.Plugin;
 
 namespace Inscribe.Plugin
@@ -26,7 +27,14 @@ namespace Inscribe.Plugin
             {
                 _plugins.Add(plugin);
             }
-            plugin.Loaded();
+            try
+            {
+                plugin.Loaded();
+            }
+            catch (Exception e)
+            {
+                throw new KrilePluginException(plugin, "プラグインのロードに失敗しました。", e);
+            }
         }
     }
 }

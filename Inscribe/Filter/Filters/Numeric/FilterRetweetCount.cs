@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Dulcet.Twitter;
 using Inscribe.Filter.Core;
 using Inscribe.Storage;
-using Dulcet.Twitter;
 
 namespace Inscribe.Filter.Filters.Numeric
 {
@@ -62,7 +62,12 @@ namespace Inscribe.Filter.Filters.Numeric
 
         public override string Identifier
         {
-            get { return "rt_count"; }
+            get { return "rts"; }
+        }
+
+        public override IEnumerable<string> Aliases
+        {
+            get { yield return "rt_count"; }
         }
 
         public override IEnumerable<object> GetArgumentsForQueryify()

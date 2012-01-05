@@ -85,15 +85,6 @@ namespace Mystique.Views
                         Browser.Start(Define.ReleaseNoteUrl);
                 }
             }
-            else if (Setting.IsSafeMode)
-            {
-                MessageBox.Show(this,
-                    "Krileが連続して異常終了していることを検知しました。" + Environment.NewLine +
-                    "確認のため、プラグインをロードせずに起動しています。" + Environment.NewLine +
-                    "もしもこれによって異常終了しなくなった場合は、プラグインに原因があります。" + Environment.NewLine +
-                    "導入したプラグインを削除するか、最新版に更新してください。",
-                    "セーフモードでの起動", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -32,7 +32,6 @@ namespace Inscribe.Core
                 Setting.Instance.StateProperty.WindowPosition = rect;
                 Setting.Instance.StateProperty.WindowState = Application.Current.MainWindow.WindowState;
             }
-            Setting.Instance.KernelProperty.KillByErrorCount = 0;
             Setting.Instance.Save();
             ThreadHelper.HaltThreads();
             Application.Current.Dispatcher.InvokeShutdown();

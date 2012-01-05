@@ -21,7 +21,6 @@ namespace Inscribe.Filter.Filters.ScreenName
         {
             get { return "block_from"; }
         }
-
         public override string Description
         {
             get { return "指定アカウントのブロック"; }

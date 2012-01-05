@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
-using Inscribe.Filter.Core;
 using Inscribe.Common;
+using Inscribe.Filter.Core;
 using Inscribe.Storage;
-using System.Linq;
 
 namespace Inscribe.Filter.Filters.Particular
 {
@@ -126,7 +126,12 @@ namespace Inscribe.Filter.Filters.Particular
 
         public override string Identifier
         {
-            get { return "mtree"; }
+            get { return "trace"; }
+        }
+
+        public override IEnumerable<string> Aliases
+        {
+            get { yield return "mtree"; }
         }
 
         public override IEnumerable<object> GetArgumentsForQueryify()

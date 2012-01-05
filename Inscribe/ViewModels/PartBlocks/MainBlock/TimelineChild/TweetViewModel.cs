@@ -494,6 +494,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get { return Setting.Instance.TweetExperienceProperty.ShowTweetTooltip; }
         }
 
+        public bool IsQuickFavAndRetweetEnabled
+        {
+            get { return Setting.Instance.TweetExperienceProperty.QuickFavAndRetweet; }
+        }
+
         #endregion
 
         #region Commands

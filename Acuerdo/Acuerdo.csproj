@@ -53,6 +53,7 @@
     <Compile Include="Injection\InjectionPortFunc.cs" />
     <Compile Include="Plugin\IConfigurator.cs" />
     <Compile Include="Plugin\IPlugin.cs" />
+    <Compile Include="Plugin\KrilePluginException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripting\CompilationService.cs" />
     <Compile Include="Scripting\ExecutionEnvironment.cs" />

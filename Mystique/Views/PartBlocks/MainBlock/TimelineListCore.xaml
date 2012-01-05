@@ -149,13 +149,12 @@
             </MenuItem>
             <MenuItem Command="{Binding FavoriteAndRetweetCommand,
                                         Mode=OneTime}"
-                      Header="Favorite A_nd Retweet"
+                      Header="Favorite a_nd Retweet"
                       InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
                                                  Mode=OneTime,
                                                  ConverterParameter=FavoriteAndRetweet}">
                 <MenuItem.Icon>
-                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
-                           Source="{StaticResource FavoriteRetweet}" />
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource FavoriteRetweet}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding FavoriteCommand,
@@ -221,6 +220,16 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Header="複数アカウント(M)">
+                <MenuItem Command="{Binding FavoriteAndRetweetMultiUserCommand,
+                                            Mode=OneTime}"
+                          Header="Favorite a_nd Retweet"
+                          InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                     Mode=OneTime,
+                                                     ConverterParameter=FavoriteAndRetweet}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource FavoriteRetweet}" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Command="{Binding FavoriteMultiUserCommand,
                                             Mode=OneTime}"
                           Header="_Favorite..."
@@ -482,22 +491,39 @@
                                        Source="{StaticResource Favorited}" />
                                 <Button.ToolTip>Favoriteに追加</Button.ToolTip>
                             </Button>
-                            <Button Grid.Column="2"
-                                    Command="{Binding Path=RetweetCommand,
-                                                      Mode=OneTime}"
-                                    Style="{StaticResource SimpleButtonStyle}"
-                                    Visibility="{Binding Path=Tweet.IsProtected,
-                                                         Converter={StaticResource BoolInvisibleConverter}}">
-                                <Image Width="16"
-                                       Height="16"
-                                       Margin="1"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                       SnapsToDevicePixels="True"
-                                       Source="{StaticResource Retweet}" />
-                                <Button.ToolTip>Retweetする</Button.ToolTip>
-                            </Button>
+                            <cpanel:FillPanel Grid.Column="2" Visibility="{Binding Path=Tweet.IsProtected, Converter={StaticResource BoolInvisibleConverter}}">
+                                <Button Command="{Binding Path=RetweetCommand,
+                                                          Mode=OneTime}"
+                                        Style="{StaticResource SimpleButtonStyle}"
+                                        Visibility="{Binding Path=Tweet.IsQuickFavAndRetweetEnabled,
+                                                             Converter={StaticResource BoolInvisibleConverter}}">
+                                    <Image Width="16"
+                                           Height="16"
+                                           Margin="1"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           SnapsToDevicePixels="True"
+                                           Source="{StaticResource Retweet}" />
+                                    <Button.ToolTip>Retweetする</Button.ToolTip>
+                                </Button>
+                                <Button Grid.Column="2"
+                                        Command="{Binding Path=FavoriteAndRetweetCommand,
+                                                          Mode=OneTime}"
+                                        Style="{StaticResource SimpleButtonStyle}"
+                                        Visibility="{Binding Path=Tweet.IsQuickFavAndRetweetEnabled,
+                                                             Converter={StaticResource BoolVisibleConverter}}">
+                                    <Image Width="16"
+                                           Height="16"
+                                           Margin="1"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           SnapsToDevicePixels="True"
+                                           Source="{StaticResource FavoriteRetweet}" />
+                                    <Button.ToolTip>Favorite+Retweetする</Button.ToolTip>
+                                </Button>
+                            </cpanel:FillPanel>
                         </Grid>
                     </cpanel:FillPanel>
                     <TextBlock Grid.Column="1"
@@ -894,8 +920,7 @@
                                                                                     AncestorType={x:Type ListBoxItem}},
                                                      Path=IsSelected,
                                                      Converter={StaticResource BoolVisibleConverter}}">
-                        <Grid VerticalAlignment="Center"
-                              Visibility="{Binding Path=Tweet.CanFavorite, Converter={StaticResource BoolVisibleConverter}}">
+                        <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.CanFavorite, Converter={StaticResource BoolVisibleConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="11" />
@@ -908,16 +933,14 @@
                                     Command="{Binding FavoriteAndRetweetMultiUserCommand}"
                                     Focusable="False"
                                     Style="{DynamicResource FlatButtonStyle}">
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                       Source="{StaticResource Chevron}" />
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Chevron}" />
                                 <Button.ToolTip>多重FavRT...</Button.ToolTip>
                             </Button>
                             <Button VerticalAlignment="Center"
                                     Command="{Binding FavoriteAndRetweetCommand}"
                                     Focusable="False"
                                     Style="{DynamicResource FlatButtonStyle}">
-                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                       Source="{StaticResource FavoriteRetweet}" />
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource FavoriteRetweet}" />
                                 <Button.ToolTip>Favorite and Retweet</Button.ToolTip>
                             </Button>
                         </Grid>

@@ -21,7 +21,12 @@ namespace Inscribe.Filter.Filters.ScreenName
 
         public override string Identifier
         {
-            get { return "fav_from"; }
+            get { return "fav_by"; }
+        }
+
+        public override IEnumerable<string> Aliases
+        {
+            get { yield return "fav_from"; }
         }
 
         public override IEnumerable<object> GetArgumentsForQueryify()

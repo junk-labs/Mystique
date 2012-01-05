@@ -65,7 +65,7 @@ namespace Inscribe.ViewModels.Dialogs
         {
             CreateTab("Home", new IFilter[]{
                 new FilterFollowFrom("*"),
-                new FilterMention("*"),
+                new FilterTo("*"),
                 new FilterUser("*"), new FilterDirectMessage()});
             Close();
         }
@@ -92,7 +92,7 @@ namespace Inscribe.ViewModels.Dialogs
                 new IFilter[]{
                     new FilterCluster(
                         new IFilter[]{
-                            new FilterMention("*"),
+                            new FilterTo("*"),
                             new FilterRetweeted(){Negate=true}},
                             concatAnd: true)});
             Close();
@@ -201,7 +201,7 @@ namespace Inscribe.ViewModels.Dialogs
         {
             CreateTab("Home", new IFilter[]{
                 new FilterFollowFrom(SelectedScreenName),
-                new FilterMention(SelectedScreenName),
+                new FilterTo(SelectedScreenName),
                 new FilterUser(SelectedScreenName), 
                 new FilterCluster(
                     new IFilter[]{
@@ -233,7 +233,7 @@ namespace Inscribe.ViewModels.Dialogs
                 new IFilter[]{
                     new FilterCluster(
                         new IFilter[]{
-                            new FilterMention(SelectedScreenName),
+                            new FilterTo(SelectedScreenName),
                             new FilterRetweeted(){Negate=true}},
                             concatAnd: true)});
             Close();

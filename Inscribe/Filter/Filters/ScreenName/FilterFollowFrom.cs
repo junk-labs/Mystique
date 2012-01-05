@@ -51,6 +51,15 @@ namespace Inscribe.Filter.Filters.ScreenName
             get { return "follow_from"; }
         }
 
+        public override System.Collections.Generic.IEnumerable<string> Aliases
+        {
+            get
+            {
+                yield return "following";
+                yield return "followings";
+            }
+        }
+
         public override string Description
         {
             get { return "指定アカウントのフォロー"; }

@@ -23,6 +23,11 @@ namespace Inscribe.Filter.Filters.Text
             get { return "text"; }
         }
 
+        public override System.Collections.Generic.IEnumerable<string> Aliases
+        {
+            get { yield return "t"; }
+        }
+
         public override string Description
         {
             get { return "本文"; }

@@ -29,7 +29,7 @@ namespace Inscribe.Filter.Filters.Text
 
         public override string Description
         {
-            get { return "URL"; }
+            get { return "本文中のURL"; }
         }
     }
 }

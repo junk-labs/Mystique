@@ -316,33 +316,36 @@ namespace Inscribe.Storage
             {
                 if (status.Entities != null)
                 {
-                    // extracting t.co
-                    var urls = status.Entities.GetChildNode("urls");
-                    if (urls != null)
+                    // extracting t.co and official image
+                    new[]
                     {
-                        // indicesの始まりが遅い順に置換していく
-                        urls.GetChildNodes("item")
-                            .Where(i => i.GetChildNode("indices") != null)
-                            .Where(i => i.GetChildNode("indices").GetChildValues("item") != null)
-                            .OrderByDescending(i => i.GetChildNode("indices").GetChildValues("item")
-                                .Select(s => int.Parse(s.Value)).First())
-                            .ForEach(i =>
-                        {
-                            var expand = i.GetChildValue("expanded_url").Value;
-                            if (String.IsNullOrWhiteSpace(expand))
-                                expand = i.GetChildValue("url").Value;
-                            if (!String.IsNullOrWhiteSpace(expand))
-                            {
-                                var indices = i.GetChildNode("indices").GetChildValues("item")
-                                    .Select(v => int.Parse(v.Value)).OrderBy(v => v).ToArray();
-                                if (indices.Length == 2)
-                                {
-                                    status.Text = status.Text.Substring(0, indices[0]) +
-                                        expand + status.Text.Substring(indices[1]);
-                                }
-                            }
-                        });
+                        status.Entities.GetChildNode("urls"),
+                        status.Entities.GetChildNode("media")
                     }
+                        .Where(n => n != null)
+                        .SelectMany(n => n.GetChildNodes("item"))
+                        .Where(i => i.GetChildNode("indices") != null)
+                        .Where(i => i.GetChildNode("indices").GetChildValues("item") != null)
+                        .OrderByDescending(i => i.GetChildNode("indices").GetChildValues("item")
+                            .Select(s => int.Parse(s.Value)).First())
+                        .ForEach(i =>
+                    {
+                        var expand = i.GetChildValue("media_url").Value;
+                        if (String.IsNullOrWhiteSpace(expand))
+                            expand = i.GetChildValue("expanded_url").Value;
+                        if (String.IsNullOrWhiteSpace(expand))
+                            expand = i.GetChildValue("url").Value;
+                        if (!String.IsNullOrWhiteSpace(expand))
+                        {
+                            var indices = i.GetChildNode("indices").GetChildValues("item")
+                                .Select(v => int.Parse(v.Value)).OrderBy(v => v).ToArray();
+                            if (indices.Length == 2)
+                            {
+                                status.Text = status.Text.Substring(0, indices[0]) +
+                                    expand + status.Text.Substring(indices[1]);
+                            }
+                        }
+                    });
                 }
             }
             catch { }

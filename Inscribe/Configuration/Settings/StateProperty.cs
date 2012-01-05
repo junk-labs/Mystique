@@ -24,14 +24,14 @@ namespace Inscribe.Configuration.Settings
                     new TabProperty("Home",
                             new IFilter[]{
                                 new FilterFollowFrom("*"),
-                                new FilterMention("*"),
+                                new FilterTo("*"),
                                 new FilterUser("*"),
                                 new FilterDirectMessage()}),
                     new TabProperty("Mentions",
                         new IFilter[]{
                             new FilterCluster(
                                 new IFilter[]{
-                                    new FilterMention("*"),
+                                    new FilterTo("*"),
                                     new FilterRetweeted(){ Negate = true }
                                 }, concatAnd: true)}),
                     new TabProperty("Messages",

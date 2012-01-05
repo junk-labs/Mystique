@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Inscribe.Common;
-using Inscribe.Storage;
 
 namespace Inscribe.Filter.Filters.Attributes
 {

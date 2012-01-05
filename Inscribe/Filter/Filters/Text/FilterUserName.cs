@@ -13,7 +13,6 @@ namespace Inscribe.Filter.Filters.Text
             this.isCaseSensitive = isCaseSensitive;
         }
 
-
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
             return this.Match(status.User.UserName, this.needle, this.isCaseSensitive);

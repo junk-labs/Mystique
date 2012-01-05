@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Dulcet.Twitter;
 using Inscribe.Filter.Core;
 using Inscribe.Storage;
-using System.Threading;
-using Dulcet.Twitter;
-using System.Threading.Tasks;
 
 namespace Inscribe.Filter.Filters.Particular
 {
