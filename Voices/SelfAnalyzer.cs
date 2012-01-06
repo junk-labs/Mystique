@@ -11,7 +11,8 @@ namespace Voices
         public static string Analyze(string error)
         {
             if (error.Contains("System.IO.DirectoryNotFoundException") ||
-                error.Contains("System.IO.FileNotFoundException"))
+                error.Contains("System.IO.FileNotFoundException") ||
+                error.Contains("System.TypeLoadException"))
             {
                 return "Krileのファイル構成が壊れている可能性があります。" + Environment.NewLine +
                     "Krile 公式サイトより最新版をダウンロードして上書きしてみてください。" + Environment.NewLine +

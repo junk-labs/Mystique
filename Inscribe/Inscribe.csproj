@@ -66,6 +66,7 @@
     <Compile Include="Communication\InjectionPoint.cs" />
     <Compile Include="Communication\UserStreams\ConnectionManager.cs" />
     <Compile Include="Communication\UserStreams\UserStreamsConnection.cs" />
+    <Compile Include="Configuration\Settings\DefinedFiltersProperty.cs" />
     <Compile Include="Configuration\Settings\MouseAssignProperty.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterTo.cs" />
     <Compile Include="Util\WrappingStream.cs" />
