@@ -26,7 +26,6 @@ namespace Inscribe.Core
             // ネットワーク初期化
             Dulcet.Network.Http.Expect100Continue = false;
             Dulcet.Network.Http.MaxConnectionLimit = Int32.MaxValue;
-            Dulcet.Network.Http.TimeoutInterval = 8000;
 
             // プラグインのロード
             PluginLoader.Load();

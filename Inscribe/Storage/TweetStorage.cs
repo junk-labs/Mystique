@@ -330,10 +330,12 @@ namespace Inscribe.Storage
                             .Select(s => int.Parse(s.Value)).First())
                         .ForEach(i =>
                     {
-                        var expand = i.GetChildValue("media_url").Value;
-                        if (String.IsNullOrWhiteSpace(expand))
+                        String expand = null;
+                        if (i.GetChildValue("media_url") != null)
+                            expand = i.GetChildValue("media_url").Value;
+                        if (String.IsNullOrWhiteSpace(expand) && i.GetChildValue("expanded_url") != null)
                             expand = i.GetChildValue("expanded_url").Value;
-                        if (String.IsNullOrWhiteSpace(expand))
+                        if (String.IsNullOrWhiteSpace(expand) && i.GetChildValue("url") != null)
                             expand = i.GetChildValue("url").Value;
                         if (!String.IsNullOrWhiteSpace(expand))
                         {
