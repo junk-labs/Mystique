@@ -1,9 +1,9 @@
-﻿using Acuerdo.Plugin;
-using Livet;
-using Inscribe.ViewModels.Behaviors.Messaging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Acuerdo.Plugin;
 using Inscribe.Plugin;
+using Inscribe.ViewModels.Behaviors.Messaging;
+using Livet;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
@@ -28,7 +28,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public string Name { get { return this.plugin.Name; } }
 
-        public string Version { get { return this.plugin.Version.ToString("0.0"); } }
+        public string Version { get { return this.plugin.Version.ToString(); } }
 
         #region OpenConfigurationCommand
         Livet.Commands.ViewModelCommand _OpenConfigurationCommand;

@@ -57,11 +57,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }
         }
 
-        /*
-        private CollectionViewSource _tweetCollectionView;
-        public CollectionViewSource TweetCollectionView { get { return this._tweetCollectionView; } }
-        */
-
         private TabDependentTweetViewModel _selectedTweetViewModel = null;
         public TabDependentTweetViewModel SelectedTweetViewModel
         {
@@ -196,7 +191,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         private void SettingValueChanged(object o, EventArgs e)
         {
             this.Commit();
-            // UpdateSortDescription();
+            Task.Factory.StartNew(() => this.InvalidateCache());
         }
 
         public bool CheckFilters(TweetViewModel viewModel)

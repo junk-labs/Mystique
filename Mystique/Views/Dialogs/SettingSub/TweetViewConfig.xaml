@@ -8,126 +8,166 @@
              d:DesignWidth="400"
              mc:Ignorable="d">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0"
-                   Margin="4,2"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Center"
-                   Text="短縮URLの解決" />
-        <ComboBox Grid.Row="0"
-                  Grid.Column="1"
-                  Margin="4,2"
-                  SelectedIndex="{Binding ResolveStrategyIndex}">
-            <ComboBoxItem Content="しない" />
-            <ComboBoxItem Content="マウスオーバー時にする" />
-            <ComboBoxItem Content="受信時にする(非推奨, 遅延します)" />
-        </ComboBox>
-        <Grid Grid.Row="1"
-              Grid.Column="1"
-              Margin="4,2"
-              Visibility="{Binding IsTranscender,
-                                   Converter={StaticResource BoolVisibleConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBlock Margin="0,0,4,0"
-                       HorizontalAlignment="Right"
-                       VerticalAlignment="Center"
-                       Text="チップヘルプ表示時間(msec)" />
-            <TextBox Grid.Column="1"
-                     Margin="4,0,0,0"
-                     bat:TextBoxExtension.IsNumeric="True"
-                     MaxLength="10"
-                     Text="{Binding TipHelpShowLength,
-                                    UpdateSourceTrigger=PropertyChanged}" />
-        </Grid>
-        <TextBlock Grid.Row="2"
-                   Margin="4,2"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Center"
-                   Text="ユーザー名の表示" />
-        <ComboBox Grid.Row="2"
-                  Grid.Column="1"
-                  Margin="4,2"
-                  SelectedIndex="{Binding UserNameViewModeIndex}">
-            <ComboBoxItem Content="@ID" />
-            <ComboBoxItem Content="ユーザー名" />
-            <ComboBoxItem Content="両方(@ID/ユーザー名)" />
-        </ComboBox>
-        <TextBlock Grid.Row="3"
-                   Margin="4,2"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Center"
-                   Text="通知ウィンドウでの表示" />
-        <ComboBox Grid.Row="3"
-                  Grid.Column="1"
-                  Margin="4,2"
-                  SelectedIndex="{Binding NotificationNameViewModeIndex}">
-            <ComboBoxItem Content="@ID" />
-            <ComboBoxItem Content="ユーザー名" />
-            <ComboBoxItem Content="両方(@ID/ユーザー名)" />
-        </ComboBox>
-        <TextBlock Grid.Row="4"
-                   Margin="4,2"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Center"
-                   Text="ユーザー名の幅" />
-        <StackPanel Grid.Row="4"
-                    Grid.Column="1"
-                    Margin="4,2"
-                    Orientation="Vertical">
-            <Border Width="{Binding UserNameAreaWidthInt}"
-                    Height="20"
-                    HorizontalAlignment="Left"
-                    Background="Gainsboro"
-                    BorderBrush="Black"
-                    BorderThickness="1">
-                <TextBlock Text="sample_id/サンプルユーザー名" />
-            </Border>
-            <TextBox bat:TextBoxExtension.IsNumeric="True"
-                     MaxLength="4"
-                     Text="{Binding UserNameAreaWidthString,
-                                    UpdateSourceTrigger=PropertyChanged}" />
-        </StackPanel>
-        <StackPanel Grid.Row="5"
-                    Grid.ColumnSpan="2"
-                    Orientation="Vertical">
-            <CheckBox Margin="4,2" IsChecked="{Binding P3StyleIcon}">
-                <AccessText Text="P3スタイルのアイコン表示(_P)[アイコンの上下端をカットします]" />
-            </CheckBox>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Margin="4,2" IsChecked="{Binding ShowUnofficialRTButton}">
-                    <AccessText Text="非公式RTを使う(_R)" />
-                </CheckBox>
-                <CheckBox Margin="4,2" IsChecked="{Binding ShowQuoteTweetButton}">
-                    <AccessText Text="QTを使う(_Q)" />
-                </CheckBox>
+        <TabControl>
+            <TabItem Header="一般設定">
+                <StackPanel Grid.Row="5"
+                            Grid.ColumnSpan="2"
+                            Orientation="Vertical">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Margin="4,2"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Text="ツイートの表示" />
+                        <ComboBox Grid.Row="0"
+                                  Grid.Column="1"
+                                  Margin="4,2"
+                                  SelectedIndex="{Binding ViewModeIndex}">
+                            <ComboBoxItem Content="全行表示(大)" />
+                            <ComboBoxItem Content="全行表示(小)" />
+                            <ComboBoxItem Content="一行表示" />
+                        </ComboBox>
+                    </Grid>
 
-            </StackPanel>
-            <CheckBox Margin="4,2" IsChecked="{Binding CanFavMyTweet}">
-                <AccessText Text="自分のツイートもFav可能にする(_F)" />
-            </CheckBox>
-            <CheckBox Margin="4,2" IsChecked="{Binding ShowTweetTooltip}">
-                <AccessText Text="ツイートツールチップを表示する(_T)" />
-            </CheckBox>
-            <CheckBox Margin="4,2" IsChecked="{Binding FullLineView}">
-                <AccessText Text="縮小状態でも全文表示する(_X)" />
-            </CheckBox>
-            <CheckBox Margin="4,2" IsChecked="{Binding QuickFavAndRetweet}">
-                <AccessText Text="クイックRTボタンをFav+RTにする(_A)" />
-            </CheckBox>
-        </StackPanel>
+                    <CheckBox Margin="4,2" IsChecked="{Binding ShowUnofficialRTButton}">
+                        <AccessText Text="非公式RTを使う(_R)" />
+                    </CheckBox>
+                    <CheckBox Margin="4,2" IsChecked="{Binding ShowQuoteTweetButton}">
+                        <AccessText Text="QTを使う(_Q)" />
+                    </CheckBox>
+                    <CheckBox Margin="4,2" IsChecked="{Binding CanFavMyTweet}">
+                        <AccessText Text="自分のツイートもFav可能にする(_F)" />
+                    </CheckBox>
+                    <CheckBox Margin="4,2"
+                              IsChecked="{Binding P3StyleIcon}"
+                              IsEnabled="{Binding IsSingleline}">
+                        <AccessText Text="P3スタイルのアイコン表示(_P)[アイコンの上下端をカットします]" />
+                    </CheckBox>
+                    <CheckBox Margin="4,2"
+                              IsChecked="{Binding QuickFavAndRetweet}"
+                              IsEnabled="{Binding IsSingleline}">
+                        <AccessText Text="クイックRTボタンをFav+RTにする(_A)" />
+                    </CheckBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="ユーザー名">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="ユーザー名の表示" />
+                    <ComboBox Grid.Row="0"
+                              Grid.Column="1"
+                              Margin="4,2"
+                              SelectedIndex="{Binding UserNameViewModeIndex}">
+                        <ComboBoxItem Content="@ID" />
+                        <ComboBoxItem Content="ユーザー名" />
+                        <ComboBoxItem Content="両方(@ID/ユーザー名)" />
+                    </ComboBox>
+                    <TextBlock Grid.Row="1"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="通知ウィンドウでの表示" />
+                    <ComboBox Grid.Row="1"
+                              Grid.Column="1"
+                              Margin="4,2"
+                              SelectedIndex="{Binding NotificationNameViewModeIndex}">
+                        <ComboBoxItem Content="@ID" />
+                        <ComboBoxItem Content="ユーザー名" />
+                        <ComboBoxItem Content="両方(@ID/ユーザー名)" />
+                    </ComboBox>
+                    <TextBlock Grid.Row="2"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="ユーザー名の幅" />
+                    <StackPanel Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="4,2"
+                                Orientation="Vertical">
+                        <Border Width="{Binding UserNameAreaWidthInt}"
+                                Height="20"
+                                HorizontalAlignment="Left"
+                                Background="Gainsboro"
+                                BorderBrush="Black"
+                                BorderThickness="1">
+                            <TextBlock Text="sample_id/サンプルユーザー名" />
+                        </Border>
+                        <TextBox bat:TextBoxExtension.IsNumeric="True"
+                                 MaxLength="4"
+                                 Text="{Binding UserNameAreaWidthString,
+                                                UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="ツールチップ">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Margin="4,2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="短縮URLの解決" />
+                    <ComboBox Grid.Row="0"
+                              Grid.Column="1"
+                              Margin="4,2"
+                              SelectedIndex="{Binding ResolveStrategyIndex}">
+                        <ComboBoxItem Content="しない" />
+                        <ComboBoxItem Content="マウスオーバー時にする" />
+                        <ComboBoxItem Content="受信時にする(非推奨, 遅延します)" />
+                    </ComboBox>
+                    <Grid Grid.Row="1"
+                          Grid.Column="1"
+                          Margin="4,2"
+                          Visibility="{Binding IsTranscender,
+                                               Converter={StaticResource BoolVisibleConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Margin="0,0,4,0"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Text="チップヘルプ表示時間(msec)" />
+                        <TextBox Grid.Column="1"
+                                 Margin="4,0,0,0"
+                                 bat:TextBoxExtension.IsNumeric="True"
+                                 MaxLength="10"
+                                 Text="{Binding TipHelpShowLength,
+                                                UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <CheckBox Grid.Row="2"
+                              Grid.ColumnSpan="2"
+                              Margin="4,2"
+                              IsChecked="{Binding ShowTweetTooltip}"
+                              IsEnabled="{Binding IsSingleline}">
+                        <AccessText Text="縮小状態のツイートをポイントした時、ツールチップを表示する(_T)" />
+                    </CheckBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

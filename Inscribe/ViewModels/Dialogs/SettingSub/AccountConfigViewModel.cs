@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Inscribe.Communication;
 using Inscribe.Authentication;
+using Inscribe.Communication;
 using Inscribe.Storage;
+using Inscribe.ViewModels.Common;
+using Inscribe.ViewModels.Dialogs.Account;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.ViewModels.Dialogs.Account;
-using Inscribe.ViewModels.Common;
 
 namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
     public class AccountConfigViewModel : ViewModel, IApplyable
     {
+        public bool IsAccountModified { get; private set; }
+
         public AccountConfigViewModel()
         {
+            IsAccountModified = false;
             ViewModelHelper.BindNotification(AccountStorage.AccountsChangedEvent,
                 this, (o, e) => RaisePropertyChanged(() => Accounts));
         }
@@ -56,9 +58,12 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             var apcvm = new AccountPropertyConfigViewModel(parameter);
             var msg = new TransitionMessage(apcvm, "ShowConfig");
             this.Messenger.Raise(msg);
+            if (apcvm.IsModified)
+                IsAccountModified = true;
             if (apcvm.AccountInfo != null && apcvm.AccountInfo.ScreenName != prevId)
             {
                 // User ID changed
+                IsAccountModified = true;
                 UserInformationManager.ReceiveInidividualInfo(apcvm.AccountInfo);
             }
         }
@@ -91,6 +96,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 }
                 else
                 {
+                    IsAccountModified = true;
                     ShowAccountConfig(ainfo);
                     AccountStorage.RegisterAccount(ainfo);
                     UserInformationManager.ReceiveInidividualInfo(ainfo);

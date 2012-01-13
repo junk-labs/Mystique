@@ -14,7 +14,7 @@ namespace Inscribe.Configuration.Settings
             UrlResolveMode = UrlResolve.OnPointed;
             UrlTooltipShowLength = 60 * 1000;
             ShowTweetTooltip = true;
-            UseFullLineView = false;
+            TweetViewMode = TweetViewingMode.SingleLine;
             CanFavoriteMyTweet = false;
             QuickFavAndRetweet = false;
         }
@@ -37,7 +37,7 @@ namespace Inscribe.Configuration.Settings
 
         public bool ShowTweetTooltip { get; set; }
 
-        public bool UseFullLineView { get; set; }
+        public TweetViewingMode TweetViewMode { get; set; }
 
         public bool CanFavoriteMyTweet { get; set; }
 
@@ -66,4 +66,12 @@ namespace Inscribe.Configuration.Settings
         /// </summary>
         OnReceived
     }
+
+    public enum TweetViewingMode
+    {
+        Expanded,
+        FullLine,
+        SingleLine,
+    }
+
 }

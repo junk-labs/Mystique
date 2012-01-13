@@ -22,6 +22,17 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public bool SetSearchCaretColorWhite { get; set; }
 
+        private int _coloringIndex;
+        public int ColoringIndex
+        {
+            get { return _coloringIndex; }
+            set
+            {
+                _coloringIndex = value;
+                RaisePropertyChanged(() => ColoringIndex);
+            }
+        }
+
         private string _backgroundImage;
         public string BackgroundImage
         {
@@ -37,13 +48,14 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             SetInputCaretColorWhite = Setting.Instance.ColoringProperty.SetInputCaretColorWhite;
             SetSearchCaretColorWhite = Setting.Instance.ColoringProperty.SetSearchCaretColorWhite;
+            this._coloringIndex = (int)Setting.Instance.ColoringProperty.TweetColorMode;
             NameBackColors = new IApplyable[]{
-                Wrap(Setting.Instance.ColoringProperty.DefaultNameColor, "基本色"),
+                Wrap(Setting.Instance.ColoringProperty.DefaultHighlightColor, "基本色"),
                 Wrap(Setting.Instance.ColoringProperty.MyColor, "自分"),
                 Wrap(Setting.Instance.ColoringProperty.FriendColor, "相互フォローユーザー"),
                 Wrap(Setting.Instance.ColoringProperty.FollowingColor, "片思いユーザー"),
                 Wrap(Setting.Instance.ColoringProperty.FollowerColor, "片思われユーザー"),
-                Wrap(Setting.Instance.ColoringProperty.DirectMessageNameColor, "ダイレクトメッセージ"),
+                Wrap(Setting.Instance.ColoringProperty.DirectMessageHighlightColor, "ダイレクトメッセージ"),
             };
             TextBackColors = new IApplyable[]{
                 Wrap(Setting.Instance.ColoringProperty.DefaultColor, "基本色"),
@@ -160,12 +172,12 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             var nbcprops = new dynamic[]
             {
-                cp.DefaultNameColor, 
+                cp.DefaultHighlightColor, 
                 cp.MyColor, 
                 cp.FriendColor, 
                 cp.FollowingColor, 
                 cp.FollowerColor, 
-                cp.DirectMessageNameColor
+                cp.DirectMessageHighlightColor
             };
             var tbcprops = new dynamic[] 
             { 
@@ -322,6 +334,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 .Concat(TextForeColors)
                 .Concat(CommonColors)
                 .ForEach(a => a.Apply());
+            Setting.Instance.ColoringProperty.TweetColorMode = (TweetColoringMode)this._coloringIndex;
             Setting.Instance.ColoringProperty.SetInputCaretColorWhite = SetInputCaretColorWhite;
             Setting.Instance.ColoringProperty.SetSearchCaretColorWhite = SetSearchCaretColorWhite;
             Setting.Instance.TimelineExperienceProperty.BackgroundImage = this.BackgroundImage;

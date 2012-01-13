@@ -26,7 +26,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._p3StyleIcon = Setting.Instance.TweetExperienceProperty.UseP3StyleIcon;
             this._showUnofficialRTButton = Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton;
             this._showQuoteTweetButton = Setting.Instance.TweetExperienceProperty.ShowQuoteButton;
-            this._fullLineView = Setting.Instance.TweetExperienceProperty.UseFullLineView;
+            this._viewModeIndex = (int)Setting.Instance.TweetExperienceProperty.TweetViewMode;
             this._canFavMyTweet = Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet;
             this._showTweetTooltip = Setting.Instance.TweetExperienceProperty.ShowTweetTooltip;
             this._quickFavAndRetweet = Setting.Instance.TweetExperienceProperty.QuickFavAndRetweet;
@@ -127,14 +127,15 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
-        private bool _fullLineView;
-        public bool FullLineView
+        private int _viewModeIndex;
+        public int ViewModeIndex
         {
-            get { return _fullLineView; }
+            get { return _viewModeIndex; }
             set
             {
-                _fullLineView = value;
-                RaisePropertyChanged(() => FullLineView);
+                _viewModeIndex = value;
+                RaisePropertyChanged(() => ViewModeIndex);
+                RaisePropertyChanged(() => IsSingleline);
             }
         }
 
@@ -161,7 +162,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         }
 
         private bool _quickFavAndRetweet;
-
         public bool QuickFavAndRetweet
         {
             get { return _quickFavAndRetweet; }
@@ -171,6 +171,15 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 RaisePropertyChanged(() => QuickFavAndRetweet);
             }
         }
+
+        #region Binding helper
+
+        public bool IsSingleline
+        {
+            get { return this._viewModeIndex > 0; }
+        }
+
+        #endregion
 
         public void Apply()
         {
@@ -184,7 +193,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 Setting.Instance.TweetExperienceProperty.UseP3StyleIcon = this._p3StyleIcon;
                 Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton = this._showUnofficialRTButton;
                 Setting.Instance.TweetExperienceProperty.ShowQuoteButton = this._showQuoteTweetButton;
-                Setting.Instance.TweetExperienceProperty.UseFullLineView = this._fullLineView;
+                Setting.Instance.TweetExperienceProperty.TweetViewMode = (TweetViewingMode)this._viewModeIndex;
+
                 Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet = this._canFavMyTweet;
                 Setting.Instance.TweetExperienceProperty.ShowTweetTooltip = this._showTweetTooltip;
                 Setting.Instance.TweetExperienceProperty.QuickFavAndRetweet = this._quickFavAndRetweet;

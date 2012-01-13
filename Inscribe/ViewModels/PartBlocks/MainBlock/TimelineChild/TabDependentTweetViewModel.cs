@@ -12,19 +12,19 @@ using Inscribe.Common;
 using Inscribe.Communication.Posting;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
+using Inscribe.Core;
 using Inscribe.Filter;
 using Inscribe.Filter.Filters.Numeric;
 using Inscribe.Filter.Filters.Particular;
+using Inscribe.Filter.Filters.Text;
 using Inscribe.Storage;
+using Inscribe.Subsystems;
 using Inscribe.Text;
+using Inscribe.ViewModels.Behaviors.Messaging;
 using Inscribe.ViewModels.Dialogs;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using Inscribe.Subsystems;
-using Inscribe.ViewModels.Behaviors.Messaging;
-using Inscribe.Core;
-using Inscribe.Filter.Filters.Text;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -48,11 +48,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 case ItemInitStrategy.None:
                     break;
                 case ItemInitStrategy.DefaultColors:
-                    _nameBackColorCache = Setting.Instance.ColoringProperty.DefaultNameColor.GetColor();
+                    _highlightColorCache = Setting.Instance.ColoringProperty.DefaultHighlightColor.GetColor();
                     _lightColorCache = Setting.Instance.ColoringProperty.DefaultColor.GetDarkColor();
                     _darkColorCache = Setting.Instance.ColoringProperty.DefaultColor.GetLightColor();
                     _textColorCache = Setting.Instance.ColoringProperty.DefaultTextColor.GetColor();
-                    _nameBackBrushCache = new SolidColorBrush(_nameBackColorCache).CloneFreeze();
+                    _highlightBrushCache = new SolidColorBrush(_highlightColorCache).CloneFreeze();
                     _lightBrushCache = new SolidColorBrush(_lightColorCache).CloneFreeze();
                     _darkBrushCache = new SolidColorBrush(_darkColorCache).CloneFreeze();
                     _textBrushCache = new SolidColorBrush(_textColorCache).CloneFreeze();
@@ -98,17 +98,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
 
-        private bool _isExpanded = false;
-        public bool IsExpanded
-        {
-            get { return this._isExpanded; }
-            set
-            {
-                this._isExpanded = value;
-                RaisePropertyChanged(() => IsExpanded);
-            }
-        }
-
         #endregion
 
         public void SettingValueChanged()
@@ -126,7 +115,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             this.isColorChanged = true;
             if (isRefreshBrightColor)
-                this.nameBackColorChanged = true;
+                this.highlightColorChanged = true;
             // RaisePropertyChanged(() => DarkBrush);
             // more speedy
             // DarkかLightを見てるはずなので両方Raiseしとけば、まぁ。
@@ -136,18 +125,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         #region Coloring Property
 
-        private bool nameBackColorChanged = true;
+        private bool highlightColorChanged = true;
         private bool isColorChanged = true;
-
-        private Color _nameBackColorCache;
-        public Color NameBackColor
-        {
-            get
-            {
-                TreatColorChange();
-                return _nameBackColorCache;
-            }
-        }
 
         private Color _lightColorCache;
         public Color LightColor
@@ -189,13 +168,44 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
 
-        private Brush _nameBackBrushCache;
-        public Brush NameBackBrush
+        private Color _highlightColorCache;
+        public Color HighlightColor
         {
             get
             {
                 TreatColorChange();
-                return _nameBackBrushCache;
+                return _highlightColorCache;
+            }
+        }
+        private Brush _highlightBrushCache;
+        public Brush HighlightBrush
+        {
+            get
+            {
+                TreatColorChange();
+                return _highlightBrushCache;
+            }
+        }
+
+        public Color HighlightTransparencyColor
+        {
+            get
+            {
+                if (Setting.Instance.ColoringProperty.TweetColorMode == TweetColoringMode.BottomBarGradient)
+                    return Colors.Transparent;
+                else
+                    return HighlightColor;
+            }
+        }
+
+        public Brush HighlightTransparencyBrush
+        {
+            get
+            {
+                if (Setting.Instance.ColoringProperty.TweetColorMode == TweetColoringMode.BottomBarGradient)
+                    return Brushes.Transparent;
+                else
+                    return HighlightBrush;
             }
         }
 
@@ -245,14 +255,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                     TwitterHelper.IsFollowerCurrent(uvm, ptv))
                     return Setting.Instance.ColoringProperty.FollowerColor.GetColor();
 
-                return Setting.Instance.ColoringProperty.DefaultNameColor.GetColor();
+                return Setting.Instance.ColoringProperty.DefaultHighlightColor.GetColor();
             }
             else
             {
-                if (Setting.Instance.ColoringProperty.DirectMessageNameColor.IsActivated)
-                    return Setting.Instance.ColoringProperty.DirectMessageNameColor.GetColor();
+                if (Setting.Instance.ColoringProperty.DirectMessageHighlightColor.IsActivated)
+                    return Setting.Instance.ColoringProperty.DirectMessageHighlightColor.GetColor();
                 else
-                    return Setting.Instance.ColoringProperty.DefaultNameColor.GetColor();
+                    return Setting.Instance.ColoringProperty.DefaultHighlightColor.GetColor();
             }
         }
 
@@ -399,30 +409,30 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             bool change = isColorChanged;
             isColorChanged = false;
-            bool lchanged = nameBackColorChanged;
-            nameBackColorChanged = false;
+            bool hchanged = highlightColorChanged;
+            highlightColorChanged = false;
             if (change && !pending)
             {
                 pending = true;
                 // 色の更新があった
-                taskDispatcher.Push(() => CommitColorChanged(lchanged));
+                taskDispatcher.Push(() => CommitColorChanged(hchanged));
             }
         }
 
         /// <summary>
         /// このTweetViewModelの色設定を更新します。
         /// </summary>
-        private void CommitColorChanged(bool nameBackColorUpdated)
+        private void CommitColorChanged(bool highlightColorUpdated)
         {
             pending = false;
             bool nlf = false;
-            if (nameBackColorUpdated)
+            if (highlightColorUpdated)
             {
                 var nlc = GetCurrentNameBackColor();
-                if (_nameBackColorCache != nlc)
+                if (_highlightColorCache != nlc)
                 {
-                    _nameBackColorCache = nlc;
-                    _nameBackBrushCache = new SolidColorBrush(_nameBackColorCache).CloneFreeze();
+                    _highlightColorCache = nlc;
+                    _highlightBrushCache = new SolidColorBrush(_highlightColorCache).CloneFreeze();
                     nlf = true;
                 }
             }
@@ -456,8 +466,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
             if (nlf)
             {
-                RaisePropertyChanged(() => NameBackColor);
-                RaisePropertyChanged(() => NameBackBrush);
+                RaisePropertyChanged(() => HighlightColor);
+                RaisePropertyChanged(() => HighlightBrush);
+                RaisePropertyChanged(() => HighlightTransparencyColor);
+                RaisePropertyChanged(() => HighlightTransparencyBrush);
             }
             if (bcf)
             {

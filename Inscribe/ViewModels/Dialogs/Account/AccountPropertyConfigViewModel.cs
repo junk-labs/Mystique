@@ -13,11 +13,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
 {
     public class AccountPropertyConfigViewModel : ViewModel
     {
+        public bool IsModified { get; private set; }
+
         public AccountInfo AccountInfo { get; private set; }
 
         public AccountPropertyConfigViewModel(AccountInfo info)
         {
             this.AccountInfo = info;
+            IsModified = false;
             this._profileImageProvider = new ProfileImageProvider(info);
         }
 
@@ -37,6 +40,7 @@ namespace Inscribe.ViewModels.Dialogs.Account
             get { return this.AccountInfo.AccountProperty.UseUserStreams; }
             set
             {
+                IsModified = true;
                 this.AccountInfo.AccountProperty.UseUserStreams = value;
                 RaisePropertyChanged(() => UseUserStreams);
             }
@@ -47,6 +51,7 @@ namespace Inscribe.ViewModels.Dialogs.Account
             get { return this.AccountInfo.AccountProperty.UserStreamsRepliesAll; }
             set
             {
+                IsModified = true;
                 this.AccountInfo.AccountProperty.UserStreamsRepliesAll = value;
                 RaisePropertyChanged(() => UserStreamsRepliesAll);
             }

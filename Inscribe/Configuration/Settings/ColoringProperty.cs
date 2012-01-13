@@ -8,7 +8,9 @@ namespace Inscribe.Configuration.Settings
     /// </summary>
     public class ColoringProperty
     {
-        #region NameBackColor
+        public TweetColoringMode TweetColorMode { get; set; }
+
+        #region HighlightColor
 
         public DisablableColorElement MyColor =
             new DisablableColorElement(0x99, 0xcd, 0xff);
@@ -22,10 +24,10 @@ namespace Inscribe.Configuration.Settings
         public DisablableColorElement FollowerColor =
             new DisablableColorElement(0xff, 0x99, 0x99);
 
-        public DisablableColorElement DirectMessageNameColor =
+        public DisablableColorElement DirectMessageHighlightColor =
             new DisablableColorElement(0xff, 0x99, 0x99);
 
-        public ColorElement DefaultNameColor =
+        public ColorElement DefaultHighlightColor =
             new ColorElement(Colors.White);
 
         #endregion
@@ -124,6 +126,13 @@ namespace Inscribe.Configuration.Settings
         public bool SetInputCaretColorWhite = false;
 
         public bool SetSearchCaretColorWhite = false;
+    }
+
+    public enum TweetColoringMode
+    {
+        NameBackground,
+        BottomBar,
+        BottomBarGradient,
     }
 
     public interface IColorElement

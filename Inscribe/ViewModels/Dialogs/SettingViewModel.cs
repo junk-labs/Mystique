@@ -147,7 +147,8 @@ namespace Inscribe.ViewModels.Dialogs
         private void Close()
         {
             Messenger.Raise(new WindowActionMessage("Close", WindowAction.Close));
-            Task.Factory.StartNew(() => ConnectionManager.RefreshReceivers());
+            if (this.AccountConfigViewModel.IsAccountModified)
+                Task.Factory.StartNew(() => ConnectionManager.RefreshReceivers());
         }
         #endregion
 

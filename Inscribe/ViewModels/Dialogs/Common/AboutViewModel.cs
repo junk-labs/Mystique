@@ -16,6 +16,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
             new ContributorViewModel("佐々木＠くっくっ。", "ssk_uo"),
             new ContributorViewModel("るみぃ", "lummy_ts"),
             new ContributorViewModel("たけしけー", "takeshik"),
+            new ContributorViewModel("凡骨A", "bonkotsua"),
         };
 
         public AboutViewModel()
@@ -234,7 +235,10 @@ namespace Inscribe.ViewModels.Dialogs.Common
 
         public ContributorViewModel(string name, string screen = null)
         {
-            this.Name = name;
+            if (!String.IsNullOrEmpty(screen))
+                this.Name = name + "(" + screen + ")";
+            else
+                this.Name = name;
             this.screen = screen;
         }
 

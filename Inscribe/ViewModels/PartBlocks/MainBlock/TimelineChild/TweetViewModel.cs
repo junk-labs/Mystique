@@ -195,7 +195,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 this._retweeteds.Add(user);
             }
             TweetStorage.NotifyTweetStateChanged(this);
-            RaisePropertyChanged(() => RetweetedUsers);
+            // RaisePropertyChanged(() => RetweetedUsers);
+            RaisePropertyChanged(() => RetweetedUsersCount);
+            RaisePropertyChanged(() => IsRetweetExists);
             return true;
         }
 
@@ -208,13 +210,25 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 this._retweeteds.Remove(user);
             }
             TweetStorage.NotifyTweetStateChanged(this);
-            RaisePropertyChanged(() => RetweetedUsers);
+            // RaisePropertyChanged(() => RetweetedUsers);
+            RaisePropertyChanged(() => RetweetedUsersCount);
+            RaisePropertyChanged(() => IsRetweetExists);
             return true;
         }
 
         public ConcurrentObservable<UserViewModel> RetweetedUsers
         {
             get { return this._retweeteds; }
+        }
+
+        public int RetweetedUsersCount
+        {
+            get { return this.RetweetedUsers.Count; }
+        }
+
+        public bool IsRetweetExists
+        {
+            get { return this._retweeteds.Count > 0; }
         }
 
         #endregion
@@ -233,7 +247,9 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 this._favoreds.Add(user);
             }
             TweetStorage.NotifyTweetStateChanged(this);
-            RaisePropertyChanged(() => FavoredUsers);
+            // RaisePropertyChanged(() => FavoredUsers);
+            RaisePropertyChanged(() => FavoredUsersCount);
+            RaisePropertyChanged(() => IsFavorExists);
             return true;
         }
 
@@ -246,13 +262,25 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 this._favoreds.Remove(user);
             }
             TweetStorage.NotifyTweetStateChanged(this);
-            RaisePropertyChanged(() => FavoredUsers);
+            // RaisePropertyChanged(() => FavoredUsers);
+            RaisePropertyChanged(() => FavoredUsersCount);
+            RaisePropertyChanged(() => IsFavorExists);
             return true;
         }
 
         public ConcurrentObservable<UserViewModel> FavoredUsers
         {
             get { return this._favoreds; }
+        }
+
+        public int FavoredUsersCount
+        {
+            get { return this._favoreds.Count; }
+        }
+
+        public bool IsFavorExists
+        {
+            get { return this._favoreds.Count > 0; }
         }
 
         #endregion
@@ -291,9 +319,13 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             RaisePropertyChanged(() => Status);
             RaisePropertyChanged(() => NameAreaWidth);
             RaisePropertyChanged(() => CanFavorite);
+            RaisePropertyChanged(() => IsExpandedView);
             RaisePropertyChanged(() => IsFullLineView);
             RaisePropertyChanged(() => TextWrapping);
             RaisePropertyChanged(() => TextTrimming);
+            RaisePropertyChanged(() => IsNameBackColoring);
+            RaisePropertyChanged(() => IsBottomBarColoring);
+            RaisePropertyChanged(() => BottomBarHeight);
         }
 
         public void RefreshInReplyToInfo()
@@ -442,9 +474,38 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
 
+        public bool IsNameBackColoring
+        {
+            get { return Setting.Instance.ColoringProperty.TweetColorMode == Configuration.Settings.TweetColoringMode.NameBackground; }
+        }
+
+        public bool IsBottomBarColoring
+        {
+            get
+            {
+                return Setting.Instance.ColoringProperty.TweetColorMode == Configuration.Settings.TweetColoringMode.BottomBar ||
+                    Setting.Instance.ColoringProperty.TweetColorMode == Configuration.Settings.TweetColoringMode.BottomBarGradient;
+            }
+        }
+
+        public double BottomBarHeight
+        {
+            get
+            {
+                return
+                    Setting.Instance.ColoringProperty.TweetColorMode == Configuration.Settings.TweetColoringMode.BottomBar ?
+                    2 : 5;
+            }
+        }
+
+        public bool IsExpandedView
+        {
+            get { return Setting.Instance.TweetExperienceProperty.TweetViewMode == Configuration.Settings.TweetViewingMode.Expanded; }
+        }
+
         public bool IsFullLineView
         {
-            get { return Setting.Instance.TweetExperienceProperty.UseFullLineView; }
+            get { return Setting.Instance.TweetExperienceProperty.TweetViewMode == Configuration.Settings.TweetViewingMode.FullLine; }
         }
 
         public TextWrapping TextWrapping
