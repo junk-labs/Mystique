@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Reflection;
 using Acuerdo.Plugin;
 using Inscribe.Plugin;
@@ -19,9 +20,9 @@ namespace Casket
             get { return "Krile basic plugin"; }
         }
 
-        public double Version
+        public Version Version
         {
-            get { return 1.0; }
+            get { return new Version(1, 5, 0, 0); }
         }
 
         public IConfigurator ConfigurationInterface

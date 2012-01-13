@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace Acuerdo.Plugin
 {
     /// <summary>
@@ -14,7 +15,7 @@ namespace Acuerdo.Plugin
         /// <summary>
         /// プラグイン バージョンを取得します。
         /// </summary>
-        double Version { get; }
+        Version Version { get; }
 
         /// <summary>
         /// プラグインがロードされたことを通知します。

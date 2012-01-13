@@ -19,9 +19,9 @@ namespace SookIkemen
             get { return "スークイケメンﾅｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰｰ"; }
         }
 
-        public double Version
+        public Version Version
         {
-            get { return 1.1; }
+            get { return new Version(1, 2, 0, 0); }
         }
 
         public void Loaded()
