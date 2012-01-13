@@ -696,7 +696,9 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
             if (origin == null)
                 origin = info;
             var parent = AccountStorage.Accounts.Where(i => i.AccountProperty.FallbackAccount == info.ScreenName).FirstOrDefault();
-            if (parent == null || parent == origin)
+            if (parent == null)
+                return info;
+            else if (parent == origin)
                 return origin;
             else
                 return FallbackBackTracking(parent, origin);
@@ -1219,7 +1221,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
       
         #endregion
 
-        #region Posing control
+        #region Posting control
 
         public void AddUpdateWorker(TweetWorker w)
         {
