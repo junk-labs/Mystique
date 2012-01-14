@@ -5,6 +5,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 {
     public class InputConfigViewModel : ViewModel, IApplyable
     {
+        public bool IsTranscender { get { return Setting.Instance.ExperienceProperty.IsTranscender; } }
+
         public InputConfigViewModel()
         {
             this.UseInputSuggesting = Setting.Instance.InputExperienceProperty.UseInputSuggesting;
@@ -17,6 +19,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this.TrimExceedChars = Setting.Instance.InputExperienceProperty.TrimExceedChars;
             this.AutoRetryOnError = Setting.Instance.InputExperienceProperty.AutoRetryOnError;
             this.SuspendAutoBindInReply = Setting.Instance.InputExperienceProperty.SuspendAutoBindInReply;
+            this.AutoUniquify = Setting.Instance.InputExperienceProperty.AutoUniquify;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -39,6 +42,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public bool SuspendAutoBindInReply { get; set; }
 
+        public bool AutoUniquify { get; set; }
+
         public void Apply()
         {
             Setting.Instance.InputExperienceProperty.OfficialRetweetInReplyToRetweeter = this.OfficialRetweetInReplyToRetweeter;
@@ -51,7 +56,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.InputExperienceProperty.TrimExceedChars = this.TrimExceedChars;
             Setting.Instance.InputExperienceProperty.AutoRetryOnError = this.AutoRetryOnError;
             Setting.Instance.InputExperienceProperty.SuspendAutoBindInReply = this.SuspendAutoBindInReply;
-
+            Setting.Instance.InputExperienceProperty.AutoUniquify = this.AutoUniquify;
         }
     }
 }

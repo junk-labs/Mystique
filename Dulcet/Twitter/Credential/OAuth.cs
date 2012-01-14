@@ -316,7 +316,7 @@ namespace Dulcet.Twitter.Credential
         /// <param name="pin">personal identify code</param>
         /// <param name="userId">user id</param>
         /// <returns>succeed authorization</returns>
-        public bool GetAccessToken(string token, string pin, out string userId)
+        public bool GetAccessToken(string token, string pin, out long userId, out string userScreenName)
         {
 
             //Generate param
@@ -338,20 +338,22 @@ namespace Dulcet.Twitter.Credential
                     throw ret.ThrownException;
                 if (!ret.Succeeded)
                 {
-                    userId = null;
+                    userId = 0;
+                    userScreenName = null;
                     return false;
                 }
                 var rd = SplitParamDict(ret.Data);
-                if (rd.ContainsKey("oauth_token") && rd.ContainsKey("oauth_token_secret"))
+                if (rd.ContainsKey("oauth_token") && rd.ContainsKey("oauth_token_secret") && Int64.TryParse(rd["user_id"], out userId))
                 {
                     Token = rd["oauth_token"];
                     Secret = rd["oauth_token_secret"];
-                    userId = rd["screen_name"];
+                    userScreenName = rd["screen_name"];
                     return true;
                 }
                 else
                 {
-                    userId = null;
+                    userId = 0;
+                    userScreenName = null;
                     return false;
                 }
             }

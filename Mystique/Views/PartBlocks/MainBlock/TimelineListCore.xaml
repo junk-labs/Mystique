@@ -29,12 +29,18 @@
         <cp:TVMToUserImageConverter x:Key="TweetUserImageConverter" />
         <cp:SourceToInlinesConverter x:Key="SourceInlinesConverter" />
         <cp:StringRemoveLineFeedConverter x:Key="SingleLineConverter" />
-        <BitmapImage x:Key="Comment"
+        <BitmapImage x:Key="Mention"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/comment_edit.png" />
-        <BitmapImage x:Key="Favorited"
+        <BitmapImage x:Key="Mentioned"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/comment.png" />
+        <BitmapImage x:Key="Favorite"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/star.png" />
+        <BitmapImage x:Key="Favorited"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/faved.png" />
         <BitmapImage x:Key="Loading"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/refresh_large.png" />
@@ -47,15 +53,15 @@
         <BitmapImage x:Key="Chevron"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/chevron.png" />
-        <BitmapImage x:Key="Favorite"
-                     PresentationOptions:Freeze="True"
-                     UriSource="/Resources/star.png" />
         <BitmapImage x:Key="FavoriteRetweet"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/favrt.png" />
         <BitmapImage x:Key="Retweet"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/rt.png" />
+        <BitmapImage x:Key="Retweeted"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/rted.png" />
         <BitmapImage x:Key="UORetweet"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/rtp.png" />
@@ -150,7 +156,7 @@
                                                  Converter={StaticResource KeyAssignConverter},
                                                  ConverterParameter=Mention}">
                 <MenuItem.Icon>
-                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Comment}" />
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Mention}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding FavoriteAndRetweetCommand,
@@ -483,7 +489,7 @@
                                        VerticalAlignment="Center"
                                        RenderOptions.BitmapScalingMode="NearestNeighbor"
                                        SnapsToDevicePixels="True"
-                                       Source="{StaticResource Comment}" />
+                                       Source="{StaticResource Mention}" />
                                 <Button.ToolTip>返信</Button.ToolTip>
                             </Button>
                             <Button Grid.Column="1"
@@ -499,7 +505,7 @@
                                        VerticalAlignment="Center"
                                        RenderOptions.BitmapScalingMode="NearestNeighbor"
                                        SnapsToDevicePixels="True"
-                                       Source="{StaticResource Favorited}" />
+                                       Source="{StaticResource Favorite}" />
                                 <Button.ToolTip>Favoriteに追加</Button.ToolTip>
                             </Button>
                             <cpanel:FillPanel Grid.Column="2" Visibility="{Binding Path=Tweet.IsProtected, Converter={StaticResource BoolInvisibleConverter}}">
@@ -571,7 +577,7 @@
                                    VerticalAlignment="Center"
                                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                                    SnapsToDevicePixels="True"
-                                   Source="{StaticResource Favorited}" />
+                                   Source="{StaticResource Favorite}" />
                             <TextBlock Margin="2,2,4,2"
                                        VerticalAlignment="Center"
                                        Foreground="Goldenrod"
@@ -600,14 +606,36 @@
                                                       FallbackValue=0}" />
                         </StackPanel>
                     </Border>
+                    <Grid>
+                        <Image Width="16"
+                               Height="16"
+                               VerticalAlignment="Center"
+                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                               SnapsToDevicePixels="True"
+                               Source="{StaticResource Favorited}"
+                               Visibility="{Binding Path=Tweet.IsFavored,
+                                                    IsAsync=True,
+                                                    Converter={StaticResource BoolVisibleConverter},
+                                                    FallbackValue=Collapsed}" />
+                        <Image Width="16"
+                               Height="16"
+                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                               SnapsToDevicePixels="True"
+                               Source="{StaticResource Retweeted}"
+                               Visibility="{Binding Path=Tweet.IsRetweeted,
+                                                    IsAsync=True,
+                                                    Converter={StaticResource BoolVisibleConverter},
+                                                    FallbackValue=Collapsed}" />
+                    </Grid>
                     <Image Width="16"
                            Height="16"
-                           VerticalAlignment="Center"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            SnapsToDevicePixels="True"
-                           Source="{StaticResource Favorited}"
-                           Visibility="{Binding Path=Tweet.IsFavored,
-                                                Converter={StaticResource BoolVisibleConverter}}" />
+                           Source="{StaticResource Mentioned}"
+                           Visibility="{Binding Path=Tweet.IsMentioned,
+                                                IsAsync=True,
+                                                Converter={StaticResource BoolVisibleConverter},
+                                                FallbackValue=Collapsed}" />
                     <Image Width="16"
                            Height="16"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
@@ -1026,7 +1054,7 @@
                                 Command="{Binding MentionCommand}"
                                 Focusable="False"
                                 Style="{DynamicResource FlatButtonStyle}">
-                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Comment}" />
+                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Mention}" />
                             <Button.ToolTip>返信</Button.ToolTip>
                         </Button>
                         <Button VerticalAlignment="Center"
@@ -1524,7 +1552,7 @@
                                 Command="{Binding MentionCommand}"
                                 Focusable="False"
                                 Style="{DynamicResource FlatButtonStyle}">
-                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Comment}" />
+                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Mention}" />
                             <Button.ToolTip>返信</Button.ToolTip>
                         </Button>
                         <Button VerticalAlignment="Center"

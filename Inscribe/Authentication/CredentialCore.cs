@@ -41,5 +41,10 @@ namespace Inscribe.Authentication
         /// ユーザーの@ID
         /// </summary>
         public string ScreenName { get; set; }
+
+        /// <summary>
+        /// ユーザーの数値ID
+        /// </summary>
+        public long NumericId { get; set; }
     }
 }

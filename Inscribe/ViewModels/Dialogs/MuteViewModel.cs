@@ -119,7 +119,7 @@ namespace Inscribe.ViewModels.Dialogs
                 case NGKindTypes.Keyword:
                     return new FilterText(this.MuteText);
                 case NGKindTypes.UserName:
-                    return new FilterUser("^" + this.UserScreenName + "$");
+                    return new FilterUserScreenName("^" + this.UserScreenName + "$");
                 default:
                     throw new InvalidOperationException("Invalid kind:" + this.NGKind.ToString());
             }

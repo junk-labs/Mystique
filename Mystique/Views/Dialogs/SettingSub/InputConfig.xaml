@@ -11,90 +11,119 @@
              d:DesignHeight="300"
              d:DesignWidth="400"
              mc:Ignorable="d">
-    <StackPanel Orientation="Vertical">
-        <CheckBox Margin="4,2"
-                  Content="オートコンプリートを利用する(_A)"
-                  IsChecked="{Binding UseInputSuggesting}"
-                  ToolTip="@や#を入力した場合、入力候補を表示して簡単に入力ができるようにします。" />
+    <Grid>
+        <TabControl>
+            <TabItem Header="一般">
+                <StackPanel Orientation="Vertical">
+                    <CheckBox Margin="4,2"
+                              Content="オートコンプリートを利用する(_A)"
+                              IsChecked="{Binding UseInputSuggesting}"
+                              ToolTip="@や#を入力した場合、入力候補を表示して簡単に入力ができるようにします。" />
 
-        <CheckBox Margin="4,2"
-                  Content="投稿ボックス展開中のユーザー選択はその投稿にのみ使用する(_U)"
-                  IsChecked="{Binding EnableTemporarilyUserSelection}">
-            <CheckBox.ToolTip>
-                <TextBlock>
-                    <Run Text="投稿ボックスを展開中に選択したユーザーを、投稿ボックスを閉じる時に元に戻すようにします。" />
-                    <LineBreak />
-                    <Run Text="頻繁にアカウントを切り替える方におすすめです。" />
-                </TextBlock>
-            </CheckBox.ToolTip>
-        </CheckBox>
-        <CheckBox Margin="4,2"
-                  Content="公式RTへの返信をRTした人にする(_I)"
-                  IsChecked="{Binding OfficialRetweetInReplyToRetweeter}" />
-        <CheckBox Margin="4,2"
-                  Content="文頭の空白文字を削除する(_R)"
-                  IsChecked="{Binding TrimBeginSpace}"
-                  ToolTip=" RT @～のように、先頭が空白文字で始まるツイートを投稿するとき、先頭の空白を削除します。" />
-        <CheckBox Margin="4,2"
-                  Content="文字数制限を超えた分はカットする(_T)"
-                  IsChecked="{Binding TrimExceedChars}">
-            <CheckBox.ToolTip>
-                <TextBlock>
-                    <Run Text="ツイート時、ツイート上限(140文字)を超えた部分を自動でカットします。" />
-                    <LineBreak />
-                    <Run Text="ただ機械的に削除を行うため、URLやハッシュタグなどが破壊されることがあります。" />
-                    <LineBreak />
-                    <Run Text="破壊しないようにするには、このオプションをオフにして自分で調整することをお勧めします。" />
-                </TextBlock>
-            </CheckBox.ToolTip>
-        </CheckBox>
-        <CheckBox Margin="4,2"
-                  Content="POST規制情報がある時はすぐにフォールバックする(_F)"
-                  IsChecked="{Binding UseActiveFallback}">
-            <CheckBox.ToolTip>
-                <TextBlock>
-                    <Run Text="POST規制されているのが分かっている時は、本アカウントから投稿を試みず、フォールバック先でのみ投稿します。" />
-                    <LineBreak />
-                    <Run Text="頻繁に規制される方におすすめです。" />
-                </TextBlock>
-            </CheckBox.ToolTip>
-        </CheckBox>
-        <CheckBox Margin="4,2"
-                  Content="フォールバックアカウントでの会話をフォールバック元から行う(_B)"
-                  IsChecked="{Binding FallbackBackTracking}">
-            <CheckBox.ToolTip>
-                <TextBlock>
-                    <Run Text="フォールバック先に指定されているアカウントへのmentionに対して返信する時、フォールバック元を探索してそのアカウントからの返信を入力できるようにします。" />
-                    <LineBreak />
-                    <Run Text="頻繁に規制される方におすすめです。" />
-                </TextBlock>
-            </CheckBox.ToolTip>
-        </CheckBox>
-        <CheckBox Margin="4,2"
-                  Content="公式RTもフォールバックする(_O)"
-                  IsChecked="{Binding UseOfficialRetweetFallback}">
-            <CheckBox.ToolTip>
-                <TextBlock>
-                    <Run Text="公式RTもフォールバックします。公式RTからは規制情報を取得できないため、Krile内に規制情報がある場合のみフォールバックします。" />
-                </TextBlock>
-            </CheckBox.ToolTip>
-        </CheckBox>
-        <CheckBox Margin="4,2"
-                  Content="ツイートに失敗した際に自動で再試行する(_N)"
-                  IsChecked="{Binding AutoRetryOnError}" />
-        <Button Margin="4,2" Content="ハッシュタグ自動バインド設定(_H)...">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <ma:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type bcd:AutoBindConfig}">
-                        <l:DirectInteractionMessage>
-                            <l:TransitionMessage />
-                        </l:DirectInteractionMessage>
-                    </ma:TransitionInteractionMessageAction>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Button>
-        <CheckBox Margin="4,2"
-                  Content="返信中はハッシュタグ自動バインドを行わない(_S)"
-                  IsChecked="{Binding SuspendAutoBindInReply}" />
-    </StackPanel>
+                    <CheckBox Margin="4,2"
+                              Content="投稿ボックス展開中のユーザー選択はその投稿にのみ使用する(_U)"
+                              IsChecked="{Binding EnableTemporarilyUserSelection}">
+                        <CheckBox.ToolTip>
+                            <TextBlock>
+                                <Run Text="投稿ボックスを展開中に選択したユーザーを、投稿ボックスを閉じる時に元に戻すようにします。" />
+                                <LineBreak />
+                                <Run Text="頻繁にアカウントを切り替える方におすすめです。" />
+                            </TextBlock>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+                    <CheckBox Margin="4,2"
+                              Content="公式RTへの返信をRTした人にする(_I)"
+                              IsChecked="{Binding OfficialRetweetInReplyToRetweeter}" />
+                    <CheckBox Margin="4,2"
+                              Content="ツイートに失敗した際に自動で再試行する(_N)"
+                              IsChecked="{Binding AutoRetryOnError}" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="フォールバック">
+                <StackPanel Orientation="Vertical">
+                    <CheckBox Margin="4,2"
+                              Content="POST規制情報がある時はすぐにフォールバックする(_F)"
+                              IsChecked="{Binding UseActiveFallback}">
+                        <CheckBox.ToolTip>
+                            <TextBlock>
+                                <Run Text="POST規制されているのが分かっている時は、本アカウントから投稿を試みず、フォールバック先でのみ投稿します。" />
+                                <LineBreak />
+                                <Run Text="頻繁に規制される方におすすめです。" />
+                            </TextBlock>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+                    <CheckBox Margin="4,2"
+                              Content="フォールバックアカウントでの会話をフォールバック元から行う(_B)"
+                              IsChecked="{Binding FallbackBackTracking}">
+                        <CheckBox.ToolTip>
+                            <TextBlock>
+                                <Run Text="フォールバック先に指定されているアカウントへのmentionに対して返信する時、フォールバック元を探索してそのアカウントからの返信を入力できるようにします。" />
+                                <LineBreak />
+                                <Run Text="頻繁に規制される方におすすめです。" />
+                            </TextBlock>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+                    <CheckBox Margin="4,2"
+                              Content="公式RTもフォールバックする(_O)"
+                              IsChecked="{Binding UseOfficialRetweetFallback}">
+                        <CheckBox.ToolTip>
+                            <TextBlock>
+                                <Run Text="公式RTもフォールバックします。公式RTからは規制情報を取得できないため、Krile内に規制情報がある場合のみフォールバックします。" />
+                            </TextBlock>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="自動整形">
+                <StackPanel Orientation="Vertical">
+                    <CheckBox Margin="4,2"
+                              Content="文頭の空白文字を削除する(_R)"
+                              IsChecked="{Binding TrimBeginSpace}"
+                              ToolTip=" RT @～のように、先頭が空白文字で始まるツイートを投稿するとき、先頭の空白を削除します。" />
+                    <CheckBox Margin="4,2"
+                              Content="文字数制限を超えた分はカットする(_T)"
+                              IsChecked="{Binding TrimExceedChars}">
+                        <CheckBox.ToolTip>
+                            <TextBlock>
+                                <Run Text="ツイート時、ツイート上限(140文字)を超えた部分を自動でカットします。" />
+                                <LineBreak />
+                                <Run Text="ただ機械的に削除を行うため、URLやハッシュタグなどが破壊されることがあります。" />
+                                <LineBreak />
+                                <Run Text="破壊しないようにするには、このオプションをオフにして自分で調整することをお勧めします。" />
+                            </TextBlock>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+                    <CheckBox Margin="4,2"
+                              Content="ツイート重複を回避する(_U)"
+                              IsChecked="{Binding AutoUniquify}"
+                              Visibility="{Binding IsTranscender,
+                                                   Converter={StaticResource BoolVisibleConverter}}">
+                        <CheckBox.ToolTip>
+                            <TextBlock>
+                                <Run Text="直近10件のツイートと内容が重複した際、全角スペースやピリオドの挿入により重複を回避します。" />
+                            </TextBlock>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="タグバインド">
+                <StackPanel Orientation="Vertical">
+                    <CheckBox Margin="4,2"
+                              Content="返信中はハッシュタグ自動バインドを行わない(_S)"
+                              IsChecked="{Binding SuspendAutoBindInReply}" />
+                    <Button Margin="4,2" Content="ハッシュタグ自動バインド設定(_H)...">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <ma:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type bcd:AutoBindConfig}">
+                                    <l:DirectInteractionMessage>
+                                        <l:TransitionMessage />
+                                    </l:DirectInteractionMessage>
+                                </ma:TransitionInteractionMessageAction>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </UserControl>

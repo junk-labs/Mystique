@@ -52,7 +52,7 @@
                                           Height="48"
                                           Margin="2"
                                           VerticalAlignment="Center"
-                                          UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
+                                          UriSource="{Binding Path=ProfileImageProvider.ProfileImage, IsAsync=True}" />
                             <Grid Grid.Column="1" VerticalAlignment="Center">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />

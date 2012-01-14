@@ -3,18 +3,12 @@ using Inscribe.Storage;
 
 namespace Inscribe.Filter.Filters.ScreenName
 {
-    public class FilterBlockFrom : ScreenNameFilterBase
+    public class FilterBlockFrom : ScreenNameUserFilterBase
     {
         private FilterBlockFrom() { }
         public FilterBlockFrom(string needle)
         {
             this.needle = needle;
-        }
-
-        protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
-        {
-            return AccountStorage.Accounts.Where(i => Match(i.ScreenName, needle))
-                .Any(i => i.IsBlocking(status.User.NumericId));
         }
 
         public override string Identifier
@@ -29,6 +23,12 @@ namespace Inscribe.Filter.Filters.ScreenName
         public override string FilterStateString
         {
             get { return "アカウント @" + this.needle + " でブロックしているユーザー"; }
+        }
+
+        public override bool FilterUser(Dulcet.Twitter.TwitterUser user)
+        {
+            return AccountStorage.Accounts.Where(i => Match(i.ScreenName, needle))
+                .Any(i => i.IsBlocking(user.NumericId));
         }
     }
 }

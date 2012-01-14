@@ -3,18 +3,12 @@ using Inscribe.Storage;
 
 namespace Inscribe.Filter.Filters.ScreenName
 {
-    public class FilterFollowTo : ScreenNameFilterBase
+    public class FilterFollowTo : ScreenNameUserFilterBase
     {
         private FilterFollowTo() { }
         public FilterFollowTo(string needle)
         {
             this.needle = needle;
-        }
-
-        protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
-        {
-            return AccountStorage.Accounts.Where(i => Match(i.ScreenName, needle))
-                .Any(i => i.IsFollowedBy(status.User.NumericId));
         }
 
         public override string Identifier
@@ -39,6 +33,12 @@ namespace Inscribe.Filter.Filters.ScreenName
         public override string FilterStateString
         {
             get { return "アカウント @" + this.needle + " のフォロワー"; }
+        }
+
+        public override bool FilterUser(Dulcet.Twitter.TwitterUser user)
+        {
+            return AccountStorage.Accounts.Where(i => Match(i.ScreenName, needle))
+                .Any(i => i.IsFollowedBy(user.NumericId));
         }
     }
 }

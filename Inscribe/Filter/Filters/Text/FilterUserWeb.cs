@@ -1,7 +1,7 @@
 ﻿
 namespace Inscribe.Filter.Filters.Text
 {
-    public class FilterUserWeb : TextFilterBase
+    public class FilterUserWeb : TextFilterBase, IUserFilter
     {
         private FilterUserWeb() { }
 
@@ -15,7 +15,7 @@ namespace Inscribe.Filter.Filters.Text
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
-            return this.Match(status.User.Web, this.needle, this.isCaseSensitive);
+            return FilterUser(status.User);
         }
 
         public override string Identifier
@@ -26,6 +26,11 @@ namespace Inscribe.Filter.Filters.Text
         public override string Description
         {
             get { return "ユーザーWeb"; }
+        }
+
+        public bool FilterUser(Dulcet.Twitter.TwitterUser user)
+        {
+            return this.Match(user.Web, this.needle, this.isCaseSensitive);
         }
     }
 }

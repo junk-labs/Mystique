@@ -1,16 +1,11 @@
 ﻿using System.Collections.Generic;
-using Inscribe.Common;
+using Dulcet.Twitter;
 
 namespace Inscribe.Filter.Filters.Attributes
 {
-    public class FilterVerified : FilterBase
+    public class FilterVerified : UserFilterBase
     {
         public FilterVerified() { }
-
-        protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
-        {
-            return TwitterHelper.GetSuggestedUser(status).IsVerified;
-        }
 
         public override string Identifier
         {
@@ -30,6 +25,11 @@ namespace Inscribe.Filter.Filters.Attributes
         public override string FilterStateString
         {
             get { return "公式認証ユーザー"; }
+        }
+
+        public override bool FilterUser(TwitterUser user)
+        {
+            return user.IsVerified;
         }
     }
 }

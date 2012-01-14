@@ -65,8 +65,10 @@ namespace Inscribe.ViewModels.Common.Filter
                             inst = ci.Invoke(new object[0]) as FilterBase;
                         if (inst != null)
                         {
-                            if (inst.IsOnlyTranscender && !
-                                Setting.Instance.ExperienceProperty.IsTranscender)
+                            if (inst.IsOnlyForTranscender &&
+                                !Setting.Instance.ExperienceProperty.IsTranscender)
+                                continue;
+                            if (inst.Identifier != s) // hit by alias
                                 continue;
                             if (localcount > 0)
                                 yield return s + "(" + localcount + "): " + inst.Description;

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Dulcet.Twitter;
 using Inscribe.Filter.Core;
 using Inscribe.Storage;
 
 namespace Inscribe.Filter.Filters.Numeric
 {
-    public class FilterUserId : FilterBase
+    public class FilterUserId : UserFilterBase
     {
         private LongRange _range;
 
@@ -23,15 +24,7 @@ namespace Inscribe.Filter.Filters.Numeric
             this.Range = range;
         }
 
-        public FilterUserId(long pivot)
-        {
-            this.Range = LongRange.FromPivotValue(pivot);
-        }
-
-        protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
-        {
-            return this.Range.Check(status.User.NumericId);
-        }
+        public FilterUserId(long pivot) : this(LongRange.FromPivotValue(pivot)) { }
 
         public override string Identifier
         {
@@ -54,7 +47,7 @@ namespace Inscribe.Filter.Filters.Numeric
             {
                 if (this._range != null && this._range.From != null && this.Range.RangeType == RangeType.Pivot)
                 {
-                    var u = UserStorage.GetAll().Where(uvm => uvm.TwitterUser.NumericId == this._range.From).FirstOrDefault();
+                    var u = UserStorage.Get(this._range.From.Value);
                     if (u == null)
                     {
                         return "ユーザー数値ID:" + this.Range.ToString() + "(逆引き: Krile内に見つかりません)";
@@ -69,6 +62,11 @@ namespace Inscribe.Filter.Filters.Numeric
                     return "ユーザー数値ID:" + this.Range.ToString();
                 }
             }
+        }
+
+        public override bool FilterUser(TwitterUser user)
+        {
+            return this.Range.Check(user.NumericId);
         }
     }
 }

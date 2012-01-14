@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dulcet.Twitter;
+using Inscribe.Filter.Filters;
 
 namespace Inscribe.Filter
 {
     /// <summary>
     /// フィルタクラスタ
     /// </summary>
-    public class FilterCluster : IFilter
+    public class FilterCluster : IUserFilter
     {
         public FilterCluster() { }
         public FilterCluster(IEnumerable<IFilter> filters, bool negate = false, bool concatAnd = false)
@@ -108,6 +109,23 @@ namespace Inscribe.Filter
             return ConcatenateAnd == !Negate;
         }
 
+        public bool FilterUser(TwitterUser user)
+        {
+            if (_filters != null)
+            {
+                foreach (var f in _filters.OfType<IUserFilter>())
+                {
+                    // ANDのとき => FALSEに出会ったらFALSEを返す
+                    // ORのとき => TRUEに出会ったらTRUEを返す　
+                    if (f.FilterUser(user) != ConcatenateAnd)
+                        return ConcatenateAnd == Negate;
+                }
+            }
+            // ANDのとき => FALSEに出会っていないのでTRUEを返す
+            // ORのとき => TRUEに出会っていないのでFALSEを返す
+            return ConcatenateAnd == !Negate;
+        }
+
         public event Action RequireReaccept = () => { };
 
         public event Action<TwitterStatusBase> RequirePartialReaccept = _ => { };
@@ -116,6 +134,18 @@ namespace Inscribe.Filter
         /// 否定フィルタであるか
         /// </summary>
         public bool Negate { get; set; }
+
+        public FilterCluster GetOnlyForUserFilter()
+        {
+            var nfc = new FilterCluster();
+            nfc.ConcatenateAnd = this.ConcatenateAnd;
+            nfc.Negate = this.Negate;
+            nfc.Filters = _filters
+                .OfType<IUserFilter>()
+                .Select(f => f is FilterCluster ? ((FilterCluster)f).GetOnlyForUserFilter() : f)
+                .ToArray();
+            return nfc;
+        }
 
         /// <summary>
         /// このフィルタをクエリ化します。

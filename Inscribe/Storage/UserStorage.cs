@@ -1,41 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Dulcet.Twitter;
-using Dulcet.Twitter.Rest;
-using Inscribe.ViewModels.PartBlocks.MainBlock;
-using Inscribe.Util;
 using System.Threading;
 using System.Threading.Tasks;
+using Dulcet.Twitter;
+using Dulcet.Twitter.Rest;
+using Inscribe.Util;
+using Inscribe.ViewModels.PartBlocks.MainBlock;
 
 namespace Inscribe.Storage
 {
     public static class UserStorage
     {
         private static ReaderWriterLockWrap lockWrap;
-        private static Dictionary<string, UserViewModel> dictionary;
+        private static Dictionary<long, UserViewModel> dictionary;
         private static object semaphoreAccessLocker = new object();
-        private static Dictionary<string, ManualResetEvent> semaphores;
+        private static Dictionary<string, ManualResetEvent> strSemaphores;
+        private static Dictionary<long, ManualResetEvent> numSemaphores;
 
         static UserStorage()
         {
             lockWrap = new ReaderWriterLockWrap();
-            dictionary = new Dictionary<string, UserViewModel>();
-            semaphores = new Dictionary<string, ManualResetEvent>();
+            dictionary = new Dictionary<long, UserViewModel>();
+            strSemaphores = new Dictionary<string,ManualResetEvent>();
+            numSemaphores = new Dictionary<long,ManualResetEvent>();
         }
 
         /// <summary>
         /// キャッシュにユーザー情報が存在していたら、すぐに返します。<para />
         /// キャッシュに存在しない場合はNULLを返します。
         /// </summary>
+        [Obsolete("for performance reason, should use other overload.")]
         public static UserViewModel Lookup(string userScreenName)
         {
             if (userScreenName == null)
                 throw new ArgumentNullException("userScreenName");
+            using (lockWrap.GetReaderLock())
+            {
+                return dictionary
+                    .Where(u => u.Value.TwitterUser.ScreenName == userScreenName)
+                    .Select(u => u.Value)
+                    .FirstOrDefault();
+            }
+        }
+
+        public static UserViewModel Lookup(long id)
+        {
             UserViewModel ret;
             using (lockWrap.GetReaderLock())
             {
-                if (dictionary.TryGetValue(userScreenName, out ret))
+                if (dictionary.TryGetValue(id, out ret))
                     return ret;
                 else
                     return null;
@@ -62,12 +76,31 @@ namespace Inscribe.Storage
             var newvm = new UserViewModel(user);
             using (lockWrap.GetWriterLock())
             {
-                if (dictionary.ContainsKey(user.ScreenName))
-                    dictionary[user.ScreenName] = newvm;
+                if (dictionary.ContainsKey(user.NumericId))
+                    dictionary[user.NumericId] = newvm;
                 else
-                    dictionary.Add(user.ScreenName, newvm);
+                    dictionary.Add(user.NumericId, newvm);
             }
             return newvm;
+        }
+
+        /// <summary>
+        /// User ViewModelを取得します。<para />
+        /// nullを返すことがあります。
+        /// </summary>
+        /// <param name="userId">ユーザーID</param>
+        /// <param name="useCache">内部キャッシュが可能であれば使用する</param>
+        /// <returns></returns>
+        public static UserViewModel Get(long userId, bool useCache = true)
+        {
+            UserViewModel ret = null;
+            if (useCache)
+            {
+                ret = Lookup(userId);
+                if (ret != null)
+                    return ret;
+            }
+            return DownloadUser(userId);
         }
 
         /// <summary>
@@ -77,6 +110,7 @@ namespace Inscribe.Storage
         /// <param name="userScreenName">ユーザースクリーン名</param>
         /// <param name="useCache">内部キャッシュが可能であれば使用する</param>
         /// <returns></returns>
+        [Obsolete("for performance reason, should use other overload.")]
         public static UserViewModel Get(string userScreenName, bool useCache = true)
         {
             if (String.IsNullOrEmpty(userScreenName))
@@ -94,14 +128,78 @@ namespace Inscribe.Storage
         /// <summary>
         /// ユーザー情報をダウンロードし、キャッシュを更新します。
         /// </summary>
+        private static UserViewModel DownloadUser(long userId)
+        {
+            ManualResetEvent mre;
+            lock (semaphoreAccessLocker)
+            {
+                if (!numSemaphores.TryGetValue(userId, out mre))
+                {
+                    numSemaphores.Add(userId, new ManualResetEvent(false));
+                }
+            }
+            if (mre != null)
+            {
+                mre.WaitOne();
+                return Get(userId);
+            }
+            try
+            {
+                var acc = AccountStorage.GetRandom(ai => true, true);
+                if (acc != null)
+                {
+                    try
+                    {
+                        var ud = acc.GetUser(userId);
+                        if (ud != null)
+                        {
+                            var uvm = new UserViewModel(ud);
+                            using (lockWrap.GetWriterLock())
+                            {
+                                if (dictionary.ContainsKey(ud.NumericId))
+                                    dictionary[ud.NumericId] = uvm;
+                                else
+                                    dictionary.Add(ud.NumericId, uvm);
+                            }
+                            return uvm;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionStorage.Register(e, ExceptionCategory.TwitterError, "ユーザー情報の受信に失敗しました。(ユーザー #" + userId + " を アカウント @" + acc.ScreenName + " で受信しようとしました。)");
+                    }
+                    return null;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            finally
+            {
+                lock (semaphoreAccessLocker)
+                {
+                    if (numSemaphores.ContainsKey(userId))
+                    {
+                        numSemaphores[userId].Set();
+                        numSemaphores.Remove(userId);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// ユーザー情報をダウンロードし、キャッシュを更新します。
+        /// </summary>
+        [Obsolete("for performance reason, should use other overload.")]
         private static UserViewModel DownloadUser(string userScreenName)
         {
             ManualResetEvent mre;
             lock (semaphoreAccessLocker)
             {
-                if (!semaphores.TryGetValue(userScreenName, out mre))
+                if (!strSemaphores.TryGetValue(userScreenName, out mre))
                 {
-                    semaphores.Add(userScreenName, new ManualResetEvent(false));
+                    strSemaphores.Add(userScreenName, new ManualResetEvent(false));
                 }
             }
             if (mre != null)
@@ -122,10 +220,10 @@ namespace Inscribe.Storage
                             var uvm = new UserViewModel(ud);
                             using (lockWrap.GetWriterLock())
                             {
-                                if (dictionary.ContainsKey(userScreenName))
-                                    dictionary[userScreenName] = uvm;
+                                if (dictionary.ContainsKey(ud.NumericId))
+                                    dictionary[ud.NumericId] = uvm;
                                 else
-                                    dictionary.Add(userScreenName, uvm);
+                                    dictionary.Add(ud.NumericId, uvm);
                             }
                             return uvm;
                         }
@@ -145,15 +243,14 @@ namespace Inscribe.Storage
             {
                 lock (semaphoreAccessLocker)
                 {
-                    if (semaphores.ContainsKey(userScreenName))
+                    if (strSemaphores.ContainsKey(userScreenName))
                     {
-                        semaphores[userScreenName].Set();
-                        semaphores.Remove(userScreenName);
+                        strSemaphores[userScreenName].Set();
+                        strSemaphores.Remove(userScreenName);
                     }
                 }
             }
         }
-
 
         /// <summary>
         /// ストレージに格納されているすべてのユーザーを取得します。

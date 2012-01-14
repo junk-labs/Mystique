@@ -66,7 +66,7 @@ namespace Inscribe.ViewModels.Dialogs
             CreateTab("Home", new IFilter[]{
                 new FilterFollowFrom("*"),
                 new FilterTo("*"),
-                new FilterUser("*"), new FilterDirectMessage()});
+                new FilterUserScreenName("*"), new FilterDirectMessage()});
             Close();
         }
         #endregion
@@ -147,7 +147,7 @@ namespace Inscribe.ViewModels.Dialogs
                                     new IFilter[]{
                                     new FilterFavoriteCount(new LongRange(from:1)),
                                     new FilterRetweetCount(new LongRange(from:1))}),
-                            new FilterUser("*")}, concatAnd:true)});
+                            new FilterUserScreenName("*")}, concatAnd:true)});
             Close();
         }
         #endregion
@@ -202,7 +202,7 @@ namespace Inscribe.ViewModels.Dialogs
             CreateTab("Home", new IFilter[]{
                 new FilterFollowFrom(SelectedScreenName),
                 new FilterTo(SelectedScreenName),
-                new FilterUser(SelectedScreenName), 
+                new FilterUserScreenName(SelectedScreenName), 
                 new FilterCluster(
                     new IFilter[]{
                         new FilterDirectMessage(),
@@ -295,7 +295,7 @@ namespace Inscribe.ViewModels.Dialogs
                                     new IFilter[]{
                                     new FilterFavoriteCount(new LongRange(from:1)),
                                     new FilterRetweetCount(new LongRange(from:1))}),
-                            new FilterUser(SelectedScreenName)}, concatAnd:true)});
+                            new FilterUserScreenName(SelectedScreenName)}, concatAnd:true)});
             Close();
         }
         #endregion

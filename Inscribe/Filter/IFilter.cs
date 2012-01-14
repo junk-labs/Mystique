@@ -8,7 +8,7 @@ namespace Inscribe.Filter
     {
         /// <summary>
         /// フィルタを適用します。<para />
-        /// Negate値は考慮されます。
+        /// Negate値も考慮されます。
         /// </summary>
         /// <returns>フィルタを通過したか</returns>
         bool Filter(TwitterStatusBase status);

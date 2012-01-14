@@ -30,6 +30,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._canFavMyTweet = Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet;
             this._showTweetTooltip = Setting.Instance.TweetExperienceProperty.ShowTweetTooltip;
             this._quickFavAndRetweet = Setting.Instance.TweetExperienceProperty.QuickFavAndRetweet;
+            this._showImageInlineThumbnail = Setting.Instance.TweetExperienceProperty.ShowImageInlineThumbnail;
         }
 
         private int _resolveStrategyIndex;
@@ -172,6 +173,17 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+        private bool _showImageInlineThumbnail;
+        public bool ShowImageInlineThumbnail
+        {
+            get { return _showImageInlineThumbnail; }
+            set
+            {
+                _showImageInlineThumbnail = value;
+                RaisePropertyChanged(() => ShowImageInlineThumbnail);
+            }
+        }
+
         #region Binding helper
 
         public bool IsSingleline
@@ -194,10 +206,10 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
                 Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton = this._showUnofficialRTButton;
                 Setting.Instance.TweetExperienceProperty.ShowQuoteButton = this._showQuoteTweetButton;
                 Setting.Instance.TweetExperienceProperty.TweetViewMode = (TweetViewingMode)this._viewModeIndex;
-
                 Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet = this._canFavMyTweet;
                 Setting.Instance.TweetExperienceProperty.ShowTweetTooltip = this._showTweetTooltip;
                 Setting.Instance.TweetExperienceProperty.QuickFavAndRetweet = this._quickFavAndRetweet;
+                Setting.Instance.TweetExperienceProperty.ShowImageInlineThumbnail = this._showImageInlineThumbnail;
             }
             catch (Exception ex)
             {

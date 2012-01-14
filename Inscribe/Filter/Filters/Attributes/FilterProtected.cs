@@ -2,14 +2,9 @@
 
 namespace Inscribe.Filter.Filters.Attributes
 {
-    public class FilterProtected : FilterBase
+    public class FilterProtected : UserFilterBase
     {
         public FilterProtected() { }
-
-        protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
-        {
-            return status.User.IsProtected;
-        }
 
         public override string Identifier
         {
@@ -29,6 +24,11 @@ namespace Inscribe.Filter.Filters.Attributes
         public override string FilterStateString
         {
             get { return "プロテクトユーザー"; }
+        }
+
+        public override bool FilterUser(Dulcet.Twitter.TwitterUser user)
+        {
+            return user.IsProtected;
         }
     }
 }

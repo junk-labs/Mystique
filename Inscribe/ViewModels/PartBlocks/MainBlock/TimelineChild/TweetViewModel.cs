@@ -147,11 +147,18 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             get
             {
-                if (_photoThumbUrls == null && !IsPhotoResolving)
+                if (Setting.Instance.TweetExperienceProperty.ShowImageInlineThumbnail)
                 {
-                    Task.Factory.StartNew(() => ResolvePhotos());
+                    if (_photoThumbUrls == null && !IsPhotoResolving)
+                    {
+                        Task.Factory.StartNew(() => ResolvePhotos());
+                    }
+                    return _photoThumbUrls ?? new PhotoThumbnailViewModel[0];
                 }
-                return _photoThumbUrls ?? new PhotoThumbnailViewModel[0];
+                else
+                {
+                    return new PhotoThumbnailViewModel[0];
+                }
             }
         }
 
@@ -198,6 +205,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             // RaisePropertyChanged(() => RetweetedUsers);
             RaisePropertyChanged(() => RetweetedUsersCount);
             RaisePropertyChanged(() => IsRetweetExists);
+            RaisePropertyChanged(() => IsRetweeted);
             return true;
         }
 
@@ -213,6 +221,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             // RaisePropertyChanged(() => RetweetedUsers);
             RaisePropertyChanged(() => RetweetedUsersCount);
             RaisePropertyChanged(() => IsRetweetExists);
+            RaisePropertyChanged(() => IsRetweeted);
             return true;
         }
 
@@ -250,6 +259,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             // RaisePropertyChanged(() => FavoredUsers);
             RaisePropertyChanged(() => FavoredUsersCount);
             RaisePropertyChanged(() => IsFavorExists);
+            RaisePropertyChanged(() => IsFavored);
             return true;
         }
 
@@ -265,6 +275,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             // RaisePropertyChanged(() => FavoredUsers);
             RaisePropertyChanged(() => FavoredUsersCount);
             RaisePropertyChanged(() => IsFavorExists);
+            RaisePropertyChanged(() => IsFavored);
             return true;
         }
 
@@ -290,7 +301,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         /// <summary>
         /// このツイートに返信しているツイートのID
         /// </summary>
-        private ConcurrentBag<long> inReplyFroms = new ConcurrentBag<long>();
+        private SafeList<long> inReplyFroms = new SafeList<long>();
 
         /// <summary>
         /// このツイートに返信を行っていることを登録します。
@@ -300,6 +311,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             this.inReplyFroms.Add(tweetId);
             TweetStorage.NotifyTweetStateChanged(this);
+            RaisePropertyChanged(() => IsMentioned);
+        }
+
+        public void RemoveInReplyToThis(long tweetId)
+        {
+            this.inReplyFroms.Remove(tweetId);
+            TweetStorage.NotifyTweetStateChanged(this);
+            RaisePropertyChanged(() => IsMentioned);
         }
 
         /// <summary>
@@ -406,6 +425,27 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 return TwitterHelper.IsFavoredThis(this);
+            }
+        }
+
+        public bool IsRetweeted
+        {
+            get
+            {
+                return TwitterHelper.IsRetweetedThis(this);
+            }
+        }
+
+        public bool IsMentioned
+        {
+            get
+            {
+                if (this.inReplyFroms.Count == 0)
+                    return false;
+                return inReplyFroms.Select(i => TweetStorage.Get(i))
+                    .Where(vm => vm != null)
+                    .Select(vm => TwitterHelper.IsMyTweet(vm))
+                    .Any(b => b);
             }
         }
 

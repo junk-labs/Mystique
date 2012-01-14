@@ -1,18 +1,12 @@
 ﻿
 namespace Inscribe.Filter.Filters.ScreenName
 {
-    public class FilterUser : ScreenNameFilterBase
+    public class FilterUserScreenName : ScreenNameUserFilterBase
     {
-        private FilterUser() { }
-
-        public FilterUser(string needle)
+        private FilterUserScreenName() { }
+        public FilterUserScreenName(string needle)
         {
             this.needle = needle;
-        }
-
-        protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
-        {
-            return Match(status.User.ScreenName, needle);
         }
 
         public override string Identifier
@@ -28,6 +22,11 @@ namespace Inscribe.Filter.Filters.ScreenName
         public override string Description
         {
             get { return "ユーザー@ID"; }
+        }
+
+        public override bool FilterUser(Dulcet.Twitter.TwitterUser user)
+        {
+            return Match(user.ScreenName, needle);
         }
     }
 }

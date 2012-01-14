@@ -20,6 +20,7 @@ namespace Inscribe.Configuration.Settings
             AutoRetryOnError = true;
             AutoRetryMaxCount = 5;
             ShowInputBlockInBottom = false;
+            AutoUniquify = false;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -52,6 +53,8 @@ namespace Inscribe.Configuration.Settings
         public int AutoRetryMaxCount { get; set; }
 
         public bool ShowInputBlockInBottom { get; set; }
+
+        public bool AutoUniquify { get; set; }
     }
 
     public class HashtagAutoBindDescription

@@ -12,7 +12,7 @@ namespace Inscribe.Filter
     /// </summary>
     public abstract class FilterBase : IFilter
     {
-        public virtual bool IsOnlyTranscender
+        public virtual bool IsOnlyForTranscender
         {
             get
             {

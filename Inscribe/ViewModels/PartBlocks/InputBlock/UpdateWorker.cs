@@ -257,7 +257,10 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         body += quoteBody;
                         isBodyStandby = true;
                     }
-                    this.TweetSummary = body;
+                    // uniquify body
+                    if (Setting.Instance.InputExperienceProperty.AutoUniquify)
+                        body = Uniquify(body);
+                    this.TweetSummary = "@" + this.accountInfo.ScreenName + ": " + body;
 
                     // ready
 
@@ -281,7 +284,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                     else
                     {
                         // fallbacking
-                        FallbackRequired(new TweetWorker(this.parent, acc, this.body, this.inReplyToId, this.attachImagePath, this.tags));
+                        // 画像のattachやタグのbindはもう必要ない
+                        FallbackRequired(new TweetWorker(this.parent, acc, body, this.inReplyToId, null, null));
                         throw new TweetAnnotationException(TweetAnnotationException.AnnotationKind.Fallbacked);
                     }
                 }
@@ -294,6 +298,26 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 this.RecentPostCount = -1;
                 return this.WorkingState == InputBlock.WorkingState.Annotated;
             }
+        }
+
+        private string Uniquify(String body)
+        {
+            var tweets = TweetStorage.GetAll(vm => vm.Status.User.ScreenName == accountInfo.ScreenName)
+                .OrderByDescending(t => t.CreatedAt)
+                .Take(10)
+                .ToArray();
+            while (tweets.Any(t => t.Text == body) && body.Length < TwitterDefine.TweetMaxLength)
+            {
+                if (body.EndsWith("　"))
+                {
+                    body = body.Substring(0, body.Length - 1) + ".";
+                }
+                else
+                {
+                    body += "　";
+                }
+            }
+            return body;
         }
 
         private void ParseFailException(Exception exception)
@@ -588,6 +612,5 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 rr();
         }
         #endregion
-
     }
 }

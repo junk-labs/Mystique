@@ -80,7 +80,7 @@
                                                   Height="32"
                                                   DefaultImage="{StaticResource Painting}"
                                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                                  UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
+                                                  UriSource="{Binding Path=ProfileImageProvider.ProfileImage, IsAsync=True}" />
                                     <TextBlock Grid.RowSpan="2"
                                                Grid.Column="1"
                                                Margin="2"

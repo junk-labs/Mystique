@@ -9,7 +9,7 @@
              mc:Ignorable="d">
     <Grid>
         <TabControl>
-            <TabItem Header="一般設定">
+            <TabItem Header="表示">
                 <StackPanel Grid.Row="5"
                             Grid.ColumnSpan="2"
                             Orientation="Vertical">
@@ -41,6 +41,9 @@
                     </CheckBox>
                     <CheckBox Margin="4,2" IsChecked="{Binding CanFavMyTweet}">
                         <AccessText Text="自分のツイートもFav可能にする(_F)" />
+                    </CheckBox>
+                    <CheckBox Margin="4,2" IsChecked="{Binding ShowImageInlineThumbnail}">
+                        <AccessText Text="画像のインラインサムネイルを表示する(_I)" />
                     </CheckBox>
                     <CheckBox Margin="4,2"
                               IsChecked="{Binding P3StyleIcon}"

@@ -1,5 +1,4 @@
 ﻿
-using System;
 namespace Inscribe.Configuration.Settings
 {
     public class ExperienceProperty
@@ -22,16 +21,6 @@ namespace Inscribe.Configuration.Settings
         /// 超越者である
         /// </summary>
         public bool IsTranscender { get; set; }
-
-        /// <summary>
-        /// 上級者向けの解説を使用する
-        /// </summary>
-        [Obsolete("use IsTranscender property.")]
-        public bool IsAloofUserMode
-        {
-            get { return IsTranscender; }
-            set { IsTranscender = value; }
-        }
 
         /// <summary>
         /// 更新パッケージ種別

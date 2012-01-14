@@ -14,6 +14,7 @@ namespace Inscribe.Configuration.Settings
             UrlResolveMode = UrlResolve.OnPointed;
             UrlTooltipShowLength = 60 * 1000;
             ShowTweetTooltip = true;
+            ShowImageInlineThumbnail = true;
             TweetViewMode = TweetViewingMode.SingleLine;
             CanFavoriteMyTweet = false;
             QuickFavAndRetweet = false;
@@ -36,6 +37,8 @@ namespace Inscribe.Configuration.Settings
         public int UrlTooltipShowLength { get; set; }
 
         public bool ShowTweetTooltip { get; set; }
+
+        public bool ShowImageInlineThumbnail { get; set; }
 
         public TweetViewingMode TweetViewMode { get; set; }
 

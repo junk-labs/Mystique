@@ -8,7 +8,7 @@ namespace Inscribe.Filter.Filters.Transcend
 {
     public class ExceptedFilter : FilterBase
     {
-        public override bool IsOnlyTranscender
+        public override bool IsOnlyForTranscender
         {
             get { return true; }
         }

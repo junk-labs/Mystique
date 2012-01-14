@@ -41,6 +41,7 @@ namespace Inscribe.Authentication
                 RateLimitRemaining = original.RateLimitRemaining,
                 RateLimitReset = original.RateLimitReset,
                 ScreenName = original.ScreenName,
+                NumericId = original.NumericId,
                 Secret = original.Secret,
                 Token = original.Token,
             };
@@ -63,6 +64,7 @@ namespace Inscribe.Authentication
             this.RateLimitRemaining = overwrite.RateLimitRemaining;
             this.RateLimitReset = overwrite.RateLimitReset;
             this.ScreenName = overwrite.ScreenName;
+            this.NumericId = overwrite.NumericId;
             this.Secret = overwrite.Secret;
             this.Token = overwrite.Token;
         }
@@ -70,7 +72,16 @@ namespace Inscribe.Authentication
         [XmlIgnore()]
         public UserViewModel UserViewModel
         {
-            get { return Storage.UserStorage.Get(this.ScreenName); }
+            get
+            {
+                var user = this.NumericId != 0 ? Storage.UserStorage.Get(this.NumericId) : Storage.UserStorage.Get(this.ScreenName);
+                if (user == null) return user;
+                if (this.NumericId == 0)
+                    this.NumericId = user.TwitterUser.NumericId;
+                if (this.ScreenName == null || this.ScreenName != user.TwitterUser.ScreenName)
+                    this.ScreenName = user.TwitterUser.ScreenName;
+                return user;
+            }
         }
 
         #region ConnectionStateChangedイベント

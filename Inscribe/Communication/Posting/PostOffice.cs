@@ -376,7 +376,7 @@ namespace Inscribe.Communication.Posting
 
         public static void FavTweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => FavTweetSync(infos, status));
+            Task.Factory.StartNew(() => FavTweetSink(infos, status));
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> favoriteInjection =
@@ -387,7 +387,7 @@ namespace Inscribe.Communication.Posting
             get { return favoriteInjection.GetInterface(); }
         }
 
-        public static void FavTweetSync(IEnumerable<AccountInfo> infos, TweetViewModel status)
+        public static void FavTweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
             var ts = status.Status as TwitterStatus;
             if (ts == null)
@@ -406,7 +406,7 @@ namespace Inscribe.Communication.Posting
             Parallel.ForEach(infos,
                 (d) =>
                 {
-                    var ud = UserStorage.Get(d.ScreenName);
+                    var ud = d.UserViewModel;
                     // ふぁぼり状態更新
                     if (ud != null)
                         status.RegisterFavored(ud);
@@ -473,7 +473,7 @@ namespace Inscribe.Communication.Posting
             Parallel.ForEach(infos,
                 (d) =>
                 {
-                    var ud = UserStorage.Get(d.ScreenName);
+                    var ud = d.UserViewModel;
                     // ふぁぼり状態更新
                     if (ud != null)
                         status.RemoveFavored(ud);
@@ -510,7 +510,7 @@ namespace Inscribe.Communication.Posting
 
         public static void Retweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => RetweetSync(infos, status));
+            Task.Factory.StartNew(() => RetweetSink(infos, status));
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> retweetInjection =
@@ -521,7 +521,7 @@ namespace Inscribe.Communication.Posting
             get { return retweetInjection.GetInterface(); }
         }
 
-        public static void RetweetSync(IEnumerable<AccountInfo> infos, TweetViewModel status)
+        public static void RetweetSink(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
             var ts = status.Status as TwitterStatus;
             if (ts == null)
@@ -541,7 +541,7 @@ namespace Inscribe.Communication.Posting
                 d =>
                 {
                     // リツイート状態更新
-                    var ud = UserStorage.Get(d.ScreenName);
+                    var ud = d.UserViewModel;
                     if (ud != null)
                         status.RegisterRetweeted(ud);
                     try
@@ -623,7 +623,7 @@ namespace Inscribe.Communication.Posting
                 d =>
                 {
                     // リツイート状態更新
-                    var ud = UserStorage.Get(d.ScreenName);
+                    var ud = d.UserViewModel;
                     if (ud != null)
                         status.RegisterRetweeted(ud);
                     try
@@ -693,6 +693,12 @@ namespace Inscribe.Communication.Posting
                 }
                 else
                 {
+                    if (tweet.InReplyToStatusId != 0)
+                    {
+                        var s = TweetStorage.Get(tweet.InReplyToStatusId);
+                        if (s != null)
+                            s.RemoveInReplyToThis(tweetId);
+                    }
                     TweetStorage.Remove(tweetId);
                     NotifyStorage.Notify("削除しました:" + tweet.ToString());
                 }

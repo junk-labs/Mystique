@@ -194,12 +194,14 @@ namespace Inscribe.ViewModels.Dialogs.Account
             {
                 try
                 {
-                    string userId = null;
+                    long userId;
+                    string userScreenName;
                     if (this._credentialCore.GetAccessToken(
-                        this.requestToken, this.PinString, out userId) &&
-                        !String.IsNullOrEmpty(userId))
+                        this.requestToken, this.PinString, out userId, out userScreenName) &&
+                        userId != 0)
                     {
-                        this._credentialCore.ScreenName = userId;
+                        this._credentialCore.NumericId = userId;
+                        this._credentialCore.ScreenName = userScreenName;
                         this.Success = true;
                         DispatcherHelper.BeginInvoke(() =>
                         Messenger.Raise(new WindowActionMessage("Close", WindowAction.Close)));

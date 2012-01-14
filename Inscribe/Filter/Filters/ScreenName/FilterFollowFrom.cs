@@ -5,7 +5,7 @@ using Inscribe.Storage;
 
 namespace Inscribe.Filter.Filters.ScreenName
 {
-    public class FilterFollowFrom : ScreenNameFilterBase
+    public class FilterFollowFrom : ScreenNameUserFilterBase
     {
         private bool acceptBlocking = false;
         [GuiVisible("フォロー中ユーザーによるブロック中ユーザーのRTを受け入れる")]
@@ -68,6 +68,12 @@ namespace Inscribe.Filter.Filters.ScreenName
         public override string FilterStateString
         {
             get { return "アカウント @" + this.needle + " のフォロー"; }
+        }
+
+        public override bool FilterUser(TwitterUser user)
+        {
+            return AccountStorage.Accounts.Where(i => Match(i.ScreenName, needle))
+                .Any(i => i.IsFollowing(user.NumericId));
         }
     }
 }

@@ -516,6 +516,8 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\faved.png" />
+    <Resource Include="Resources\rted.png" />
     <Resource Include="Resources\plus.png" />
     <Resource Include="Resources\favrt.png" />
     <None Include="assigns\tween.xml">

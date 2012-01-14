@@ -25,7 +25,7 @@ namespace Inscribe.Configuration.Settings
                             new IFilter[]{
                                 new FilterFollowFrom("*"),
                                 new FilterTo("*"),
-                                new FilterUser("*"),
+                                new FilterUserScreenName("*"),
                                 new FilterDirectMessage()}),
                     new TabProperty("Mentions",
                         new IFilter[]{

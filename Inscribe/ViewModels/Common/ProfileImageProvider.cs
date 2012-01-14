@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Dulcet.Twitter.Rest;
-using Inscribe.Common;
 using Inscribe.Authentication;
-using Inscribe.Storage;
 using Livet;
 
 namespace Inscribe.ViewModels.Common
@@ -20,18 +16,11 @@ namespace Inscribe.ViewModels.Common
         {
             get
             {
-                var ud = UserStorage.Lookup(this._info.ScreenName);
+                var ud = this._info.UserViewModel;
                 if (ud != null)
                     return ud.TwitterUser.ProfileImage;
                 else
-                {
-                    Task.Factory.StartNew(() =>
-                        {
-                            UserStorage.Get(this._info.ScreenName);
-                            RaisePropertyChanged(() => ProfileImage);
-                        });
                     return null;
-                }
             }
         }
     }

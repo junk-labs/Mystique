@@ -182,5 +182,12 @@ namespace Inscribe.Common
             else
                 return status.User;
         }
+
+        public static bool IsMentionedThis(TweetViewModel tweetViewModel)
+        {
+            return TweetStorage.GetAll(t => TwitterHelper.IsMyTweet(t))
+                .OfType<TwitterStatus>()
+                .Any(t => t.InReplyToStatusId == tweetViewModel.bindingId);
+        }
     }
 }
