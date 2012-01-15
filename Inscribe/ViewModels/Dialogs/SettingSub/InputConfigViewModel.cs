@@ -11,7 +11,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             this.UseInputSuggesting = Setting.Instance.InputExperienceProperty.UseInputSuggesting;
             this.OfficialRetweetInReplyToRetweeter = Setting.Instance.InputExperienceProperty.OfficialRetweetInReplyToRetweeter;
-            this.TrimBeginSpace = Setting.Instance.InputExperienceProperty.TrimBeginSpace;
             this.UseActiveFallback = Setting.Instance.InputExperienceProperty.UseActiveFallback;
             this.EnableTemporarilyUserSelection = Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection;
             this.FallbackBackTracking = Setting.Instance.InputExperienceProperty.FallbackBackTracking;
@@ -25,8 +24,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
 
         public bool UseInputSuggesting { get; set; }
-
-        public bool TrimBeginSpace { get; set; }
 
         public bool UseActiveFallback { get; set; }
 
@@ -48,7 +45,6 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
         {
             Setting.Instance.InputExperienceProperty.OfficialRetweetInReplyToRetweeter = this.OfficialRetweetInReplyToRetweeter;
             Setting.Instance.InputExperienceProperty.UseInputSuggesting = this.UseInputSuggesting;
-            Setting.Instance.InputExperienceProperty.TrimBeginSpace = this.TrimBeginSpace;
             Setting.Instance.InputExperienceProperty.UseActiveFallback = this.UseActiveFallback;
             Setting.Instance.InputExperienceProperty.IsEnabledTemporarilyUserSelection = this.EnableTemporarilyUserSelection;
             Setting.Instance.InputExperienceProperty.FallbackBackTracking = this.FallbackBackTracking;

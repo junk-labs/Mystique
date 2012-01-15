@@ -344,8 +344,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("CopyWebUrl", () => ExecTVMAction(vm => vm.Tweet.CopyWebUrlCommand.Execute()));
             KeyAssignCore.RegisterOperation("CopyScreenName", () => ExecTVMAction(vm => vm.Tweet.CopyScreenNameCommand.Execute()));
 
-            // Selection
-
             // Tab Action
             KeyAssignCore.RegisterOperation("Search", () => ExecTabAction(vm =>
             {
@@ -354,6 +352,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             }));
             KeyAssignCore.RegisterOperation("RemoveViewStackTop", () => ExecTabAction(vm => vm.RemoveTopTimeline(false)));
             KeyAssignCore.RegisterOperation("RemoveViewStackAll", () => ExecTabAction(vm => vm.RemoveTopTimeline(true)));
+            KeyAssignCore.RegisterOperation("OpenUserViewFromSearchBar", () => ExecTabAction(vm => vm.OpenUser()));
             KeyAssignCore.RegisterOperation("CreateTab", () => ExecTabAction(vm => vm.Parent.AddNewTabCommand.Execute()));
             KeyAssignCore.RegisterOperation("CloseTab", () => ExecTabAction(vm => vm.Parent.CloseTab(vm)));
         }

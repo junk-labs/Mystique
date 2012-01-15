@@ -39,13 +39,10 @@ namespace Inscribe.Storage
         /// </summary>
         /// <param name="prevId">旧アカウント情報</param>
         /// <param name="newinfo">新しいアカウント情報</param>
-        public static void Update(string prevId, AccountInfo newinfo)
+        public static void Update(AccountInfo prev, AccountInfo newinfo)
         {
             accounts.LockOperate(() =>
             {
-                var prev = Get(prevId);
-                if(prev == null)
-                    throw new ArgumentException("アカウント @" + prevId + " は存在しません。");
                 var idx = accounts.IndexOf(prev);
                 if (idx < 0) throw new ArgumentException("旧アカウント情報が見つかりません。");
                 accounts[idx] = newinfo;
@@ -53,16 +50,12 @@ namespace Inscribe.Storage
             OnAccountsChanged(EventArgs.Empty);
         }
 
-        /// <summary>
-        /// アカウント情報を削除します。
-        /// </summary>
-        /// <param name="screenName">削除するアカウント情報のスクリーン名</param>
-        public static bool DeleteAccount(string screenName)
+        public static bool DeleteAccount(AccountInfo info)
         {
-            var del = Get(screenName);
-            if (del != null)
+
+            if (info != null && accounts.Contains(info))
             {
-                accounts.Remove(del);
+                accounts.Remove(info);
                 OnAccountsChanged(EventArgs.Empty);
                 return true;
             }
@@ -102,11 +95,29 @@ namespace Inscribe.Storage
         }
 
         /// <summary>
+        /// ユーザーIDからユーザーアカウント情報を取得します。
+        /// </summary>
+        /// <param name="userId">ユーザーID</param>
+        /// <returns>アカウント情報</returns>
+        public static AccountInfo Get(long userId)
+        {
+            return accounts.FirstOrDefault(a => a.NumericId == userId);
+        }
+
+        /// <summary>
         /// アカウントが含まれているか確認します。
         /// </summary>
         public static bool Contains(string screenName)
         {
             return Get(screenName) != null;
+        }
+
+        /// <summary>
+        /// アカウントが含まれているか確認します。
+        /// </summary>
+        public static bool Contains(long id)
+        {
+            return Get(id) != null;
         }
 
         public enum MoveDirection
@@ -118,11 +129,8 @@ namespace Inscribe.Storage
         /// <summary>
         /// アカウントの順序を変更します。
         /// </summary>
-        public static void MoveAccount(string id, MoveDirection direction)
+        public static void MoveAccount(AccountInfo info, MoveDirection direction)
         {
-            var info = Get(id);
-            if (info == null)
-                throw new ArgumentException("アカウント @" + id + " は存在しません。");
             var idx = accounts.IndexOf(info);
             if (idx < 0)
                 throw new InvalidOperationException();

@@ -4,6 +4,8 @@ using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.ViewModels;
 using Inscribe.ViewModels.PartBlocks.InputBlock;
+using System.Windows.Documents;
+using System.Collections.Generic;
 
 namespace Inscribe.Core
 {
@@ -43,13 +45,30 @@ namespace Inscribe.Core
             get { return _isInShutdown; }
         }
 
+        private static bool isStandby = false;
+        private static List<PluginMenuItem> menuholder = new List<PluginMenuItem>();
         public static void AddMenu(string header, Action command)
         {
             if (header == null)
                 throw new NullReferenceException("header");
             if (command == null)
                 throw new NullReferenceException("command");
-            MainWindowViewModel.InputBlockViewModel.pluginMenus.Add(new PluginMenuItem(header, command));
+            if (isStandby)
+            {
+                MainWindowViewModel.InputBlockViewModel.pluginMenus.Add(new PluginMenuItem(header, command));
+                MainWindowViewModel.InputBlockViewModel.RefreshPluginMenu();
+            }
+            else
+            {
+                menuholder.Add(new PluginMenuItem(header, command));
+            }
+        }
+
+        internal static void CallbackWindowPrepared()
+        {
+            isStandby = true;
+            menuholder.ForEach(i =>
+                MainWindowViewModel.InputBlockViewModel.pluginMenus.Add(i));
             MainWindowViewModel.InputBlockViewModel.RefreshPluginMenu();
         }
     }

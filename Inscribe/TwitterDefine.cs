@@ -67,6 +67,8 @@ namespace Inscribe
 
         public static readonly int TimelineDispatchBlockCount = 5000;
 
+        public static readonly char[] TrimmingChars = new[] { ' ', '\t', '\r', '\n' };
+
         #endregion
     }
 }

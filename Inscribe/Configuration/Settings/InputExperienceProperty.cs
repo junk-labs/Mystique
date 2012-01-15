@@ -9,7 +9,6 @@ namespace Inscribe.Configuration.Settings
         public InputExperienceProperty()
         {
             OfficialRetweetInReplyToRetweeter = false;
-            TrimBeginSpace = true;
             UseInputSuggesting = true;
             SuspendAutoBindInReply = true;
             UseActiveFallback = false;
@@ -24,8 +23,6 @@ namespace Inscribe.Configuration.Settings
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
-
-        public bool TrimBeginSpace { get; set; }
 
         public bool UseInputSuggesting { get; set; }
 

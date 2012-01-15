@@ -76,6 +76,22 @@ namespace System.Linq
             yield return buffer;
         }
 
+        public static IEnumerable<T> Guard<T>(this IEnumerable<T> collection, Func<bool> guard)
+        {
+            if (!guard())
+                return new T[0];
+            else
+                return collection;
+        }
+
+        public static IEnumerable<T> Guard<T>(this IEnumerable<T> collection, Func<IEnumerable<T>,bool> guard)
+        {
+            if (!guard(collection))
+                return new T[0];
+            else
+                return collection;
+        }
+
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> execute)
         {
             foreach (var i in source)

@@ -109,6 +109,7 @@ namespace Inscribe.Core
             var call = OnStandbyApp;
             if (call != null)
                 call();
+            KernelService.CallbackWindowPrepared();
         }
 
         public static event Action OnStandbyApp;

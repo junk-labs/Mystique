@@ -150,7 +150,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         private void MoveUp()
         {
-            AccountStorage.MoveAccount(this.ScreenName, AccountStorage.MoveDirection.Up);
+            AccountStorage.MoveAccount(this.info, AccountStorage.MoveDirection.Up);
         }
         #endregion
 
@@ -169,7 +169,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         private void MoveDown()
         {
-            AccountStorage.MoveAccount(this.ScreenName, AccountStorage.MoveDirection.Down);
+            AccountStorage.MoveAccount(this.info, AccountStorage.MoveDirection.Down);
         }
         #endregion
 
@@ -188,7 +188,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         private void Delete()
         {
-            AccountStorage.DeleteAccount(this.ScreenName);
+            AccountStorage.DeleteAccount(this.info);
         }
         #endregion
 

@@ -20,6 +20,14 @@
         <BitmapImage x:Key="AddColumn" UriSource="/Resources/add.png" />
         <cp:NotZeroToVisibleConverter x:Key="NotZeroVisibleConverter" />
         <ContextMenu x:Key="TabParentContextMenu">
+            <ContextMenu.Style>
+                <Style>
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{x:Static SystemColors.HighlightColor}" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="{x:Static SystemColors.ControlColor}" />
+                    </Style.Resources>
+                </Style>
+            </ContextMenu.Style>
             <MenuItem Command="{Binding AddNewTabCommand}" Header="新しいタブの追加(_N)..." />
             <MenuItem Command="{Binding ShowTabQuickBuilderCommand}" Header="タブクイックビルダー(_Q)..." />
             <MenuItem Command="{Binding RebirthTabCommand}" Header="最後に閉じたタブを元に戻す(_R)" />
@@ -37,6 +45,14 @@
                 </i:Interaction.Triggers>
                 <Border.ContextMenu>
                     <ContextMenu>
+                        <ContextMenu.Style>
+                            <Style>
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{x:Static SystemColors.HighlightColor}" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="{x:Static SystemColors.ControlColor}" />
+                                </Style.Resources>
+                            </Style>
+                        </ContextMenu.Style>
                         <MenuItem Command="{Binding Path=EditTabCommand}" Header="このタブを編集(_E)..." />
                         <MenuItem Header="このタブについて(_T)" Visibility="{Binding IsTranscender, Converter={StaticResource BoolVisibleConverter}}">
                             <MenuItem Command="{Binding FavoriteThisTabAllCommand}" Header="全てFavorite(_F)" />

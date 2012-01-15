@@ -608,7 +608,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         public void OpenUser()
         {
             var qtext = this.QueryText;
-            if (qtext.Length == 0) return;
+            if (qtext.Length == 0 || !qtext.StartsWith("@")) return;
             this.AddTopUser(qtext.Substring(1));
         }
         #endregion

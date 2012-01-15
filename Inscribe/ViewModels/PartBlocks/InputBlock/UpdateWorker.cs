@@ -194,6 +194,8 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         }
                     }
 
+                    // trimming space and line feeding
+                    body = body.TrimStart(TwitterDefine.TrimmingChars).TrimEnd(TwitterDefine.TrimmingChars);
 
                     if (TweetTextCounter.Count(body) > TwitterDefine.TweetMaxLength)
                     {

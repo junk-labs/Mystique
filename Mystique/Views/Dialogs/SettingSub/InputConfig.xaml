@@ -77,10 +77,6 @@
             <TabItem Header="自動整形">
                 <StackPanel Orientation="Vertical">
                     <CheckBox Margin="4,2"
-                              Content="文頭の空白文字を削除する(_R)"
-                              IsChecked="{Binding TrimBeginSpace}"
-                              ToolTip=" RT @～のように、先頭が空白文字で始まるツイートを投稿するとき、先頭の空白を削除します。" />
-                    <CheckBox Margin="4,2"
                               Content="文字数制限を超えた分はカットする(_T)"
                               IsChecked="{Binding TrimExceedChars}">
                         <CheckBox.ToolTip>

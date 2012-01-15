@@ -245,10 +245,6 @@ namespace Inscribe.Communication.Posting
             int retryCount = 0;
             do
             {
-                if (Setting.Instance.InputExperienceProperty.TrimBeginSpace)
-                {
-                    text = text.TrimStart(' ', '\t', '　');
-                }
                 try
                 {
                     updateInjection.Execute(new Tuple<AccountInfo, string, long?>(info, text, inReplyToId));

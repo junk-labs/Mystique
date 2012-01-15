@@ -72,6 +72,7 @@
       <Assign Action="Mute" Key="Ctrl+Delete" />
       <Assign Action="ShowConversation" Key="OemPeriod" />
       <Assign Action="ShowUserDetail" Key="U" />
+      <Assign Action="OpenTweetWeb" Key="W" />
       <Assign Action="Search" Key="F3" Preview="True" />
       <Assign Action="RemoveViewStackTop" Key="F4" Preview="True" InTextBox="True" />
       <Assign Action="CloseTab" Key="Ctrl+F4" Preview="True" />
