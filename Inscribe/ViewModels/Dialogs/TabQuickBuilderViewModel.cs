@@ -13,6 +13,7 @@ using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging.Windows;
+using Inscribe.Filter.Filters.Particular;
 
 namespace Inscribe.ViewModels.Dialogs
 {
@@ -200,14 +201,8 @@ namespace Inscribe.ViewModels.Dialogs
         public void CreateAccountHomeTimeline()
         {
             CreateTab("Home", new IFilter[]{
-                new FilterFollowFrom(SelectedScreenName),
-                new FilterTo(SelectedScreenName),
-                new FilterUserScreenName(SelectedScreenName), 
-                new FilterCluster(
-                    new IFilter[]{
-                        new FilterDirectMessage(),
-                        new FilterTo(SelectedScreenName)
-                    }, concatAnd: true)});
+                new FilterHome(SelectedScreenName)
+            });
             Close();
         }
         #endregion

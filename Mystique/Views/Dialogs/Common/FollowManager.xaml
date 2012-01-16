@@ -246,7 +246,14 @@
                 </ScrollViewer>
             </Border>
             <DockPanel Grid.Row="2" LastChildFill="False">
-                <Button Width="100"
+                <Button Width="120"
+                        Height="25"
+                        Command="{Binding FollowAllCommand}"
+                        Content="すべてFollow(_S)"
+                        DockPanel.Dock="Left"
+                        Foreground="RoyalBlue"
+                        ToolTip="すべてのアカウントでフォローします。" />
+                <Button Width="120"
                         Height="25"
                         Command="{Binding R4SAllCommand}"
                         Content="すべてR4S(_S)"

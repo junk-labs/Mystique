@@ -6,7 +6,7 @@
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         Title="MapleMagic on Krile"
         Width="600"
-        Height="180"
+        Height="220"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         WindowStyle="ToolWindow">
@@ -90,7 +90,9 @@
                    Foreground="Red">
             <Run Text="上記ユーザーからフォローされましたが、スパムの可能性が高いと判定されました:" />
             <LineBreak />
-            <Run Text="{Binding Reason, StringFormat=none, Mode=OneWay}" />
+            <Run Text="{Binding Reason, Mode=OneWay, FallbackValue=null}" />
+            <LineBreak />
+            <Run Foreground="DimGray" Text="{Binding Receiver, StringFormat=(フォローされたユーザー:{0}), Mode=OneWay, FallbackValue=(フォローされたユーザー:...)}" />
         </TextBlock>
         <Grid Grid.Row="4" Grid.Column="1">
             <Grid.ColumnDefinitions>

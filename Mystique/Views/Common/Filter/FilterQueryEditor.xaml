@@ -5,8 +5,8 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
         Title="クエリ エディタ"
-        Width="400"
-        Height="200"
+        Width="550"
+        Height="350"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ToolWindow">
@@ -18,7 +18,9 @@
         <Border Background="Gainsboro"
                 BorderBrush="DimGray"
                 BorderThickness="1">
-            <TextBlock Margin="2" Text="{Binding Result}" />
+            <ScrollViewer MaxHeight="90" VerticalScrollBarVisibility="Auto">
+                <TextBlock Margin="2" Text="{Binding Result}" />
+            </ScrollViewer>
         </Border>
         <TextBox Grid.Row="1"
                  AcceptsReturn="True"
@@ -28,6 +30,7 @@
                  Padding="3"
                  Text="{Binding Text,
                                 UpdateSourceTrigger=PropertyChanged}"
+                 TextWrapping="Wrap"
                  VerticalScrollBarVisibility="Visible" />
     </Grid>
 </Window>

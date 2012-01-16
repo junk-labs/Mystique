@@ -70,6 +70,7 @@
     <Compile Include="Configuration\Settings\MouseAssignProperty.cs" />
     <Compile Include="Filter\Filters\Attributes\FilterVerifiedStar.cs" />
     <Compile Include="Filter\Filters\Numeric\FilterUserIdStar.cs" />
+    <Compile Include="Filter\Filters\Particular\FilterHome.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterBlockFromStar.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterFollowFromStar.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterFollowToStar.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Filter\Filters\Text\FilterUserWebStar.cs" />
     <Compile Include="Filter\IUserFilter.cs" />
     <Compile Include="Filter\Filters\ScreenName\FilterTo.cs" />
+    <Compile Include="Filter\MatchingUtil.cs" />
     <Compile Include="Filter\UserFilterBase.cs" />
     <Compile Include="Subsystems\Protection\StormProtection.cs" />
     <Compile Include="Util\WrappingStream.cs" />

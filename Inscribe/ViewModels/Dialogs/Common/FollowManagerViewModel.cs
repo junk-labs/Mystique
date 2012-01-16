@@ -86,6 +86,27 @@ namespace Inscribe.ViewModels.Dialogs.Common
 
         public event Action CloseRequired = () => { };
 
+        #region FollowAllCommand
+        private ViewModelCommand _FollowAllCommand;
+
+        public ViewModelCommand FollowAllCommand
+        {
+            get
+            {
+                if (_FollowAllCommand == null)
+                {
+                    _FollowAllCommand = new ViewModelCommand(FollowAll);
+                }
+                return _FollowAllCommand;
+            }
+        }
+
+        public void FollowAll()
+        {
+            this.Relations.ForEach(r => r.FollowCommand.Execute());
+        }
+        #endregion
+
         #region R4SAllCommand
         ViewModelCommand _R4SAllCommand;
 

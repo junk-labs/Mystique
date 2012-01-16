@@ -8,6 +8,8 @@ using Livet;
 using Livet.Messaging;
 using Livet.Messaging.Windows;
 using System.Threading.Tasks;
+using Inscribe.Authentication;
+using Dulcet.Twitter;
 
 namespace MapleMagic
 {
@@ -15,9 +17,13 @@ namespace MapleMagic
     {
         public UserViewModel User { get; private set; }
 
-        public R4SDialogViewModel(UserViewModel user, string reason)
+        public string Receiver { get; private set; }
+
+        public R4SDialogViewModel(UserViewModel user, string receiver, string reason)
+
         {
             this.User = user;
+            this.Receiver = receiver;
             this.Reason = reason;
         }
 
@@ -110,12 +116,25 @@ namespace MapleMagic
                 this.Messenger.Raise(new WindowActionMessage("WindowAction", WindowAction.Close));
                 Task.Factory.StartNew(() =>
                 {
-                    AccountStorage.Accounts.ForEach(i => i.ReportSpam(User.TwitterUser.NumericId));
+                    AccountStorage.Accounts.ForEach(i => ReportForSpam(i, User.TwitterUser));
                     NotifyStorage.Notify("@" + User.TwitterUser.ScreenName + " をスパム報告しました。");
                 });
             }
         }
         #endregion
+
+        private void ReportForSpam(AccountInfo info, TwitterUser user)
+        {
+            try
+            {
+                info.ReportSpam(user.NumericId);
+            }
+            catch (Exception ex)
+            {
+                ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
+                    "@" + user.ScreenName + " のR4Sに失敗しました。", () => ReportForSpam(info, user));
+            }
+        }
 
         #region CloseCommand
         private Livet.Commands.ViewModelCommand _CloseCommand;

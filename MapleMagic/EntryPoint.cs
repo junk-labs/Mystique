@@ -25,7 +25,7 @@ namespace MapleMagic
 
         public Version Version
         {
-            get { return new Version(0, 0, 0, 0); }
+            get { return new Version(0, 5, 0, 0); }
         }
 
         public void Loaded()
@@ -53,13 +53,13 @@ namespace MapleMagic
                 switch (e.EventDescription.Kind)
                 {
                     case EventKind.Follow:
-                        CheckFollower(e.EventDescription.SourceUser);
+                        CheckFollower(e.EventDescription.SourceUser, e.EventDescription.TargetUser.TwitterUser.ScreenName);
                         break;
                 }
             });
         }
 
-        private void CheckFollower(UserViewModel userViewModel)
+        private void CheckFollower(UserViewModel userViewModel, string receiver)
         {
             // 自分からのフォローなら無視
             if (AccountStorage.Contains(userViewModel.TwitterUser.NumericId) ||
@@ -78,15 +78,15 @@ namespace MapleMagic
                 .FirstOrDefault();
             if (checkresult != null)
             {
-                ShowR4SCandidateDialog(userViewModel, checkresult.Description);
+                ShowR4SCandidateDialog(userViewModel, receiver, checkresult.Description);
             }
         }
 
-        public void ShowR4SCandidateDialog(UserViewModel userViewModel, string description)
+        public void ShowR4SCandidateDialog(UserViewModel userViewModel, string receiver, string description)
         {
             DispatcherHelper.BeginInvoke(() =>
             {
-                var r4svm = new R4SDialogViewModel(userViewModel, description);
+                var r4svm = new R4SDialogViewModel(userViewModel, receiver, description);
                 var r4s = new R4SDialog();
                 r4s.DataContext = r4svm;
                 r4s.Owner = Application.Current.MainWindow;
@@ -96,27 +96,33 @@ namespace MapleMagic
 
         public IEnumerable<AutoSpamRule> GetRules()
         {
-            // 直近のツイートが全て twittbot.net からの投稿、もしくは
-            // 直近のツイートの8割以上にURLがある、もしくは
-            // 直近のツイートの8割以上に"RT"がある
             yield return new AutoSpamRule("直近50ツイートの8割以上がtwittbot.netからの投稿", (u, t) =>
             {
                 var tla = t.OfType<TwitterStatus>().ToArray();
                 return tla.Select(s => s.Source)
-                    .Where(s => s.Contains("twittbot.net")).Count() * 100 / tla.Count() >= 80;
+                    .Where(s => s.Contains("twittbot.net")).Count() > tla.Count() * 0.8;
             });
             yield return new AutoSpamRule("直近50ツイートの8割以上にURLが含まれる", (u, t) =>
             {
                 var tla = t.OfType<TwitterStatus>().ToArray();
                 return tla.Select(s => s.Text)
-                    .Where(s => RegularExpressions.UrlRegex.IsMatch(s)).Count() * 100 / tla.Count() >= 80;
+                    .Where(s => RegularExpressions.UrlRegex.IsMatch(s)).Count() > tla.Count() * 0.8;
             });
             yield return new AutoSpamRule("直近50ツイートの8割以上に\"RT\"が含まれる", (u, t) =>
             {
                 var tla = t.OfType<TwitterStatus>().ToArray();
                 return tla.Select(s => s.Text)
-                    .Where(s => s.Contains("RT")).Count() * 100 / tla.Count() >= 80;
+                    .Where(s => s.Contains("RT")).Count() > tla.Count() * 0.8;
             });
+            yield return new AutoSpamRule("直近50ツイート全てに@mentionが含まれる", (u, t) =>
+            {
+                var tla = t.OfType<TwitterStatus>().ToArray();
+                return tla.Select(s => s.Text)
+                    .Where(s => !s.Contains("@")).Count() == 0;
+            });
+            yield return new AutoSpamRule("フォロー数がフォロワー数の2倍以上", (u, t) => u.TwitterUser.Followings > u.TwitterUser.Followers * 2);
+            yield return new AutoSpamRule("ツイートが3件以下", (u, t) => u.TwitterUser.Tweets < 3);
+            yield return new AutoSpamRule("お気に入りが0個", (u, t) => u.TwitterUser.Favorites == 0);
         }
 
         public IConfigurator ConfigurationInterface
