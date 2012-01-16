@@ -80,13 +80,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                     RaisePropertyChanged(() => Listed);
                     SetUserTimeline(value);
                 }
-                this.OpenLinkCommand.RaiseCanExecuteChanged();
-                this.OpenUserTwilogCommand.RaiseCanExecuteChanged();
-                this.OpenUserFavstarCommand.RaiseCanExecuteChanged();
-                this.OpenUserWebCommand.RaiseCanExecuteChanged();
-                this.CreateUserTabCommand.RaiseCanExecuteChanged();
-                this.ReceiveTimelineCommand.RaiseCanExecuteChanged();
-                this.ManageFollowCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -180,7 +173,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_OpenLinkCommand == null)
-                    _OpenLinkCommand = new ListenerCommand<string>(OpenLink, () => this.User != null);
+                    _OpenLinkCommand = new ListenerCommand<string>(OpenLink);
                 return _OpenLinkCommand;
             }
         }
@@ -203,7 +196,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_OpenUserTwilogCommand == null)
-                    _OpenUserTwilogCommand = new ViewModelCommand(OpenUserTwilog, () => this.User != null);
+                    _OpenUserTwilogCommand = new ViewModelCommand(OpenUserTwilog);
                 return _OpenUserTwilogCommand;
             }
         }
@@ -223,7 +216,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_OpenUserFavstarCommand == null)
-                    _OpenUserFavstarCommand = new ViewModelCommand(OpenUserFavstar, () => this.User != null);
+                    _OpenUserFavstarCommand = new ViewModelCommand(OpenUserFavstar);
                 return _OpenUserFavstarCommand;
             }
         }
@@ -243,7 +236,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_OpenUserWebCommand == null)
-                    _OpenUserWebCommand = new ViewModelCommand(OpenUserWeb, ()=>this.User != null);
+                    _OpenUserWebCommand = new ViewModelCommand(OpenUserWeb);
                 return _OpenUserWebCommand;
             }
         }
@@ -333,7 +326,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_CreateUserTabCommand == null)
-                    _CreateUserTabCommand = new ViewModelCommand(CreateUserTab, () => this.User != null);
+                    _CreateUserTabCommand = new ViewModelCommand(CreateUserTab);
                 return _CreateUserTabCommand;
             }
         }
@@ -378,7 +371,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_ReceiveTimelineCommand == null)
-                    _ReceiveTimelineCommand = new ViewModelCommand(ReceiveTimeline, ()=>this.User != null);
+                    _ReceiveTimelineCommand = new ViewModelCommand(ReceiveTimeline);
                 return _ReceiveTimelineCommand;
             }
         }
@@ -425,7 +418,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             get
             {
                 if (_ManageFollowCommand == null)
-                    _ManageFollowCommand = new ViewModelCommand(ManageFollow, () => this.User != null);
+                    _ManageFollowCommand = new ViewModelCommand(ManageFollow);
                 return _ManageFollowCommand;
             }
         }

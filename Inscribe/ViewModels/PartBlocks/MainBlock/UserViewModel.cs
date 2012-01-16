@@ -29,6 +29,5 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         {
             return (int)TwitterUser.NumericId;
         }
-
     }
 }
