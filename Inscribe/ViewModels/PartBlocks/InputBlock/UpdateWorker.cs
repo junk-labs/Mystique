@@ -235,6 +235,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                             quoteBody = body.Substring(quoteindex);
                             body = body.Substring(0, quoteindex);
                         }
+                        body = body.TrimEnd(' ', '\t');
 
                         // add footer (when is in not "unofficial RT")
                         if (!isQuoting &&
@@ -251,8 +252,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                                 if (TweetTextCounter.Count(body) + TweetTextCounter.Count(quoteBody) + tag.Length + 1 <= TwitterDefine.TweetMaxLength)
                                     body += " " + tag;
                             }
-                            if (isQuoting)
-                                body += " ";
+                            body += " ";
                         }
 
                         // join quote
