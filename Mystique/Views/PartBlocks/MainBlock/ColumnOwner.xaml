@@ -23,7 +23,7 @@
             <l:ConfirmationDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
-    <ItemsControl x:Name="ColumnsOwner" ItemsSource="{Binding Columns, IsAsync=True}">
+    <ItemsControl x:Name="ColumnsOwner" ItemsSource="{Binding Columns}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <UniformGrid Rows="1" />

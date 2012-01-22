@@ -13,36 +13,37 @@
         <BitmapImage x:Key="Painting" UriSource="/Resources/painting.png" />
     </UserControl.Resources>
     <StackPanel Orientation="Vertical">
-        <ItemsControl MaxWidth="480" ItemsSource="{Binding LinkDatas}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ToggleButton IsChecked="{Binding IsLink, Mode=TwoWay}">
-                        <ToggleButton.InputBindings>
-                            <MouseBinding Command="{Binding SelectThisCommand}" MouseAction="LeftDoubleClick" />
-                        </ToggleButton.InputBindings>
-                        <my:LazyImage Width="32"
-                                      Height="32"
-                                      Margin="2"
-                                      DefaultImage="{StaticResource Painting}"
-                                      UriSource="{Binding Path=ProfileImageProvider.ProfileImage,
-                                                          IsAsync=True}" />
-                        <ToggleButton.ToolTip>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock FontWeight="Bold" Text="{Binding ScreenName, StringFormat=@{0}, Mode=OneWay}" />
-                                <TextBlock Text="ダブルクリックでこのユーザーのみ選択します。" />
-                            </StackPanel>
-                        </ToggleButton.ToolTip>
-                    </ToggleButton>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ScrollViewer MaxHeight="640" VerticalScrollBarVisibility="Auto">
+            <ItemsControl MaxWidth="640" ItemsSource="{Binding LinkDatas}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ToggleButton IsChecked="{Binding IsLink, Mode=TwoWay}">
+                            <ToggleButton.InputBindings>
+                                <MouseBinding Command="{Binding SelectThisCommand}" MouseAction="LeftDoubleClick" />
+                            </ToggleButton.InputBindings>
+                            <my:LazyImage Width="32"
+                                          Height="32"
+                                          Margin="2"
+                                          DefaultImage="{StaticResource Painting}"
+                                          UriSource="{Binding Path=ProfileImageProvider.ProfileImage}" />
+                            <ToggleButton.ToolTip>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock FontWeight="Bold" Text="{Binding ScreenName, StringFormat=@{0}, Mode=OneWay}" />
+                                    <TextBlock Text="ダブルクリックでこのユーザーのみ選択します。" />
+                                </StackPanel>
+                            </ToggleButton.ToolTip>
+                        </ToggleButton>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
         <StackPanel Orientation="Horizontal">
             <Button Command="{Binding CheckAllCommand}" ToolTip="全てチェックする">
                 <Image Width="8"

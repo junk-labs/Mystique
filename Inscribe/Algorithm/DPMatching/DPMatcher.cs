@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Inscribe.Algorithm.DPMatching
 {
     /// <summary>
-    /// Matching with Dynamic Programming method for String.
+    /// Matching with Dynamic Programming method for string.
     /// </summary>
     public static class DPMatcher
     {
@@ -16,13 +15,15 @@ namespace Inscribe.Algorithm.DPMatching
         /// <param name="test">test sample</param>
         /// <param name="reference">reference sample</param>
         /// <returns></returns>
-        public static MatchingResult Matching(String test, String reference)
+        public static MatchingResult Matching(string test, string reference)
         {
             int[,] traceTable;
             double dpv = DPMatchingCore(test, reference, out traceTable);
+            System.Diagnostics.Debug.WriteLine(Enumerable.Range(0, traceTable.GetLength(0))
+                .Select(i => Enumerable.Range(0, traceTable.GetLength(1)).Select(j => traceTable[i, j].ToString()).JoinString(" "))
+                .JoinString(Environment.NewLine));
             return Trace(traceTable, dpv);
         }
-
 
         /// <summary>
         /// Run DPMatching, get distance.
@@ -31,7 +32,7 @@ namespace Inscribe.Algorithm.DPMatching
         /// <param name="reference">reference sample</param>
         /// <param name="traceTable">result trace table</param>
         /// <returns>distance between two samples.</returns>
-        public static double DPMatchingCore(String test, String reference)
+        public static double DPMatchingCore(string test, string reference)
         {
             int[,] _;
             return DPMatchingCore(test, reference, out _);
@@ -44,7 +45,7 @@ namespace Inscribe.Algorithm.DPMatching
         /// <param name="reference">reference sample</param>
         /// <param name="traceTable">result trace table</param>
         /// <returns>distance between two samples.</returns>
-        public static double DPMatchingCore(String test, String reference, out int[,] traceTable)
+        public static double DPMatchingCore(string test, string reference, out int[,] traceTable)
         {
             int rl = reference.Length;
             int tl = test.Length;
@@ -79,25 +80,47 @@ namespace Inscribe.Algorithm.DPMatching
             int rf = traceTable.GetLength(0);
             int ri = rf - 1;
             int ti = tf - 1;
+            List<int> insertions = new List<int>();
+            List<int> deletions = new List<int>();
+            List<Tuple<int, int>> substitutions = new List<Tuple<int, int>>();
             while (ri > 0 && ti > 0)
             {
                 int min = new[] { traceTable[ri - 1, ti], traceTable[ri, ti - 1], traceTable[ri - 1, ti - 1] }
                     .Min();
                 if (traceTable[ri - 1, ti - 1] == min)
                 {
+                    if (traceTable[ri, ti] != traceTable[ri - 1, ti - 1])
+                        substitutions.Add(new Tuple<int, int>(ti - 1, ri - 1));
                     ri--; ti--;
                 }
                 else if (traceTable[ri, ti - 1] == min)
                 {
+                    insertions.Add(ti - 1);
                     ti--;
-                    r.Insertions++;
                 }
                 else
                 {
+                    deletions.Add(ri - 1);
                     ri--;
-                    r.Deletions++;
                 }
             }
+            if (ri != 0)
+            {
+                // reference index is remain.
+                // -> Deletion error
+                Enumerable.Range(0, ri)
+                    .ForEach(deletions.Add);
+            }
+            if (ti != 0)
+            {
+                // test index is remain.
+                // -> Insertion error
+                Enumerable.Range(0, ti)
+                    .ForEach(insertions.Add);
+            }
+            r.InsertionIndexes = insertions.OrderBy(i => i).ToArray();
+            r.DeletionIndexes = deletions.OrderBy(i => i).ToArray();
+            r.SubstitutionIndexes = substitutions.OrderBy(i => i.Item1).ToArray();
             return r;
         }
 
@@ -128,18 +151,39 @@ namespace Inscribe.Algorithm.DPMatching
         public double Distance { get; set; }
 
         /// <summary>
+        /// Indexes of insertion error occured
+        /// </summary>
+        public int[] InsertionIndexes { get; set; }
+
+        /// <summary>
+        /// Indexes of deletion error occured
+        /// </summary>
+        public int[] DeletionIndexes { get; set; }
+
+        /// <summary>
+        /// Indexes of substitution error occured<para />
+        /// Item1 is index of test, Item2 is index of reference.
+        /// </summary>
+        public Tuple<int, int>[] SubstitutionIndexes { get; set; }
+
+        /// <summary>
         /// Insertion error
         /// </summary>
-        public int Insertions { get; set; }
+        public int Insertions { get { return InsertionIndexes.Length; } }
 
         /// <summary>
         /// Deletion error
         /// </summary>
-        public int Deletions { get; set; }
+        public int Deletions { get { return DeletionIndexes.Length; } }
+
+        /// <summary>
+        /// Substitution error
+        /// </summary>
+        public int Substitutions { get { return SubstitutionIndexes.Length; } }
 
         public override string ToString()
         {
-            return "Distance: " + Distance + ", Insertions: " + Insertions + ", Deletions: " + Deletions;
+            return "Distance: " + Distance + ", Insertions: " + Insertions + ", Deletions: " + Deletions + ", Substitutions: " + Substitutions;
         }
     }
 }

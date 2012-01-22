@@ -21,6 +21,8 @@ using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using System.IO;
+using Livet.Messaging.IO;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -758,6 +760,41 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         private void EditTab()
         {
             Parent.EditTab(this);
+        }
+        #endregion
+
+        #region SaveTabAsSTOTCommand
+        private Livet.Commands.ViewModelCommand _SaveTabAsSTOTCommand;
+
+        public Livet.Commands.ViewModelCommand SaveTabAsSTOTCommand
+        {
+            get
+            {
+                if (_SaveTabAsSTOTCommand == null)
+                {
+                    _SaveTabAsSTOTCommand = new Livet.Commands.ViewModelCommand(SaveTabAsSTOT);
+                }
+                return _SaveTabAsSTOTCommand;
+            }
+        }
+
+        public void SaveTabAsSTOT()
+        {
+            SavingFileSelectionMessage m = new SavingFileSelectionMessage("SaveFile");
+            m.Filter = "テキスト ファイル|*.txt";
+            m.Title = "保存先のファイルを指定";
+            String file = null;
+            if ((file = this.Parent.Messenger.GetResponse(m).Response) != null)
+            {
+                using (FileStream fs = File.Open(file, FileMode.Create, FileAccess.ReadWrite))
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    this.CurrentForegroundTimeline.CoreViewModel.TweetsSource.ForEach(tdtvm =>
+                        {
+                            sw.WriteLine(TwitterHelper.GetSuggestedUser(tdtvm.Tweet).ScreenName + ":" + tdtvm.Tweet.Text + " [" + tdtvm.Tweet.Permalink + "]");
+                        });
+                }
+            }
         }
         #endregion
 

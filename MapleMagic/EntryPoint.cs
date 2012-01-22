@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using Acuerdo.Plugin;
@@ -25,7 +26,7 @@ namespace MapleMagic
 
         public Version Version
         {
-            get { return new Version(0, 5, 0, 0); }
+            get { return new Version(0, 6, 0, 0); }
         }
 
         public void Loaded()
@@ -61,24 +62,31 @@ namespace MapleMagic
 
         private void CheckFollower(UserViewModel userViewModel, string receiver)
         {
-            // 自分からのフォローなら無視
-            if (AccountStorage.Contains(userViewModel.TwitterUser.NumericId) ||
-                AccountStorage.Contains(userViewModel.TwitterUser.ScreenName))
-                return;
-            // 自分がフォローしている相手なら無視
-            if (TwitterHelper.IsFollowingAny(userViewModel))
-                return;
-            // 直近ツイートを取得
-            var ai = AccountStorage.GetRandom(i => i.IsFollowedBy(userViewModel.TwitterUser.NumericId), true);
-            if (ai == null) return;
-            var tl = ai.GetUserTimeline(userId: userViewModel.TwitterUser.NumericId, count: 50);
-            if (tl == null) return;
-            var checkresult = GetRules()
-                .Where(r => r.Check(userViewModel, tl))
-                .FirstOrDefault();
-            if (checkresult != null)
+            try
             {
-                ShowR4SCandidateDialog(userViewModel, receiver, checkresult.Description);
+                // 自分からのフォローなら無視
+                if (AccountStorage.Contains(userViewModel.TwitterUser.NumericId) ||
+                    AccountStorage.Contains(userViewModel.TwitterUser.ScreenName))
+                    return;
+                // 自分がフォローしている相手なら無視
+                if (TwitterHelper.IsFollowingAny(userViewModel))
+                    return;
+                // 直近ツイートを取得
+                var ai = AccountStorage.GetRandom(i => i.IsFollowedBy(userViewModel.TwitterUser.NumericId), true);
+                if (ai == null) return;
+                var tl = ai.GetUserTimeline(userId: userViewModel.TwitterUser.NumericId, count: 50);
+                if (tl == null) return;
+                var checkresult = GetRules()
+                    .Where(r => r.Check(userViewModel, tl))
+                    .FirstOrDefault();
+                if (checkresult != null)
+                {
+                    ShowR4SCandidateDialog(userViewModel, receiver, checkresult.Description);
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionStorage.Register(ex, ExceptionCategory.TwitterError, "MapleMagicでの照合に失敗しました。", () => CheckFollower(userViewModel, receiver));
             }
         }
 
@@ -120,7 +128,7 @@ namespace MapleMagic
                 return tla.Select(s => s.Text)
                     .Where(s => !s.Contains("@")).Count() == 0;
             });
-            yield return new AutoSpamRule("フォロー数がフォロワー数の2倍以上", (u, t) => u.TwitterUser.Followings > u.TwitterUser.Followers * 2);
+            yield return new AutoSpamRule("Bioにひらがなが含まれない", (u, t) => !Regex.IsMatch(u.TwitterUser.Bio, @".\p{IsHiragana}", RegexOptions.Compiled));
             yield return new AutoSpamRule("ツイートが3件以下", (u, t) => u.TwitterUser.Tweets < 3);
             yield return new AutoSpamRule("お気に入りが0個", (u, t) => u.TwitterUser.Favorites == 0);
         }

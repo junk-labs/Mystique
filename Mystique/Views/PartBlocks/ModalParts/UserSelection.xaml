@@ -14,7 +14,7 @@
         <BitmapImage x:Key="FavoriteLarge" UriSource="/Resources/star_large.png" />
         <BitmapImage x:Key="Plus" UriSource="/Resources/plus.png" />
     </UserControl.Resources>
-    <Border Width="350"
+    <Border Width="600"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Background="#FFFFFF"
@@ -56,7 +56,6 @@
                            Text="FavRT" />
             </StackPanel>
             <my:UserSelector Grid.Row="1"
-                             MaxWidth="320"
                              HorizontalAlignment="Center"
                              DataContext="{Binding UserSelectorViewModel}" />
             <TextBlock Grid.Row="2"

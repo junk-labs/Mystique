@@ -775,7 +775,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         }
         #endregion
 
-
         #region SearchGoogleCommand
         private ViewModelCommand _SearchGoogleCommand;
 
