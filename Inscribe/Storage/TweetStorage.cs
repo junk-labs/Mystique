@@ -45,6 +45,9 @@ namespace Inscribe.Storage
         /// </summary>
         static List<TweetViewModel> viewmodels = new List<TweetViewModel>();
 
+        /// <summary>
+        /// empties/deleteReserveds用ロックラップ
+        /// </summary>
         static ReaderWriterLockWrap elockWrap = new ReaderWriterLockWrap(LockRecursionPolicy.NoRecursion);
 
         /// <summary>
@@ -73,13 +76,14 @@ namespace Inscribe.Storage
         /// </summary>
         public static TweetExistState Contains(long id)
         {
-            using (elockWrap.GetReaderLock())
             using (lockWrap.GetReaderLock())
             {
-                System.Diagnostics.Debug.WriteLine("contains");
                 if (dictionary.ContainsKey(id))
                     return TweetExistState.Exists;
-                else if (deleteReserveds.Contains(id))
+            }
+            using (elockWrap.GetReaderLock())
+            {
+                if (deleteReserveds.Contains(id))
                     return TweetExistState.ServerDeleted;
                 else if (empties.ContainsKey(id))
                     return TweetExistState.EmptyExists;
@@ -95,17 +99,19 @@ namespace Inscribe.Storage
         /// <param name="createEmpty">存在しないとき、空のViewModelを作って登録して返す</param>
         public static TweetViewModel Get(long id, bool createEmpty = false)
         {
+            TweetViewModel ret;
             using (lockWrap.GetReaderLock())
-            using (createEmpty ? elockWrap.GetUpgradableReaderLock() : elockWrap.GetReaderLock())
             {
-                TweetViewModel ret;
                 if (dictionary.TryGetValue(id, out ret))
                     return ret;
+            }
+            using (createEmpty ? elockWrap.GetUpgradableReaderLock() : elockWrap.GetReaderLock())
+            {
                 if (empties.TryGetValue(id, out ret))
                     return ret;
                 if (createEmpty)
                 {
-                    using(elockWrap.GetWriterLock())
+                    using (elockWrap.GetWriterLock())
                     {
                         var nvm = new TweetViewModel(id);
                         empties.Add(id, nvm);
@@ -238,7 +244,7 @@ namespace Inscribe.Storage
             TweetViewModel viewModel;
             using (elockWrap.GetUpgradableReaderLock())
             {
-                if(empties.TryGetValue(statusBase.Id, out viewModel))
+                if (empties.TryGetValue(statusBase.Id, out viewModel))
                 {
                     // 既にViewModelが生成済み
                     if (!viewModel.IsStatusInfoContains)
@@ -259,13 +265,13 @@ namespace Inscribe.Storage
                 // プリプロセッシング
                 PreProcess(statusBase);
                 bool delr = false;
-                using (lockWrap.GetUpgradableReaderLock())
+                using (elockWrap.GetReaderLock())
                 {
-                    using (elockWrap.GetReaderLock())
-                    {
-                        delr = deleteReserveds.Contains(statusBase.Id);
-                    }
-                    if (!delr)
+                    delr = deleteReserveds.Contains(statusBase.Id);
+                }
+                if (!delr)
+                {
+                    using (lockWrap.GetUpgradableReaderLock())
                     {
                         if (dictionary.ContainsKey(statusBase.Id))
                         {
@@ -280,9 +286,6 @@ namespace Inscribe.Storage
                             _count++;
                         }
                     }
-                }
-                if (!delr)
-                {
                     Task.Factory.StartNew(() => RaiseStatusAdded(viewModel)).ContinueWith(_ =>
                     {
                         // delay add
@@ -361,17 +364,24 @@ namespace Inscribe.Storage
         {
             TweetViewModel remobj = null;
             using (elockWrap.GetWriterLock())
-            using (vmLockWrap.GetWriterLock())
-            using (lockWrap.GetWriterLock())
             {
                 empties.Remove(id);
+            }
+            using (lockWrap.GetWriterLock())
+            {
                 if (dictionary.TryGetValue(id, out remobj))
                 {
                     dictionary.Remove(id);
-                    viewmodels.Remove(remobj);
                     _count--;
-                    Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
                 }
+            }
+            if (remobj != null)
+            {
+                using (vmLockWrap.GetWriterLock())
+                {
+                    viewmodels.Remove(remobj);
+                }
+                Task.Factory.StartNew(() => RaiseStatusRemoved(remobj));
             }
         }
 

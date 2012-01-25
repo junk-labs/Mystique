@@ -5,6 +5,8 @@ using Dulcet.Twitter;
 using Dulcet.Twitter.Rest;
 using Inscribe.Authentication;
 using Inscribe.Common;
+using System.Linq;
+using Inscribe.Storage;
 
 namespace Inscribe.Communication
 {
@@ -13,6 +15,21 @@ namespace Inscribe.Communication
     /// </summary>
     public static class InjectionPoint
     {
+        public static IEnumerable<TwitterStatusBase> UnfoldTimeline(Func<int, IEnumerable<TwitterStatusBase>> reader, int lengthThreshold, int maxDepth)
+        {
+            List<IEnumerable<TwitterStatusBase>> cache = new List<IEnumerable<TwitterStatusBase>>();
+            for (int i = 0; i < maxDepth; i++)
+            {
+                var status = ApiHelper.ExecApi(() => reader(i)).OrderByDescending(t => t.CreatedAt);
+                cache.Add(status);
+                if (status.Count() < lengthThreshold)
+                    break;
+                if (!status.Take(1).Any(s => TweetStorage.Contains(s.Id) == TweetExistState.Unreceived))
+                    break;
+            }
+            return cache.Where(i => i != null).SelectMany(i => i);
+        }
+
         #region Home
 
         internal static InjectionPort<AccountInfo, IEnumerable<TwitterStatusBase>> _GetHomeTimelineInjection
@@ -25,7 +42,7 @@ namespace Inscribe.Communication
 
         private static IEnumerable<TwitterStatusBase> GetHomeTimeline(AccountInfo info)
         {
-            return ApiHelper.ExecApi(() => info.GetHomeTimeline(count: TwitterDefine.HomeReceiveMaxCount));
+            return UnfoldTimeline(i => info.GetHomeTimeline(count: TwitterDefine.HomeReceiveMaxCount, page: i), TwitterDefine.HomeReceiveMaxCount * 2 / 3, 10);
         }
 
         #endregion
@@ -42,7 +59,7 @@ namespace Inscribe.Communication
 
         private static IEnumerable<TwitterStatusBase> GetMentions(AccountInfo info)
         {
-            return ApiHelper.ExecApi(() => info.GetMentions(count: TwitterDefine.MentionReceiveMaxCount));
+            return UnfoldTimeline(i => info.GetMentions(count: TwitterDefine.MentionReceiveMaxCount, page: i), TwitterDefine.MentionReceiveMaxCount * 2 / 3, 3);
         }
 
         #endregion
@@ -93,7 +110,10 @@ namespace Inscribe.Communication
 
         private static IEnumerable<TwitterStatusBase> GetMyTweets(AccountInfo info)
         {
-            return ApiHelper.ExecApi(() => info.GetUserTimeline(screenName: info.ScreenName, count: TwitterDefine.HomeReceiveMaxCount, includeRts: true));
+            if (info.NumericId != 0)
+                return UnfoldTimeline(i => info.GetUserTimeline(userId: info.NumericId, count: TwitterDefine.HomeReceiveMaxCount, includeRts: true, page: i), TwitterDefine.HomeReceiveMaxCount * 2 / 3, 5);
+            else
+                return UnfoldTimeline(i => info.GetUserTimeline(screenName: info.ScreenName, count: TwitterDefine.HomeReceiveMaxCount, includeRts: true, page: i), TwitterDefine.HomeReceiveMaxCount * 2 / 3, 5);
         }
 
         #endregion
@@ -110,7 +130,7 @@ namespace Inscribe.Communication
 
         private static IEnumerable<TwitterStatusBase> GetFavorites(AccountInfo info)
         {
-            return ApiHelper.ExecApi(() => info.GetFavorites());
+            return UnfoldTimeline(i => info.GetFavorites(page: i), 5, 3);
         }
 
         #endregion

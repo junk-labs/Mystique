@@ -232,7 +232,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                         if (quoteindex >= 0)
                         {
                             isQuoting = true;
-                            quoteBody = body.Substring(quoteindex);
+                            quoteBody = " " + body.Substring(quoteindex).Trim();
                             body = body.Substring(0, quoteindex);
                         }
                         body = body.TrimEnd(' ', '\t');
@@ -252,7 +252,6 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                                 if (TweetTextCounter.Count(body) + TweetTextCounter.Count(quoteBody) + tag.Length + 1 <= TwitterDefine.TweetMaxLength)
                                     body += " " + tag;
                             }
-                            body += " ";
                         }
 
                         // join quote

@@ -3,11 +3,19 @@ using Inscribe.Authentication;
 using Livet;
 using Inscribe.Storage;
 using System.Threading.Tasks;
+using Inscribe.Common;
 
 namespace Inscribe.ViewModels.Common
 {
     public class ProfileImageProvider : ViewModel
     {
+        private static StackTaskDispatcher imageloader;
+        static ProfileImageProvider()
+        {
+            imageloader = new StackTaskDispatcher(1);
+            ThreadHelper.Halt += () => imageloader.Dispose();
+        }
+
         private AccountInfo _info;
         private bool? _fetching = null;
         public ProfileImageProvider(AccountInfo relatedInfo)
@@ -19,7 +27,7 @@ namespace Inscribe.ViewModels.Common
         {
             get
             {
-                if (_fetching.HasValue && _fetching.Value == true) return null;
+                if (_fetching.GetValueOrDefault()) return null;
                 if (UserStorage.Lookup(_info.NumericId) != null || !_fetching.GetValueOrDefault())
                 {
                     var ud = this._info.UserViewModel;
@@ -31,7 +39,7 @@ namespace Inscribe.ViewModels.Common
                 else
                 {
                     _fetching = true;
-                    Task.Factory.StartNew(() =>
+                    imageloader.Push(()=>
                     {
                         var info = this._info.UserViewModel;
                         RaisePropertyChanged(() => ProfileImage);
