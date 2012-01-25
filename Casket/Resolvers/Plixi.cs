@@ -6,7 +6,7 @@ namespace Casket.Resolvers
     {
         public bool IsResolvable(string url)
         {
-            return url.StartsWith("http://plixi.com/p/") || url.StartsWith("http://tweetphoto.com/");
+            return url.StartsWith("http://plixi.com/p/") || url.StartsWith("http://tweetphoto.com/") || url.StartsWith("http://lockerz.com/s/");
         }
 
         public string Resolve(string url)
