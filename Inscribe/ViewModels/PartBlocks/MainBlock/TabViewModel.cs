@@ -702,6 +702,45 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
         }
         #endregion
 
+
+        #region UnfavoriteThisTabAllCommand
+        private ViewModelCommand _UnfavoriteThisTabAllCommand;
+
+        public ViewModelCommand UnfavoriteThisTabAllCommand
+        {
+            get
+            {
+                if (_UnfavoriteThisTabAllCommand == null)
+                {
+                    _UnfavoriteThisTabAllCommand = new ViewModelCommand(UnfavoriteThisTabAll);
+                }
+                return _UnfavoriteThisTabAllCommand;
+            }
+        }
+
+        public void UnfavoriteThisTabAll()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                IEnumerable<TabDependentTweetViewModel> tweets;
+                using (NotifyStorage.NotifyManually("タイムラインの内容を取得しています..."))
+                {
+                    tweets = this.CurrentForegroundTimeline.CoreViewModel.TweetsSource.ToArrayVolatile();
+                }
+                var msg = new ConfirmationMessage(
+                    "このタブに含まれるすべてのツイートをUnfavoriteします。" + Environment.NewLine +
+                    "(対象ツイート: " + tweets.Count() + "件)" + Environment.NewLine +
+                    "よろしいですか？", "全てUnfavorite",
+                    System.Windows.MessageBoxImage.Warning,
+                    System.Windows.MessageBoxButton.OKCancel,
+                    "Confirm");
+                this.Parent.Messenger.Raise(msg);
+                if (msg.Response.GetValueOrDefault())
+                    tweets.ForEach(t => t.Unfavorite());
+            });
+        }
+        #endregion
+
         #region RetweetThisTabAllCommand
         private ViewModelCommand _RetweetThisTabAllCommand;
 

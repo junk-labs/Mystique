@@ -13,6 +13,7 @@ using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 using System.Windows.Media;
+using Inscribe.Communication;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock
 {
@@ -385,7 +386,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 try
                 {
                     var acc = AccountStorage.GetRandom(a => a.Followings.Contains(this.User.TwitterUser.NumericId), true);
-                    var tweets = ApiHelper.ExecApi(() => acc.GetUserTimeline(userId: this.User.TwitterUser.NumericId, count: 100, includeRts: true));
+                    var tweets = InjectionPoint.UnfoldTimeline(i => acc.GetUserTimeline(userId: this.User.TwitterUser.NumericId, count: 100, includeRts: true, page: i), 100, 5);
                     if (tweets != null)
                         tweets.ForEach(t => TweetStorage.Register(t));
                 }

@@ -55,8 +55,10 @@
                         </ContextMenu.Style>
                         <MenuItem Command="{Binding Path=EditTabCommand}" Header="このタブを編集(_E)..." />
                         <MenuItem Header="このタブについて(_T)" Visibility="{Binding IsTranscender, Converter={StaticResource BoolVisibleConverter}}">
-                            <MenuItem Command="{Binding Path=SaveTabAsSTOTCommand}" Header="このタブをSTOT形式で書きだす(_W)..." />
+                            <MenuItem Command="{Binding SaveTabAsSTOTCommand}" Header="このタブをSTOT形式で書きだす(_W)..." />
+                            <Separator />
                             <MenuItem Command="{Binding FavoriteThisTabAllCommand}" Header="全てFavorite(_F)" />
+                            <MenuItem Command="{Binding UnfavoriteThisTabAllCommand}" Header="全てUnfavorite(_U)" />
                             <MenuItem Command="{Binding RetweetThisTabAllCommand}" Header="全てRetweet(_R)" />
                         </MenuItem>
                         <Separator />

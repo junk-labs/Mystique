@@ -16,6 +16,7 @@ using Inscribe.Configuration;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
+using System.IO;
 
 namespace Inscribe.Communication.Posting
 {
@@ -28,6 +29,8 @@ namespace Inscribe.Communication.Posting
         static Timer updateUnderControllingTimer = new Timer(UpdateUnderControls, null, 1000, 1000);
 
         static ConcurrentDictionary<AccountInfo, DateTime> underControls = new ConcurrentDictionary<AccountInfo, DateTime>();
+
+        static QueueTaskDispatcher operationDispatcher;
 
         #region OnUnderControlChangedイベント
 
@@ -54,7 +57,9 @@ namespace Inscribe.Communication.Posting
 
         static PostOffice()
         {
+            operationDispatcher = new QueueTaskDispatcher(20);
             ThreadHelper.Halt += updateUnderControllingTimer.Dispose;
+            ThreadHelper.Halt += () => operationDispatcher.Dispose();
         }
 
         private static void AddUnderControlled(AccountInfo info)
@@ -177,7 +182,7 @@ namespace Inscribe.Communication.Posting
             for (int i = 0; i < times.Length; i++)
             {
                 // 前のツイートまで、3時間以上の空きがあるとそこがチャンクの切れ目
-                if (i + 1 < times.Length && 
+                if (i + 1 < times.Length &&
                     times[i] - times[i + 1] > TwitterDefine.UnderControlTimespan)
                 {
                     // ここがチャンクの切れ目
@@ -361,7 +366,7 @@ namespace Inscribe.Communication.Posting
         private static void UpdateDirectMessageSink(AccountInfo info, string target, string body)
         {
             var status = info.SendDirectMessage(target, body);
-            if(status == null || status.Id == 0)
+            if (status == null || status.Id == 0)
                 throw new WebException("Timeout or failure sending tweet.", WebExceptionStatus.Timeout);
 
             TweetStorage.Register(status);
@@ -372,7 +377,7 @@ namespace Inscribe.Communication.Posting
 
         public static void FavTweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => FavTweetSink(infos, status));
+            operationDispatcher.Enqueue(() => FavTweetSink(infos, status));
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> favoriteInjection =
@@ -415,11 +420,19 @@ namespace Inscribe.Communication.Posting
                         success = false;
                         if (ud != null)
                             status.RemoveFavored(ud);
-                        NotifyStorage.Notify("Favに失敗しました: @" + d.ScreenName);
-                        if (!(ex is ApplicationException))
+                        if (ex is FavoriteSuspendedException)
                         {
-                            ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
-                                "Fav操作時にエラーが発生しました");
+                            // ふぁぼ規制
+                            // TODO:ふぁぼフォールバック実装
+                        }
+                        else
+                        {
+                            NotifyStorage.Notify("Favに失敗しました: @" + d.ScreenName);
+                            if (!(ex is ApplicationException))
+                            {
+                                ExceptionStorage.Register(ex, ExceptionCategory.TwitterError,
+                                    "Fav操作時にエラーが発生しました");
+                            }
                         }
                     }
                 });
@@ -429,8 +442,43 @@ namespace Inscribe.Communication.Posting
 
         private static void FavTweetCore(AccountInfo d, TweetViewModel status)
         {
+            /*
             if (ApiHelper.ExecApi(() => d.CreateFavorites(status.Status.Id)) == null)
                 throw new ApplicationException();
+            */
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    if (d.CreateFavorites(status.Status.Id) != null)
+                        break;
+                }
+                catch (WebException wex)
+                {
+                    var hwr = wex.Response as HttpWebResponse;
+                    if (wex.Status == WebExceptionStatus.ProtocolError && 
+                        hwr != null && hwr.StatusCode == HttpStatusCode.Forbidden)
+                    {
+                        // あとIt's great that ... ならふぁぼ規制
+                        using (var read = new StreamReader( hwr.GetResponseStream()))
+                        {
+                            var desc = read.ReadToEnd();
+                            if (desc.Contains("It's great that you like so many updates, but we only allow so many updates to be marked as a favorite per day."))
+                            {
+                                throw new FavoriteSuspendedException();
+                            }
+                        }
+                    }
+                    else if (wex.Status == WebExceptionStatus.Timeout)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
         }
 
         #endregion
@@ -439,7 +487,7 @@ namespace Inscribe.Communication.Posting
 
         public static void UnfavTweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => UnfavTweetSink(infos, status));
+            operationDispatcher.Enqueue(() => UnfavTweetSink(infos, status));
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> unfavoriteInjection =
@@ -506,7 +554,7 @@ namespace Inscribe.Communication.Posting
 
         public static void Retweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => RetweetSink(infos, status));
+            operationDispatcher.Enqueue(() => RetweetSink(infos, status));
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> retweetInjection =
@@ -587,7 +635,7 @@ namespace Inscribe.Communication.Posting
 
         public static void Unretweet(IEnumerable<AccountInfo> infos, TweetViewModel status)
         {
-            Task.Factory.StartNew(() => UnretweetSink(infos, status));
+            operationDispatcher.Enqueue(() => UnretweetSink(infos, status));
         }
 
         private static InjectionPort<Tuple<AccountInfo, TweetViewModel>> unretweetInjection =

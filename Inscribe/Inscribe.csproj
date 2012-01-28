@@ -64,6 +64,7 @@
     <Compile Include="Common\Punycode.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\MyTweetsTask.cs" />
     <Compile Include="Communication\InjectionPoint.cs" />
+    <Compile Include="Communication\Posting\FavoriteSuspendedException.cs" />
     <Compile Include="Communication\UserStreams\ConnectionManager.cs" />
     <Compile Include="Communication\UserStreams\UserStreamsConnection.cs" />
     <Compile Include="Configuration\Settings\DefinedFiltersProperty.cs" />
