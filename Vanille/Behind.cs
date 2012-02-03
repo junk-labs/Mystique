@@ -13,7 +13,7 @@ namespace Vanille
             this.Shown += new EventHandler(Behind_Shown);
         }
 
-        private Process RunAsStart()
+        private Process StartCoProcess(bool superUser)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.UseShellExecute = true;
@@ -33,7 +33,7 @@ namespace Vanille
 #endif
             }
             startInfo.Arguments = cmd[1] + " " + cmd[2] + " " + cmd[3] + " runas";
-            if (Environment.OSVersion.Version.Major >= 6)
+            if (superUser && Environment.OSVersion.Version.Major >= 6)
                 startInfo.Verb = "runas";
             try
             {
@@ -56,16 +56,23 @@ namespace Vanille
                 return;
             }
 #endif
-            var p = RunAsStart();
+            var p = StartCoProcess(true);
             while (p == null)
             {
-                if (MessageBox.Show(
+                var result =
+                MessageBox.Show(
                     "Fail to start updater with elevated authority." + Environment.NewLine +
-                    "Do you want to retry?",
+                    "If you want to retry, press Retry." + Environment.NewLine +
+                    "Or, if you want to run update without superuser, press Ignore." + Environment.NewLine +
+                    "Otherwise, you can cancel update by clicking Abort.",
                     "Krile updater - Execution error",
-                     MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
+                     MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Warning);
+                if (result == System.Windows.Forms.DialogResult.Abort)
                     break;
-                p = RunAsStart();
+                else if (result == System.Windows.Forms.DialogResult.Ignore)
+                    p = StartCoProcess(false);
+                else
+                    p = StartCoProcess(true);
             }
             if (p == null)
             {

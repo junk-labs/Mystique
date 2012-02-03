@@ -13,6 +13,7 @@ using Inscribe.Storage;
 using Inscribe.Text;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
+using Inscribe.Filter.Filters.Text;
 
 namespace MapleMagic
 {
@@ -104,11 +105,21 @@ namespace MapleMagic
 
         public IEnumerable<AutoSpamRule> GetRules()
         {
+            yield return new AutoSpamRule("Bioにひらがなが含まれない", (u, t) =>
+                !String.IsNullOrEmpty(u.TwitterUser.Bio) && !Regex.IsMatch(u.TwitterUser.Bio, @".\p{IsHiragana}", RegexOptions.Compiled));
+            yield return new AutoSpamRule("ツイートが3件以下", (u, t) => u.TwitterUser.Tweets < 3);
+            yield return new AutoSpamRule("お気に入りが0個", (u, t) => u.TwitterUser.Favorites == 0);
             yield return new AutoSpamRule("直近50ツイートの8割以上がtwittbot.netからの投稿", (u, t) =>
             {
                 var tla = t.OfType<TwitterStatus>().ToArray();
                 return tla.Select(s => s.Source)
                     .Where(s => s.Contains("twittbot.net")).Count() > tla.Count() * 0.8;
+            });
+            yield return new AutoSpamRule("直近50ツイートの8割以上がtwitterfeedからの投稿", (u, t) =>
+            {
+                var tla = t.OfType<TwitterStatus>().ToArray();
+                return tla.Select(s => s.Source)
+                    .Where(s => s.Contains("twitterfeed")).Count() > tla.Count() * 0.8;
             });
             yield return new AutoSpamRule("直近50ツイートの8割以上にURLが含まれる", (u, t) =>
             {
@@ -123,19 +134,51 @@ namespace MapleMagic
                     .Where(s => s.Contains("RT")).Count() > tla.Count() * 0.8;
             });
             yield return new AutoSpamRule("直近50ツイート全てに@mentionが含まれる", (u, t) =>
+                 t.OfType<TwitterStatus>().Select(s => s.Text).Where(s => !s.Contains("@")).Count() == 0);
+            var spamtools = new string[] { "burgertweet", "http://www.twisuke.com/" };
+            yield return new AutoSpamRule("知られているスパムツールからのツイートが含まれる", (u, t) =>
+                t.OfType<TwitterStatus>().Select(s => s.Source).Any(s => spamtools.Any(tool => s.ContainsIgnoreCase(tool))));
+            yield return new AutoSpamRule("botっぽいツールを使っている", (u, t) =>
+                t.OfType<TwitterStatus>().Select(s => s.Source).Any(s => !s.ContainsIgnoreCase("tweetbot") && s.ContainsIgnoreCase("bot")));
+            yield return new AutoSpamRule("直近50ツイートのうち、goo.gl/amazon/amzn.toを含むツイートが1割以上含まれる", (u, t) =>
             {
                 var tla = t.OfType<TwitterStatus>().ToArray();
                 return tla.Select(s => s.Text)
-                    .Where(s => !s.Contains("@")).Count() == 0;
+                    .Where(s => s.ContainsIgnoreCase("goo.gl")).Count() > tla.Count() * 0.1;
             });
-            yield return new AutoSpamRule("Bioにひらがなが含まれない", (u, t) => !Regex.IsMatch(u.TwitterUser.Bio, @".\p{IsHiragana}", RegexOptions.Compiled));
-            yield return new AutoSpamRule("ツイートが3件以下", (u, t) => u.TwitterUser.Tweets < 3);
-            yield return new AutoSpamRule("お気に入りが0個", (u, t) => u.TwitterUser.Favorites == 0);
+            yield return new AutoSpamRule("直近50ツイートの1割以上に #followmejp などのフォロー募集系タグを使っている", (u, t) =>
+            {
+                var tla = t.OfType<TwitterStatus>().ToArray();
+                return tla.Select(s => s.Text)
+                    .Where(s =>
+                        s.ContainsIgnoreCase("#followmejp") ||
+                        s.ContainsIgnoreCase("#sougofollow") ||
+                        s.ContainsIgnoreCase("#followdaibosyu") ||
+                        s.ContainsIgnoreCase("#followdaiboshu") ||
+                        s.ContainsIgnoreCase("#goen") ||
+                        s.ContainsIgnoreCase("#autofollow"))
+                        .Count() > tla.Count() * 0.1;
+            });
+            yield return new AutoSpamRule("Krileでまだ受信したことのないクライアントからのツイートが含まれる", (u, t) =>
+                t.OfType<TwitterStatus>()
+                    .Select(tw => tw.Source)
+                    .Distinct()
+                    .Select(s => new FilterVia(s))
+                    .Any(f => TweetStorage.GetAll(tw => f.Filter(tw.Status))
+                        .Count() == 0));
         }
 
         public IConfigurator ConfigurationInterface
         {
             get { return null; }
+        }
+    }
+
+    public static class StringExtension
+    {
+        public static bool ContainsIgnoreCase(this String haystack, String needle)
+        {
+            return haystack.IndexOf(needle, StringComparison.CurrentCultureIgnoreCase) != -1;
         }
     }
 

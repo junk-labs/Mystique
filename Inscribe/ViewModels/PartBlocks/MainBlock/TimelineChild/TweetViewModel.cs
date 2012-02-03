@@ -586,7 +586,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             get
             {
                 return this.Status is TwitterStatus &&
-                    (!this.IsMyTweet || Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet);
+                    (!this.IsMyTweet &&
+                    (((TwitterStatus)this.Status).RetweetedOriginal == null ||
+                        AccountStorage.Get(((TwitterStatus)this.Status).RetweetedOriginal.User.ScreenName) == null)
+                     || Setting.Instance.TweetExperienceProperty.CanFavoriteMyTweet);
             }
         }
 

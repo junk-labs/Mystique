@@ -13,7 +13,7 @@ namespace Vanille.UpdateCore
 {
     public class UpdateCoreProcessor
     {
-        public readonly double Version = 3.1;
+        public readonly double Version = 3.5;
 
         private Action<string> _writer;
 

@@ -19,6 +19,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this.AutoRetryOnError = Setting.Instance.InputExperienceProperty.AutoRetryOnError;
             this.SuspendAutoBindInReply = Setting.Instance.InputExperienceProperty.SuspendAutoBindInReply;
             this.AutoUniquify = Setting.Instance.InputExperienceProperty.AutoUniquify;
+            this.EnableFavoriteFallback = Setting.Instance.InputExperienceProperty.EnableFavoriteFallback;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -41,6 +42,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
 
         public bool AutoUniquify { get; set; }
 
+        public bool EnableFavoriteFallback { get; set; }
+
         public void Apply()
         {
             Setting.Instance.InputExperienceProperty.OfficialRetweetInReplyToRetweeter = this.OfficialRetweetInReplyToRetweeter;
@@ -53,6 +56,7 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.InputExperienceProperty.AutoRetryOnError = this.AutoRetryOnError;
             Setting.Instance.InputExperienceProperty.SuspendAutoBindInReply = this.SuspendAutoBindInReply;
             Setting.Instance.InputExperienceProperty.AutoUniquify = this.AutoUniquify;
+            Setting.Instance.InputExperienceProperty.EnableFavoriteFallback = this.EnableFavoriteFallback;
         }
     }
 }

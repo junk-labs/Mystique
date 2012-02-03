@@ -72,6 +72,16 @@
                             </TextBlock>
                         </CheckBox.ToolTip>
                     </CheckBox>
+                    <CheckBox Margin="4,2"
+                              Content="お気に入りフォールバックを使用する(_V)"
+                              IsChecked="{Binding EnableFavoriteFallback}"
+                              Visibility="{Binding IsTranscender,
+                                                   Converter={StaticResource BoolVisibleConverter}}">
+                        <CheckBox.ToolTip>
+                            <TextBlock>
+                                <Run Text="ふぁぼ規制をフォールバックします。(テスト実装のため、動作は期待しないでください。)" /></TextBlock>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
                 </StackPanel>
             </TabItem>
             <TabItem Header="自動整形">

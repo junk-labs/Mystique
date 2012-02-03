@@ -420,10 +420,17 @@ namespace Inscribe.Communication.Posting
                         success = false;
                         if (ud != null)
                             status.RemoveFavored(ud);
-                        if (ex is FavoriteSuspendedException)
+                        if (ex is FavoriteSuspendedException && Setting.Instance.InputExperienceProperty.EnableFavoriteFallback)
                         {
-                            // ふぁぼ規制
-                            // TODO:ふぁぼフォールバック実装
+                            // ふぁぼ規制 -> フォールバック
+                            AccountInfo fallback = null;
+                            if(!String.IsNullOrEmpty( d.AccountProperty.FallbackAccount) && 
+                                (fallback = AccountStorage.Get(d.AccountProperty.FallbackAccount)) != null &&
+                                !status.FavoredUsers.Contains(fallback.UserViewModel))
+                            {
+                                NotifyStorage.Notify("Fav fallbackします: @" + d.ScreenName + " >> @");
+                                FavTweetSink(new[] { fallback }, status);
+                            }
                         }
                         else
                         {

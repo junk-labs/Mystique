@@ -20,6 +20,7 @@ namespace Inscribe.Configuration.Settings
             AutoRetryMaxCount = 5;
             ShowInputBlockInBottom = false;
             AutoUniquify = false;
+            EnableFavoriteFallback = false;
         }
 
         public bool OfficialRetweetInReplyToRetweeter { get; set; }
@@ -52,6 +53,8 @@ namespace Inscribe.Configuration.Settings
         public bool ShowInputBlockInBottom { get; set; }
 
         public bool AutoUniquify { get; set; }
+
+        public bool EnableFavoriteFallback { get; set; }
     }
 
     public class HashtagAutoBindDescription
