@@ -10,6 +10,7 @@ namespace Inscribe.Configuration.Settings
             UseP3StyleIcon = true;
             NameAreaWidth = 120;
             UserNameViewMode = NameView.ID;
+            ShowStealButton = false;
             NotificationNameViewMode = NameView.ID;
             UrlResolveMode = UrlResolve.OnPointed;
             UrlTooltipShowLength = 60 * 1000;
@@ -17,12 +18,14 @@ namespace Inscribe.Configuration.Settings
             ShowImageInlineThumbnail = true;
             TweetViewMode = TweetViewingMode.SingleLine;
             CanFavoriteMyTweet = false;
-            QuickFavAndRetweet = false;
+            RightButtonKind = QuickActionButtonKind.Retweet;
         }
 
         public bool ShowUnofficialRetweetButton { get; set; }
 
         public bool ShowQuoteButton { get; set; }
+
+        public bool ShowStealButton { get; set; }
 
         public bool UseP3StyleIcon { get; set; }
 
@@ -44,7 +47,16 @@ namespace Inscribe.Configuration.Settings
 
         public bool CanFavoriteMyTweet { get; set; }
 
-        public bool QuickFavAndRetweet { get; set; }
+        public QuickActionButtonKind RightButtonKind { get; set; }
+    }
+
+    public enum QuickActionButtonKind
+    {
+        Retweet,
+        FavoriteAndRetweet,
+        UnofficialRetweet,
+        Steal,
+        FavoriteAndSteal,
     }
 
     public enum NameView

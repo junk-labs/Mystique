@@ -13,6 +13,7 @@ using Livet.Commands;
 using Inscribe.Text;
 using Inscribe.Plugin;
 using System.Threading.Tasks;
+using Inscribe.Configuration.Settings;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -593,14 +594,25 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
         }
 
+        public bool CanSteal
+        {
+            get
+            {
+                return 
+                    Setting.Instance.ExperienceProperty.IsTranscender &&
+                    Setting.Instance.TweetExperienceProperty.ShowStealButton &&
+                    !this.IsProtected;
+            }
+        }
+
         public bool ShowTooltip
         {
             get { return Setting.Instance.TweetExperienceProperty.ShowTweetTooltip; }
         }
 
-        public bool IsQuickFavAndRetweetEnabled
+        public QuickActionButtonKind RightButtonKind
         {
-            get { return Setting.Instance.TweetExperienceProperty.QuickFavAndRetweet; }
+            get { return Setting.Instance.TweetExperienceProperty.RightButtonKind; }
         }
 
         #endregion

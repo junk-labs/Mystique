@@ -6,6 +6,8 @@ using Inscribe;
 using Inscribe.Common;
 using Inscribe.Core;
 using Livet;
+using System.Linq;
+
 
 namespace Mystique
 {

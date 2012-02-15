@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
@@ -16,7 +17,6 @@ using Inscribe.Configuration;
 using Inscribe.Storage;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
-using System.IO;
 
 namespace Inscribe.Communication.Posting
 {

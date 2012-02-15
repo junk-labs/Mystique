@@ -19,9 +19,11 @@ namespace Inscribe.Algorithm.DPMatching
         {
             int[,] traceTable;
             double dpv = DPMatchingCore(test, reference, out traceTable);
+            /*
             System.Diagnostics.Debug.WriteLine(Enumerable.Range(0, traceTable.GetLength(0))
                 .Select(i => Enumerable.Range(0, traceTable.GetLength(1)).Select(j => traceTable[i, j].ToString()).JoinString(" "))
                 .JoinString(Environment.NewLine));
+            */
             return Trace(traceTable, dpv);
         }
 
@@ -81,8 +83,8 @@ namespace Inscribe.Algorithm.DPMatching
             int ri = rf - 1;
             int ti = tf - 1;
             List<int> insertions = new List<int>();
-            List<int> deletions = new List<int>();
-            List<Tuple<int, int>> substitutions = new List<Tuple<int, int>>();
+            List<IndexTuple> deletions = new List<IndexTuple>();
+            List<IndexTuple> substitutions = new List<IndexTuple>();
             while (ri > 0 && ti > 0)
             {
                 int min = new[] { traceTable[ri - 1, ti], traceTable[ri, ti - 1], traceTable[ri - 1, ti - 1] }
@@ -90,7 +92,7 @@ namespace Inscribe.Algorithm.DPMatching
                 if (traceTable[ri - 1, ti - 1] == min)
                 {
                     if (traceTable[ri, ti] != traceTable[ri - 1, ti - 1])
-                        substitutions.Add(new Tuple<int, int>(ti - 1, ri - 1));
+                        substitutions.Add(new IndexTuple(ti - 1, ri - 1));
                     ri--; ti--;
                 }
                 else if (traceTable[ri, ti - 1] == min)
@@ -100,7 +102,7 @@ namespace Inscribe.Algorithm.DPMatching
                 }
                 else
                 {
-                    deletions.Add(ri - 1);
+                    deletions.Add(new IndexTuple(ti, ri - 1));
                     ri--;
                 }
             }
@@ -109,7 +111,7 @@ namespace Inscribe.Algorithm.DPMatching
                 // reference index is remain.
                 // -> Deletion error
                 Enumerable.Range(0, ri)
-                    .ForEach(deletions.Add);
+                    .ForEach(i => deletions.Add(new IndexTuple(0, i)));
             }
             if (ti != 0)
             {
@@ -118,9 +120,10 @@ namespace Inscribe.Algorithm.DPMatching
                 Enumerable.Range(0, ti)
                     .ForEach(insertions.Add);
             }
+            // OrderBy method is a stable sort.
             r.InsertionIndexes = insertions.OrderBy(i => i).ToArray();
-            r.DeletionIndexes = deletions.OrderBy(i => i).ToArray();
-            r.SubstitutionIndexes = substitutions.OrderBy(i => i.Item1).ToArray();
+            r.DeletionIndexes = deletions.OrderBy(i => i.IndexOfReference).OrderBy(i => i.IndexOfText).ToArray();
+            r.SubstitutionIndexes = substitutions.OrderBy(i => i.IndexOfReference).OrderBy(i => i.IndexOfText).ToArray();
             return r;
         }
 
@@ -158,13 +161,12 @@ namespace Inscribe.Algorithm.DPMatching
         /// <summary>
         /// Indexes of deletion error occured
         /// </summary>
-        public int[] DeletionIndexes { get; set; }
+        public IndexTuple[] DeletionIndexes { get; set; }
 
         /// <summary>
         /// Indexes of substitution error occured<para />
-        /// Item1 is index of test, Item2 is index of reference.
         /// </summary>
-        public Tuple<int, int>[] SubstitutionIndexes { get; set; }
+        public IndexTuple[] SubstitutionIndexes { get; set; }
 
         /// <summary>
         /// Insertion error
@@ -185,5 +187,18 @@ namespace Inscribe.Algorithm.DPMatching
         {
             return "Distance: " + Distance + ", Insertions: " + Insertions + ", Deletions: " + Deletions + ", Substitutions: " + Substitutions;
         }
+    }
+
+    public class IndexTuple
+    {
+        public IndexTuple() { }
+        public IndexTuple(int testIndex, int referenceIndex)
+        {
+            IndexOfText = testIndex;
+            IndexOfReference = referenceIndex;
+        }
+
+        public int IndexOfText { get; set; }
+        public int IndexOfReference { get; set; }
     }
 }

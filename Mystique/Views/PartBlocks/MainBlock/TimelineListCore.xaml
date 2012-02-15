@@ -83,6 +83,12 @@
         <BitmapImage x:Key="User"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/user.png" />
+        <BitmapImage x:Key="Steal"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/retry.png" />
+        <BitmapImage x:Key="FavoriteSteal"
+                     PresentationOptions:Freeze="True"
+                     UriSource="/Resources/favretry.png" />
         <BitmapImage x:Key="Spam"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/bug.png" />
@@ -218,6 +224,32 @@
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource QuoteTweet}" />
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Command="{Binding StealCommand,
+                                        Mode=OneTime}"
+                      Header="失敬する(_S)"
+                      InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 Mode=OneTime,
+                                                 ConverterParameter=Steal}"
+                      Visibility="{Binding Path=Tweet.CanSteal,
+                                           Mode=OneWay,
+                                           Converter={StaticResource BoolVisibleConverter}}">
+                <MenuItem.Icon>
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Steal}" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Command="{Binding FavoriteStealCommand,
+                                        Mode=OneTime}"
+                      Header="ふぁぼって失敬(_V)"
+                      InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                 Mode=OneTime,
+                                                 ConverterParameter=FavoriteAndSteal}"
+                      Visibility="{Binding Path=Tweet.CanSteal,
+                                           Mode=OneWay,
+                                           Converter={StaticResource BoolVisibleConverter}}">
+                <MenuItem.Icon>
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource FavoriteSteal}" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem Command="{Binding DeleteCommand,
                                         Mode=OneTime}"
                       Header="ツイートを削除(_D)"
@@ -263,6 +295,32 @@
                                                      ConverterParameter=RetweetMulti}">
                     <MenuItem.Icon>
                         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Retweet}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding StealMultiUserCommand,
+                                            Mode=OneTime}"
+                          Header="_Steal"
+                          InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                     Mode=OneWay,
+                                                     ConverterParameter=StealMulti}"
+                          Visibility="{Binding Path=Tweet.CanSteal,
+                                               Mode=OneTime,
+                                               Converter={StaticResource BoolVisibleConverter}}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Steal}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding FavoriteAndStealMultiUserCommand,
+                                            Mode=OneTime}"
+                          Header="Fa_vorite and Steal..."
+                          InputGestureText="{Binding Converter={StaticResource KeyAssignConverter},
+                                                     Mode=OneWay,
+                                                     ConverterParameter=FavoriteAndStealMulti}"
+                          Visibility="{Binding Path=Tweet.CanSteal,
+                                               Mode=OneTime,
+                                               Converter={StaticResource BoolVisibleConverter}}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource FavoriteSteal}" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
@@ -512,8 +570,9 @@
                                 <Button Command="{Binding Path=RetweetCommand,
                                                           Mode=OneTime}"
                                         Style="{StaticResource SimpleButtonStyle}"
-                                        Visibility="{Binding Path=Tweet.IsQuickFavAndRetweetEnabled,
-                                                             Converter={StaticResource BoolInvisibleConverter}}">
+                                        Visibility="{Binding Path=Tweet.RightButtonKind,
+                                                             Converter={StaticResource StringEqualVisibleConverter},
+                                                             ConverterParameter=Retweet}">
                                     <Image Width="16"
                                            Height="16"
                                            Margin="1"
@@ -528,8 +587,9 @@
                                         Command="{Binding Path=FavoriteAndRetweetCommand,
                                                           Mode=OneTime}"
                                         Style="{StaticResource SimpleButtonStyle}"
-                                        Visibility="{Binding Path=Tweet.IsQuickFavAndRetweetEnabled,
-                                                             Converter={StaticResource BoolVisibleConverter}}">
+                                        Visibility="{Binding Path=Tweet.RightButtonKind,
+                                                             Converter={StaticResource StringEqualVisibleConverter},
+                                                             ConverterParameter=FavoriteAndRetweet}">
                                     <Image Width="16"
                                            Height="16"
                                            Margin="1"
@@ -539,6 +599,57 @@
                                            SnapsToDevicePixels="True"
                                            Source="{StaticResource FavoriteRetweet}" />
                                     <Button.ToolTip>Favorite+Retweetする</Button.ToolTip>
+                                </Button>
+                                <Button Grid.Column="2"
+                                        Command="{Binding Path=UnofficialRetweetCommand,
+                                                          Mode=OneTime}"
+                                        Style="{StaticResource SimpleButtonStyle}"
+                                        Visibility="{Binding Path=Tweet.RightButtonKind,
+                                                             Converter={StaticResource StringEqualVisibleConverter},
+                                                             ConverterParameter=UnofficialRetweet}">
+                                    <Image Width="16"
+                                           Height="16"
+                                           Margin="1"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           SnapsToDevicePixels="True"
+                                           Source="{StaticResource UORetweet}" />
+                                    <Button.ToolTip>非公式RTする</Button.ToolTip>
+                                </Button>
+                                <Button Grid.Column="2"
+                                        Command="{Binding Path=StealCommand,
+                                                          Mode=OneTime}"
+                                        Style="{StaticResource SimpleButtonStyle}"
+                                        Visibility="{Binding Path=Tweet.RightButtonKind,
+                                                             Converter={StaticResource StringEqualVisibleConverter},
+                                                             ConverterParameter=Steal}">
+                                    <Image Width="16"
+                                           Height="16"
+                                           Margin="1"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           SnapsToDevicePixels="True"
+                                           Source="{StaticResource Steal}" />
+                                    <Button.ToolTip>失敬する</Button.ToolTip>
+                                </Button>
+                                <Button Grid.Column="2"
+                                        Command="{Binding Path=FavoriteAndStealCommand,
+                                                          Mode=OneTime}"
+                                        Style="{StaticResource SimpleButtonStyle}"
+                                        Visibility="{Binding Path=Tweet.RightButtonKind,
+                                                             Converter={StaticResource StringEqualVisibleConverter},
+                                                             ConverterParameter=FavoriteAndSteal}">
+                                    <Image Width="16"
+                                           Height="16"
+                                           Margin="1"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           SnapsToDevicePixels="True"
+                                           Source="{StaticResource FavoriteSteal}" />
+                                    <Button.ToolTip>Favorite+失敬する</Button.ToolTip>
                                 </Button>
                             </cpanel:FillPanel>
                         </Grid>
@@ -960,6 +1071,54 @@
                 </StackPanel>
                 <DockPanel Grid.Row="2" Grid.Column="1">
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.CanSteal, Converter={StaticResource BoolVisibleConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="11" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding StealMultiUserCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Chevron}" />
+                                <Button.ToolTip>多重で失敬する...</Button.ToolTip>
+                            </Button>
+                            <Button VerticalAlignment="Center"
+                                    Command="{Binding StealCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Steal}" />
+                                <Button.ToolTip>失敬する</Button.ToolTip>
+                            </Button>
+                        </Grid>
+                        <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.CanSteal, Converter={StaticResource BoolVisibleConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="11" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding FavoriteAndStealMultiUserCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Chevron}" />
+                                <Button.ToolTip>多重FavSteal...</Button.ToolTip>
+                            </Button>
+                            <Button VerticalAlignment="Center"
+                                    Command="{Binding FavoriteAndStealCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource FavoriteSteal}" />
+                                <Button.ToolTip>Favorite and Steal</Button.ToolTip>
+                            </Button>
+                        </Grid>
                         <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.CanFavorite, Converter={StaticResource BoolVisibleConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
@@ -1458,6 +1617,54 @@
                 </StackPanel>
                 <DockPanel Grid.Row="2" Grid.Column="1">
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.CanSteal, Converter={StaticResource BoolVisibleConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="11" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding StealMultiUserCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Chevron}" />
+                                <Button.ToolTip>多重で失敬する...</Button.ToolTip>
+                            </Button>
+                            <Button VerticalAlignment="Center"
+                                    Command="{Binding StealCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Steal}" />
+                                <Button.ToolTip>失敬する</Button.ToolTip>
+                            </Button>
+                        </Grid>
+                        <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.CanSteal, Converter={StaticResource BoolVisibleConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="11" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding FavoriteAndStealMultiUserCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource Chevron}" />
+                                <Button.ToolTip>多重FavSteal...</Button.ToolTip>
+                            </Button>
+                            <Button VerticalAlignment="Center"
+                                    Command="{Binding FavoriteAndStealCommand}"
+                                    Focusable="False"
+                                    Style="{DynamicResource FlatButtonStyle}">
+                                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{StaticResource FavoriteSteal}" />
+                                <Button.ToolTip>Favorite and Steal</Button.ToolTip>
+                            </Button>
+                        </Grid>
                         <Grid VerticalAlignment="Center" Visibility="{Binding Path=Tweet.CanFavorite, Converter={StaticResource BoolVisibleConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
