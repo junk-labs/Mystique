@@ -1215,7 +1215,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             this.RaiseMessage(conf);
             if (conf.Response.GetValueOrDefault())
             {
-                PostOffice.RemoveTweet(AccountStorage.Get(this.Tweet.Status.User.ScreenName), this.Tweet.Status.Id);
+                if (this.Tweet.IsDirectMessage)
+                {
+                    PostOffice.RemoveDirectMessage(AccountStorage.Get(this.Tweet.Status.User.ScreenName), this.Tweet.Status.Id);
+                }
+                else
+                {
+                    PostOffice.RemoveTweet(AccountStorage.Get(this.Tweet.Status.User.ScreenName), this.Tweet.Status.Id);
+                }
             }
         }
         #endregion

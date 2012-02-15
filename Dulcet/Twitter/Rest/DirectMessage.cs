@@ -114,7 +114,7 @@ namespace Dulcet.Twitter.Rest
             var xmlDoc = provider.RequestAPIv1(partialUri, CredentialProvider.RequestMethod.POST, null);
             if (xmlDoc == null)
                 return null;
-            return TwitterDirectMessage.FromNode(xmlDoc.Element("direct_message"));
+            return TwitterDirectMessage.FromNode(xmlDoc.Root);
         }
     }
 }

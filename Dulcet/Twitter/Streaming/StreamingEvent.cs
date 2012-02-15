@@ -147,7 +147,14 @@ namespace Dulcet.Twitter.Streaming
                 if (node.Element("delete") != null)
                 {
                     // delete
-                    ParseDelete(node);
+                    if (node.Element("delete").Element("direct_message") != null)
+                    {
+                        ParseDeleteDirectMessage(node);
+                    }
+                    else
+                    {
+                        ParseDelete(node);
+                    }
                 }
                 else if (node.Element("text") != null && node.Element("user") != null)
                 {
@@ -240,6 +247,12 @@ namespace Dulcet.Twitter.Streaming
         }
 
         #region Implicit switch
+        
+        private void ParseDeleteDirectMessage(XElement node)
+        {
+            Kind = ElementKind.Delete;
+            DeletedStatusId = node.Element("delete").Element("direct_message").Element("id").ParseLong();
+        }
 
         private void ParseDelete(XElement node)
         {
