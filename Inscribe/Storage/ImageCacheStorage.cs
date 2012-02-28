@@ -42,7 +42,7 @@ namespace Inscribe.Storage
             lockWrap = new ReaderWriterLockWrap();
             imageDataDictionary = new Dictionary<Uri, KeyValuePair<BitmapImage, DateTime>>();
             semaphores = new Dictionary<Uri, ManualResetEvent>();
-            gcTimer = new Timer(GCCacheStorage, null, Setting.Instance.KernelProperty.ImageGCInitialDelay, Setting.Instance.KernelProperty.ImageGCInterval);
+            gcTimer = new Timer(GCCacheStorage, null, Setting.Instance.KernelProperty.ImageCacheGCInitialDelay, Setting.Instance.KernelProperty.ImageCacheGCInterval);
         }
 
         private static bool _isGCing = false;
@@ -65,7 +65,6 @@ namespace Inscribe.Storage
             var surviver = tuple
                 .Where(d => DateTime.Now.Subtract(d.Value.Value).TotalMilliseconds < Setting.Instance.KernelProperty.ImageLifetime)
                 .OrderBy(v => v.Value.Value)
-                .Take((int)(Setting.Instance.KernelProperty.ImageCacheMaxCount * Setting.Instance.KernelProperty.ImageCacheSurviveDensity))
                 .ToArray();
             var newdic = new Dictionary<Uri, KeyValuePair<BitmapImage, DateTime>>();
             surviver.ForEach(i => newdic.Add(i.Key, i.Value));
@@ -213,8 +212,6 @@ namespace Inscribe.Storage
                     else
                     {
                         imageDataDictionary.Add(uri, newv);
-                        if (imageDataDictionary.Count() > Setting.Instance.KernelProperty.ImageCacheMaxCount)
-                            Task.Factory.StartNew(() => GCCacheStorage(null));
                     }
                 }
                 return bi;
