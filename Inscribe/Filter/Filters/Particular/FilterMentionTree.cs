@@ -85,6 +85,7 @@ namespace Inscribe.Filter.Filters.Particular
                         if (status != null)
                         {
                             var vm = TweetStorage.Register(status);
+                            this.tracePoint = status.Id; // temporarily id
                             Task.Factory.StartNew(() => RecursiveCheckId(status.Id));
                             Task.Factory.StartNew(() =>
                                 TweetStorage.GetAll(tvm => (tvm.Status is TwitterStatus) && ((TwitterStatus)tvm.Status).InReplyToStatusId == id)
