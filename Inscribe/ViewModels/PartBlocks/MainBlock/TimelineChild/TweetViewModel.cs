@@ -371,6 +371,11 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         #region Binding Helper Property
 
+        public bool CanShare
+        {
+            get { return !IsProtected && !IsDirectMessage; }
+        }
+
         public bool IsProtected
         {
             get { return TwitterHelper.GetSuggestedUser(this).IsProtected; }
@@ -482,7 +487,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             get
             {
-                return !this.IsProtected;
+                return this.CanShare;
             }
         }
 
@@ -490,7 +495,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             get
             {
-                return Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton && !this.IsProtected;
+                return Setting.Instance.TweetExperienceProperty.ShowUnofficialRetweetButton && this.CanShare;
             }
         }
 
@@ -498,7 +503,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             get
             {
-                return Setting.Instance.TweetExperienceProperty.ShowQuoteButton;
+                // share 扱いにしない
+                return Setting.Instance.TweetExperienceProperty.ShowQuoteButton && !this.IsDirectMessage;
             }
         }
 
@@ -598,10 +604,10 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         {
             get
             {
-                return 
+                return
                     Setting.Instance.ExperienceProperty.IsTranscender &&
                     Setting.Instance.TweetExperienceProperty.ShowStealButton &&
-                    !this.IsProtected;
+                    this.CanShare;
             }
         }
 

@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <BitmapImage x:Key="RetweetLarge" UriSource="/Resources/refresh_large.png" />
         <BitmapImage x:Key="FavoriteLarge" UriSource="/Resources/star_large.png" />
+        <BitmapImage x:Key="StealLarge" UriSource="/Resources/steal_large.png" />
         <BitmapImage x:Key="Plus" UriSource="/Resources/plus.png" />
     </UserControl.Resources>
     <Border Width="600"
@@ -29,32 +30,52 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding IsRetweet, Converter={StaticResource BoolVisibleConverter}}">
-                <Image Source="{StaticResource RetweetLarge}" Stretch="None" />
-                <TextBlock Margin="4"
-                           VerticalAlignment="Center"
-                           FontSize="40"
-                           Foreground="RoyalBlue"
-                           Text="Retweet" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding IsFavorite, Converter={StaticResource BoolVisibleConverter}}">
-                <Image Source="{StaticResource FavoriteLarge}" Stretch="None" />
-                <TextBlock Margin="4"
-                           VerticalAlignment="Center"
-                           FontSize="40"
-                           Foreground="Orange"
-                           Text="Favorite" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding IsFavoriteAndRetweet, Converter={StaticResource BoolVisibleConverter}}">
-                <Image Source="{StaticResource FavoriteLarge}" Stretch="None" />
-                <Image Source="{StaticResource Plus}" Stretch="None" />
-                <Image Source="{StaticResource RetweetLarge}" Stretch="None" />
-                <TextBlock Margin="4"
-                           VerticalAlignment="Center"
-                           FontSize="40"
-                           Foreground="Green"
-                           Text="FavRT" />
-            </StackPanel>
+            <Grid HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsRetweet, Converter={StaticResource BoolVisibleConverter}}">
+                    <Image Source="{StaticResource RetweetLarge}" Stretch="None" />
+                    <TextBlock Margin="4"
+                               VerticalAlignment="Center"
+                               FontSize="40"
+                               Foreground="RoyalBlue"
+                               Text="Retweet" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsFavorite, Converter={StaticResource BoolVisibleConverter}}">
+                    <Image Source="{StaticResource FavoriteLarge}" Stretch="None" />
+                    <TextBlock Margin="4"
+                               VerticalAlignment="Center"
+                               FontSize="40"
+                               Foreground="Orange"
+                               Text="Favorite" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsFavoriteAndRetweet, Converter={StaticResource BoolVisibleConverter}}">
+                    <Image Source="{StaticResource FavoriteLarge}" Stretch="None" />
+                    <Image Source="{StaticResource Plus}" Stretch="None" />
+                    <Image Source="{StaticResource RetweetLarge}" Stretch="None" />
+                    <TextBlock Margin="4"
+                               VerticalAlignment="Center"
+                               FontSize="40"
+                               Foreground="Green"
+                               Text="FavRT" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsSteal, Converter={StaticResource BoolVisibleConverter}}">
+                    <Image Source="{StaticResource StealLarge}" Stretch="None" />
+                    <TextBlock Margin="4"
+                               VerticalAlignment="Center"
+                               FontSize="40"
+                               Foreground="Orange"
+                               Text="Steal" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsFavoriteAndSteal, Converter={StaticResource BoolVisibleConverter}}">
+                    <Image Source="{StaticResource FavoriteLarge}" Stretch="None" />
+                    <Image Source="{StaticResource Plus}" Stretch="None" />
+                    <Image Source="{StaticResource StealLarge}" Stretch="None" />
+                    <TextBlock Margin="4"
+                               VerticalAlignment="Center"
+                               FontSize="40"
+                               Foreground="Green"
+                               Text="FavSteal" />
+                </StackPanel>
+            </Grid>
             <my:UserSelector Grid.Row="1"
                              HorizontalAlignment="Center"
                              DataContext="{Binding UserSelectorViewModel}" />

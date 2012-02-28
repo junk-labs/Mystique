@@ -40,6 +40,8 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
             RaisePropertyChanged(() => IsFavoriteAndRetweet);
             RaisePropertyChanged(() => IsFavorite);
             RaisePropertyChanged(() => IsRetweet);
+            RaisePropertyChanged(() => IsSteal);
+            RaisePropertyChanged(() => IsFavoriteAndSteal);
             RaisePropertyChanged(() => SelectedUsers);
             OkCommand.RaiseCanExecuteChanged();
         }
@@ -57,6 +59,16 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
         public bool IsRetweet
         {
             get { return this._kind == SelectionKind.Retweet; }
+        }
+
+        public bool IsSteal
+        {
+            get { return this._kind == SelectionKind.Steal; }
+        }
+
+        public bool IsFavoriteAndSteal
+        {
+            get { return this._kind == SelectionKind.FavoriteAndSteal; }
         }
 
         private UserSelectorViewModel _userSelectorViewModel;
@@ -120,5 +132,7 @@ namespace Inscribe.ViewModels.PartBlocks.ModalParts
         FavoriteAndRetweet,
         Favorite,
         Retweet,
+        Steal,
+        FavoriteAndSteal,
     }
 }

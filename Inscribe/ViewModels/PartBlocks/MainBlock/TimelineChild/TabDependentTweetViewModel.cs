@@ -25,6 +25,7 @@ using Inscribe.ViewModels.Dialogs;
 using Livet;
 using Livet.Commands;
 using Livet.Messaging;
+using Inscribe.Authentication;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -1024,6 +1025,121 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
                 });
         }
         #endregion
+
+        #region StealCommand
+        private ViewModelCommand _StealCommand;
+
+        public ViewModelCommand StealCommand
+        {
+            get
+            {
+                if (_StealCommand == null)
+                {
+                    _StealCommand = new ViewModelCommand(Steal);
+                }
+                return _StealCommand;
+            }
+        }
+
+        public void Steal()
+        {
+            if (this.Tweet.IsProtected || this.Tweet.IsDirectMessage) return;
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                StealMultiUser();
+            else
+                this.Parent.TabProperty.LinkAccountInfos.ForEach(i => StealCore(i));
+        }
+        #endregion
+
+        #region StealMultiUserCommand
+        private ViewModelCommand _StealMultiUserCommand;
+
+        public ViewModelCommand StealMultiUserCommand
+        {
+            get
+            {
+                if (_StealMultiUserCommand == null)
+                {
+                    _StealMultiUserCommand = new ViewModelCommand(StealMultiUser);
+                }
+                return _StealMultiUserCommand;
+            }
+        }
+
+        public void StealMultiUser()
+        {
+            if (this.Tweet.IsProtected || this.Tweet.IsDirectMessage) return;
+            this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.Steal,
+                new AccountInfo[0],
+                u => u.ForEach(StealCore));
+        }
+        #endregion
+
+        #region FavoriteAndStealCommand
+        private ViewModelCommand _FavoriteAndStealCommand;
+
+        public ViewModelCommand FavoriteAndStealCommand
+        {
+            get
+            {
+                if (_FavoriteAndStealCommand == null)
+                {
+                    _FavoriteAndStealCommand = new ViewModelCommand(FavoriteAndSteal);
+                }
+                return _FavoriteAndStealCommand;
+            }
+        }
+
+        public void FavoriteAndSteal()
+        {
+            if (this.Tweet.IsProtected || this.Tweet.IsDirectMessage) return;
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+                StealMultiUser();
+            else
+                this.Parent.TabProperty.LinkAccountInfos
+                    .Do(i => PostOffice.FavTweet(new[]{i}, this.Tweet))
+                    .ForEach(i => StealCore(i));
+        }
+        #endregion
+
+
+        #region FavoriteAndStealMultiUserCommand
+        private ViewModelCommand _FavoriteAndStealMultiUserCommand;
+
+        public ViewModelCommand FavoriteAndStealMultiUserCommand
+        {
+            get
+            {
+                if (_FavoriteAndStealMultiUserCommand == null)
+                {
+                    _FavoriteAndStealMultiUserCommand = new ViewModelCommand(FavoriteAndStealMultiUser);
+                }
+                return _FavoriteAndStealMultiUserCommand;
+            }
+        }
+
+        public void FavoriteAndStealMultiUser()
+        {
+            if (this.Tweet.IsProtected || this.Tweet.IsDirectMessage) return;
+            if (this.Tweet.IsProtected || this.Tweet.IsDirectMessage) return;
+            this.Parent.Parent.Parent.Parent.SelectUser(ModalParts.SelectionKind.FavoriteAndSteal,
+                new AccountInfo[0],
+                u => u
+                    .Do(i => PostOffice.FavTweet(new[]{i}, this.Tweet))
+                    .ForEach(StealCore));
+        }
+        #endregion
+
+
+
+        private void StealCore(AccountInfo info)
+        {
+            var ibvm = this.Parent.Parent.Parent.Parent.InputBlockViewModel;
+            ibvm.AddUpdateWorker(
+                new InputBlock.TweetWorker(ibvm, info, this.Tweet.TweetText,
+                    ((TwitterStatus)this.Tweet.Status).InReplyToStatusId, null, null));
+        }
+
 
         #region RetweetCommand
         ViewModelCommand _RetweetCommand;

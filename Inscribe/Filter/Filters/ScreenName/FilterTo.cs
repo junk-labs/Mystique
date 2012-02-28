@@ -73,5 +73,12 @@ namespace Inscribe.Filter.Filters.ScreenName
         {
             get { return "@" + this.needle + " への返信/DM" + (isStrict ? "(厳密)" : ""); }
         }
+
+        public override System.Collections.Generic.IEnumerable<object> GetArgumentsForQueryify()
+        {
+            yield return needle;
+            if (IsStrict)
+                yield return true;
+        }
     }
 }

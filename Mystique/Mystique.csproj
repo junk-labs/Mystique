@@ -516,6 +516,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\steal_large.png" />
     <Resource Include="Resources\favretry.png" />
     <Resource Include="Resources\faved.png" />
     <Resource Include="Resources\rted.png" />

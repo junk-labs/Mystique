@@ -92,10 +92,25 @@ namespace System.Linq
                 return collection;
         }
 
+        public static IEnumerable<T> Do<T>(this IEnumerable<T> source, Action<T> execute)
+        {
+            foreach (var i in source)
+            {
+                execute(i);
+                yield return i;
+            }
+        }
+
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> execute)
         {
             foreach (var i in source)
                 execute(i);
+        }
+
+        public static void Run<T>(this IEnumerable<T> source)
+        {
+            var iterator = source.GetEnumerator();
+            while (iterator.MoveNext()) ;
         }
 
         public static string JoinString(this IEnumerable<string> source, string separator)
