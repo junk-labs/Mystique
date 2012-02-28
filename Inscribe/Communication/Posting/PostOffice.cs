@@ -762,6 +762,51 @@ namespace Inscribe.Communication.Posting
 
         #endregion
 
+        #region Remove DirectMessage
+        
+        public static void RemoveDirectMessage(AccountInfo info, long tweetId)
+        {
+            var result = Task.Factory.StartNew(() =>
+                removeDMInjection.Execute(new Tuple<AccountInfo, long>(info, tweetId)));
+            
+            var ex = result.Exception;
+            if (ex != null)
+            {
+                NotifyStorage.Notify("ダイレクトメッセージを削除できませんでした(@" + info.ScreenName + ")");
+                ExceptionStorage.Register(ex, ExceptionCategory.TwitterError, "ダイレクトメッセージ削除時にエラーが発生しました");
+            }
+        }
+        
+        private static InjectionPort<Tuple<AccountInfo, long>> removeDMInjection =
+            new InjectionPort<Tuple<AccountInfo, long>>(a => RemoveDMSink(a.Item1, a.Item2));
+        
+        public static IInjectionPort<Tuple<AccountInfo, long>> RemoveDMInjection
+        {
+            get { return removeDMInjection.GetInterface(); }
+        }
+        
+        private static void RemoveDMSink(AccountInfo info, long tweetId)
+        {
+            var tweet = ApiHelper.ExecApi(() => info.DestroyDirectMessage(tweetId.ToString()));
+            if (tweet != null)
+            {
+                if (tweet.Id != tweetId)
+                {
+                    NotifyStorage.Notify("削除には成功しましたが、ダイレクトメッセージIDが一致しません。(" + tweetId.ToString() + " -> " + tweet.Id.ToString() + ")");
+                }
+                else
+                {
+                    TweetStorage.Remove(tweetId);
+                    NotifyStorage.Notify("削除しました:" + tweet.ToString());
+                }
+            }
+            else
+            {
+                NotifyStorage.Notify("ダイレクトメッセージを削除できませんでした(@" + info.ScreenName + ")");
+            }
+        }
+        
+        #endregion
     }
 
     public class UnderControlEventArgs : EventArgs
