@@ -52,6 +52,10 @@ namespace Inscribe.Filter.Filters.Particular
             }
             else
             {
+                if (!status.User.ScreenName.Equals(user1, StringComparison.CurrentCultureIgnoreCase) &&
+                    !status.User.ScreenName.Equals(user2, StringComparison.CurrentCultureIgnoreCase))
+                    return false;
+
                 if (RegularExpressions.AtRegex.Matches(status.Text).Cast<Match>()
                     .Any(m => m.Value.Equals(user1, StringComparison.CurrentCultureIgnoreCase) ||
                         m.Value.Equals(user2, StringComparison.CurrentCultureIgnoreCase)))
