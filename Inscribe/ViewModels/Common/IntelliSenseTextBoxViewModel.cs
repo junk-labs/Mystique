@@ -175,13 +175,14 @@ namespace Inscribe.ViewModels.Common
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("distance:" + item
-                        .Where(i => i.ItemText[0] == this.CurrentToken[0])
-                        .Select(i => DPMatcher.DPMatchingCore(i.ItemText, this.CurrentToken))
-                        .OrderBy(i => i).FirstOrDefault());
                     return item
                         .Where(i => i.ItemText[0] == this.CurrentToken[0])
-                        .OrderBy(i => DPMatcher.DPMatchingCore(i.ItemText, this.CurrentToken));
+                        .OrderBy(i =>
+                            EnumerableEx.Unfold(s => s.Substring(0, s.Length - 1), i.ItemText)
+                            .TakeWhile(s => s.Length > 0)
+                            .AsParallel()
+                            .Select(s => DPMatcher.DPMatchingCore(s, this.CurrentToken))
+                            .Min());
                 }
 
                 //if (String.IsNullOrEmpty(this.CurrentToken))

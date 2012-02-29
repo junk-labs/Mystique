@@ -63,26 +63,31 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Text="{Binding FavoritesCount}" />
-            <TextBlock Grid.Column="1" Text="{Binding FollowsCount}" />
-            <TextBlock Grid.Column="2" Text="{Binding FollowersCount}" />
-            <TextBlock Grid.Column="3" Text="{Binding ListedCount}" />
+            <TextBlock Grid.Column="0" Text="{Binding TweetsCount}" />
+            <TextBlock Grid.Column="1" Text="{Binding FavoritesCount}" />
+            <TextBlock Grid.Column="2" Text="{Binding FollowsCount}" />
+            <TextBlock Grid.Column="3" Text="{Binding FollowersCount}" />
+            <TextBlock Grid.Column="4" Text="{Binding ListedCount}" />
             <TextBlock Grid.Row="1"
                        Grid.Column="0"
-                       Text="favorites" />
+                       Text="tweets" />
             <TextBlock Grid.Row="1"
                        Grid.Column="1"
-                       Text="follows" />
+                       Text="favorites" />
             <TextBlock Grid.Row="1"
                        Grid.Column="2"
-                       Text="followers" />
+                       Text="follows" />
             <TextBlock Grid.Row="1"
                        Grid.Column="3"
+                       Text="followers" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="4"
                        Text="listed" />
         </Grid>
         <TextBlock Grid.Row="3"

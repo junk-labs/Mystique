@@ -299,6 +299,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             KeyAssignCore.RegisterOperation("FavoriteRemoveSpecific", acc => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
                 Configuration.Settings.FavMouseActionCandidates.FavRemoveWithSpecificAccount, acc)));
             KeyAssignCore.RegisterOperation("FavoriteAndRetweet", () => ExecTVMAction(vm => vm.ToggleFavoriteAndRetweet()));
+            KeyAssignCore.RegisterOperation("FavoriteAndSteal", () => ExecTVMAction(vm => vm.FavoriteAndSteal()));
 
             KeyAssignCore.RegisterOperation("Retweet", () => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
                 Configuration.Settings.RetweetMouseActionCandidates.RetweetToggle, null)));
@@ -331,6 +332,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                  Configuration.Settings.UnofficialRetweetQuoteMouseActionCandidates.CustomUnofficialRetweetImmediately, arg)));
             KeyAssignCore.RegisterOperation("CustomQuoteTweetImmediately", arg => ExecTVMAction(vm => MouseAssignCore.ExecuteAction(vm.Tweet,
                 Configuration.Settings.UnofficialRetweetQuoteMouseActionCandidates.CustomQuoteTweetImmediately, arg)));
+
+            KeyAssignCore.RegisterOperation("Steal", () => ExecTVMAction(vm => vm.Steal()));
 
             KeyAssignCore.RegisterOperation("Delete", () => ExecTVMAction(vm => vm.DeleteCommand.Execute()));
             KeyAssignCore.RegisterOperation("Mute", () => ExecTVMAction(vm => vm.MuteCommand.Execute()));

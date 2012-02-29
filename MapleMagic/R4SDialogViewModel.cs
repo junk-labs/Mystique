@@ -68,6 +68,11 @@ namespace MapleMagic
             get { return User.TwitterUser.Bio; }
         }
 
+        public long TweetsCount
+        {
+            get { return User.TwitterUser.Tweets; }
+        }
+
         public long FavoritesCount
         {
             get { return User.TwitterUser.Favorites; }
