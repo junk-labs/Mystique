@@ -15,6 +15,7 @@ using Livet;
 using Livet.Commands;
 using System.Windows.Media;
 using System.Windows;
+using Inscribe.ViewModels.Dialogs.Common;
 
 namespace Inscribe.ViewModels
 {
@@ -59,7 +60,7 @@ namespace Inscribe.ViewModels
         {
             get
             {
-                return Define.ApplicationName + " " + Define.GetFormattedVersion();
+                return Define.ApplicationName + " " + Define.GetFormattedVersion() + (AboutViewModel.IsPremiumStatic ? " [premium]" : "");
             }
         }
 

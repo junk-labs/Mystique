@@ -133,9 +133,6 @@
             </Hyperlink>
             <Run Text="." />
             <LineBreak />
-            <Hyperlink Command="{Binding ShowContributorsCommand}">
-                <Run FontWeight="Bold" Text="Show contributors" />
-            </Hyperlink>
         </TextBlock>
         <TextBlock Margin="0,0,5,25"
                    HorizontalAlignment="Right"
@@ -147,13 +144,13 @@
             </Hyperlink>
             <Run Text="." />
         </TextBlock>
-        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-            <StackPanel.Background>
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <DockPanel.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Offset="0" Color="White" />
                     <GradientStop Offset="1" Color="#E0FFF9" />
                 </LinearGradientBrush>
-            </StackPanel.Background>
+            </DockPanel.Background>
             <StackPanel Orientation="Horizontal" Visibility="{Binding CheckState, ConverterParameter=Checking, Converter={StaticResource StringEqualVisibleConverter}}">
                 <my:Intermediate Margin="2" />
                 <TextBlock Margin="2" Text="Krileの更新を確認しています..." />
@@ -192,7 +189,28 @@
                        Source="{StaticResource Failed}" />
                 <TextBlock Margin="2" Text="更新の確認に失敗しました。しばらく間を置いて、再度お試しください。" />
             </StackPanel>
-        </StackPanel>
+            <Grid HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock Margin="4,2"
+                           FontWeight="Bold"
+                           Visibility="{Binding IsPremium,
+                                                Converter={StaticResource BoolVisibleConverter}}">
+                    <Hyperlink Command="{Binding ShowContributorsCommand}"
+                               Foreground="OrangeRed">
+                        <Run FontWeight="Bold"
+                             Text="You are a Premium user!" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="4,2"
+                           FontWeight="Bold"
+                           Visibility="{Binding IsPremium,
+                                                Converter={StaticResource BoolInvisibleConverter}}">
+                    <Hyperlink Command="{Binding ShowContributorsCommand}">
+                        <Run FontWeight="Bold"
+                             Text="You are not a Premium user." />
+                    </Hyperlink>
+                </TextBlock>
+            </Grid>
+        </DockPanel>
         <ScrollViewer Background="#E0FFFFFF"
                       VerticalScrollBarVisibility="Auto"
                       Visibility="{Binding IsVisibleLicense,
@@ -237,7 +255,8 @@
                 <Run Text="以下の方々を含む多くの方の寄付により、Krileの開発が継続されています。" />
             </TextBlock>
             <DockPanel Background="#66ff9900" DockPanel.Dock="Bottom">
-                <TextBlock DockPanel.Dock="Right"
+                <TextBlock VerticalAlignment="Center"
+                           DockPanel.Dock="Right"
                            Padding="6,4"
                            TextWrapping="Wrap">
                     <Bold>
@@ -246,7 +265,8 @@
                         </Hyperlink>
                     </Bold>
                 </TextBlock>
-                <TextBlock DockPanel.Dock="Bottom"
+                <TextBlock VerticalAlignment="Center"
+                           DockPanel.Dock="Bottom"
                            Padding="6,4"
                            TextWrapping="Wrap">
                     <Bold>

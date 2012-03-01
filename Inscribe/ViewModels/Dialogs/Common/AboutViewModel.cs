@@ -6,19 +6,35 @@ using System.Threading.Tasks;
 using Inscribe.Common;
 using Livet;
 using Livet.Commands;
+using Inscribe.Storage;
 
 namespace Inscribe.ViewModels.Dialogs.Common
 {
     public class AboutViewModel : ViewModel
     {
-        private readonly ContributorViewModel[] contributors = new ContributorViewModel[]{
-            new ContributorViewModel("そらん", "dasoran"),
+        public static readonly ContributorViewModel[] contributors = new ContributorViewModel[]{
+            new ContributorViewModel("かーの", "karno"), // test
             new ContributorViewModel("佐々木＠くっくっ。", "ssk_uo"),
-            new ContributorViewModel("るみぃ", "lummy_ts"),
+            new ContributorViewModel("そらん", "dasoran"),
             new ContributorViewModel("たけしけー", "takeshik"),
-            new ContributorViewModel("凡骨A", "bonkotsua"),
             new ContributorViewModel("ひかりさま", "miz_hi"),
+            new ContributorViewModel("凡骨A", "bonkotsua"),
+            new ContributorViewModel("るみぃ", "lummy_ts"),
         };
+
+        public static bool IsPremiumStatic
+        {
+            get
+            {
+                return AccountStorage.Accounts
+                   .Any(i => AboutViewModel.contributors.Select(c => c.ScreenName).Any(s => s == i.ScreenName));
+            }
+        }
+
+        public bool IsPremium
+        {
+            get { return IsPremiumStatic; }
+        }
 
         public AboutViewModel()
         {
@@ -30,7 +46,9 @@ namespace Inscribe.ViewModels.Dialogs.Common
             get
             {
                 // 順番はランダム
-                return contributors.Shuffle()
+                return contributors
+                    .Skip(1) // 最初は僕なので飛ばす
+                    .Shuffle()
                     .Concat(new[] { new ContributorViewModel("(順不同で掲載しています)") });
             }
         }
@@ -232,7 +250,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
     public class ContributorViewModel
     {
         public string Name { get; private set; }
-        private string screen;
+        public string ScreenName { get; private set; }
 
         public ContributorViewModel(string name, string screen = null)
         {
@@ -240,12 +258,12 @@ namespace Inscribe.ViewModels.Dialogs.Common
                 this.Name = name + "(" + screen + ")";
             else
                 this.Name = name;
-            this.screen = screen;
+            this.ScreenName = screen;
         }
 
         public bool IsLinkEnabled
         {
-            get { return !String.IsNullOrEmpty(screen); }
+            get { return !String.IsNullOrEmpty(ScreenName); }
         }
 
         #region OpenLinkCommand
@@ -267,7 +285,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
         {
             if (IsLinkEnabled)
             {
-                Browser.Start("http://twitter.com/" + screen);
+                Browser.Start("http://twitter.com/" + ScreenName);
             }
 
         }
