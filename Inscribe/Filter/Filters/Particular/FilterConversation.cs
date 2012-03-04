@@ -56,6 +56,8 @@ namespace Inscribe.Filter.Filters.Particular
                     !status.User.ScreenName.Equals(user2, StringComparison.CurrentCultureIgnoreCase))
                     return false;
 
+                // ここおかしい, @が入る
+                // あとユーザー名マッチングを使えるように
                 if (RegularExpressions.AtRegex.Matches(status.Text).Cast<Match>()
                     .Any(m => m.Value.Equals(user1, StringComparison.CurrentCultureIgnoreCase) ||
                         m.Value.Equals(user2, StringComparison.CurrentCultureIgnoreCase)))
