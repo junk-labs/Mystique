@@ -13,7 +13,7 @@ namespace Casket.Resolvers
         {
             if (IsResolvable(url))
             {
-                return "http://image.movapic.com/pic/s_" + url.Substring(23);
+                return "http://image.movapic.com/pic/m_" + url.Substring(23) + ".jpeg";
             }
             else
             {
