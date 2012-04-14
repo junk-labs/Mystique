@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Inscribe.Common;
+using Inscribe.Storage;
 using Livet;
 using Livet.Commands;
-using Inscribe.Storage;
 
 namespace Inscribe.ViewModels.Dialogs.Common
 {
@@ -21,6 +21,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
             new ContributorViewModel("ひかりさま", "miz_hi"),
             new ContributorViewModel("凡骨A", "bonkotsua"),
             new ContributorViewModel("るみぃ", "lummy_ts"),
+            new ContributorViewModel("recov", "recov"),
         };
 
         public static bool IsPremiumStatic
