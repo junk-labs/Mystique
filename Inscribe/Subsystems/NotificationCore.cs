@@ -160,27 +160,48 @@ namespace Inscribe.Subsystems
             {
                 DispatcherHelper.BeginInvoke(() =>
                 {
-                    if (Setting.Instance.NotificationProperty.WindowNotificationStrategy == Configuration.Settings.NotificationStrategy.OnlyInactive &&
-                        Application.Current.MainWindow.IsActive)
-                        return;
-                    var nvm = new NotificationViewModel(
-                        Core.KernelService.MainWindowViewModel,
-                        source,
-                        target,
-                        text,
-                        eventKind);
-                    Core.KernelService.MainWindowViewModel.Messenger.Raise(
-                        new TransitionMessage(nvm, TransitionMode.Normal, "Notification"));
+                    try
+                    {
+                        if (Setting.Instance.NotificationProperty.WindowNotificationStrategy == Configuration.Settings.NotificationStrategy.OnlyInactive &&
+                            Application.Current.MainWindow.IsActive)
+                            return;
+                    }
+                    catch (NullReferenceException nrex)
+                    {
+                        throw new NullReferenceException("Rewrap(BEFORE-1)", nrex);
+                    }
+                    try
+                    {
+                        var nvm = new NotificationViewModel(
+                            Core.KernelService.MainWindowViewModel,
+                            source,
+                            target,
+                            text,
+                            eventKind);
+                        Core.KernelService.MainWindowViewModel.Messenger.Raise(
+                            new TransitionMessage(nvm, TransitionMode.Normal, "Notification"));
+                    }
+                    catch (NullReferenceException nrex)
+                    {
+                        throw new NullReferenceException("Rewrap(BEFORE-2)", nrex);
+                    }
                 });
             }
             if (Setting.Instance.NotificationProperty.SoundNotificationStrategy != Configuration.Settings.NotificationStrategy.Disabled)
             {
                 DispatcherHelper.BeginInvoke(() =>
                 {
-                    if (Setting.Instance.NotificationProperty.SoundNotificationStrategy == Configuration.Settings.NotificationStrategy.OnlyInactive &&
-                        Application.Current.MainWindow.IsActive)
-                        return;
-                    PlaySound(eventKind, soundPath);
+                    try
+                    {
+                        if (Setting.Instance.NotificationProperty.SoundNotificationStrategy == Configuration.Settings.NotificationStrategy.OnlyInactive &&
+                            Application.Current.MainWindow.IsActive)
+                            return;
+                        PlaySound(eventKind, soundPath);
+                    }
+                    catch (NullReferenceException nrex)
+                    {
+                        throw new NullReferenceException("Rewrap (AFTER)", nrex);
+                    }
                 }, System.Windows.Threading.DispatcherPriority.Background);
             }
         }
