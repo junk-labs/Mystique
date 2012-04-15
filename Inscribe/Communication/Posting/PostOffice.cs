@@ -618,13 +618,17 @@ namespace Inscribe.Communication.Posting
 
         private static AccountInfo CheckFallback(AccountInfo d)
         {
+            if (d == null)
+                throw new ArgumentNullException("d");
             AccountInfo origin = d;
-            while (Setting.Instance.InputExperienceProperty.OfficialRetweetFallback &&
+            while (
+                Setting.Instance.InputExperienceProperty.OfficialRetweetFallback &&
                 IsAccountUnderControlled(d) &&
                 !String.IsNullOrEmpty(d.AccountProperty.FallbackAccount))
             {
                 var fallback = AccountStorage.Get(d.AccountProperty.FallbackAccount);
-                if (fallback == origin) break;
+                if (fallback == null || fallback == origin)
+                    break;
                 d = fallback;
             }
             return d;
