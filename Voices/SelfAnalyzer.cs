@@ -19,6 +19,12 @@ namespace Voices
                     "(ERR: FileOrDirNotFound)";
             }
 
+            if (error.Contains("BadImageFormatException"))
+            {
+                return "Krileのアプリケーション バイナリが壊れています。" + Environment.NewLine +
+                    "Krile 公式サイトより最新版をダウンロードして上書きしてみてください。" + Environment.NewLine +
+                    "(ERR: BadImageFormat)";
+            }
 
             if (error.Contains("KrilePluginException"))
             {
@@ -28,6 +34,7 @@ namespace Voices
                     "Krile 公式サイトより最新版をダウンロードして上書きしてみてください。" + Environment.NewLine +
                     "(ERR: PluginAsserted)";
             }
+
             if (error.Contains("System.MissingMethodException") ||
                 error.Contains("System.MissingFieldException"))
             {
@@ -36,6 +43,13 @@ namespace Voices
                     "それでも起動しない場合は、Krileのファイル構成が壊れている可能性があります。" + Environment.NewLine +
                     "Krile 公式サイトより最新版をダウンロードして上書きしてみてください。" + Environment.NewLine +
                     "(ERR: MissingFieldOrMethod)";
+            }
+
+            if (error.Contains("System.OutOfmemoryException"))
+            {
+                return "メモリ領域を確保できませんでした。" + Environment.NewLine +
+                    "メモリを食べ尽くしました。ごめんなさい。" + Environment.NewLine +
+                    "(ERR: OutOfMemory)";
             }
 
             List<String> errors = new List<string>();

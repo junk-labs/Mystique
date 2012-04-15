@@ -638,6 +638,8 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         private void OpenDMConversation()
         {
+            if (!this.Tweet.IsDirectMessage)
+                return;
             var filter = new[] { new FilterConversation(this.Tweet.Status.User.ScreenName, ((TwitterDirectMessage)this.Tweet.Status).Recipient.ScreenName) };
             var description = "DM:@" + this.Tweet.Status.User.ScreenName + "&@" + ((TwitterDirectMessage)this.Tweet.Status).Recipient.ScreenName;
             switch (Setting.Instance.TimelineExperienceProperty.ConversationTransition)
