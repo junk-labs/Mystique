@@ -43,7 +43,14 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
             nivm.RequireClose += (no, ne) => _notifications.Remove(nivm);
             _notifications.Add(nivm);
             Task.Factory.StartNew(() => Thread.Sleep(Setting.Instance.ExperienceProperty.TwitterActionNotifyShowLength))
-                .ContinueWith(_ => _notifications.Remove(nivm));
+                .ContinueWith(_ =>
+                {
+                    try
+                    {
+                        _notifications.Remove(nivm);
+                    }
+                    catch { }
+                });
 
         }
 
