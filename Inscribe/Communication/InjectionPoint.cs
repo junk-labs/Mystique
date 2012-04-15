@@ -20,7 +20,7 @@ namespace Inscribe.Communication
             List<IEnumerable<TwitterStatusBase>> cache = new List<IEnumerable<TwitterStatusBase>>();
             for (int i = 0; i < maxDepth; i++)
             {
-                var status = ApiHelper.ExecApi(() => reader(i)).OrderByDescending(t => t.CreatedAt);
+                var status = ApiHelper.ExecApi(() => reader(i)).Guard().OrderByDescending(t => t.CreatedAt);
                 cache.Add(status);
                 if (status.Count() < lengthThreshold)
                     break;

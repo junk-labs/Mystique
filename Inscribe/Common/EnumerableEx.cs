@@ -76,6 +76,14 @@ namespace System.Linq
             yield return buffer;
         }
 
+        public static IEnumerable<T> Guard<T>(this IEnumerable<T> collection)
+        {
+            if (collection == null)
+                return new T[0];
+            else
+                return collection;
+        }
+
         public static IEnumerable<T> Guard<T>(this IEnumerable<T> collection, Func<bool> guard)
         {
             if (!guard())
