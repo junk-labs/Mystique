@@ -77,9 +77,9 @@ namespace Inscribe.Communication.Posting
 
             try
             {
-                var recvs = ApiHelper.ExecApi(() => info.GetUserTimeline(count: 150, includeRts: true));
-                if (recvs != null)
-                    recvs.ForEach(i => TweetStorage.Register(i));
+                ApiHelper.ExecApi(() => info.GetUserTimeline(count: 150, includeRts: true))
+                    .Guard()
+                    .ForEach(i => TweetStorage.Register(i));
 
                 notify.Message = "[規制管理:規制開始時刻を割り出しています...]";
 
