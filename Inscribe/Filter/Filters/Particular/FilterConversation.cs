@@ -59,10 +59,10 @@ namespace Inscribe.Filter.Filters.Particular
                 // ここおかしい, @が入る
                 // あとユーザー名マッチングを使えるように
                 if (RegularExpressions.AtRegex.Matches(status.Text).Cast<Match>()
-                    .Any(m => m.Value.Equals(user1, StringComparison.CurrentCultureIgnoreCase) ||
-                        m.Value.Equals(user2, StringComparison.CurrentCultureIgnoreCase)))
+                    .Any(m => m.Value.Equals("@" + user1, StringComparison.CurrentCultureIgnoreCase) ||
+                        m.Value.Equals("@" + user2, StringComparison.CurrentCultureIgnoreCase)))
                     return true;
-                if (vm.InReplyFroms.Select(id => TweetStorage.Get(id))
+                if (vm != null && vm.InReplyFroms.Select(id => TweetStorage.Get(id))
                     .Where(irvm => irvm != null)
                     .Any(irvm => irvm.Status.User.ScreenName.Equals(user1, StringComparison.CurrentCultureIgnoreCase) ||
                         irvm.Status.User.ScreenName.Equals(user2, StringComparison.CurrentCultureIgnoreCase)))
