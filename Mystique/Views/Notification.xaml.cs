@@ -58,8 +58,6 @@ namespace Mystique.Views
             {
                 if (Setting.Instance.NotificationProperty.ShowMultiple)
                 {
-                    try
-                    {
                         // ウィンドウ最大表示数を数える
                         // Height = (48 + 10) * x
                         // Margin:10px
@@ -70,10 +68,18 @@ namespace Mystique.Views
 
                         if (offsetIndex == -1)
                         {
-                            // overflow
-                            offsetIndex = Enumerable.Range(0, (int)(screen.WorkingArea.Height / 58))
-                                .OrderBy(i => notifications[i].CreateDateTime).First();
-                            notifications[offsetIndex].Close();
+                            try
+                            {
+                                // overflow
+                                offsetIndex = Enumerable.Range(0, (int)(screen.WorkingArea.Height / 58))
+                                    .OrderBy(i => notifications[i].CreateDateTime).First();
+                                notifications[offsetIndex].Close();
+                            }
+                            catch
+                            {
+                                // undefined 
+                                offsetIndex = 0;
+                            }
                         }
 
                         if (offsetIndex == notifications.Count)
@@ -84,11 +90,6 @@ namespace Mystique.Views
                         {
                             notifications[offsetIndex] = this;
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new ArgumentOutOfRangeException("Debug?::NI::" + offsetIndex.ToString() + "/" + notifications.Count.ToString(), ex);
-                    }
                 }
                 else
                 {

@@ -16,7 +16,7 @@ namespace Inscribe.Filter.Filters.Particular
         [GuiVisible("検索@ID", "自分のアカウントのみ有効")]
         public string Needle
         {
-            get { return this.needle; }
+            get { return this.needle ?? String.Empty; }
             set
             {
                 if (this.needle == value) return;
@@ -78,7 +78,7 @@ namespace Inscribe.Filter.Filters.Particular
 
         public override IEnumerable<object> GetArgumentsForQueryify()
         {
-            yield return needle;
+            yield return Needle;
         }
 
         public override string Description
