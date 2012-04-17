@@ -8,6 +8,7 @@ using Inscribe.ViewModels.Common;
 using System.Windows.Data;
 using Inscribe.Algorithm.DPMatching;
 using Inscribe;
+using Livet;
 
 namespace Mystique.Views.Common
 {
@@ -229,7 +230,16 @@ namespace Mystique.Views.Common
                     {
                         // 最も近いものを選択する
                         string cstr;
-                        this.intelliSenseList.SelectedIndex = GetNearestIndex(ctoken, out cstr);
+                        var nearidx = GetNearestIndex(ctoken, out cstr);
+                        if (nearidx == -1)
+                        {
+                            this.intelliSenseList.SelectedIndex = 0;
+                            DispatcherHelper.BeginInvoke(() => this.intelliSenseList.SelectedIndex = -1);
+                        }
+                        else
+                        {
+                            this.intelliSenseList.SelectedIndex = nearidx;
+                        }
                     }
                 }
             }

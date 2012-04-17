@@ -36,7 +36,7 @@ namespace Inscribe
         {
             get
             {
-                return GetVersion().FilePrivatePart > 1;
+                return GetVersion().FilePrivatePart >= 1;
             }
         }
 
