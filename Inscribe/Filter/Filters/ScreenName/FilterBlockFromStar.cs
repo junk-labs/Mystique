@@ -22,7 +22,7 @@ namespace Inscribe.Filter.Filters.ScreenName
 
         public override string FilterStateString
         {
-            get { return FilterStateString + "*"; }
+            get { return base.FilterStateString + "*"; }
         }
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)

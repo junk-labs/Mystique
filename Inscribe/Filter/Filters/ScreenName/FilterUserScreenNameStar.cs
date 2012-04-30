@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Inscribe.Common;
 
 namespace Inscribe.Filter.Filters.ScreenName
@@ -31,7 +28,7 @@ namespace Inscribe.Filter.Filters.ScreenName
 
         public override string FilterStateString
         {
-            get { return FilterStateString + "*"; }
+            get { return base.FilterStateString + "*"; }
         }
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)

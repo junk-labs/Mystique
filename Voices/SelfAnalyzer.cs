@@ -45,12 +45,22 @@ namespace Voices
                     "(ERR: MissingFieldOrMethod)";
             }
 
-            if (error.Contains("System.OutOfmemoryException"))
+            if (error.Contains("System.OutOfMemoryException"))
             {
                 return "メモリ領域を確保できませんでした。" + Environment.NewLine +
                     "メモリを食べ尽くしました。ごめんなさい。" + Environment.NewLine +
                     "(ERR: OutOfMemory)";
             }
+
+            /* 逃げの一手
+            if (error.Contains("System.InvalidOperationException") &&
+                error.Contains("BindingExpression"))
+            {
+                return "WPF 内部エラーが発生しました。" + Environment.NewLine +
+                    "お手数ですがKrileを再起動してください。" + Environment.NewLine +
+                    "(ERR: BindingExpression)";
+            }
+            */
 
             List<String> errors = new List<string>();
             if (error.Contains("MS.Internal.Documents.UndoManager.Close(IParentUndoUnit unit, UndoCloseAction closeAction)"))

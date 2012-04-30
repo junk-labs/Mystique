@@ -14,7 +14,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
     {
         public static readonly ContributorViewModel[] contributors = new ContributorViewModel[]{
             new ContributorViewModel("かーの", "karno"), // test, first element will be skiped.
-            new ContributorViewModel("佐々木＠くっくっ。", "ssk_uo"),
+            new ContributorViewModel("佐々木＠くっくっ。", "ssk_prd"),
             new ContributorViewModel("しろつめ", "shirotsume_jp"),
             new ContributorViewModel("そらん", "dasoran"),
             new ContributorViewModel("たけしけー", "takeshik"),

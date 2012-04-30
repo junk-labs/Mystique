@@ -30,7 +30,7 @@ namespace Inscribe.Filter.Filters.Text
 
         public override string FilterStateString
         {
-            get { return FilterStateString + "*"; }
+            get { return base.FilterStateString + "*"; }
         }
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
