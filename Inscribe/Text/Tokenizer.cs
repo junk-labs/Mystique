@@ -29,7 +29,8 @@ namespace Inscribe.Text
         public static IEnumerable<Token> Tokenize(string raw)
         {
             if (String.IsNullOrEmpty(raw)) yield break;
-            var escaped = Escape(raw);
+            // escape exact.
+            var escaped = Escape(Unescape(raw));
             escaped = RegularExpressions.UrlRegex.Replace(escaped, (m) =>
             {
                 // # => &sharp; (ハッシュタグで再識別されることを防ぐ)
