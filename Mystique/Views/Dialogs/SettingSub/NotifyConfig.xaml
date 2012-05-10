@@ -6,23 +6,7 @@
              d:DesignHeight="300"
              d:DesignWidth="400"
              mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <StackPanel Orientation="Vertical">
         <CheckBox Margin="4,2"
                   Content="新しくタブを作った時、そのタブの通知をオンにする(_E)"
                   IsChecked="{Binding TabNotifyEnabledAsDefault}" />
@@ -85,5 +69,10 @@
                 <ComboBoxItem Content="鳴らさない" />
             </ComboBox>
         </Grid>
-    </Grid>
+        <CheckBox Margin="4,2"
+                  Content="インビジブルなんとかを有効にする(_E)"
+                  IsChecked="{Binding IsInvisibleSomethingEnabled}"
+                  Visibility="{Binding IsTranscender,
+                                       Converter={StaticResource BoolVisibleConverter}}" />
+    </StackPanel>
 </UserControl>

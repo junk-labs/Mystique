@@ -30,7 +30,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
             get
             {
                 return AccountStorage.Accounts
-                   .Any(i => AboutViewModel.contributors.Select(c => c.ScreenName).Any(s => s == i.ScreenName));
+                   .Any(i => AboutViewModel.contributors.Select(c => c.ScreenName).Any(s => s.Equals(i.ScreenName, StringComparison.CurrentCultureIgnoreCase)));
             }
         }
 

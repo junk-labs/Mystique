@@ -61,6 +61,8 @@ namespace Inscribe.ViewModels.PartBlocks.BlockCommon
                     case EventKind.Mention:
                     case EventKind.DirectMessage:
                         return description.TargetTweet.Status.Text;
+                    case EventKind.Suppressed:
+                        return "インビジブルなんとか 発動！！";
                     default:
                         try
                         {

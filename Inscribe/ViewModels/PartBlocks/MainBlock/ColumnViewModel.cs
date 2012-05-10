@@ -173,7 +173,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             return this._tabItems.Contains(tabViewModel);
         }
 
-
         #region DragDropStartCommand
         ViewModelCommand _DragDropStartCommand;
 
@@ -421,7 +420,6 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
             this.Messenger.Raise(new TransitionMessage("ShowTabQuickBuilder"));
         }
         #endregion
-
 
         private TabProperty ShowTabEditor(TabProperty property = null)
         {

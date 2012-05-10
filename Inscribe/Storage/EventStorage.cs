@@ -6,11 +6,18 @@ using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild;
 using Livet;
 using Inscribe.Common;
+using Dulcet.Twitter;
+using Inscribe.Configuration;
 
 namespace Inscribe.Storage
 {
     public static class EventStorage
     {
+        static EventStorage()
+        {
+            InitInvisibleSomething();
+        }
+
         static DateTime wakeupTime = DateTime.Now;
 
         private static SafeLinkedList<EventDescription> events = new SafeLinkedList<EventDescription>();
@@ -26,7 +33,7 @@ namespace Inscribe.Storage
             OnEventChanged(EventArgs.Empty);
         }
 
-        private static void Register(EventDescription description)
+        private static void Register(EventDescription description, bool enforceRaise = false)
         {
             // check is muted
             if ((description.TargetTweet != null && FilterHelper.IsMuted(description.TargetTweet.Status)) ||
@@ -35,7 +42,9 @@ namespace Inscribe.Storage
                 return;
             events.AddLast(description);
             OnEventChanged(EventArgs.Empty);
-            OnEventRegistered(new EventDescriptionEventArgs(description));
+            if (enforceRaise ||
+                !Setting.Instance.NotificationProperty.IsInvisibleSomethingEnabled || !IsBlacklisted(description.SourceUser.TwitterUser))
+                OnEventRegistered(new EventDescriptionEventArgs(description));
         }
 
         #region EventRegisteredイベント
@@ -135,6 +144,61 @@ namespace Inscribe.Storage
             Register(new EventDescription(EventKind.DirectMessage,
                 UserStorage.Get(tweet.Status.User), null, tweet));
         }
+
+        #region InvisibleSomething
+
+        // インビジブルなんとかの実装
+
+        private static object listLock = new object();
+
+        const int BLACKLIST_THRESHOLD = 3;
+
+        private static Dictionary<long, int> eventRaiseCountDictionary = new Dictionary<long, int>();
+
+        private static List<long> blacklistedUserIds = new List<long>();
+
+        private static Timer eventCountInitTimer;
+
+        private static Timer blacklistInitTimer;
+
+        private static void InitInvisibleSomething()
+        {
+            eventCountInitTimer = new Timer(
+                _ => { lock (listLock) { eventRaiseCountDictionary.Clear(); } },
+                null,
+                TimeSpan.FromSeconds(0),
+                TimeSpan.FromSeconds(3));
+            blacklistInitTimer = new Timer(
+                _ => { lock (listLock) { blacklistedUserIds.Clear(); } },
+                null,
+                TimeSpan.FromSeconds(0),
+                TimeSpan.FromSeconds(30));
+        }
+
+        private static bool IsBlacklisted(TwitterUser user)
+        {
+            lock (listLock)
+            {
+                if (eventRaiseCountDictionary.ContainsKey(user.NumericId))
+                    eventRaiseCountDictionary[user.NumericId]++;
+                else
+                    eventRaiseCountDictionary.Add(user.NumericId, 1);
+                if (blacklistedUserIds.Contains(user.NumericId))
+                    return true;
+                if (eventRaiseCountDictionary[user.NumericId] >= BLACKLIST_THRESHOLD)
+                {
+                    blacklistedUserIds.Add(user.NumericId);
+                    Register(new EventDescription(EventKind.Suppressed, new UserViewModel(user), null), true);
+                    return true;
+                }
+                else
+                {
+                    // OK
+                    return false;
+                }
+            }
+        }
+        #endregion
     }
 
     public class EventDescription
@@ -168,7 +232,8 @@ namespace Inscribe.Storage
         Unfollow,
         Mention,
         DirectMessage,
-        Undefined
+        Undefined,
+        Suppressed,
     }
 
     public class EventDescriptionEventArgs : EventArgs

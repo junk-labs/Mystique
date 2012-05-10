@@ -55,6 +55,8 @@ namespace Inscribe.Configuration.Settings
         public bool AutoUniquify { get; set; }
 
         public bool EnableFavoriteFallback { get; set; }
+
+        public bool UseDpMatching { get; set; }
     }
 
     public class HashtagAutoBindDescription

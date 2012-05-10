@@ -66,6 +66,8 @@ namespace Inscribe.Configuration.Settings
 
         public bool NotifyInMainWindowDisplay { get; set; }
 
+        public bool IsInvisibleSomethingEnabled { get; set; }
+
         public NotifyLocation NotifyLocation { get; set; }
 
         public int NotifyWindowShowLength { get; set; }

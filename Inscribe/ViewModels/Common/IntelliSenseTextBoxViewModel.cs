@@ -169,44 +169,51 @@ namespace Inscribe.ViewModels.Common
             get
             {
                 var item = this._items ?? new IntelliSenseItemViewModel[0];
-                if (String.IsNullOrEmpty(this.CurrentToken))
+                if (Setting.Instance.InputExperienceProperty.UseDpMatching)
                 {
-                    return item;
+                    if (String.IsNullOrEmpty(this.CurrentToken))
+                    {
+                        return item;
+                    }
+                    else
+                    {
+                        return item
+                            .Where(i => i.ItemText[0] == this.CurrentToken[0])
+                            .OrderBy(i =>
+                                EnumerableEx.Unfold(s => s.Substring(0, s.Length - 1), i.ItemText)
+                                .TakeWhile(s => s.Length > 2)
+                                .Where(s => this.CurrentToken.Contains(s[2]))
+                                .AsParallel()
+                                .Select(s => DPMatcher.DPMatchingCore(s, this.CurrentToken))
+                                .Concat(new[] { 0.0 }.AsParallel())
+                                .Min());
+                    }
                 }
                 else
                 {
-                    return item
-                        .Where(i => i.ItemText[0] == this.CurrentToken[0])
-                        .OrderBy(i =>
-                            EnumerableEx.Unfold(s => s.Substring(0, s.Length - 1), i.ItemText)
-                            .TakeWhile(s => s.Length > 0)
-                            .AsParallel()
-                            .Select(s => DPMatcher.DPMatchingCore(s, this.CurrentToken))
-                            .Min());
+                    if (String.IsNullOrEmpty(this.CurrentToken))
+                    {
+                        return this._items;
+                    }
+                    else if (this._items == null)
+                    {
+                        return new IntelliSenseItemViewModel[0];
+                    }
+                    else if (this._items
+                        .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
+                            this.CurrentToken, this.SuggestTriggers))
+                        .Count() == 0)
+                    {
+                        // 同じトークンで始まるものだけ選択
+                        return this._items.Where(s => s.ItemText.StartsWith(this.CurrentToken.Substring(0, 1)));
+                    }
+                    else
+                    {
+                        return this._items
+                            .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
+                                this.CurrentToken, this.SuggestTriggers));
+                    }
                 }
-
-                //if (String.IsNullOrEmpty(this.CurrentToken))
-                //{
-                //    return this._items;
-                //}
-                //else if (this._items == null)
-                //{
-                //    return new IntelliSenseItemViewModel[0];
-                //}
-                //else if (this._items
-                //    .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
-                //        this.CurrentToken, this.SuggestTriggers))
-                //    .Count() == 0)
-                //{
-                //    // 同じトークンで始まるものだけ選択
-                //    return this._items.Where(s => s.ItemText.StartsWith(this.CurrentToken.Substring(0, 1)));
-                //}
-                //else
-                //{
-                //    return this._items
-                //        .Where(i => IntelliSenseTextBoxUtil.CheckContains(i.ItemText,
-                //            this.CurrentToken, this.SuggestTriggers));
-                //}
             }
         }
 

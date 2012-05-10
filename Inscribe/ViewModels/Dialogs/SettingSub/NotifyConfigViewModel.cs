@@ -20,6 +20,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             this._notifyLocationIndex = (int)Setting.Instance.NotificationProperty.NotifyLocation;
             this._windowNotificationStrategyIndex = (int)Setting.Instance.NotificationProperty.WindowNotificationStrategy;
             this._soundNotificationStrategyIndex = (int)Setting.Instance.NotificationProperty.SoundNotificationStrategy;
+
+            this.IsInvisibleSomethingEnabled = Setting.Instance.NotificationProperty.IsInvisibleSomethingEnabled;
         }
 
         private bool _tabNotifyEnabledAsDefault;
@@ -88,6 +90,16 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             }
         }
 
+        private bool _isInvisibleSomethingEnabled;
+        public bool IsInvisibleSomethingEnabled
+        {
+            get { return _isInvisibleSomethingEnabled; }
+            set
+            {
+                _isInvisibleSomethingEnabled = value;
+                RaisePropertyChanged(() => IsInvisibleSomethingEnabled);
+            }
+        }
 
         public void Apply()
         {
@@ -98,7 +110,8 @@ namespace Inscribe.ViewModels.Dialogs.SettingSub
             Setting.Instance.NotificationProperty.NotifyLocation = (NotifyLocation)this._notifyLocationIndex;
             Setting.Instance.NotificationProperty.WindowNotificationStrategy = (NotificationStrategy)this._windowNotificationStrategyIndex;
             Setting.Instance.NotificationProperty.SoundNotificationStrategy = (NotificationStrategy)this._soundNotificationStrategyIndex;
-        }
 
+            Setting.Instance.NotificationProperty.IsInvisibleSomethingEnabled = this.IsInvisibleSomethingEnabled;
+        }
     }
 }
