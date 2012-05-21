@@ -59,7 +59,7 @@ namespace Dulcet.Util
 
         public static string ParseString(this XElement e)
         {
-            return e == null ? null : e.Value.Replace("&lt;", "<").Replace("&gt;", ">");
+            return e == null ? null : e.Value.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
         }
 
         public static bool ParseBool(this XElement e)
