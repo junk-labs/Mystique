@@ -24,6 +24,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
             new ContributorViewModel("recov", "recov"),
             new ContributorViewModel("Hotspring", "hotspring_r"),
             new ContributorViewModel("アリサ", "ALYSSA_MNSN"),
+            new ContributorViewModel("下呂子", "Geroko"),
         };
 
         public static bool IsPremiumStatic
