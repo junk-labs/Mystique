@@ -44,6 +44,7 @@
     <Compile Include="Network\Http.cs" />
     <Compile Include="Network\WebResult.cs" />
     <Compile Include="ThirdParty\TwitPicApi.cs" />
+    <Compile Include="ThirdParty\YFrogApi.cs" />
     <Compile Include="Twitter\Credential\CredentialProvider.cs" />
     <Compile Include="Twitter\Credential\OAuth.cs" />
     <Compile Include="Twitter\Rest\ApiBase.cs" />

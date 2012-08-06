@@ -51,9 +51,9 @@
     <Compile Include="Resolvers\Plixi.cs" />
     <Compile Include="Resolvers\Twipple.cs" />
     <Compile Include="Resolvers\ViaMe.cs" />
-    <Compile Include="Resolvers\YFrog.cs" />
     <Compile Include="Shorteners\UxNu.cs" />
     <Compile Include="Uploaders\TwitPic.cs" />
+    <Compile Include="Uploaders\YFrog.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Acuerdo\Acuerdo.csproj">

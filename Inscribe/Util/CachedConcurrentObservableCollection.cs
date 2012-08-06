@@ -92,7 +92,6 @@ namespace Inscribe.Util
             return add;
         }
 
-
         public bool AddLastSingle(T item)
         {
             bool add = true;

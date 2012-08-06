@@ -4,15 +4,14 @@ using Dulcet.Twitter.Credential;
 
 namespace Casket.Uploaders
 {
-    public class TwitPic : IUploader
+    public class YFrog : IUploader
     {
-        private static string _appkey = "f4e98ee376dc3e692342b6add361608d";
-
+        private static string _appkey = "238DGHOTa6a8f8356246fb3d3e9c7dae65cb3970";
 
         public string UploadImage(OAuth credential, string path, string comment)
         {
             string url;
-            if (!credential.UploadToTwitpic(_appkey, comment, path, out url))
+            if (!credential.UploadToYFrog(_appkey, path, out url))
             {
                 return null;
             }
@@ -24,24 +23,20 @@ namespace Casket.Uploaders
 
         public string ServiceName
         {
-            get { return "TwitPic"; }
+            get { return "YFrog"; }
         }
 
         public bool IsResolvable(string url)
         {
-            return url.StartsWith("http://twitpic.com/");
+            return url.StartsWith("http://yfrog.com/");
         }
 
         public string Resolve(string url)
         {
             if (IsResolvable(url))
-            {
-                return "http://twitpic.com/show/full/" + url.Substring(19);
-            }
+                return url + ":medium";
             else
-            {
                 return null;
-            }
         }
     }
 }
