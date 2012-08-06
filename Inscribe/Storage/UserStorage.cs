@@ -13,17 +13,17 @@ namespace Inscribe.Storage
     public static class UserStorage
     {
         private static ReaderWriterLockWrap lockWrap;
-        private static Dictionary<long, UserViewModel> dictionary;
+        private static SortedDictionary<long, UserViewModel> dictionary;
         private static object semaphoreAccessLocker = new object();
-        private static Dictionary<string, ManualResetEvent> strSemaphores;
-        private static Dictionary<long, ManualResetEvent> numSemaphores;
+        private static SortedDictionary<string, ManualResetEvent> strSemaphores;
+        private static SortedDictionary<long, ManualResetEvent> numSemaphores;
 
         static UserStorage()
         {
             lockWrap = new ReaderWriterLockWrap();
-            dictionary = new Dictionary<long, UserViewModel>();
-            strSemaphores = new Dictionary<string,ManualResetEvent>();
-            numSemaphores = new Dictionary<long,ManualResetEvent>();
+            dictionary = new SortedDictionary<long, UserViewModel>();
+            strSemaphores = new SortedDictionary<string, ManualResetEvent>();
+            numSemaphores = new SortedDictionary<long, ManualResetEvent>();
         }
 
         /// <summary>

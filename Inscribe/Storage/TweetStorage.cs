@@ -37,7 +37,7 @@ namespace Inscribe.Storage
         /// <summary>
         /// 登録済みステータスディクショナリ
         /// </summary>
-        static Dictionary<long, TweetViewModel> dictionary = new Dictionary<long, TweetViewModel>();
+        static SortedDictionary<long, TweetViewModel> dictionary = new SortedDictionary<long, TweetViewModel>();
 
         static ReaderWriterLockWrap vmLockWrap = new ReaderWriterLockWrap(LockRecursionPolicy.NoRecursion);
         /// <summary>
@@ -53,7 +53,7 @@ namespace Inscribe.Storage
         /// <summary>
         /// 仮登録ステータスディクショナリ
         /// </summary>
-        static Dictionary<long, TweetViewModel> empties = new Dictionary<long, TweetViewModel>();
+        static SortedDictionary<long, TweetViewModel> empties = new SortedDictionary<long, TweetViewModel>();
 
         /// <summary>
         /// 削除予約されたツイートIDリスト

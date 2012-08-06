@@ -153,7 +153,7 @@ namespace Inscribe.Storage
 
         const int BLACKLIST_THRESHOLD = 3;
 
-        private static Dictionary<long, int> eventRaiseCountDictionary = new Dictionary<long, int>();
+        private static SortedDictionary<long, int> eventRaiseCountDictionary = new SortedDictionary<long, int>();
 
         private static List<long> blacklistedUserIds = new List<long>();
 
