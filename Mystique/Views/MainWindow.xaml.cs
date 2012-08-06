@@ -1,11 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using Inscribe;
+using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Core;
 using Inscribe.Subsystems;
 using Inscribe.Subsystems.KeyAssign;
-using Inscribe;
-using System;
-using Inscribe.Common;
 
 namespace Mystique.Views
 {

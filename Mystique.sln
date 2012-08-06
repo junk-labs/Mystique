@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapleMagic", "MapleMagic\Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SookIkemen", "SookIkemen\SookIkemen.csproj", "{68FCFA6A-199C-4FAF-8E61-972934DA2CC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SweetLady", "SweetLady\SweetLady.csproj", "{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -181,6 +183,18 @@ Global
 		{68FCFA6A-199C-4FAF-8E61-972934DA2CC4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{68FCFA6A-199C-4FAF-8E61-972934DA2CC4}.Release|x64.ActiveCfg = Release|Any CPU
 		{68FCFA6A-199C-4FAF-8E61-972934DA2CC4}.Release|x86.ActiveCfg = Release|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Release|x64.ActiveCfg = Release|Any CPU
+		{E7D6D10B-1688-451A-BF94-B4F6A9A16CFB}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
