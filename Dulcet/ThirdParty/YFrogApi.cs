@@ -5,6 +5,8 @@ using System.Xml.Linq;
 using Dulcet.Network;
 using Dulcet.Twitter.Credential;
 using Dulcet.Util;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace Dulcet.ThirdParty
 {
@@ -19,14 +21,14 @@ namespace Dulcet.ThirdParty
         {
             url = null;
             var doc = provider.UploadToYFrog(apiKey, mediaFilePath);
-            if (doc == null || doc.Element("rsp") == null)
+            try
+            {
+                url = doc.Element("root").Element("rsp").Element("mediaurl").ParseString();
+                return true;
+            }
+            catch
             {
                 return false;
-            }
-            else
-            {
-                url = doc.Element("rsp").Element("mediaurl").ParseString();
-                return true;
             }
         }
 
@@ -44,7 +46,14 @@ namespace Dulcet.ThirdParty
             sd.Add(new SendData("key", apiKey));
             sd.Add(new SendData("media", file: mediaFilePath));
 
-            var doc = Http.WebUpload<XDocument>(req, sd, Encoding.UTF8, (s) => XDocument.Load(s));
+            var doc = Http.WebUpload<XDocument>(req, sd, Encoding.UTF8, (s) =>
+            {
+                using (var json = JsonReaderWriterFactory.CreateJsonReader(s,
+                    System.Xml.XmlDictionaryReaderQuotas.Max))
+                {
+                    return XDocument.Load(json);
+                }
+            });
             if (doc.ThrownException != null)
                 throw doc.ThrownException;
             if (doc.Succeeded == false)
