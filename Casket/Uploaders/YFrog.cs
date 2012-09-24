@@ -28,13 +28,13 @@ namespace Casket.Uploaders
 
         public bool IsResolvable(string url)
         {
-            return url.StartsWith("http://yfrog.com/");
+            return url.StartsWith("http://yfrog.com/") || url.StartsWith("http://twitter.yfrog.com/");
         }
 
         public string Resolve(string url)
         {
             if (IsResolvable(url))
-                return url + ":medium";
+                return url.Replace("twitter.", "") + ":medium";
             else
                 return null;
         }
