@@ -21,7 +21,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
             new ContributorViewModel("ひかりさま", "miz_hi"),
             new ContributorViewModel("凡骨A", "bonkotsua"),
             new ContributorViewModel("るみぃ", "lummy_ts"),
-            new ContributorViewModel("recov", "recov"),
+            new ContributorViewModel("れこー", "recov"),
             new ContributorViewModel("Hotspring", "hotspring_r"),
             new ContributorViewModel("アリサ", "ALYSSA_MNSN"),
             new ContributorViewModel("下呂子", "Geroko"),
