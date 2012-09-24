@@ -43,13 +43,16 @@
   <ItemGroup>
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resolvers\Droplr.cs" />
     <Compile Include="Resolvers\Gyazo.cs" />
     <Compile Include="Resolvers\Imgly.cs" />
     <Compile Include="Resolvers\Instagram.cs" />
     <Compile Include="Resolvers\MovaPic.cs" />
     <Compile Include="Resolvers\Pckles.cs" />
+    <Compile Include="Resolvers\Photozou.cs" />
     <Compile Include="Resolvers\Plixi.cs" />
     <Compile Include="Resolvers\Twipple.cs" />
+    <Compile Include="Resolvers\Twitgoo.cs" />
     <Compile Include="Resolvers\ViaMe.cs" />
     <Compile Include="Shorteners\UxNu.cs" />
     <Compile Include="Uploaders\TwitPic.cs" />
