@@ -31,10 +31,10 @@ namespace Dulcet.Twitter.Rest
                 para.Add(new KeyValuePair<string, string>("page", page.ToString()));
 
             if (includeRts != null && includeRts.Value)
-                para.Add(new KeyValuePair<string, string>("includeRts", "true"));
+                para.Add(new KeyValuePair<string, string>("include_rts", "true"));
 
             if (includeEntities != null && includeEntities.Value)
-                para.Add(new KeyValuePair<string, string>("includeEntities", "true"));
+                para.Add(new KeyValuePair<string, string>("include_entities", "true"));
 
             return provider.GetTimeline(partialUri, para);
         }
