@@ -347,11 +347,11 @@ namespace Inscribe.Storage
                             if (indices.Length == 2)
                             {
                                 //一旦内容を元の状態に戻す（参照：XmlParser.ParseString）
-                                string orgtext = status.Text.Replace(">", "&gt;").Replace("<", "&lt;");
+                                string orgtext = status.Text.Replace("&", "&amp;").Replace(">", "&gt;").Replace("<", "&lt;");
                                 string text = orgtext.Substring(0, indices[0]) +
                                     expand + orgtext.Substring(indices[1]);
                                 //再度処理を施す
-                                status.Text = text.Replace("&lt;", "<").Replace("&gt;", ">");
+                                status.Text = text.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
                             }
                         }
                     });
