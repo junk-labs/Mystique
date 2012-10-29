@@ -9,10 +9,12 @@ namespace Inscribe.Common
     {
         public static bool IsMuted(TwitterStatusBase status)
         {
+            var tweet = status as TwitterStatus;
             return (Setting.Instance.TimelineFilteringProperty.MuteFilterCluster != null &&
                 Setting.Instance.TimelineFilteringProperty.MuteFilterCluster.Filter(status) &&
                 !AccountStorage.Contains(status.User.ScreenName)) ||
-                IsMuted(status.User);
+                IsMuted(status.User) ||
+                (tweet != null && tweet.RetweetedOriginal != null && IsMuted(tweet.RetweetedOriginal.User));
         }
 
         public static bool IsMuted(TwitterUser user)
