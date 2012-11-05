@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Dulcet.Twitter.Rest;
+using Inscribe.Common;
 using Inscribe.Filter.Core;
+using Inscribe.Storage;
 
 namespace Inscribe.Filter.Filters.Numeric
 {
@@ -21,10 +25,25 @@ namespace Inscribe.Filter.Filters.Numeric
             this.Range = range;
         }
 
-        public FilterStatusId(long pivot)
+        public FilterStatusId(long pivot, bool getStatus)
         {
             this.Range = LongRange.FromPivotValue(pivot);
+
+            if (getStatus)
+            {
+                if (TweetStorage.Contains(pivot) != TweetExistState.Exists)
+                    Task.Factory.StartNew(() =>
+                    {
+                        var status = ApiHelper.ExecApi(() => AccountStorage.GetRandom().GetStatus(pivot));
+                        TweetStorage.Register(status);
+                        RaisePartialRequireReaccept(status);
+                    });
+            }
         }
+
+        public FilterStatusId(long pivot)
+            : this(pivot, false)
+        { }
 
         protected override bool FilterStatus(Dulcet.Twitter.TwitterStatusBase status)
         {
