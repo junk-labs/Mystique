@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -10,6 +12,7 @@ using Inscribe.Common;
 using Inscribe.Configuration;
 using Inscribe.Configuration.Settings;
 using Inscribe.Core;
+using Inscribe.Filter.Filters.Numeric;
 using Inscribe.Filter.Filters.Text;
 using Inscribe.Plugin;
 using Inscribe.Storage;
@@ -47,6 +50,8 @@ namespace Mystique.Views.Converters.Particular
 
     public static class TextToFlowConversionStatic
     {
+        private const string TweetUrlRegex = @"^https?://(www\.)?twitter\.com/(#!/)?\w+/status(es)?/(?<id>\d+)/?(\?.*)?$";
+
         /// <summary>
         /// 文字をリッチテキストフォーマットして返します。
         /// </summary>
@@ -84,9 +89,13 @@ namespace Mystique.Views.Converters.Particular
                             resolved = new Uri(ctt).PunyDecode().OriginalString;
                         }
                         catch (UriFormatException) { }
-                        var urllink = TextElementGenerator.GenerateHyperlink(
-                            String.IsNullOrEmpty(resolved) ? ctt : resolved,
-                            () => ExternalLinkClicked(ctt));
+                        var urllink = Regex.IsMatch(ctt, TweetUrlRegex)
+                            ? TextElementGenerator.GenerateHyperlink(
+                                String.IsNullOrEmpty(resolved) ? ctt : resolved,
+                                () => InternalLinkClicked(InternalLinkKind.Tweet, ctt))
+                            : TextElementGenerator.GenerateHyperlink(
+                                String.IsNullOrEmpty(resolved) ? ctt : resolved,
+                                () => ExternalLinkClicked(ctt));
 
                         switch (Setting.Instance.TweetExperienceProperty.UrlResolveMode)
                         {
@@ -160,7 +169,9 @@ namespace Mystique.Views.Converters.Particular
                         break;
                     case TokenKind.Url:
                         yield return TextElementGenerator.GenerateHyperlink(tok.Text,
-                            () => ExternalLinkClicked(tok.Text));
+                            Regex.IsMatch(tok.Text, TweetUrlRegex)
+                                ? new Action(() => InternalLinkClicked(InternalLinkKind.Tweet, tok.Text))
+                                : new Action(() => ExternalLinkClicked(tok.Text)));
                         break;
                     case TokenKind.Text:
                     default:
@@ -190,10 +201,9 @@ namespace Mystique.Views.Converters.Particular
                         });
                         break;
                     case TokenKind.Url:
-                        yield return new Action(() =>
-                        {
-                            ExternalLinkClicked(ctt);
-                        });
+                        yield return Regex.IsMatch(tok.Text, TweetUrlRegex)
+                            ? new Action(() => InternalLinkClicked(InternalLinkKind.Tweet, ctt))
+                            : new Action(() => ExternalLinkClicked(ctt));
                         break;
                 }
             }
@@ -202,7 +212,8 @@ namespace Mystique.Views.Converters.Particular
         enum InternalLinkKind
         {
             User,
-            Hash
+            Hash,
+            Tweet
         }
 
         static void InternalLinkClicked(InternalLinkKind kind, string source)
@@ -227,6 +238,19 @@ namespace Mystique.Views.Converters.Particular
                             KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn.SelectedTabViewModel != null)
                             KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn
                                 .SelectedTabViewModel.AddTopTimeline(new[] { new FilterText(source) });
+                    }
+                    break;
+                case InternalLinkKind.Tweet:
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                    {
+                        Browser.Start(source);
+                    }
+                    else
+                    {
+                        if (KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn != null &&
+                            KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn.SelectedTabViewModel != null)
+                            KernelService.MainWindowViewModel.ColumnOwnerViewModel.CurrentFocusColumn
+                                .SelectedTabViewModel.AddTopTimeline(new[] { new FilterStatusId(long.Parse(Regex.Match(source, TweetUrlRegex).Groups["id"].ToString()), true) });
                     }
                     break;
                 default:
