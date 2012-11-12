@@ -34,9 +34,16 @@ namespace Inscribe.Filter.Filters.Numeric
                 if (TweetStorage.Contains(pivot) != TweetExistState.Exists)
                     Task.Factory.StartNew(() =>
                     {
-                        var status = ApiHelper.ExecApi(() => AccountStorage.GetRandom().GetStatus(pivot));
-                        TweetStorage.Register(status);
-                        RaisePartialRequireReaccept(status);
+                        try
+                        {
+                            var status = ApiHelper.ExecApi(() => AccountStorage.GetRandom().GetStatus(pivot));
+                            if (status != null)
+                            {
+                                TweetStorage.Register(status);
+                                RaisePartialRequireReaccept(status);
+                            }
+                        }
+                        catch { }
                     });
             }
         }
