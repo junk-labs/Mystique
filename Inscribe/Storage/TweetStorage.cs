@@ -348,8 +348,10 @@ namespace Inscribe.Storage
                             {
                                 //一旦内容を元の状態に戻す（参照：XmlParser.ParseString）
                                 string orgtext = status.Text.Replace("&", "&amp;").Replace(">", "&gt;").Replace("<", "&lt;");
-                                string text = orgtext.Substring(0, indices[0]) +
-                                    expand + orgtext.Substring(indices[1]);
+                                // Considering surrogate pairs.
+                                System.Globalization.StringInfo orgtextinfo = new System.Globalization.StringInfo(orgtext);
+                                string text = orgtextinfo.SubstringByTextElements(0, indices[0]) +
+                                    expand + ((orgtextinfo.LengthInTextElements > indices[1]) ? orgtextinfo.SubstringByTextElements(indices[1]) : null);
                                 //再度処理を施す
                                 status.Text = text.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
                             }
