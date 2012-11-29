@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Updates", "Updates", "{59B2919B-31D4-4C5E-AB80-A4A099DFDEE8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DefaultPlugins", "DefaultPlugins", "{4423B503-1D7B-4801-8EE2-3E8E460826D8}"
@@ -44,6 +44,7 @@ Global
 		{9E55F0C5-D9AE-46E7-86CD-32AAC79F7C69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9E55F0C5-D9AE-46E7-86CD-32AAC79F7C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E55F0C5-D9AE-46E7-86CD-32AAC79F7C69}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{9E55F0C5-D9AE-46E7-86CD-32AAC79F7C69}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{9E55F0C5-D9AE-46E7-86CD-32AAC79F7C69}.Debug|x64.ActiveCfg = Debug|x86
 		{9E55F0C5-D9AE-46E7-86CD-32AAC79F7C69}.Debug|x64.Build.0 = Debug|x86
 		{9E55F0C5-D9AE-46E7-86CD-32AAC79F7C69}.Debug|x86.ActiveCfg = Debug|x86

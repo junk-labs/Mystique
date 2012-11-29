@@ -176,6 +176,7 @@ namespace Dulcet.Twitter.Credential
                 request = Http.CreateRequest(new Uri(target), method.ToString(), contentType: "application/x-www-form-urlencoded");
                 request.Headers.Add("Authorization", "OAuth " + reg);
                 request.Timeout = 8000;
+                request.AutomaticDecompression = DecompressionMethods.None; // due to delaying streaming receiving.
 
                 var ret = Http.WebConnect<Stream>(req: request, responseconv: Http.ResponseConverters.GetStream, senddata: body);
                 if (ret.Succeeded)
