@@ -56,6 +56,7 @@ namespace Mystique.Views.Common
                         bi.UriSource = uri;
                         bi.CacheOption = BitmapCacheOption.OnLoad;
                         bi.EndInit();
+                        bi.Freeze();
                         SetImage(img, bi, uri);
                     }
                     else
@@ -111,6 +112,8 @@ namespace Mystique.Views.Common
             {
                 if (bitmap != null && (checkUri == null || image.UriSource == checkUri))
                 {
+                    if (!bitmap.IsFrozen)
+                        throw new ArgumentException("Image is not frozen.");
                     image.Source = bitmap;
                 }
             }

@@ -91,7 +91,7 @@ namespace Inscribe.Storage
 
         private static void RemoveCache(Uri key)
         {
-            using(lockWrap.GetWriterLock())
+            using (lockWrap.GetWriterLock())
             {
                 imageDataDictionary.Remove(key);
             }
@@ -171,16 +171,13 @@ namespace Inscribe.Storage
                 {
                     if (condata.Succeeded && condata.Data != null)
                     {
-                        using (var ws = new WrappingStream(condata.Data))
-                        {
-                            bi.BeginInit();
-                            bi.CacheOption = BitmapCacheOption.OnLoad;
-                            bi.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                            bi.DecodePixelWidth = ImageMaxWidth;
-                            bi.StreamSource = ws;
-                            bi.EndInit();
-                            bi.Freeze();
-                        }
+                        bi.BeginInit();
+                        bi.CacheOption = BitmapCacheOption.OnLoad;
+                        bi.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+                        bi.DecodePixelWidth = ImageMaxWidth;
+                        bi.StreamSource = new WrappingStream(condata.Data);
+                        bi.EndInit();
+                        bi.Freeze();
                     }
                     else
                     {
