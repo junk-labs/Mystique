@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Dulcet.Twitter.Credential;
 
 namespace Inscribe.Authentication
@@ -9,6 +10,8 @@ namespace Inscribe.Authentication
     /// </summary>
     public class CredentialCore : OAuth
     {
+        public static readonly int CurrentKeyGeneration = 2;
+
         [XmlIgnore()]
         protected override string ConsumerKey
         {
@@ -16,8 +19,13 @@ namespace Inscribe.Authentication
             {
                 if (this.OverridedConsumerKey != null)
                     return this.OverridedConsumerKey;
-                else
-                    return "K3FZBXVOzsm271KC1jPPHA";
+                switch (Generation)
+                {
+                    case 2:
+                        return "iL5pS5TzIve6qdP72sLEFg";
+                    default:
+                        return "K3FZBXVOzsm271KC1jPPHA";
+                }
             }
         }
 
@@ -28,10 +36,17 @@ namespace Inscribe.Authentication
             {
                 if (this.OverridedConsumerSecret != null)
                     return this.OverridedConsumerSecret;
-                else
-                    return "tOJVCdRrlzc08WilwcU5BtwuGzgbo2MlTWJIFRYaeow";
+                switch (Generation)
+                {
+                    case 2:
+                        return "u0m3ez6UneQnF9NHJm8O3MVbExWTDvJBY7OYfPwo9I";
+                    default:
+                        return "tOJVCdRrlzc08WilwcU5BtwuGzgbo2MlTWJIFRYaeow";
+                }
             }
         }
+
+        public int Generation { get; set; }
 
         public string OverridedConsumerKey { get; set; }
 

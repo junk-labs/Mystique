@@ -168,6 +168,14 @@
                         Command="{Binding CancelCommand}"
                         Content="キャンセル"
                         IsCancel="True" />
+                <TextBlock Margin="0,13,10,0"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Top"
+                           Visibility="{Binding Path=IsOverridesConsumerInfo,
+                                                Converter={StaticResource BoolInvisibleConverter}}">
+                    <Run Text="GEN:" />
+                    <Run Text="{Binding CurrentGeneration, Mode=OneWay}" />
+                </TextBlock>
             </Grid>
         </DockPanel>
         <Grid Background="#99FFFFFF" Visibility="{Binding Path=IsStandby, Converter={StaticResource BoolInvisibleConverter}, FallbackValue=Collapsed}">

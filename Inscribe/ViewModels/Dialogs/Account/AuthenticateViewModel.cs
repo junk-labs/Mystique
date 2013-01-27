@@ -14,7 +14,7 @@ namespace Inscribe.ViewModels.Dialogs.Account
 {
     public class AuthenticateViewModel : ViewModel
     {
-        private CredentialCore _credentialCore;
+        private readonly CredentialCore _credentialCore;
 
         public bool Success { get; private set; }
 
@@ -34,7 +34,7 @@ namespace Inscribe.ViewModels.Dialogs.Account
         public AuthenticateViewModel(CredentialCore prevCore = null)
         {
             this.Success = false;
-            this._credentialCore = new CredentialCore();
+            this._credentialCore = new CredentialCore { Generation = CredentialCore.CurrentKeyGeneration };
             if (prevCore != null)
             {
                 this._credentialCore.OverridedConsumerKey = prevCore.OverridedConsumerKey;
@@ -55,7 +55,12 @@ namespace Inscribe.ViewModels.Dialogs.Account
 
         public bool CanOverrideAPIKey
         {
-            get { return Setting.Instance.ExperienceProperty.IsTranscender; }
+            get
+            {
+                // return Setting.Instance.ExperienceProperty.IsTranscender;
+                // due to API 0.1 million limitation.
+                return true;
+            }
         }
 
         public bool IsOverridesConsumerInfo
@@ -66,6 +71,11 @@ namespace Inscribe.ViewModels.Dialogs.Account
                     !String.IsNullOrEmpty(this._credentialCore.OverridedConsumerKey) ||
                     !String.IsNullOrEmpty(this._credentialCore.OverridedConsumerSecret);
             }
+        }
+
+        public int CurrentGeneration
+        {
+            get { return _credentialCore.Generation; }
         }
 
         public string OverridedConsumerKey

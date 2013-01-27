@@ -5,8 +5,8 @@ using System.Threading;
 using System.Xml.Serialization;
 using Dulcet.Twitter;
 using Inscribe.Configuration.Accounts;
-using Inscribe.Util;
 using Inscribe.Storage;
+using Inscribe.Util;
 using Inscribe.ViewModels.PartBlocks.MainBlock;
 using Livet;
 
@@ -35,6 +35,7 @@ namespace Inscribe.Authentication
         {
             return new AccountInfo()
             {
+                Generation = original.Generation,
                 OverridedConsumerKey = original.OverridedConsumerKey,
                 OverridedConsumerSecret = original.OverridedConsumerSecret,
                 RateLimitMax = original.RateLimitMax,
@@ -47,7 +48,7 @@ namespace Inscribe.Authentication
             };
         }
 
-        public AccountInfo()
+        protected AccountInfo()
         {
             this.AccountProperty = new AccountProperty();
         }
@@ -58,6 +59,7 @@ namespace Inscribe.Authentication
         /// <param name="overwrite">このアカウント情報に上書きするクレデンシャル</param>
         public void RewriteCredential(CredentialCore overwrite)
         {
+            this.Generation = overwrite.Generation;
             this.OverridedConsumerKey = overwrite.OverridedConsumerKey;
             this.OverridedConsumerSecret = overwrite.OverridedConsumerSecret;
             this.RateLimitMax = overwrite.RateLimitMax;
@@ -107,7 +109,6 @@ namespace Inscribe.Authentication
         }
 
         #endregion
-
 
         private ConnectionState _connectionState = ConnectionState.Disconnected;
         public ConnectionState ConnectionState
