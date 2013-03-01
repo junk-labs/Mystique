@@ -88,22 +88,6 @@ namespace Dulcet.Twitter.Credential
                 var ret = Http.WebConnect<XDocument>(request,
                     responseconv: new Http.ResponseConverter<XDocument>((res) =>
                     {
-                        int rateLimit;
-                        if (int.TryParse(res.Headers["X-RateLimit-Limit"], out rateLimit))
-                        {
-                            this.RateLimitMax = rateLimit;
-                        }
-                        int rateLimitRemaining;
-                        if (int.TryParse(res.Headers["X-RateLimit-Remaining"], out rateLimitRemaining))
-                        {
-                            this.RateLimitRemaining = rateLimitRemaining;
-                        }
-                        long rateLimitReset;
-                        if (long.TryParse(res.Headers["X-RateLimit-Reset"], out rateLimitReset))
-                        {
-                            this.RateLimitReset = UnixEpoch.GetDateTimeByUnixEpoch(rateLimitReset);
-                        }
-
                         switch (docType)
                         {
                             case DocumentTypes.Xml:
@@ -401,7 +385,7 @@ namespace Dulcet.Twitter.Credential
         const string ProviderRequestTokenUrl = "https://api.twitter.com/oauth/request_token";
         const string ProviderAccessTokenUrl = "https://api.twitter.com/oauth/access_token";
         const string ProviderAuthorizeUrl = "https://api.twitter.com/oauth/authorize";
-        const string ProviderEchoAuthorizeUrl = "https://api.twitter.com/1/account/verify_credentials.json";
+        const string ProviderEchoAuthorizeUrl = "https://api.twitter.com/1.1/account/verify_credentials.json";
 
         /// <summary>
         /// Signature method for OAuth

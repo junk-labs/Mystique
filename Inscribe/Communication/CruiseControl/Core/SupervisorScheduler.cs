@@ -138,9 +138,7 @@ namespace Inscribe.Communication.CruiseControl.Core
                 // 待機時間導出、待機
                 if (TaskRateLimit > 0)
                 {
-                    System.Diagnostics.Debug.WriteLine("Window Time:" + this.WindowTime + ", Rate Limit:" + this.TaskRateLimit + ", Density:" + this.Density);
                     var wait = (int)(this.WindowTime / (this.TaskRateLimit * this.Density));
-                    System.Diagnostics.Debug.WriteLine("Sleep:" + wait);
                     if (wait > this.MinWindowTime)
                         Thread.Sleep(wait);
                     else
@@ -165,7 +163,7 @@ namespace Inscribe.Communication.CruiseControl.Core
                 this.scheduledTasks.RemoveAll(s => !s.IsAlive);
 
                 // タ ス ク が な い
-                if (this.scheduledTasks.Count() == 0)
+                if (!this.scheduledTasks.Any())
                 {
                     Thread.Sleep(1000);
                     continue;
@@ -183,7 +181,6 @@ namespace Inscribe.Communication.CruiseControl.Core
                 double sum = 0;
                 foreach (var task in tasks)
                 {
-                    System.Diagnostics.Debug.WriteLine(task.GetType().ToString() + ": " + task.Rate);
                     sum += (task.Rate / sigma);
                     if (sum > rand)
                     {
@@ -219,9 +216,10 @@ namespace Inscribe.Communication.CruiseControl.Core
         {
         }
 
-        protected virtual double MinDensity {
+        protected virtual double MinDensity
+        {
             get { return 0.001; }
         }
-    
+
     }
 }

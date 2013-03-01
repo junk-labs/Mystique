@@ -49,11 +49,11 @@ namespace Inscribe
 
         public static readonly double MinNewbiesRate = 0.01; // 1%
         public static readonly double TimesPerTweetMaximumValue = 1000 * 60 * 60; // 1hに1ツイートはあることにする
-        public static readonly int MinWindowTime = 5 * 1000;
+        public static readonly int MinWindowTime = 30 * 1000;
         public static readonly int IntervalLookPrevious = 10;
         public static readonly double MinDensity = 0.1;
         public static readonly int UserStreamsTimeout = 90;
-        public static readonly int UrlMaxLength = 20;
+        public static readonly int UrlMaxLength = 22;
 
         #endregion
 

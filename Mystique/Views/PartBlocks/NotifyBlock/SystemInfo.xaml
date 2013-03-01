@@ -71,15 +71,6 @@
                                     <TextBlock Margin="2" Text="{Binding ConnectState, FallbackValue=接続状態を取得できません}" />
                                 </StackPanel>
 
-                                <TextBlock Grid.Row="1" Margin="2">
-                                    <TextBlock.Text>
-                                        <MultiBinding FallbackValue="API: 0/0 (RESET:not found)" StringFormat="API: {0}/{1} (RESET:{2})">
-                                            <Binding Path="ApiRemain" />
-                                            <Binding Path="ApiMax" />
-                                            <Binding Path="ApiReset" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
                                 <TextBlock Grid.Row="2"
                                            Margin="2"
                                            Visibility="{Binding IsAccountUnderControlled,

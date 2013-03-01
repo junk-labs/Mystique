@@ -38,9 +38,6 @@ namespace Inscribe.Authentication
                 Generation = original.Generation,
                 OverridedConsumerKey = original.OverridedConsumerKey,
                 OverridedConsumerSecret = original.OverridedConsumerSecret,
-                RateLimitMax = original.RateLimitMax,
-                RateLimitRemaining = original.RateLimitRemaining,
-                RateLimitReset = original.RateLimitReset,
                 ScreenName = original.ScreenName,
                 NumericId = original.NumericId,
                 Secret = original.Secret,
@@ -62,9 +59,6 @@ namespace Inscribe.Authentication
             this.Generation = overwrite.Generation;
             this.OverridedConsumerKey = overwrite.OverridedConsumerKey;
             this.OverridedConsumerSecret = overwrite.OverridedConsumerSecret;
-            this.RateLimitMax = overwrite.RateLimitMax;
-            this.RateLimitRemaining = overwrite.RateLimitRemaining;
-            this.RateLimitReset = overwrite.RateLimitReset;
             this.ScreenName = overwrite.ScreenName;
             this.NumericId = overwrite.NumericId;
             this.Secret = overwrite.Secret;

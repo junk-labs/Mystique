@@ -15,24 +15,6 @@ namespace Dulcet.Twitter.Credential
     public abstract class CredentialProvider
     {
         /// <summary>
-        /// API rate limit descriptor
-        /// </summary>
-        [XmlIgnore()]
-        public int RateLimitMax { get; protected set; }
-
-        /// <summary>
-        /// API rate limit remaining
-        /// </summary>
-        [XmlIgnore()]
-        public int RateLimitRemaining { get; protected set; }
-
-        /// <summary>
-        /// API rate limit reset date-time
-        /// </summary>
-        [XmlIgnore()]
-        public DateTime RateLimitReset { get; protected set; }
-
-        /// <summary>
         /// Request methods
         /// </summary>
         public enum RequestMethod
@@ -116,18 +98,6 @@ namespace Dulcet.Twitter.Credential
         protected XDocument XDocumentGenerator(WebResponse res, Func<Stream, XmlReader> converter)
         {
             //read api rate
-            int rateLimit;
-            if (int.TryParse(res.Headers["X-RateLimit-Limit"], out rateLimit))
-                RateLimitMax = rateLimit;
-
-            int rateLimitRemaining;
-            if (int.TryParse(res.Headers["X-RateLimit-Remaining"], out rateLimitRemaining))
-                RateLimitRemaining = rateLimitRemaining;
-
-            long rateLimitReset;
-            if (long.TryParse(res.Headers["X-RateLimit-Reset"], out rateLimitReset))
-                RateLimitReset = UnixEpoch.GetDateTimeByUnixEpoch(rateLimitReset);
-
             try
             {
                 using (var s = res.GetResponseStream())
@@ -152,11 +122,10 @@ namespace Dulcet.Twitter.Credential
         /// <summary>
         /// Update rate-limiting valuet
         /// </summary>
+        [Obsolete]
         internal void UpdateRateLimit(int remain, int max, DateTime reset)
         {
-            this.RateLimitMax = max;
-            this.RateLimitRemaining = remain;
-            this.RateLimitReset = reset;
+            // Obsolete, do nothing.
         }
     }
 }

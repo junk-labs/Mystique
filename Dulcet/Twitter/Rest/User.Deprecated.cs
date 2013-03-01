@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dulcet.Twitter.Credential;
 using Dulcet.Util;
-using System;
 
 namespace Dulcet.Twitter.Rest
 {
@@ -34,7 +34,7 @@ namespace Dulcet.Twitter.Rest
         /// </summary>
         private static IEnumerable<TwitterUser> GetUsers(this CredentialProvider provider, string partialUri, long? userId, string screenName, long? cursor, out long prevCursor, out long nextCursor)
         {
-            List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
+            var para = new List<KeyValuePair<string, string>>();
             if (userId != null)
             {
                 para.Add(new KeyValuePair<string, string>("user_id", userId.ToString()));
@@ -68,5 +68,29 @@ namespace Dulcet.Twitter.Rest
             }
         }
 
+        /// <summary>
+        /// Get users with use cursor params
+        /// </summary>
+        private static IEnumerable<TwitterUser> GetUsersAll(this CredentialProvider provider, string partialUri, IEnumerable<KeyValuePair<string, string>> para)
+        {
+            long n_cursor = -1;
+            long c_cursor = -1;
+            long p;
+            var parac = para.ToArray();
+            while (n_cursor != 0)
+            {
+                var pc = new List<KeyValuePair<string, string>>();
+                foreach (var pair in parac)
+                {
+                    pc.Add(pair);
+                }
+                pc.Add(new KeyValuePair<string, string>("cursor", c_cursor.ToString()));
+                var users = provider.GetUsers(partialUri, pc, out p, out n_cursor);
+                if (users != null)
+                    foreach (var u in users)
+                        yield return u;
+                c_cursor = n_cursor;
+            }
+        }
     }
 }

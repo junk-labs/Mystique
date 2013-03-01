@@ -88,9 +88,6 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
                 (o, e) => RaisePropertyChanged(() => ConnectState));
             ViewModelHelper.BindNotification(TimeTickCall, this, (o, e) =>
             {
-                RaisePropertyChanged(() => ApiRemain);
-                RaisePropertyChanged(() => ApiMax);
-                RaisePropertyChanged(() => ApiReset);
                 Task.Factory.StartNew(() => UpdatePostChunk());
             });
             ViewModelHelper.BindNotification(PostOffice.OnUnderControlChangedEvent, this, (o, e) =>
@@ -128,21 +125,6 @@ namespace Inscribe.ViewModels.PartBlocks.NotifyBlock
                         return "接続状況が不明です。";
                 }
             }
-        }
-
-        public string ApiRemain
-        {
-            get { return this.Info.RateLimitRemaining.ToString(); }
-        }
-
-        public string ApiMax
-        {
-            get { return this.Info.RateLimitMax.ToString(); }
-        }
-
-        public string ApiReset
-        {
-            get { return this.Info.RateLimitReset.ToLocalTime().ToString(); }
         }
 
         private volatile bool isChunkUpdating = false;

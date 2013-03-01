@@ -11,7 +11,7 @@ namespace Inscribe.Communication.CruiseControl
 {
     public class AccountScheduler : SupervisorScheduler
     {
-        private AccountInfo _accountInfo;
+        private readonly AccountInfo _accountInfo;
         public AccountInfo AccountInfo
         {
             get { return this._accountInfo; }
@@ -26,27 +26,7 @@ namespace Inscribe.Communication.CruiseControl
             this.AddSchedule(new SentDirectMessageReceiveTask(info));
             this.AddSchedule(new FavoritesReceiveTask(info));
             this.AddSchedule(new MyTweetsTask(info));
-            Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        // テストを飛ばす
-                        ApiHelper.ExecApi(() => info.Test());
-                    }
-                    catch { }
-                });
-            ThreadHelper.Halt += () => this.StopSchedule();
-        }
-
-        protected override void OnFallingASleep()
-        {
-            this.TaskRateLimit = this._accountInfo.RateLimitRemaining
-                - (int)(this._accountInfo.RateLimitMax * (1 - this._accountInfo.AccountProperty.AutoCruiseApiConsumeRate));
-            int wndTime = (int)this._accountInfo.RateLimitReset.Subtract(DateTime.Now).TotalMilliseconds;
-            if (wndTime < 0)
-                this.WindowTime = 0;
-            else
-                this.WindowTime = wndTime;
+            ThreadHelper.Halt += this.StopSchedule;
         }
 
         protected override void OnWakeup()

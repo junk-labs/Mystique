@@ -252,21 +252,6 @@ namespace Inscribe.Communication.UserStreams
                             }
                         }
 
-                        using (var n = NotifyStorage.NotifyManually("@" + info.ScreenName + ": 接続のテストをしています..."))
-                        {
-                            info.ConnectionState = ConnectionState.WaitTwitter;
-                            ConnectionManager.OnConnectionStateChanged(EventArgs.Empty);
-                            try
-                            {
-                                if (!ApiHelper.ExecApi(() => info.Test()))
-                                    throw new Exception();
-                            }
-                            catch
-                            {
-                                throw new WebException("Twitterが応答を停止しています。");
-                            }
-                        }
-
                         using (var n = NotifyStorage.NotifyManually("@" + info.ScreenName + ": 接続しています..."))
                         {
                             info.ConnectionState = ConnectionState.TryConnection;

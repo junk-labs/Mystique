@@ -130,7 +130,7 @@ namespace Dulcet.Twitter.Streaming
                 case StreamingType.filter:
                     return String.Format(SapiV1, type.ToString());
                 case StreamingType.user:
-                    return "https://userstream.twitter.com/2/user.json";
+                    return "https://userstream.twitter.com/1.1/user.json";
                 default:
                     throw new ArgumentOutOfRangeException("Invalid streaming value");
             }

@@ -11,7 +11,7 @@ namespace Inscribe.Text
             // It means CRLF should be treat as one charator.
             string inputCRLFProcessed = input.Replace(System.Environment.NewLine, "\n");
 
-            // URL is MAX 20 Chars (if URL has HTTPS scheme, URL is MAX 21 Chars)
+            // URL is MAX 22 Chars (if URL has HTTPS scheme, URL is MAX 23 Chars)
             int prevIndex = 0;
             int totalCount = 0;
             foreach (var m in RegularExpressions.UrlRegex.Matches(inputCRLFProcessed).OfType<Match>())
