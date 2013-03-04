@@ -129,90 +129,26 @@
             </TabItem>
             <TabItem Header="POSTフォールバック">
                 <Grid>
-                    <DockPanel HorizontalAlignment="Left"
+                    <DockPanel Width="408"
                                Margin="6,7,0,0"
-                               VerticalAlignment="Top"
-                               Width="408">
-                        <TextBlock HorizontalAlignment="Left"
-                                   Margin="0,0,4,0"
-                                   Text="POSTフォールバック先アカウント"
-                                   VerticalAlignment="Center" />
-                        <ComboBox ItemsSource="{Binding AccountInformations}"
-                                  SelectedIndex="{Binding FallbackIndex}"
-                                  VerticalAlignment="Center" />
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top">
+                        <TextBlock Margin="0,0,4,0"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   Text="POSTフォールバック先アカウント" />
+                        <ComboBox VerticalAlignment="Center"
+                                  ItemsSource="{Binding AccountInformations}"
+                                  SelectedIndex="{Binding FallbackIndex}" />
                     </DockPanel>
-                    <TextBlock Foreground="DimGray"
-                               HorizontalAlignment="Left"
-                               Margin="6,32,0,0"
-                               TextWrapping="Wrap"
-                               VerticalAlignment="Top"><Run Text="このアカウントがPOST規制されて投稿できないことを検知した時に、自動で別のアカウントでのツイートを試みます。" /><LineBreak /><Run Text="そのアカウントでもツイート出来ない場合、そのアカウントのフォールバック先アカウントで試行します。つまり、フォールバックはどんどん連鎖します。" /><LineBreak /><Run Foreground="Red"
-                                                                                                                                                                                                                                                 Text="フォールバックをループさせると、想定外の動作をすることがあります。" /></TextBlock>
-                </Grid>
-            </TabItem>
-            <TabItem Header="詳細">
-                <Grid>
-                    <TextBlock Margin="6,9,0,0"
+                    <TextBlock Margin="6,32,0,0"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
-                               Text="REST API 最大使用率:">
-                        <TextBlock.ToolTip>
-                            <TextBlock>
-                                <Run Text="REST APIを用いてツイートを取得する際に、APIを何パーセント使うか指定できます。" />
-                                <LineBreak />
-                                <Run Text="※Krileはツイートの取得を全自動で行います。取得間隔を設定することはできません。" />
-                            </TextBlock>
-                        </TextBlock.ToolTip>
+                               Foreground="DimGray"
+                               TextWrapping="Wrap"><Run Text="このアカウントがPOST規制されて投稿できないことを検知した時に、自動で別のアカウントでのツイートを試みます。" />
+                        <LineBreak /><Run Text="そのアカウントでもツイート出来ない場合、そのアカウントのフォールバック先アカウントで試行します。つまり、フォールバックはどんどん連鎖します。" />
+                        <LineBreak /><Run Foreground="Red" Text="フォールバックをループさせると、想定外の動作をすることがあります。" />
                     </TextBlock>
-                    <TextBox Width="60"
-                             Margin="136,6,0,0"
-                             HorizontalAlignment="Left"
-                             VerticalAlignment="Top">
-                        <TextBox.Text>
-                            <Binding Converter="{StaticResource DoublePercentStringConverter}"
-                                     Path="RestApiRate"
-                                     UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <conv:DoublePercentValidator />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                    <GroupBox Margin="4"
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Bottom"
-                              Header="高度な設定">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock VerticalAlignment="Center" Text="Cruise Control μ:">
-                                <TextBlock.ToolTip>
-                                    <TextBlock>
-                                        <Run Text="自動取得のパラメータ値(0-100)を指定します。" />
-                                        <LineBreak />
-                                        <Run Text="値を大きくすれば平均的なAPI消費数が少なくなりますが、取得頻度が下がります。また、タイムライン速度の変動に追従しづらくなります。" />
-                                        <LineBreak />
-                                        <Run Text="逆に値を小さくすると、取得頻度が上がり、タイムライン速度の変動に追従しやすくなりますが、平均的なAPI消費数が上がります。" />
-                                        <LineBreak />
-                                        <Run Text="User Streamsで接続中もバックグラウンドで取得し続けますが、取得頻度は少なくなります。" />
-                                    </TextBlock>
-                                </TextBlock.ToolTip>
-                            </TextBlock>
-                            <TextBox Grid.Column="1"
-                                     Width="60"
-                                     Margin="4"
-                                     HorizontalAlignment="Left">
-                                <Binding Converter="{StaticResource DoublePercentStringConverter}"
-                                         Path="AutoCruiseMu"
-                                         UpdateSourceTrigger="PropertyChanged">
-                                    <Binding.ValidationRules>
-                                        <conv:DoublePercentValidator />
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox>
-                        </Grid>
-                    </GroupBox>
                 </Grid>
             </TabItem>
         </TabControl>

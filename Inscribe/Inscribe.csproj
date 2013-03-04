@@ -62,6 +62,7 @@
     <Compile Include="Common\FreezableEx.cs" />
     <Compile Include="Common\FilterHelper.cs" />
     <Compile Include="Common\Punycode.cs" />
+    <Compile Include="Communication\CruiseControl\Core\SimpleScheduler.cs" />
     <Compile Include="Communication\CruiseControl\DefaultTasks\MyTweetsTask.cs" />
     <Compile Include="Communication\InjectionPoint.cs" />
     <Compile Include="Communication\Posting\FavoriteSuspendedException.cs" />

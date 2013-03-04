@@ -136,18 +136,17 @@ namespace Dulcet.Twitter.Rest
         /// </summary>
         public static IEnumerable<TwitterStatus> GetMentions(this CredentialProvider provider, long? sinceId = null, long? maxId = null, long? count = null, long? page = null)
         {
-            return provider.GetTimeline("statuses/mentions.json", sinceId, maxId, count, page, null, null);
+            return provider.GetTimeline("statuses/mentions_timeline.json", sinceId, maxId, count, page, null, null);
         }
 
         /// <summary>
         /// Get favorite timeline with full params
         /// </summary>
-        public static IEnumerable<TwitterStatus> GetFavorites(this CredentialProvider provider, string id = null, long? page = null)
+        public static IEnumerable<TwitterStatus> GetFavorites(this CredentialProvider provider, int count = 20)
         {
-            if (id == null)
-                return provider.GetTimeline("favorites.json", null, null, null, page, null, null);
-            else
-                return provider.GetTimeline("favorites/" + id + ".json", null, null, null, page, null, null);
+            var kvp = new List<KeyValuePair<string, string>>();
+            kvp.Add(new KeyValuePair<string, string>("count", count.ToString()));
+            return provider.GetTimeline("favorites/list.json", kvp);
         }
     }
 }

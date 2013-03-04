@@ -7,6 +7,11 @@ namespace Dulcet.Twitter.Rest
 {
     public static partial class Api
     {
+        private static IList<KeyValuePair<string, string>> CreateParamList()
+        {
+            return new List<KeyValuePair<string, string>>();
+        }
+
         /// <summary>
         /// Twitter api uri (v1)
         /// </summary>

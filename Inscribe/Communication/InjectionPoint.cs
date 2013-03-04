@@ -54,7 +54,7 @@ namespace Inscribe.Communication
 
         public static IInjectionPort<AccountInfo, IEnumerable<TwitterStatusBase>> GetMentionsInjection
         {
-            get { return _GetMentionsInjection;}
+            get { return _GetMentionsInjection; }
         }
 
         private static IEnumerable<TwitterStatusBase> GetMentions(AccountInfo info)
@@ -67,11 +67,11 @@ namespace Inscribe.Communication
         #region DirectMessages
 
         internal static InjectionPort<AccountInfo, IEnumerable<TwitterStatusBase>> _GetDirectMessagesInjection
-            = new InjectionPort<AccountInfo, IEnumerable<TwitterStatusBase>>( GetDirectMessages);
+            = new InjectionPort<AccountInfo, IEnumerable<TwitterStatusBase>>(GetDirectMessages);
 
         public static IInjectionPort<AccountInfo, IEnumerable<TwitterStatusBase>> GetDirectMessagesInjection
         {
-            get { return _GetDirectMessagesInjection;}
+            get { return _GetDirectMessagesInjection; }
         }
 
         private static IEnumerable<TwitterStatusBase> GetDirectMessages(AccountInfo info)
@@ -130,7 +130,7 @@ namespace Inscribe.Communication
 
         private static IEnumerable<TwitterStatusBase> GetFavorites(AccountInfo info)
         {
-            return UnfoldTimeline(i => info.GetFavorites(page: i), 5, 3);
+            return info.GetFavorites(count: 100);
         }
 
         #endregion

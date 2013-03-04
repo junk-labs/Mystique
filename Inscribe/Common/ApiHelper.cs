@@ -39,14 +39,26 @@ namespace Inscribe.Common
                 }
                 catch (WebException we)
                 {
+
                     if (we.Status == WebExceptionStatus.ProtocolError)
                     {
                         var hwr = we.Response as HttpWebResponse;
-                        if (hwr != null && hwr.StatusCode == HttpStatusCode.ServiceUnavailable)
+                        if (hwr != null)
                         {
-                            // Retry
-                            Thread.Sleep(Setting.Instance.ConnectionProperty.AutoRetryIntervalMSec);
-                            continue;
+                            switch (hwr.StatusCode)
+                            {
+                                case HttpStatusCode.InternalServerError:
+                                case HttpStatusCode.ServiceUnavailable:
+                                    // Retry
+                                    Thread.Sleep(Setting.Instance.ConnectionProperty.AutoRetryIntervalMSec);
+                                    continue;
+                                case (HttpStatusCode)429:
+                                    //Too many requests
+                                    return default(T);
+                                default:
+                                    System.Diagnostics.Debug.WriteLine(we.Message + " / " + hwr.ResponseUri.OriginalString + " / " + hwr.StatusCode);
+                                    break;
+                            }
                         }
                     }
                     else if (we.Status == WebExceptionStatus.Timeout)

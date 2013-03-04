@@ -9,9 +9,15 @@ using Inscribe.Storage;
 
 namespace Inscribe.Communication.CruiseControl
 {
-    public class AccountScheduler : SupervisorScheduler
+    public class AccountScheduler : SimpleScheduler
     {
+        public override int RateLimitPerHour
+        {
+            get { return 15; }
+        }
+
         private readonly AccountInfo _accountInfo;
+
         public AccountInfo AccountInfo
         {
             get { return this._accountInfo; }
@@ -27,35 +33,6 @@ namespace Inscribe.Communication.CruiseControl
             this.AddSchedule(new FavoritesReceiveTask(info));
             this.AddSchedule(new MyTweetsTask(info));
             ThreadHelper.Halt += this.StopSchedule;
-        }
-
-        protected override void OnWakeup()
-        {
-            try
-            {
-                this.TargetMu = this._accountInfo.AccountProperty.AutoCruiseDefaultMu;
-            }
-            catch (Exception e)
-            {
-                ExceptionStorage.Register(e, ExceptionCategory.ConfigurationError, "設定が破損しています。");
-                this.TargetMu = 0.5;
-            }
-        }
-
-        protected override int MinWindowTime
-        {
-            get
-            {
-                return TwitterDefine.MinWindowTime;
-            }
-        }
-
-        protected override double MinDensity
-        {
-            get
-            {
-                return TwitterDefine.MinDensity;
-            }
         }
     }
 }

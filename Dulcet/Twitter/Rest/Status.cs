@@ -10,11 +10,8 @@ namespace Dulcet.Twitter.Rest
         /// <summary>
         /// Get status
         /// </summary>
-        private static TwitterStatus GetStatus(this CredentialProvider provider, string partialUriFormat, CredentialProvider.RequestMethod method, long id)
+        private static TwitterStatus GetStatus(this CredentialProvider provider, string partialUri, CredentialProvider.RequestMethod method, IEnumerable<KeyValuePair<string, string>> para)
         {
-            string partialUri = string.Format(partialUriFormat, id);
-            List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
-            para.Add(new KeyValuePair<string, string>("include_entities", "true"));
             var doc = provider.RequestAPIv1(partialUri, method, para);
             if (doc == null)
                 return null;
@@ -28,7 +25,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="id">user id</param>
         public static TwitterStatus GetStatus(this CredentialProvider provider, long id)
         {
-            return provider.GetStatus("statuses/show/{0}.json", CredentialProvider.RequestMethod.GET, id);
+            return provider.GetStatus("statuses/show/" + id + ".json", CredentialProvider.RequestMethod.GET, CreateParamList());
         }
 
         /// <summary>
@@ -39,7 +36,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="inReplyToStatusId">tweet id which be replied this tweet</param>
         public static TwitterStatus UpdateStatus(this CredentialProvider provider, string body, long? inReplyToStatusId = null)
         {
-            List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
+            var para = CreateParamList();
             para.Add(new KeyValuePair<string, string>("status", HttpUtility.UrlEncodeStrict(body, Encoding.UTF8, true)));
             if (inReplyToStatusId != null && inReplyToStatusId.HasValue)
                 para.Add(new KeyValuePair<string, string>("in_reply_to_status_id", inReplyToStatusId.Value.ToString()));
@@ -60,7 +57,7 @@ namespace Dulcet.Twitter.Rest
         /// <param name="id">tweet id</param>
         public static TwitterStatus DestroyStatus(this CredentialProvider provider, long id)
         {
-            return provider.GetStatus("statuses/destroy/{0}.json", CredentialProvider.RequestMethod.POST, id);
+            return provider.GetStatus("statuses/destroy/" + id + ".json", CredentialProvider.RequestMethod.POST, CreateParamList());
         }
     }
 }

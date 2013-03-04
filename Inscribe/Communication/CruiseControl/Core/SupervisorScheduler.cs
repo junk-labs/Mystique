@@ -11,6 +11,7 @@ namespace Inscribe.Communication.CruiseControl.Core
     /// <summary>
     /// スーパーバイザスケジューラ
     /// </summary>
+    [Obsolete]
     public class SupervisorScheduler
     {
         /// <summary>

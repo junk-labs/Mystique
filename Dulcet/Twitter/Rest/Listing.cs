@@ -14,7 +14,6 @@ namespace Dulcet.Twitter.Rest
         public static IEnumerable<TwitterStatus> GetListStatuses(this CredentialProvider provider, string userScreenName, string listSlug, string sinceId = null, string maxId = null, long? perPage = null, long? page = null, bool? includeRts = null, bool? includeEntities = null)
         {
             listSlug = listSlug.Replace("_", "-");
-            var partialUri = userScreenName + "/lists//statuses.json";
 
             var para = new List<KeyValuePair<string, string>>();
 
@@ -42,7 +41,7 @@ namespace Dulcet.Twitter.Rest
             if (includeEntities != null && includeEntities.Value)
                 para.Add(new KeyValuePair<string, string>("include_entities", "true"));
 
-            return provider.GetTimeline(partialUri, para);
+            return provider.GetTimeline("lists/statuses.json", para);
         }
 
         /// <summary>
@@ -94,7 +93,7 @@ namespace Dulcet.Twitter.Rest
 
             System.Diagnostics.Debug.WriteLine("Lists :::" + Environment.NewLine + doc);
 
-            return doc.Root.Element("lists").Elements().Select(TwitterList.FromNode).Where(n => n != null);
+            return doc.Root.Elements().Select(TwitterList.FromNode).Where(n => n != null);
         }
 
         /// <summary>
