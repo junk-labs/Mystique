@@ -269,7 +269,7 @@ namespace Inscribe.Communication.Posting
                             {
                                 var xdoc = XDocument.Load(json);
                                 System.Diagnostics.Debug.WriteLine(xdoc);
-                                var eel = xdoc.Root.Element("error");
+                                var eel = xdoc.Root.Element("errors");
                                 if (eel != null)
                                 {
                                     if (eel.Value.IndexOf("update limit", StringComparison.CurrentCultureIgnoreCase) >= 0)
@@ -424,7 +424,7 @@ namespace Inscribe.Communication.Posting
                         {
                             // ふぁぼ規制 -> フォールバック
                             AccountInfo fallback = null;
-                            if(!String.IsNullOrEmpty( d.AccountProperty.FallbackAccount) && 
+                            if (!String.IsNullOrEmpty(d.AccountProperty.FallbackAccount) &&
                                 (fallback = AccountStorage.Get(d.AccountProperty.FallbackAccount)) != null &&
                                 !status.FavoredUsers.Contains(fallback.UserViewModel))
                             {
@@ -463,11 +463,11 @@ namespace Inscribe.Communication.Posting
                 catch (WebException wex)
                 {
                     var hwr = wex.Response as HttpWebResponse;
-                    if (wex.Status == WebExceptionStatus.ProtocolError && 
+                    if (wex.Status == WebExceptionStatus.ProtocolError &&
                         hwr != null && hwr.StatusCode == HttpStatusCode.Forbidden)
                     {
                         // あとIt's great that ... ならふぁぼ規制
-                        using (var read = new StreamReader( hwr.GetResponseStream()))
+                        using (var read = new StreamReader(hwr.GetResponseStream()))
                         {
                             var desc = read.ReadToEnd();
                             if (desc.Contains("It's great that you like so many updates, but we only allow so many updates to be marked as a favorite per day."))
@@ -767,12 +767,12 @@ namespace Inscribe.Communication.Posting
         #endregion
 
         #region Remove DirectMessage
-        
+
         public static void RemoveDirectMessage(AccountInfo info, long tweetId)
         {
             var result = Task.Factory.StartNew(() =>
                 removeDMInjection.Execute(new Tuple<AccountInfo, long>(info, tweetId)));
-            
+
             var ex = result.Exception;
             if (ex != null)
             {
@@ -780,15 +780,15 @@ namespace Inscribe.Communication.Posting
                 ExceptionStorage.Register(ex, ExceptionCategory.TwitterError, "ダイレクトメッセージ削除時にエラーが発生しました");
             }
         }
-        
+
         private static InjectionPort<Tuple<AccountInfo, long>> removeDMInjection =
             new InjectionPort<Tuple<AccountInfo, long>>(a => RemoveDMSink(a.Item1, a.Item2));
-        
+
         public static IInjectionPort<Tuple<AccountInfo, long>> RemoveDMInjection
         {
             get { return removeDMInjection.GetInterface(); }
         }
-        
+
         private static void RemoveDMSink(AccountInfo info, long tweetId)
         {
             var tweet = ApiHelper.ExecApi(() => info.DestroyDirectMessage(tweetId.ToString()));
@@ -809,7 +809,7 @@ namespace Inscribe.Communication.Posting
                 NotifyStorage.Notify("ダイレクトメッセージを削除できませんでした(@" + info.ScreenName + ")");
             }
         }
-        
+
         #endregion
     }
 
