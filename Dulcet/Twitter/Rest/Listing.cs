@@ -11,7 +11,7 @@ namespace Dulcet.Twitter.Rest
         /// <summary>
         /// Get list statuses with full params
         /// </summary>
-        public static IEnumerable<TwitterStatus> GetListStatuses(this CredentialProvider provider, string userScreenName, string listSlug, string sinceId = null, string maxId = null, long? perPage = null, long? page = null, bool? includeRts = null, bool? includeEntities = null)
+        public static IEnumerable<TwitterStatus> GetListStatuses(this CredentialProvider provider, string userScreenName, string listSlug, string sinceId = null, string maxId = null, long? perPage = null, bool? includeRts = null, bool? includeEntities = null)
         {
             listSlug = listSlug.Replace("_", "-");
 
@@ -30,10 +30,7 @@ namespace Dulcet.Twitter.Rest
                 para.Add(new KeyValuePair<string, string>("max_id", maxId));
 
             if (perPage != null)
-                para.Add(new KeyValuePair<string, string>("per_page", perPage.ToString()));
-
-            if (page != null)
-                para.Add(new KeyValuePair<string, string>("page", page.ToString()));
+                para.Add(new KeyValuePair<string, string>("count", perPage.ToString()));
 
             if (includeRts != null && includeRts.Value)
                 para.Add(new KeyValuePair<string, string>("include_rts", "true"));
