@@ -18,7 +18,7 @@ namespace Dulcet.Twitter.Rest
             var doc = provider.RequestAPIv1(partialUri, CredentialProvider.RequestMethod.GET, para);
             if (doc == null)
                 return null; // request returns error ?
-            List<TwitterUser> users = new List<TwitterUser>();
+            var users = new List<TwitterUser>();
             var nc = doc.Root.Element("next_cursor");
             if (nc != null)
                 nextCursor = (long)nc.ParseLong();
@@ -26,7 +26,7 @@ namespace Dulcet.Twitter.Rest
             if (pc != null)
                 prevCursor = (long)pc.ParseLong();
             System.Diagnostics.Debug.WriteLine("GetUser:::" + Environment.NewLine + doc.ToString());
-            return doc.Root.Element("users").Elements().Select(n => TwitterUser.FromNode(n)).Where(s => s != null);
+            return doc.Root.Element("users").Elements().Select(TwitterUser.FromNode).Where(s => s != null);
         }
 
         /// <summary>
@@ -40,11 +40,7 @@ namespace Dulcet.Twitter.Rest
             var parac = para.ToArray();
             while (n_cursor != 0)
             {
-                var pc = new List<KeyValuePair<string, string>>();
-                foreach (var pair in parac)
-                {
-                    pc.Add(pair);
-                }
+                var pc = parac.ToList();
                 pc.Add(new KeyValuePair<string, string>("cursor", c_cursor.ToString()));
                 var users = provider.GetUsers(partialUri, pc, out p, out n_cursor);
                 if (users != null)

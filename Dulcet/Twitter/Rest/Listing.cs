@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Dulcet.Twitter.Credential;
 using Dulcet.Util;
 
@@ -18,7 +19,7 @@ namespace Dulcet.Twitter.Rest
             var para = new List<KeyValuePair<string, string>>();
 
             if (!String.IsNullOrEmpty(listSlug))
-                para.Add(new KeyValuePair<string, string>("slug", listSlug));
+                para.Add(new KeyValuePair<string, string>("slug", OAuth.UrlEncode(listSlug, Encoding.UTF8, true)));
 
             if (!String.IsNullOrEmpty(userScreenName))
                 para.Add(new KeyValuePair<string, string>("owner_screen_name", userScreenName));
@@ -53,7 +54,7 @@ namespace Dulcet.Twitter.Rest
 
             var para = new List<KeyValuePair<string, string>>();
             if (!String.IsNullOrEmpty(slug))
-                para.Add(new KeyValuePair<string, string>("slug", slug));
+                para.Add(new KeyValuePair<string, string>("slug", OAuth.UrlEncode(slug, Encoding.UTF8, true)));
             if (!String.IsNullOrEmpty(userScreenName))
                 para.Add(new KeyValuePair<string, string>("owner_screen_name", userScreenName));
 
@@ -137,7 +138,7 @@ namespace Dulcet.Twitter.Rest
             if (!String.IsNullOrEmpty(userScreenName))
                 para.Add(new KeyValuePair<string, string>("owner_screen_name", userScreenName));
             if (!String.IsNullOrEmpty(listSlug))
-                para.Add(new KeyValuePair<string, string>("slug", listSlug));
+                para.Add(new KeyValuePair<string, string>("slug", OAuth.UrlEncode(listSlug, Encoding.UTF8, true)));
             var list = provider.RequestAPIv1("lists/show.json",
                  CredentialProvider.RequestMethod.GET, para).Root;
             if (list != null)

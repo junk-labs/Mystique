@@ -57,7 +57,7 @@ namespace Dulcet.Twitter.Credential
             string target = uri;
 
             // detection return type of api
-            DocumentTypes docType = DocumentTypes.Invalid;
+            var docType = DocumentTypes.Invalid;
 
             if (target.EndsWith("xml"))
                 docType = DocumentTypes.Xml;
