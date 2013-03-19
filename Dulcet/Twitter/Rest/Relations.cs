@@ -173,7 +173,7 @@ namespace Dulcet.Twitter.Rest
                 para.Add(new KeyValuePair<string, string>("user_id", userId.ToString()));
             if (!String.IsNullOrEmpty(screenName))
                 para.Add(new KeyValuePair<string, string>("screen_name", screenName));
-            var ret = provider.RequestAPIv1("report_spam.json", CredentialProvider.RequestMethod.POST, para);
+            var ret = provider.RequestAPIv1("users/report_spam.json", CredentialProvider.RequestMethod.POST, para);
             if (ret != null && ret.Root != null)
                 return TwitterUser.FromNode(ret.Root);
             return null;
