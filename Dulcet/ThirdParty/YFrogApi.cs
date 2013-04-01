@@ -33,7 +33,7 @@ namespace Dulcet.ThirdParty
         }
 
         /// <summary>
-        /// Upload picture to TwitPic
+        /// Upload picture to YFrog
         /// </summary>
         public static XDocument UploadToYFrog(this OAuth provider, string apiKey, string mediaFilePath)
         {
