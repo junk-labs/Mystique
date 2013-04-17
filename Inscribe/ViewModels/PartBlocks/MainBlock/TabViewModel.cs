@@ -768,7 +768,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock
                 var msg = new ConfirmationMessage(
                     "このタブに含まれるすべてのツイートをRetweetします。" + Environment.NewLine +
                     "(対象ツイート: " + tweets.Count() + "件)" + Environment.NewLine +
-                    "よろしいですか？", "全てFavorite",
+                    "よろしいですか？", "全てRetweet",
                     System.Windows.MessageBoxImage.Warning,
                     System.Windows.MessageBoxButton.OKCancel,
                     "Confirm");
