@@ -294,14 +294,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                 .ToArray();
             while (tweets.Any(t => t.Text == body) && body.Length < TwitterDefine.TweetMaxLength)
             {
-                if (body.EndsWith("　"))
-                {
-                    body = body.Substring(0, body.Length - 1) + ".";
-                }
-                else
-                {
-                    body += "　";
-                }
+                body += "‍";//ZWJ
             }
             return body;
         }
