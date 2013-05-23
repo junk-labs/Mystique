@@ -15,7 +15,7 @@ namespace Dulcet.Twitter.Rest
         /// <summary>
         /// Twitter api uri (v1)
         /// </summary>
-        private static string _TwitterUri = "http://api.twitter.com/1.1/";
+        private static string _TwitterUri = "https://api.twitter.com/1.1/";
 
         /// <summary>
         /// Twitter URI エンドポイント

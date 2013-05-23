@@ -48,7 +48,7 @@ namespace Dulcet.ThirdParty
             sd.Add(new SendData("message", message));
             sd.Add(new SendData("media", file: mediaFilePath));
 
-            var doc = Http.WebUpload<XDocument>(req, sd, Encoding.UTF8, (s) => XDocument.Load(s));
+            var doc = Http.WebUpload<XDocument>(req, sd, Encoding.UTF8, XDocument.Load);
             if (doc.ThrownException != null)
                 throw doc.ThrownException;
             if (doc.Succeeded == false)
