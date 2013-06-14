@@ -29,6 +29,9 @@ namespace Inscribe.ViewModels.Dialogs.Common
             new ContributorViewModel("キスショさん", "__kiss"),
             new ContributorViewModel("れき", "reki_frequent"),
             new ContributorViewModel("月夜見命", "ls_akari"),
+            new ContributorViewModel("colorfulpastel", "colorfulpastel"),
+            new ContributorViewModel("502bg", "502bg"),
+            new ContributorViewModel("ponica", "ponica"),
             new ContributorViewModel("トランキ", "trankie00"),
             new ContributorViewModel("めびう寿司", "catina013"),
             new ContributorViewModel("くりゅー", "chry545"),
@@ -51,7 +54,7 @@ namespace Inscribe.ViewModels.Dialogs.Common
 
         public AboutViewModel()
         {
-            Task.Factory.StartNew(() => CheckUpdate());
+            Task.Factory.StartNew(CheckUpdate);
         }
 
         public IEnumerable<ContributorViewModel> Contributors
