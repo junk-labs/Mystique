@@ -51,12 +51,12 @@
     <Compile Include="Resolvers\Pckles.cs" />
     <Compile Include="Resolvers\Photozou.cs" />
     <Compile Include="Resolvers\Plixi.cs" />
-    <Compile Include="Resolvers\Twipple.cs" />
     <Compile Include="Resolvers\Twitgoo.cs" />
     <Compile Include="Resolvers\ViaMe.cs" />
     <Compile Include="Shorteners\UxNu.cs" />
     <Compile Include="Uploaders\TwitPic.cs" />
     <Compile Include="Uploaders\YFrog.cs" />
+    <Compile Include="Uploaders\Twipple.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Acuerdo\Acuerdo.csproj">
