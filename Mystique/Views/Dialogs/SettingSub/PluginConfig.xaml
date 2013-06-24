@@ -10,11 +10,6 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
-    <i:Interaction.Triggers>
-        <l:InteractionMessageTrigger MessageKey="OpenConfig" Messenger="{Binding Messenger}">
-            <ba:TransitionExInteractionMessageAction />
-        </l:InteractionMessageTrigger>
-    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -34,6 +29,11 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid>
+                                <i:Interaction.Triggers>
+                                    <l:InteractionMessageTrigger MessageKey="OpenConfig" Messenger="{Binding Messenger}">
+                                        <ba:TransitionExInteractionMessageAction />
+                                    </l:InteractionMessageTrigger>
+                                </i:Interaction.Triggers>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
