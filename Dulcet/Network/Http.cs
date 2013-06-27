@@ -43,6 +43,12 @@ namespace Dulcet.Network
             set { ServicePointManager.DefaultConnectionLimit = value; }
         }
 
+        static Http()
+        {
+            // Windows 8.1 Preview
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+        }
+
         #region Converter delegate definitions and common converters
 
         /// <summary>
