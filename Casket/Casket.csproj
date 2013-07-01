@@ -55,6 +55,7 @@
     <Compile Include="Resolvers\ViaMe.cs" />
     <Compile Include="Shorteners\UxNu.cs" />
     <Compile Include="Uploaders\TwitPic.cs" />
+    <Compile Include="Uploaders\TwitterOfficial.cs" />
     <Compile Include="Uploaders\YFrog.cs" />
     <Compile Include="Uploaders\Twipple.cs" />
   </ItemGroup>

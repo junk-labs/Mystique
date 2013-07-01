@@ -86,18 +86,18 @@ namespace Dulcet.Twitter.Credential
                 request = Http.CreateRequest(new Uri(target), method.ToString(), contentType: "application/x-www-form-urlencoded");
                 request.Headers.Add("Authorization", "OAuth " + reg);
                 var ret = Http.WebConnect<XDocument>(request,
-                    responseconv: new Http.ResponseConverter<XDocument>((res) =>
+                    responseconv: res =>
                     {
                         switch (docType)
                         {
                             case DocumentTypes.Xml:
-                                return XDocumentGenerator(res);
+                                return this.XDocumentGenerator(res);
                             case DocumentTypes.Json:
-                                return XDocumentGenerator(res, (s) => JsonReaderWriterFactory.CreateJsonReader(s, XmlDictionaryReaderQuotas.Max));
+                                return this.XDocumentGenerator(res, (s) => JsonReaderWriterFactory.CreateJsonReader(s, XmlDictionaryReaderQuotas.Max));
                             default:
                                 throw new NotSupportedException("Invalid format.");
                         }
-                    }), senddata: body);
+                    }, senddata: body);
                 if (ret.Succeeded && ret.Data != null)
                 {
                     return ret.Data;

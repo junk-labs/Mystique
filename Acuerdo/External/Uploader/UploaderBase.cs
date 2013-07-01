@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Dulcet.Twitter;
 using Dulcet.Twitter.Credential;
 
 namespace Acuerdo.External.Uploader
@@ -46,5 +43,10 @@ namespace Acuerdo.External.Uploader
         /// 唯一になるように名づけなければなりません。
         /// </summary>
         string ServiceName { get; }
+    }
+
+    public interface IPostDelegatingUploader : IUploader
+    {
+        TwitterStatus PostAndUpload(OAuth credential, string path, string body, long? inReplyTo);
     }
 }

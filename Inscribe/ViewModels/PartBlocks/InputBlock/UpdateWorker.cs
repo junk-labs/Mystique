@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using Acuerdo.External.Uploader;
 using Inscribe.Authentication;
 using Inscribe.Communication.Posting;
 using Inscribe.Configuration;
@@ -165,6 +166,15 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
                                 var upl = UploaderManager.GetSuggestedUploader();
                                 if (upl == null)
                                     throw new InvalidOperationException("画像のアップローダ―が指定されていません。");
+                                var delgupl = upl as IPostDelegatingUploader;
+                                if (delgupl != null)
+                                {
+                                    // delegating upload
+                                    delgupl.PostAndUpload(this.accountInfo, this.attachImagePath, this.body,
+                                                          this.inReplyToId);
+                                    this.WorkingState = InputBlock.WorkingState.Updated;
+                                    return true;
+                                }
                                 body += " " + upl.UploadImage(this.accountInfo, this.attachImagePath, this.body);
                                 isImageAttached = true;
                             }
@@ -230,7 +240,7 @@ namespace Inscribe.ViewModels.PartBlocks.InputBlock
 
 
                         // bind tag
-                        if (tags != null && tags.Count() > 0)
+                        if (tags != null && this.tags.Any())
                         {
                             foreach (var tag in tags.Select(t => t.StartsWith("#") ? t : "#" + t))
                             {

@@ -8,7 +8,6 @@ namespace Casket.Uploaders
     {
         private static string _appkey = "f4e98ee376dc3e692342b6add361608d";
 
-
         public string UploadImage(OAuth credential, string path, string comment)
         {
             string url;
