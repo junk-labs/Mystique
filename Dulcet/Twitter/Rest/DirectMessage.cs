@@ -89,11 +89,11 @@ namespace Dulcet.Twitter.Rest
         /// <param name="provider">credential provider</param>
         /// <param name="user">target user id or name</param>
         /// <param name="text">send body</param>
-        public static TwitterDirectMessage SendDirectMessage(this CredentialProvider provider, string user, string text)
+        public static TwitterDirectMessage SendDirectMessage(this CredentialProvider provider, string screenName, string text)
         {
             List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
             para.Add(new KeyValuePair<string, string>("text", HttpUtility.UrlEncodeStrict(text, Encoding.UTF8, true)));
-            para.Add(new KeyValuePair<string, string>("user", user));
+            para.Add(new KeyValuePair<string, string>("screen_name", screenName));
 
             var xmlDoc = provider.RequestAPIv1("direct_messages/new.json", CredentialProvider.RequestMethod.POST, para);
             if (xmlDoc == null)
@@ -107,12 +107,15 @@ namespace Dulcet.Twitter.Rest
         /// </summary>
         /// <param name="provider">credential provider</param>
         /// <param name="id">destroy id</param>
-        public static TwitterDirectMessage DestroyDirectMessage(this CredentialProvider provider, string id)
+        public static TwitterDirectMessage DestroyDirectMessage(this CredentialProvider provider, long id)
         {
-            string partialUri = string.Format("direct_messages/destroy/{0}.json", id);
-            var xmlDoc = provider.RequestAPIv1(partialUri, CredentialProvider.RequestMethod.POST, null);
+            List<KeyValuePair<string, string>> para = new List<KeyValuePair<string, string>>();
+            para.Add(new KeyValuePair<string, string>("id", id.ToString()));
+
+            var xmlDoc = provider.RequestAPIv1("direct_messages/destroy.json", CredentialProvider.RequestMethod.POST, para);
             if (xmlDoc == null)
                 return null;
+
             return TwitterDirectMessage.FromNode(xmlDoc.Root);
         }
     }
