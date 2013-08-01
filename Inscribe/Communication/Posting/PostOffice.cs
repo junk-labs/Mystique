@@ -791,7 +791,7 @@ namespace Inscribe.Communication.Posting
 
         private static void RemoveDMSink(AccountInfo info, long tweetId)
         {
-            var tweet = ApiHelper.ExecApi(() => info.DestroyDirectMessage(tweetId.ToString()));
+            var tweet = ApiHelper.ExecApi(() => info.DestroyDirectMessage(tweetId));
             if (tweet != null)
             {
                 if (tweet.Id != tweetId)
