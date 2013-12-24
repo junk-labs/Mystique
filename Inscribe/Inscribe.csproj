@@ -59,6 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm\DPMatching\DPMatcher.cs" />
+    <Compile Include="Anomaly\Utils\ParsingExtension.cs" />
+    <Compile Include="Anomaly\Utils\UnixEpoch.cs" />
     <Compile Include="Common\FreezableEx.cs" />
     <Compile Include="Common\FilterHelper.cs" />
     <Compile Include="Common\Punycode.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Filter\Filters\ScreenName\FilterTo.cs" />
     <Compile Include="Filter\MatchingUtil.cs" />
     <Compile Include="Filter\UserFilterBase.cs" />
+    <Compile Include="Helpers\TwitterRegexPatterns.cs" />
     <Compile Include="Subsystems\Protection\StormProtection.cs" />
     <Compile Include="Util\WrappingStream.cs" />
     <Compile Include="Filter\Filters\Text\FilterHashtagText.cs" />

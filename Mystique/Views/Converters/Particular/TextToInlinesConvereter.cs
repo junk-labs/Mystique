@@ -51,6 +51,7 @@ namespace Mystique.Views.Converters.Particular
     public static class TextToFlowConversionStatic
     {
         private const string TweetUrlRegex = @"^https?://(www\.)?twitter\.com/(#!/)?\w+/status(es)?/(?<id>\d+)/?(\?.*)?$";
+        private const string UserRegex = @"^https?://(www\.)?twitter\.com/(#!/)?(\w+)$";
 
         /// <summary>
         /// 文字をリッチテキストフォーマットして返します。
