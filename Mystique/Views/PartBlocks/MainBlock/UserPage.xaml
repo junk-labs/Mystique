@@ -161,12 +161,12 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="6" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="6" />
+                    <ColumnDefinition Width="31" />
+                    <ColumnDefinition Width="100*" />
+                    <ColumnDefinition Width="100*" />
+                    <ColumnDefinition Width="100*" />
+                    <ColumnDefinition Width="100*" />
+                    <ColumnDefinition Width="125" />
                 </Grid.ColumnDefinitions>
                 <Rectangle Grid.RowSpan="2"
                            Grid.ColumnSpan="6"
@@ -194,7 +194,14 @@
                     </Hyperlink>
                 </TextBlock>
                 <TextBlock Grid.Row="1" Grid.Column="4">
-                    <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="lists/memberships">
+                    <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="lists">
+                        <Run Text="{Binding Listed, Mode=OneWay}" />
+                        <LineBreak />
+                        <Run FontSize="10" Text="lists" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="5">
+                    <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="memberships">
                         <Run Text="{Binding Listed, Mode=OneWay}" />
                         <LineBreak />
                         <Run FontSize="10" Text="listed" />
