@@ -26,6 +26,7 @@ using Livet;
 using Livet.Commands;
 using Livet.Messaging;
 using Inscribe.Authentication;
+using Nightmare.WinAPI;
 
 namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 {
@@ -1328,10 +1329,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
         private void Delete()
         {
             if (!this.Tweet.ShowDeleteButton) return;
-            var conf = new ConfirmationMessage("ツイート @" + this.Tweet.Status.User.ScreenName + ": " + this.Tweet.Status.Text + " を削除してもよろしいですか？", 
-                "ツイートの削除", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
-            this.RaiseMessage(conf);
-            if (conf.Response.GetValueOrDefault())
+            ConfirmationMessage conf = null;
+            if (!User32.IsKeyPressed(VirtualKey.VK_SHIFT))
+            {
+                var msg = String.Format("ツイート @{0}: {1} を削除してもよろしいですか？", this.Tweet.Status.User.ScreenName, this.Tweet.Status.Text);
+                conf = new ConfirmationMessage(msg, "ツイートの削除", System.Windows.MessageBoxImage.Warning, System.Windows.MessageBoxButton.OKCancel, "Confirm");
+                this.RaiseMessage(conf);
+            }
+            if ((conf == null) || (conf.Response.GetValueOrDefault()))
             {
                 if (this.Tweet.IsDirectMessage)
                 {

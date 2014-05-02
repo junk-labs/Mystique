@@ -6,6 +6,7 @@ using Inscribe.Configuration;
 using Inscribe.Core;
 using Inscribe.Subsystems;
 using Inscribe.Subsystems.KeyAssign;
+using Nightmare.WinAPI;
 
 namespace Mystique.Views
 {
@@ -90,19 +91,23 @@ namespace Mystique.Views
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // シャットダウン
-            if (KernelService.IsAppInShutdown ||
-                MessageBox.Show(this, "Krileを終了してもよろしいですか？", "Krileの終了", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+            if (!KernelService.IsAppInShutdown)
             {
-                if (Setting.IsInitialized)
+                if (!User32.IsKeyPressed(VirtualKey.VK_SHIFT))
                 {
-                    var rect = Nightmare.WinAPI.NativeWindowControl.GetWindowPlacement(this);
-                    Setting.Instance.StateProperty.WindowPosition = rect;
-                    Setting.Instance.StateProperty.WindowState = this.WindowState;
+                    if (MessageBox.Show(this, "Krileを終了してもよろしいですか？", "Krileの終了", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
                 }
             }
-            else
+
+            if (Setting.IsInitialized)
             {
-                e.Cancel = true;
+                var rect = Nightmare.WinAPI.NativeWindowControl.GetWindowPlacement(this);
+                Setting.Instance.StateProperty.WindowPosition = rect;
+                Setting.Instance.StateProperty.WindowState = this.WindowState;
             }
         }
 
