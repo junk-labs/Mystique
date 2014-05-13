@@ -195,7 +195,6 @@
                 </TextBlock>
                 <TextBlock Grid.Row="1" Grid.Column="4">
                     <Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="lists">
-                        <Run Text="{Binding Listed, Mode=OneWay}" />
                         <LineBreak />
                         <Run FontSize="10" Text="lists" />
                     </Hyperlink>
