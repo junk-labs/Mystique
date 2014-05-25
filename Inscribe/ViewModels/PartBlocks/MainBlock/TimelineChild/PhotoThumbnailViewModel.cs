@@ -30,7 +30,16 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public void OpenUri()
         {
-            Browser.Start(PhotoUri.OriginalString);
+            string uri;
+            if (PhotoUri.Host == "pbs.twimg.com")
+            {
+                uri = PhotoUri.OriginalString + ":orig";
+            }
+            else
+            {
+                uri = PhotoUri.OriginalString;
+            }
+            Browser.Start(uri);
         }
         #endregion
 
