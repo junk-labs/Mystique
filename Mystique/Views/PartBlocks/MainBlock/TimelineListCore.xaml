@@ -29,6 +29,7 @@
         <cp:TVMToUserImageConverter x:Key="TweetUserImageConverter" />
         <cp:SourceToInlinesConverter x:Key="SourceInlinesConverter" />
         <cp:StringRemoveLineFeedConverter x:Key="SingleLineConverter" />
+        <cp:TimelineDateConverter x:Key="TimelineDateConverter" />
         <BitmapImage x:Key="Mention"
                      PresentationOptions:Freeze="True"
                      UriSource="/Resources/comment_edit.png" />
@@ -759,8 +760,7 @@
                                FontSize="10"
                                Foreground="Gray"
                                Text="{Binding Path=Tweet.OriginalCreatedAt,
-                                              Mode=OneTime,
-                                              StringFormat=HH:mm:ss}" />
+                                              Converter={StaticResource TimelineDateConverter}}" />
                 </StackPanel>
                 <Rectangle Grid.RowSpan="3"
                            Grid.ColumnSpan="3"

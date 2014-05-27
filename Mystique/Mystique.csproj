@@ -137,6 +137,7 @@
     <Compile Include="Views\Converters\Particular\DoubleStringConverter.cs" />
     <Compile Include="Views\Converters\Particular\NotZeroToVisibleConverter.cs" />
     <Compile Include="Views\Converters\Particular\SourceToInlinesConverter.cs" />
+    <Compile Include="Views\Converters\Particular\TimelineDateConverter.cs" />
     <Compile Include="Views\Converters\Particular\TweetStringToCountConverter.cs" />
     <Compile Include="Views\Converters\Particular\TVMToUserImageConverter.cs" />
     <Compile Include="Views\Converters\Particular\TwoOrMoreVisibleConverter.cs" />
