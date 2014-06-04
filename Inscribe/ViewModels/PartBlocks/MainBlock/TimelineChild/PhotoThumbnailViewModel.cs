@@ -30,8 +30,14 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
 
         public void OpenUri()
         {
+            if (PhotoUri == null)
+            {
+                return;
+            }
+
             string uri;
-            if (PhotoUri.Host == "pbs.twimg.com")
+            // このあたりの実装をエレガントにしたい。
+            if ((PhotoUri.Host == "pbs.twimg.com") && (!PhotoUri.AbsolutePath.EndsWith(":orig")))
             {
                 uri = PhotoUri.OriginalString + ":orig";
             }
