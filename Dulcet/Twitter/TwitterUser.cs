@@ -62,10 +62,28 @@ namespace Dulcet.Twitter
         /// </summary>
         public string Bio { get; set; }
 
+        protected Uri _ProfileImage;
         /// <summary>
         /// ユーザーのプロフィール画像URL
         /// </summary>
-        public Uri ProfileImage { get; set; }
+        public Uri ProfileImage
+        {
+            get
+            {
+                return this._ProfileImage;
+            }
+            set
+            {
+                if((value.Host == "pbs.twimg.com") && (value.Scheme == "http"))
+                {
+                    this._ProfileImage = new Uri(value.OriginalString.Replace("http://", "https://"));
+                }
+                else
+                {
+                    this._ProfileImage = value;
+                }
+            }
+        }
 
         /// <summary>
         /// ユーザーのWeb

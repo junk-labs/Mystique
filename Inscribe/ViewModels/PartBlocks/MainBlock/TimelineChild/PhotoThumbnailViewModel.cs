@@ -11,7 +11,25 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             this.PhotoUri = uri;
         }
 
-        public Uri PhotoUri { get; private set; }
+        protected Uri _PhotoUri;
+        public Uri PhotoUri
+        {
+            get
+            {
+                return this._PhotoUri;
+            }
+            private set
+            {
+                if((value.Host == "pbs.twimg.com") && (value.Scheme == "http"))
+                {
+                    this._PhotoUri = new Uri(value.OriginalString.Replace("http://", "https://"));
+                }
+                else
+                {
+                    this._PhotoUri = value;
+                }
+            }
+        }
 
         #region OpenUriCommand
         private Livet.Commands.ViewModelCommand _OpenUriCommand;
