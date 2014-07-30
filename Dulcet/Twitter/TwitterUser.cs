@@ -74,7 +74,7 @@ namespace Dulcet.Twitter
             }
             set
             {
-                if((value.Host == "pbs.twimg.com") && (value.Scheme == "http"))
+                if((value.Host.EndsWith(".twimg.com")) && (value.Scheme == "http"))
                 {
                     this._ProfileImage = new Uri(value.OriginalString.Replace("http://", "https://"));
                 }

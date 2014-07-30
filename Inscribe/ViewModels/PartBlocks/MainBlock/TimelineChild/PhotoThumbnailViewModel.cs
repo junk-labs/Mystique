@@ -20,7 +20,7 @@ namespace Inscribe.ViewModels.PartBlocks.MainBlock.TimelineChild
             }
             private set
             {
-                if((value.Host == "pbs.twimg.com") && (value.Scheme == "http"))
+                if((value.Host.EndsWith(".twimg.com")) && (value.Scheme == "http"))
                 {
                     this._PhotoUri = new Uri(value.OriginalString.Replace("http://", "https://"));
                 }
