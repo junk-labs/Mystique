@@ -9,7 +9,7 @@ namespace Inscribe
         {
             get
             {
-                return Environment.OSVersion.Version.Major == 6;
+                return Environment.OSVersion.Version.Major >= 6;
             }
         }
 

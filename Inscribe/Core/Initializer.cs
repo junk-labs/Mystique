@@ -47,49 +47,10 @@ namespace Inscribe.Core
                 }
             }
 
-            Uri uri = new Uri("https://xn--bckgakc6gsa3c6z.jp");
-            var decoded = System.Web.Punycode.PunyDecode(uri);
-            System.Diagnostics.Debug.WriteLine(decoded.OriginalString);
-
             // サブシステムの初期化
             NotificationCore.Initialize();
             HashtagStorage.Initialize();
 
-            var apppath = System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-
-            // アップデータの存在を確認
-            var updater = System.IO.Path.Combine(apppath, Define.UpdateFileName);
-            if (System.IO.File.Exists(updater))
-            {
-                // .completeファイルが存在するか
-                if (System.IO.File.Exists(updater + ".completed"))
-                {
-                    Action deleteAction = null;
-                    deleteAction = new Action(() =>
-                        {
-                            try
-                            {
-                                // アップデータを削除
-                                System.IO.File.Delete(updater);
-                                System.IO.File.Delete(updater + ".completed");
-                            }
-                            catch (Exception e)
-                            {
-                                ExceptionStorage.Register(e, ExceptionCategory.AssertionFailed, "アップデータファイルの削除ができませんでした。", () => deleteAction());
-                            }
-                        });
-                    deleteAction();
-                }
-                else
-                {
-                    // アップデータを起動して終了
-                    UpdateReceiver.StartUpdateArchive();
-                    return;
-                }
-            }
-
-
-            UpdateReceiver.StartSchedule();
             Application.Current.Exit += new ExitEventHandler(AppExit);
         }
 

@@ -103,7 +103,6 @@
     <Compile Include="Common\Geometry.cs" />
     <Compile Include="Common\Packaging.cs" />
     <Compile Include="Common\TwitterHelper.cs" />
-    <Compile Include="Common\UpdateReceiver.cs" />
     <Compile Include="Common\XMLSerializer.cs" />
     <Compile Include="Common\ApiHelper.cs" />
     <Compile Include="Communication\CruiseControl\AccountScheduler.cs" />

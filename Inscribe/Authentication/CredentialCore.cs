@@ -21,7 +21,10 @@ namespace Inscribe.Authentication
                     return this.OverridedConsumerKey;
                 switch (Generation)
                 {
-                        return "N4Yom2AVG2DIYmBaNF4r7w";
+                    case 2:
+                        return "iL5pS5TzIve6qdP72sLEFg";
+                    default:
+                        return "K3FZBXVOzsm271KC1jPPHA";
                 }
             }
         }
@@ -35,7 +38,10 @@ namespace Inscribe.Authentication
                     return this.OverridedConsumerSecret;
                 switch (Generation)
                 {
-                        return "gZ5qUnDjMyxiqzQKmYxRhssyjbIrREeJYaUnU9Az2I";
+                    case 2:
+                        return "u0m3ez6UneQnF9NHJm8O3MVbExWTDvJBY7OYfPwo9I";
+                    default:
+                        return "tOJVCdRrlzc08WilwcU5BtwuGzgbo2MlTWJIFRYaeow";
                 }
             }
         }
