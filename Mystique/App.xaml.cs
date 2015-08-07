@@ -24,7 +24,6 @@ namespace Mystique
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 #endif
             Initializer.Init();
-            UpdateReceiver.StartSchedule();
         }
 
         void Exitting(object sender, ExitEventArgs e)
